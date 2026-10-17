@@ -105,6 +105,13 @@
       .x-toast.show { opacity: 1; transform: translate(-50%, 0); }
       .x-menu { display: none; }
       [hidden] { display: none !important; }
+      .x-err { color: #fb7185; font: var(--type-small); font-weight: 500; }
+      .x-in.bad, .x-sel.bad { border-color: #fb7185 !important; box-shadow: 0 0 0 3px rgb(251 113 133 / .18); }
+      .x-req { color: #fb7185; }
+      .x-tmp { display: flex; gap: 8px; align-items: center; }
+      .x-tmp code { flex: 1; font: 600 18px/1.4 ui-monospace, monospace; letter-spacing: 1px; padding: 10px 14px; border-radius: var(--r-s); background: var(--x-bg, #0a1230); border: 1px dashed var(--x-line); color: #4ade80; }
+      .x-saved { font: var(--type-caption); color: var(--x-muted); margin-left: 8px; }
+      .x-saved.ok { color: #4ade80; } .x-saved.dirty { color: #fbbf24; }
       @media (max-width: 1080px) { .x-rbac { grid-template-columns: minmax(0, 1fr); } .x-roles { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); } }
       @media (max-width: 900px) {
         .x-app { grid-template-columns: minmax(0, 1fr); }
@@ -179,7 +186,7 @@
                   <div style="flex:1;min-width:220px"><input class="x-rname" id="rname" aria-label="ชื่อบทบาท" /><p class="x-muted" id="rdesc" style="color:var(--x-muted);font:var(--type-small)"></p></div>
                   <div class="x-row"><button class="x-btn" id="selAll">เลือกทั้งหมด</button><button class="x-btn" id="clrAll">ล้าง</button><button class="x-btn x-pri" id="savePerm">บันทึกสิทธิ์</button></div>
                 </div>
-                <p style="color:var(--x-muted);font:var(--type-caption);margin-top:8px" id="pcount"></p>
+                <p style="color:var(--x-muted);font:var(--type-caption);margin-top:8px"><span id="pcount"></span><span class="x-saved" id="psaved" role="status"></span></p>
                 <div class="x-mods" id="mods"></div>
               </div>
             </div>
@@ -189,23 +196,30 @@
     </div>
 
     <dialog id="dlg" aria-labelledby="dlgTitle">
-      <form method="dialog" id="uform">
-        <div class="x-row x-ph"><h2 id="dlgTitle" style="font:var(--type-heading);font-weight:600">เพิ่มผู้ใช้</h2><button class="x-btn x-ico" value="cancel" formnovalidate aria-label="ปิด"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+      <form id="uform" novalidate>
+        <div class="x-row x-ph"><h2 id="dlgTitle" style="font:var(--type-heading);font-weight:600">เพิ่มผู้ใช้</h2><button type="button" class="x-btn x-ico" data-dclose aria-label="ปิด"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
         <div class="x-fg" id="fields">
-          <label>ชื่อ-สกุล<input class="x-in" name="name" required /></label>
-          <label>Username<input class="x-in" name="user" required pattern="[A-Za-z0-9._\-]+" /></label>
-          <label>อีเมล<input class="x-in" name="email" type="email" /></label>
+          <label>ชื่อ-สกุล <span class="x-req">*</span><input class="x-in" name="name" required placeholder="เช่น สมหญิง ใจดี" /></label>
+          <label>Username <span class="x-req">*</span><input class="x-in" name="user" required placeholder="a-z 0-9 . _ -" autocomplete="off" /></label>
+          <label>อีเมล<input class="x-in" name="email" type="email" placeholder="เว้นว่าง = username@itmaint.co.th" /></label>
           <label>รหัสพนักงาน<input class="x-in" name="emp" /></label>
           <label>แผนก<input class="x-in" name="dept" /></label>
-          <label>ไซต์<select class="x-sel" name="site"><option>โรงงานสมุทรสาคร</option><option>โรงงานระยอง</option></select></label>
+          <label>ไซต์ <span class="x-req">*</span><select class="x-sel" name="site" required><option value="">— เลือกไซต์ —</option><option>โรงงานสมุทรสาคร</option><option>โรงงานระยอง</option></select></label>
           <label>ตำแหน่ง<input class="x-in" name="pos" /></label>
-          <label>บทบาท<select class="x-sel" name="role" id="frm-role"></select></label>
-          <label>ขอบเขตข้อมูล<select class="x-sel" name="scope"><option>ทั้งหมด</option><option>ไซต์ของตน</option><option>เฉพาะที่ถือครอง</option></select></label>
+          <label>บทบาท <span class="x-req">*</span><select class="x-sel" name="role" id="frm-role" required></select></label>
+          <label>ขอบเขตข้อมูล <span class="x-req">*</span><select class="x-sel" name="scope" required><option value="">— เลือกขอบเขต —</option><option>ทั้งหมด</option><option>ไซต์ของตน</option><option>เฉพาะที่ถือครอง</option></select></label>
           <label>LINE / Telegram ผูกบัญชี<select class="x-sel" name="bind"><option>ยังไม่ผูก</option><option>LINE</option><option>Telegram</option><option>LINE + Telegram</option></select></label>
         </div>
         <div class="x-row x-ph"><button type="button" class="x-btn" id="addField">+ เพิ่มฟิลด์</button>
-          <div class="x-row"><button class="x-btn" value="cancel" formnovalidate>ยกเลิก</button><button class="x-btn x-pri" value="ok" id="saveUser">บันทึก</button></div></div>
+          <div class="x-row"><button type="button" class="x-btn" data-dclose>ยกเลิก</button><button type="button" class="x-btn x-pri" id="saveUser">บันทึก</button></div></div>
       </form>
+    </dialog>
+    <dialog id="rdlg" aria-labelledby="rdlgTitle" style="width:min(480px,calc(100vw - 24px))">
+      <div style="padding:20px;display:grid;gap:14px">
+        <div class="x-row x-ph"><h2 id="rdlgTitle" style="font:var(--type-heading);font-weight:600">รีเซ็ตรหัสผ่าน</h2><button type="button" class="x-btn x-ico" data-rclose aria-label="ปิดหน้าต่างรีเซ็ต"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+        <div id="rbody"></div>
+        <div class="x-row" style="justify-content:flex-end" id="racts"></div>
+      </div>
     </dialog>
     <div class="x-toast" id="toast" role="status" aria-live="polite"></div>
 
@@ -266,7 +280,7 @@
         document.addEventListener("click", function (e) { var b = e.target.closest("[data-toast]"); if (b) toast(b.getAttribute("data-toast")); });
 
         function roleOpts() { return roles.map(function (r, i) { return '<option value="' + i + '">' + esc(r.n) + "</option>"; }).join(""); }
-        function fillSelects() { var v = $("#frole").value; $("#frole").innerHTML = '<option value="">ทุกบทบาท (' + roles.length + ")</option>" + roleOpts(); $("#frole").value = v; $("#frm-role").innerHTML = roleOpts(); }
+        function fillSelects() { var v = $("#frole").value; $("#frole").innerHTML = '<option value="">ทุกบทบาท (' + roles.length + ")</option>" + roleOpts(); $("#frole").value = v; $("#frm-role").innerHTML = '<option value="">— เลือกบทบาท —</option>' + roleOpts(); }
 
         function kpis() {
           var k = [["ผู้ใช้", users.length, "users", "g1"], ["ใช้งาน", users.filter(function (u) { return u.st === "ใช้งาน"; }).length, "ok", "g3"],
@@ -298,27 +312,65 @@
         function openForm(i) {
           editing = i; form.reset(); fillSelects();
           [].slice.call(form.querySelectorAll(".x-extra")).forEach(function (n) { n.remove(); });
-          $("#dlgTitle").textContent = i < 0 ? "เพิ่มผู้ใช้" : "แก้ไขผู้ใช้";
+          clearErrs();
+          $("#dlgTitle").textContent = i < 0 ? "เพิ่มผู้ใช้" : "แก้ไขผู้ใช้ · " + users[i].user;
           if (i >= 0) { var u = users[i]; ["name", "user", "email", "emp", "dept", "site", "pos", "role", "scope"].forEach(function (k) { form.elements[k].value = u[k]; }); form.elements.bind.value = u.bind || "ยังไม่ผูก"; }
-          dlg.showModal();
+          if (!dlg.open) dlg.showModal(); form.elements.name.focus();
         }
         $("#addBtn").addEventListener("click", function () { showTab(1); openForm(-1); });
         $("#addField").addEventListener("click", function () { extra++; var l = document.createElement("label"); l.className = "x-extra";
           l.innerHTML = '<input class="x-in" placeholder="ชื่อฟิลด์" aria-label="ชื่อฟิลด์เพิ่มเติม ' + extra + '" value="ฟิลด์เพิ่มเติม ' + extra + '" /><input class="x-in" placeholder="ค่า" aria-label="ค่าของฟิลด์เพิ่มเติม ' + extra + '" />';
           $("#fields").appendChild(l); l.querySelectorAll("input")[1].focus(); });
-        form.addEventListener("submit", function (e) {
-          if (e.submitter && e.submitter.value !== "ok") return;
-          var f = form.elements, d = { name: f.name.value.trim(), user: f.user.value.trim(), email: f.email.value.trim() || f.user.value.trim() + "@itmaint.co.th", emp: f.emp.value.trim() || "EMP" + (1001 + users.length), dept: f.dept.value.trim() || "-", site: f.site.value, pos: f.pos.value.trim() || "-", role: +f.role.value, scope: f.scope.value, bind: f.bind.value };
-          if (users.some(function (u, i) { return u.user === d.user && i !== editing; })) { e.preventDefault(); f.user.setCustomValidity("มี username นี้แล้ว"); f.user.reportValidity(); f.user.setCustomValidity(""); return; }
+        function clearErrs() { [].slice.call(form.querySelectorAll(".x-err")).forEach(function (n) { n.remove(); }); [].slice.call(form.querySelectorAll(".bad")).forEach(function (n) { n.classList.remove("bad"); n.removeAttribute("aria-invalid"); }); }
+        function fieldErr(el, msg) { el.classList.add("bad"); el.setAttribute("aria-invalid", "true"); var m = document.createElement("small"); m.className = "x-err"; m.textContent = msg; el.insertAdjacentElement("afterend", m); }
+        form.addEventListener("submit", function (e) { e.preventDefault(); saveUser(); });
+        form.addEventListener("input", function (e) { var t = e.target; if (t.classList.contains("bad")) { t.classList.remove("bad"); var n = t.nextElementSibling; if (n && n.classList.contains("x-err")) n.remove(); } });
+        form.addEventListener("change", function (e) { var t = e.target; if (t.classList.contains("bad") && t.value) { t.classList.remove("bad"); var n = t.nextElementSibling; if (n && n.classList.contains("x-err")) n.remove(); } });
+        function saveUser() {
+          clearErrs(); var f = form.elements, errs = [];
+          var chk = function (el, bad, msg) { if (bad) { fieldErr(el, msg); errs.push(el); } };
+          var nm = f.name.value.trim(), un = f.user.value.trim(), em = f.email.value.trim();
+          chk(f.name, !nm, "กรุณากรอกชื่อ-สกุล");
+          chk(f.user, !un ? true : !/^[A-Za-z0-9._\-]+$/.test(un) || users.some(function (u, i) { return u.user.toLowerCase() === un.toLowerCase() && i !== editing; }), !un ? "กรุณากรอก Username" : !/^[A-Za-z0-9._\-]+$/.test(un) ? "ใช้ได้เฉพาะ a-z, 0-9, จุด, ขีดล่าง, ขีด" : "มี Username นี้แล้ว");
+          chk(f.email, em && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em), "รูปแบบอีเมลไม่ถูกต้อง");
+          chk(f.site, !f.site.value, "กรุณาเลือกไซต์");
+          chk(f.role, f.role.value === "", "กรุณาเลือกบทบาท");
+          chk(f.scope, !f.scope.value, "กรุณาเลือกขอบเขตข้อมูล");
+          if (errs.length) { errs[0].focus(); return; }
+          var ex = [].slice.call(form.querySelectorAll(".x-extra")).map(function (l) { var ins = l.querySelectorAll("input"); return [ins[0].value.trim(), ins[1].value.trim()]; }).filter(function (x) { return x[0]; });
+          var d = { name: nm, user: un, email: em || un + "@itmaint.co.th", emp: f.emp.value.trim() || "EMP" + (1001 + users.length), dept: f.dept.value.trim() || "-", site: f.site.value, pos: f.pos.value.trim() || "-", role: +f.role.value, scope: f.scope.value, bind: f.bind.value };
+          if (ex.length) d.extra = ex;
           if (editing < 0) { d.last = "ยังไม่เคยเข้าใช้"; d.st = "ใช้งาน"; users.push(d); toast("เพิ่มผู้ใช้ " + d.name + " แล้ว"); }
           else { Object.assign(users[editing], d); toast("บันทึกข้อมูล " + d.name + " แล้ว"); }
-          renderUsers(); renderRoles();
+          persistUsers(); dlg.close(); $("#fq").value = ""; $("#frole").value = ""; $("#fst").value = ""; renderUsers(); renderRoles();
+        }
+        $("#saveUser").addEventListener("click", saveUser);
+        [].slice.call(document.querySelectorAll("[data-dclose]")).forEach(function (b) { b.addEventListener("click", function () { dlg.close(); }); });
+        function persistUsers() { try { localStorage.setItem("rbac-users", JSON.stringify(users)); } catch (e) {} }
+        function tempPass() { var c = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789", s = ""; for (var i = 0; i < 10; i++) s += c[Math.floor(Math.random() * c.length)]; return s.slice(0, 4) + "-" + s.slice(4, 8) + "!" + s.slice(8); }
+        var rdlg = $("#rdlg"), resetIdx = -1;
+        function openReset(i) {
+          resetIdx = i; var u = users[i];
+          $("#rdlgTitle").textContent = "รีเซ็ตรหัสผ่าน · " + u.user;
+          $("#rbody").innerHTML = '<p>ยืนยันการรีเซ็ตรหัสผ่านของ <b>' + esc(u.name) + '</b> (' + esc(u.user) + ')?</p><p style="color:var(--x-muted);font:var(--type-small);margin-top:6px">รหัสผ่านเดิมจะใช้ไม่ได้ทันที เซสชันที่เปิดอยู่จะถูกออกจากระบบ และผู้ใช้ต้องเปลี่ยนรหัสผ่านเมื่อเข้าสู่ระบบครั้งถัดไป</p>';
+          $("#racts").innerHTML = '<button type="button" class="x-btn" data-rclose>ยกเลิก</button><button type="button" class="x-btn x-pri" id="rok">ยืนยันรีเซ็ต</button>';
+          if (!rdlg.open) rdlg.showModal(); $("#rok").focus();
+        }
+        rdlg.addEventListener("click", function (e) {
+          if (e.target.closest("[data-rclose]")) { rdlg.close(); return; }
+          if (e.target.closest("#rok")) {
+            var u = users[resetIdx], pw = tempPass(); if (u.st === "ถูกล็อก") u.st = "ใช้งาน"; u.reset = new Date().toISOString(); persistUsers(); renderUsers();
+            $("#rbody").innerHTML = '<p style="color:#4ade80;font-weight:600">✓ รีเซ็ตรหัสผ่านของ ' + esc(u.user) + ' แล้ว</p><p style="color:var(--x-muted);font:var(--type-small);margin:6px 0 10px">รหัสผ่านชั่วคราว (ใช้ได้ 24 ชั่วโมง · แสดงครั้งเดียว) ส่งสำเนาไปที่ ' + esc(u.email) + ' แล้ว</p><div class="x-tmp"><code id="tmpPw">' + pw + '</code><button type="button" class="x-btn" id="cpPw">คัดลอก</button></div>';
+            $("#racts").innerHTML = '<button type="button" class="x-btn x-pri" data-rclose>เสร็จสิ้น</button>';
+            toast("รีเซ็ตรหัสผ่าน " + u.user + " แล้ว"); return;
+          }
+          if (e.target.closest("#cpPw")) { var t = $("#tmpPw").textContent; (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).catch(function () {}); e.target.closest("#cpPw").textContent = "คัดลอกแล้ว ✓"; toast("คัดลอกรหัสผ่านชั่วคราวแล้ว"); }
         });
         $("#ubody").addEventListener("click", function (e) {
           var b = e.target.closest("[data-act]"); if (!b || b.disabled) return; var u = users[+b.dataset.i];
           if (b.dataset.act === "edit") openForm(+b.dataset.i);
-          if (b.dataset.act === "reset") toast("ส่งลิงก์รีเซ็ตรหัสผ่านไปที่ " + u.email + " แล้ว");
-          if (b.dataset.act === "ban") { u.st = u.st === "ระงับ" ? "ใช้งาน" : "ระงับ"; toast((u.st === "ระงับ" ? "ระงับ " : "เปิดใช้งาน ") + u.user + " แล้ว"); renderUsers(); }
+          if (b.dataset.act === "reset") openReset(+b.dataset.i);
+          if (b.dataset.act === "ban") { u.st = u.st === "ระงับ" ? "ใช้งาน" : "ระงับ"; toast((u.st === "ระงับ" ? "ระงับ " : "เปิดใช้งาน ") + u.user + " แล้ว"); persistUsers(); renderUsers(); }
         });
 
         var cur = 0;
@@ -335,16 +387,26 @@
               m.p.map(function (p, i) { var id = m.k + "." + i; return '<label class="x-sw"><input type="checkbox" data-p="' + id + '"' + (r.perms.has(id) ? " checked" : "") + ' aria-label="' + m.n + ": " + p + '" /><i></i>' + p + "</label>"; }).join("") + "</div></div>"; }).join("");
           [].slice.call(document.querySelectorAll("[data-ind]")).forEach(function (c) { c.indeterminate = true; });
         }
-        $("#roles").addEventListener("click", function (e) { var b = e.target.closest("[data-r]"); if (!b) return; cur = +b.dataset.r; renderRoles(); renderPerms(); });
+        $("#roles").addEventListener("click", function (e) { var b = e.target.closest("[data-r]"); if (!b) return; cur = +b.dataset.r; renderRoles(); renderPerms(); $("#psaved").textContent = ""; });
         $("#mods").addEventListener("change", function (e) { var t = e.target, r = roles[cur];
           if (t.dataset.p) { t.checked ? r.perms.add(t.dataset.p) : r.perms.delete(t.dataset.p); }
           if (t.dataset.g) { var m = MODS.filter(function (x) { return x.k === t.dataset.g; })[0]; m.p.forEach(function (_, i) { t.checked ? r.perms.add(m.k + "." + i) : r.perms.delete(m.k + "." + i); }); }
-          renderPerms(); var el = document.querySelector('[data-p="' + t.dataset.p + '"],[data-g="' + t.dataset.g + '"]'); if (el) el.focus();
+          renderPerms(); markDirty(); var el = document.querySelector('[data-p="' + t.dataset.p + '"],[data-g="' + t.dataset.g + '"]'); if (el) el.focus();
         });
         $("#rname").addEventListener("change", function () { var v = this.value.trim(); if (v) { roles[cur].n = v; renderRoles(); fillSelects(); renderUsers(); } });
-        $("#selAll").addEventListener("click", function () { roles[cur].perms = new Set(ALL); renderPerms(); });
-        $("#clrAll").addEventListener("click", function () { roles[cur].perms = new Set(); renderPerms(); });
-        $("#savePerm").addEventListener("click", function () { toast("บันทึก " + roles[cur].perms.size + " สิทธิ์ ให้บทบาท " + roles[cur].n); });
+        $("#selAll").addEventListener("click", function () { roles[cur].perms = new Set(ALL); renderPerms(); markDirty(); });
+        $("#clrAll").addEventListener("click", function () { roles[cur].perms = new Set(); renderPerms(); markDirty(); });
+        function markDirty() { var p = $("#psaved"); p.className = "x-saved dirty"; p.textContent = "· มีการเปลี่ยนแปลงที่ยังไม่บันทึก"; }
+        $("#savePerm").addEventListener("click", function () {
+          var b = this; b.disabled = true; b.textContent = "กำลังบันทึก…";
+          setTimeout(function () {
+            try { localStorage.setItem("rbac-roles", JSON.stringify(roles.map(function (r) { return { n: r.n, d: r.d, g: r.g, perms: Array.from(r.perms) }; }))); } catch (e) {}
+            b.disabled = false; b.textContent = "บันทึกสิทธิ์";
+            var t = new Date().toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" });
+            var p = $("#psaved"); p.className = "x-saved ok"; p.textContent = "· ✓ บันทึกแล้ว " + t + " น. (" + roles[cur].perms.size + " สิทธิ์ · ผู้ใช้ " + users.filter(function (u) { return u.role === cur; }).length + " คนได้รับผล)";
+            toast("บันทึก " + roles[cur].perms.size + " สิทธิ์ ให้บทบาท " + roles[cur].n);
+          }, 400);
+        });
         $("#newRole").addEventListener("click", function () { roles.push({ n: "บทบาทใหม่ " + (roles.length - 10), d: "บทบาทที่สร้างเอง เริ่มจากสิทธิ์ดูภาพรวม", g: grads[roles.length % 6], perms: new Set(["ov.0"]) });
           cur = roles.length - 1; renderRoles(); renderPerms(); fillSelects(); toast("สร้างบทบาทใหม่แล้ว ตั้งชื่อได้ที่หัวข้อด้านขวา"); $("#rname").focus(); $("#rname").select(); });
 
@@ -356,6 +418,8 @@
           if (a.dataset.go) showTab(+a.dataset.go); else toast("เปิดเมนู " + a.textContent + " (ตัวอย่าง)"); });
         $("#menuBtn").addEventListener("click", function () { $("#side").classList.toggle("open"); });
 
+        try { var su = JSON.parse(localStorage.getItem("rbac-users") || "null"); if (Array.isArray(su) && su.length) users = su;
+          var sr = JSON.parse(localStorage.getItem("rbac-roles") || "null"); if (Array.isArray(sr) && sr.length >= roles.length) roles = sr.map(function (r) { return { n: r.n, d: r.d, g: r.g, perms: new Set(r.perms) }; }); } catch (e) {}
         fillSelects(); renderUsers(); renderRoles(); renderPerms();
       })();
     </script>
