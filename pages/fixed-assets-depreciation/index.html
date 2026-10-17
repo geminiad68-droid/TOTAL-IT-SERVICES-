@@ -369,13 +369,29 @@
       $("#bellBtn").addEventListener("click", () => toast("แจ้งเตือน 3 รายการ: งวด ก.ย. 2569 รอปิด · FL-02 ครบอายุ · AHU-05 ใกล้ครบอายุ"));
       $("#closeBtn").addEventListener("click", () => $("#modal").classList.remove("x-hide"));
       $("#mCancel").addEventListener("click", () => $("#modal").classList.add("x-hide"));
+      const TH_MON = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."];
+      const LAST_DAY = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+      const P = { m: 8, y: 2569, cnt: 32, amt: 216600, seq: 912 }; // open period (0-based month)
+      const pName = (p) => `${TH_MON[p.m]} ${p.y}`;
+      const syncModal = () => {
+        $("#mTitle").textContent = `ยืนยันปิดงวด ${pName(P)}`;
+        const b = $("#modal").querySelectorAll(".x-modal__box b");
+        b[0].textContent = `${P.cnt} รายการ`; b[1].textContent = `${money(P.amt)} บาท`; b[2].textContent = money(P.amt); b[3].textContent = money(P.amt);
+        $("#closeBtn").textContent = `ปิดงวด ${pName(P)}`;
+      };
       $("#mOk").addEventListener("click", () => {
         $("#modal").classList.add("x-hide");
-        toast("✓ ปิดงวด ก.ย. 2569 แล้ว · สร้าง JV-69-0912 จำนวน 216,600.00 บาท");
-        const tb = $("#periodRows");
-        if (tb) tb.rows[tb.rows.length - 1].innerHTML =
-          '<td>ก.ย. 2569</td><td class="x-num">32</td><td class="x-num">216,600.00</td><td>JV-69-0912</td><td><span class="x-tag x-tag--ok">ปิดแล้ว</span></td>';
-        $("#closeBtn").textContent = "ปิดงวด ต.ค. 2569";
+        const name = pName(P), jv = `JV-${String(P.y).slice(2)}-${String(P.m + 1).padStart(2, "0")}${String(P.seq % 100).padStart(2, "0")}`;
+        const tb = $("#periodRows"), last = tb.rows[tb.rows.length - 1];
+        last.innerHTML = `<td>${name}</td><td class="x-num">${P.cnt}</td><td class="x-num">${money(P.amt)}</td><td>${jv}</td><td><span class="x-tag x-tag--ok">ปิดแล้ว</span></td>`;
+        const jb = $("#p-jv tbody");
+        jb.insertAdjacentHTML("afterbegin", `<tr><td>${jv}</td><td>${LAST_DAY[P.m]} ${name}</td><td>ค่าเสื่อมราคาประจำงวด ${name}</td><td class="x-num">${money(P.amt)}</td><td class="x-num">${money(P.amt)}</td><td><span class="x-tag x-tag--ok">ผ่านรายการ</span></td></tr>`);
+        const kp = [...document.querySelectorAll("#p-ov .x-kpi__lb")].find((e) => e.textContent.includes("งวดล่าสุด"));
+        if (kp) { kp.previousElementSibling.textContent = name; kp.nextElementSibling.innerHTML = `<span class="x-tag x-tag--ok">ปิดล่าสุด ${jv}</span>`; }
+        toast(`✓ ปิดงวด ${name} แล้ว · สร้าง ${jv} จำนวน ${money(P.amt)} บาท`);
+        P.m++; if (P.m > 11) { P.m = 0; P.y++; } P.seq++; P.amt = Math.round(P.amt * 1.004 / 10) * 10;
+        tb.insertAdjacentHTML("beforeend", `<tr><td>${pName(P)}</td><td class="x-num">${P.cnt}</td><td class="x-num">${money(P.amt)}</td><td style="color:var(--x-ink-3)">—</td><td><span class="x-tag x-tag--wait">รอปิด</span></td></tr>`);
+        syncModal();
       });
       /* depreciation book */
       const book = [
