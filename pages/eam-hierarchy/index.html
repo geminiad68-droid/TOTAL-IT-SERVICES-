@@ -114,7 +114,7 @@
       <div class="x-body">
         <header class="x-top">
           <button class="x-ib x-menu" id="menuBtn" aria-label="เปิดเมนู" aria-expanded="false"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
-          <select class="x-in x-sitesel" id="siteTop" aria-label="เลือกไซต์"><option>ทุกไซต์</option><option selected>โรงงานสมุทรสาคร</option><option>อาคารสำนักงาน</option></select>
+          <select class="x-in x-sitesel" id="siteTop" aria-label="เลือกไซต์"><option>ทุกไซต์</option><option selected>โรงงานสมุทรสาคร</option><option>โรงงานระยอง</option></select>
           <label class="x-in x-search"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="q" type="search" placeholder="ค้นหาทรัพย์สิน / รหัสที่ตั้ง…" aria-label="ค้นหา" /><span class="x-kbd">Ctrl + K</span></label>
           <button class="x-btn x-btn--p" id="reqBtn" aria-label="แจ้งซ่อม">+ <span class="x-hide-s">แจ้งซ่อม</span></button>
           <button class="x-ib" id="bell" aria-label="การแจ้งเตือน 3 รายการ"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10 21h4"/></svg><span class="x-badge">3</span></button>
@@ -124,7 +124,7 @@
           <div class="x-head">
             <div><h1>EAM ลำดับชั้น &amp; Lifecycle</h1><p>ผังความสัมพันธ์ · Health score ที่อธิบายได้ · MTBF/MTTR · TCO · มิเตอร์ → PM อัตโนมัติ · ISO 55001</p></div>
             <div class="x-acts">
-              <select class="x-in" id="siteMain" aria-label="เลือกไซต์"><option>ทุกไซต์</option><option selected>โรงงานสมุทรสาคร</option><option>อาคารสำนักงาน</option></select>
+              <select class="x-in" id="siteMain" aria-label="เลือกไซต์"><option>ทุกไซต์</option><option selected>โรงงานสมุทรสาคร</option><option>โรงงานระยอง</option></select>
               <button class="x-btn x-btn--p" id="calc">คำนวณ Health</button>
             </div>
           </div>
@@ -176,9 +176,11 @@
     <dialog class="x-modal" id="modal">
       <form method="dialog">
         <h2 style="font-size:20px">แจ้งซ่อม</h2>
-        <label>ทรัพย์สิน<select class="x-in" id="mAsset"></select></label>
-        <label>อาการ<input class="x-in" required placeholder="เช่น สายพานสั่น มีเสียงดัง" /></label>
-        <div class="x-acts" style="margin-top:16px;justify-content:flex-end"><button class="x-btn" value="cancel" formnovalidate>ยกเลิก</button><button class="x-btn x-btn--p" value="ok">ส่งแจ้งซ่อม</button></div>
+        <label>ทรัพย์สิน <span style="color:#fb7185">*</span><select class="x-in" id="mAsset"></select></label>
+        <label>อาการ <span style="color:#fb7185">*</span><input class="x-in" id="mSym" placeholder="เช่น สายพานสั่น มีเสียงดัง" /></label>
+        <label>ความเร่งด่วน <span style="color:#fb7185">*</span><select class="x-in" id="mPri"><option value="">— เลือก —</option><option value="P1">P1 วิกฤต (หยุดเดิน)</option><option value="P2">P2 สูง</option><option value="P3">P3 ปกติ</option></select></label>
+        <label>ผู้แจ้ง / เบอร์ติดต่อ<input class="x-in" id="mWho" placeholder="เช่น สมชาย 081-xxx-xxxx" /></label>
+        <div class="x-acts" style="margin-top:16px;justify-content:flex-end"><button type="button" class="x-btn" id="mCancel">ยกเลิก</button><button type="button" class="x-btn x-btn--p" id="mSend">ส่งแจ้งซ่อม</button></div>
       </form>
     </dialog>
     <div class="x-toast" id="toast" role="status"></div>
@@ -261,8 +263,10 @@
         if (n.t === "asset") h += `<dl class="x-dl"><div><dt>MTBF</dt><dd>${fmt(n.mtbf)} ชม.</dd></div><div><dt>MTTR</dt><dd>${n.mttr} ชม.</dd></div><div><dt>TCO</dt><dd>฿${fmt(n.tco)}</dd></div><div><dt>เสีย 12 ด.</dt><dd>${n.f}</dd></div></dl><p class="x-mut">คำแนะนำ: <span class="x-tag ${n.rec === "ปกติ" ? "g-g" : "g-y"}">${n.rec}</span></p>${lifeHTML(n.s)}`;
         else if (n.m) h += `<p style="margin:12px 0">${n.m}</p><p class="x-mut">เชื่อมกับ ${n.p}${n.also ? " · " + byId[n.also].n : ""}</p>`;
         else h += `<p class="x-mut" style="margin-top:12px">${kids(id).length} โหนดย่อย · ทรัพย์สิน ${assetsUnder(id).length} รายการ</p>`;
+        if (n.t === "asset") h += `<div class="x-acts" style="margin-top:14px;flex-wrap:wrap">${(REQ[id] || []).map((q) => `<span class="x-tag g-y">${q}</span>`).join(" ")}<button type="button" class="x-btn x-btn--p" data-req="${id}">แจ้งซ่อมทรัพย์สินนี้</button><a class="x-btn" href="../asset-register/?q=${encodeURIComponent(id)}">ดูในทะเบียน</a></div>`;
         $("#detail").innerHTML = h;
       }
+      const REQ = {};
       place(); vis(); select("CONV-03");
 
       // tree
@@ -306,9 +310,20 @@
       document.addEventListener("keydown", (e) => { if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") { e.preventDefault(); $("#q").focus(); } });
       $("#q").addEventListener("keydown", (e) => { if (e.key !== "Enter") return; const v = e.target.value.trim().toLowerCase(); const n = N.find((x) => (x.id + " " + (x.n || "") + " " + (x.c || "")).toLowerCase().includes(v)); if (v && n) { tab("graph"); select(n.id); toast("พบ: " + (n.n || n.id)); } else toast("ไม่พบ “" + e.target.value + "”"); });
       $("#bell").onclick = () => toast("CONV-03 หยุดเดิน · IOT-VIB-07 เกินเกณฑ์ · PM อัตโนมัติจาก MT-HR-03");
-      $("#mAsset").innerHTML = A.map((a) => `<option>${a.id}</option>`).join("");
-      $("#reqBtn").onclick = () => $("#modal").showModal();
-      $("#modal").addEventListener("close", () => { if ($("#modal").returnValue === "ok") toast(`ส่งแจ้งซ่อม ${$("#mAsset").value} แล้ว`); });
+      $("#mAsset").innerHTML = '<option value="">— เลือกทรัพย์สิน —</option>' + A.map((a) => `<option>${a.id}</option>`).join("");
+      const md = $("#modal"); let rrNo = 41;
+      function openReq(id) { md.querySelectorAll(".x-ferr").forEach((x) => x.remove()); md.querySelectorAll(".x-in").forEach((x) => { x.style.borderColor = ""; x.removeAttribute("aria-invalid"); }); $("#mAsset").value = id || ""; $("#mSym").value = ""; $("#mPri").value = ""; $("#mWho").value = ""; md.showModal(); (id ? $("#mSym") : $("#mAsset")).focus(); }
+      $("#reqBtn").onclick = () => openReq(document.querySelector(".x-n.is-sel") ? (N.find((x) => x.el.classList.contains("is-sel") && x.t === "asset") || {}).id : "");
+      $("#detail").addEventListener("click", (e) => { const b = e.target.closest("[data-req]"); if (b) openReq(b.dataset.req); });
+      $("#mCancel").onclick = () => md.close("cancel");
+      $("#mSend").onclick = () => {
+        md.querySelectorAll(".x-ferr").forEach((x) => x.remove()); md.querySelectorAll(".x-in").forEach((x) => { x.style.borderColor = ""; x.removeAttribute("aria-invalid"); });
+        const L = []; if (!$("#mAsset").value) L.push([$("#mAsset"), "กรุณาเลือกทรัพย์สิน"]); if (!$("#mSym").value.trim()) L.push([$("#mSym"), "กรุณาระบุอาการ"]); if (!$("#mPri").value) L.push([$("#mPri"), "กรุณาเลือกความเร่งด่วน"]);
+        if (L.length) { L.forEach(([el, m]) => { el.style.borderColor = "#fb7185"; el.setAttribute("aria-invalid", "true"); const d = document.createElement("span"); d.className = "x-ferr"; d.style.cssText = "display:block;color:#fb7185;font-size:12px;margin-top:4px"; d.textContent = m; el.after(d); }); L[0][0].focus(); L[0][0].scrollIntoView({ block: "center" }); return; }
+        const id = $("#mAsset").value, no = `RR-2569-${String(++rrNo).padStart(4, "0")}`;
+        (REQ[id] = REQ[id] || []).unshift(`${no} · ${$("#mPri").value} · ${$("#mSym").value.trim()}`);
+        md.close("ok"); tab("graph"); select(id); toast(`ส่งแจ้งซ่อม ${no} (${id}) แล้ว`);
+      };
     </script>
       <script src="../../assets/site-nav.js"></script>
 </body>
