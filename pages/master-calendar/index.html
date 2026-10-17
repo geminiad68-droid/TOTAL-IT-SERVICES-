@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="th" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ITMAINT Master Calendar</title>
+    <link rel="stylesheet" href="../../assets/hark.css" />
+    <style>
+      :root { --x-bg:#0A1024; --x-card:#0F1733; --x-card2:#131C3A; --x-line:rgba(77,141,255,.32); --x-glow:0 0 0 1px rgba(77,141,255,.06),0 0 18px rgba(56,120,255,.14); --x-tx:#E6ECFF; --x-mut:#9AA6C8; --x-r:16px; color-scheme:dark; }
+      body { background:var(--x-bg); color:var(--x-tx); font:400 14px/1.5 "Noto Sans Thai",sans-serif; }
+      button,input,select { font:inherit; color:inherit; }
+      .x-app { display:grid; grid-template-columns:248px minmax(0,1fr); min-height:640px; }
+      .x-side { background:#0B1330; border-right:1px solid var(--x-line); padding:18px 14px; }
+      .x-logo { display:flex; gap:10px; align-items:center; padding:4px 6px 18px; }
+      .x-logo b { display:block; font-size:16px; } .x-logo small { color:var(--x-mut); font-size:12px; }
+      .x-tile { flex:none; width:40px; height:40px; border-radius:12px; display:grid; place-items:center; background:linear-gradient(135deg,#3B82F6,#8B5CF6); box-shadow:0 0 14px rgba(99,102,241,.4); }
+      .x-tile svg { width:20px; height:20px; }
+      .x-grp { margin:14px 6px 6px; font-size:12px; color:var(--x-mut); letter-spacing:.04em; }
+      .x-nav a { display:flex; align-items:center; gap:10px; min-height:44px; padding:0 10px; border-radius:12px; color:#C9D3F0; text-decoration:none; }
+      .x-nav a:hover { background:var(--x-card2); }
+      .x-nav a.on { background:linear-gradient(90deg,rgba(59,130,246,.28),rgba(139,92,246,.14)); color:#fff; box-shadow:inset 0 0 0 1px var(--x-line); }
+      .x-nav svg { width:18px; height:18px; flex:none; }
+      .x-main { padding:16px 20px 32px; min-width:0; }
+      .x-top { display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:18px; }
+      .x-in, .x-sel { min-height:44px; background:var(--x-card2); border:1px solid var(--x-line); border-radius:12px; padding:0 12px; }
+      .x-search { flex:1 1 200px; display:flex; align-items:center; gap:8px; } .x-search input { flex:1; min-width:0; }
+      .x-ib { width:44px; height:44px; border-radius:12px; display:grid; place-items:center; background:var(--x-card2); border:1px solid var(--x-line); cursor:pointer; position:relative; }
+      .x-ib svg { width:20px; height:20px; }
+      .x-badge { position:absolute; top:6px; right:7px; width:8px; height:8px; border-radius:50%; background:#F43F5E; }
+      .x-btn { min-height:44px; padding:0 14px; border-radius:12px; border:1px solid var(--x-line); background:var(--x-card2); cursor:pointer; display:inline-flex; align-items:center; gap:6px; white-space:nowrap; }
+      .x-btn:hover { border-color:#4D8DFF; }
+      .x-pri { background:linear-gradient(135deg,#C2410C,#BE185D); border-color:transparent; color:#fff; font-weight:600; box-shadow:0 4px 18px rgba(190,24,93,.3); }
+      .x-ava { display:flex; align-items:center; gap:8px; min-height:44px; }
+      .x-ava span { width:36px; height:36px; border-radius:50%; display:grid; place-items:center; font-weight:600; background:linear-gradient(135deg,#0EA5E9,#6366F1); }
+      .x-menu { display:none; }
+      .x-card { background:var(--x-card); border:1px solid var(--x-line); border-radius:var(--x-r); box-shadow:var(--x-glow); padding:16px; min-width:0; }
+      .x-ph { display:flex; gap:12px; align-items:center; margin-bottom:14px; }
+      .x-ph h1 { font-size:22px; line-height:1.3; } .x-ph p { color:var(--x-mut); font-size:13px; }
+      .x-body { display:grid; grid-template-columns:minmax(0,1fr) 300px; gap:16px; align-items:start; }
+      .x-ctl { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-bottom:12px; }
+      .x-ctl h2 { font-size:18px; margin-right:auto; min-width:150px; }
+      .x-seg { display:inline-flex; background:var(--x-card2); border:1px solid var(--x-line); border-radius:12px; padding:2px; }
+      .x-seg button { min-height:44px; min-width:44px; padding:0 12px; border:0; background:none; border-radius:10px; cursor:pointer; color:var(--x-mut); }
+      .x-seg button[aria-pressed="true"] { background:#1E2A55; color:#fff; }
+      .x-chips { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px; }
+      .x-chip { min-height:44px; display:inline-flex; align-items:center; gap:7px; padding:0 12px; border-radius:999px; background:#121A36; border:1px solid #233063; cursor:pointer; font-size:13px; }
+      .x-chip i { width:9px; height:9px; border-radius:50%; background:var(--c); }
+      .x-chip b { font-size:12px; background:#1E2A55; border-radius:999px; padding:0 7px; }
+      .x-chip[aria-pressed="false"] { opacity:.45; } .x-chip[aria-pressed="false"] i { background:none; box-shadow:inset 0 0 0 2px var(--c); }
+      .x-dow, .x-week { display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); }
+      .x-dow span { text-align:center; font-size:12px; color:var(--x-mut); padding:6px 0; }
+      .x-week { border-top:1px solid #1C2650; }
+      .x-day { grid-row:1/-1; border-left:1px solid #1C2650; padding:4px 6px; min-height:112px; cursor:pointer; }
+      .x-day:first-child { border-left:0; } .x-day:hover { background:rgba(77,141,255,.05); }
+      .x-day.is-out .x-num { color:#4A5680; }
+      .x-num { display:inline-grid; place-items:center; min-width:24px; height:24px; border-radius:50%; font-size:13px; }
+      .is-today { background:rgba(59,130,246,.09); box-shadow:inset 0 0 0 1px #3B82F6; }
+      .is-today .x-num { background:linear-gradient(135deg,#3B82F6,#8B5CF6); color:#fff; font-weight:600; }
+      .x-dots { display:none; }
+      .x-evs { display:flex; flex-direction:column; gap:3px; padding:0 4px 6px; min-width:0; pointer-events:none; }
+      .x-evs > * { pointer-events:auto; }
+      .x-bar { display:flex; align-items:center; gap:5px; width:100%; min-width:0; min-height:22px; padding:1px 6px; border-radius:6px; border:0; border-left:3px solid var(--c); background:color-mix(in srgb,var(--c) 20%,#0F1733); font-size:12px; text-align:left; cursor:pointer; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+      .x-bar:hover { background:color-mix(in srgb,var(--c) 34%,#0F1733); }
+      .x-span { margin:2px 4px 1px; width:auto; z-index:1; }
+      .x-more { border:0; background:none; color:#8FB4FF; font-size:12px; text-align:left; padding:0 4px; cursor:pointer; }
+      .x-list .x-dg { padding:10px 0; border-top:1px solid #1C2650; display:grid; grid-template-columns:110px minmax(0,1fr); gap:10px; }
+      .x-list .x-dg:first-child { border-top:0; }
+      .x-dg h4 { font-size:13px; color:var(--x-mut); font-weight:500; } .x-dg h4 b { display:block; color:var(--x-tx); font-size:15px; }
+      .x-dg.is-t h4 b { color:#8FB4FF; }
+      .x-dg .x-bar, .x-ag .x-bar, .x-pop .x-bar { min-height:44px; white-space:normal; font-size:13px; border-radius:10px; }
+      .x-dg > div, .x-ag > div { display:flex; flex-direction:column; gap:6px; min-width:0; }
+      .x-empty { color:#9AA6C8; font-size:13px; padding:10px 0; }
+      .x-ag h3 { font-size:16px; margin-bottom:4px; } .x-ag > p { color:var(--x-mut); font-size:12px; margin-bottom:10px; }
+      .x-ag h4 { font-size:13px; color:var(--x-mut); font-weight:500; margin:12px 0 6px; }
+      .x-bar small { display:block; color:var(--x-mut); font-size:12px; }
+      .x-pop { position:fixed; right:20px; bottom:20px; width:340px; max-width:calc(100% - 24px); z-index:50; padding:18px; background:#111B3D; }
+      .x-pop[hidden] { display:none; }
+      .x-pop h3 { font-size:17px; margin:8px 40px 10px 0; }
+      .x-pop dl { display:grid; grid-template-columns:72px 1fr; gap:6px; font-size:13px; margin:0 0 14px; } .x-pop dt { color:var(--x-mut); } .x-pop dd { margin:0; }
+      .x-x { position:absolute; top:8px; right:8px; }
+      .x-tag { display:inline-flex; align-items:center; gap:6px; font-size:12px; padding:3px 10px; border-radius:999px; background:#1A2448; }
+      .x-tag i { width:8px; height:8px; border-radius:50%; background:var(--c); }
+      dialog.x-card { color:var(--x-tx); width:380px; max-width:calc(100% - 24px); padding:20px; }
+      dialog::backdrop { background:rgba(5,8,20,.7); }
+      dialog label { display:block; font-size:13px; color:var(--x-mut); margin:12px 0 4px; } dialog .x-in, dialog .x-sel { width:100%; }
+      .x-row { display:flex; gap:8px; justify-content:flex-end; margin-top:18px; }
+      .x-toast { position:fixed; left:50%; bottom:24px; transform:translateX(-50%); background:#1A2448; border:1px solid var(--x-line); border-radius:12px; padding:12px 16px; z-index:60; box-shadow:var(--x-glow); max-width:calc(100% - 24px); }
+      .x-toast[hidden] { display:none; }
+      :focus-visible { outline:2px solid #8FB4FF; outline-offset:2px; }
+      @media (max-width:1180px) { .x-body { grid-template-columns:minmax(0,1fr); } }
+      @media (max-width:900px) {
+        .x-app { grid-template-columns:minmax(0,1fr); }
+        .x-side { position:fixed; top:0; bottom:0; left:0; width:270px; z-index:40; overflow-y:auto; transform:translateX(-100%); transition:transform .2s; }
+        .x-side.open { transform:none; box-shadow:0 0 40px rgba(0,0,0,.6); }
+        .x-menu { display:grid; } .x-ava em { display:none; }
+        .x-main { padding:12px 12px 28px; }
+      }
+      @media (max-width:640px) {
+        .x-card { padding:12px; }
+        .x-evs, .x-span span { display:none; }
+        .x-span { min-height:6px; height:6px; padding:0; margin:1px 0; border:0; background:var(--c); border-radius:3px; pointer-events:none; }
+        .x-day { min-height:64px; padding:3px; text-align:center; }
+        .x-dots { display:flex; flex-wrap:wrap; justify-content:center; gap:3px; margin-top:4px; }
+        .x-dots i { width:6px; height:6px; border-radius:50%; background:var(--c); }
+        .x-list .x-dg { grid-template-columns:minmax(0,1fr); gap:6px; }
+        .x-top .x-sel { flex:1 1 140px; } .x-pri-t { display:none; } .x-top .x-pri { min-width:44px; justify-content:center; }
+        .x-pop { left:12px; right:12px; bottom:12px; width:auto; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="x-app">
+      <aside class="x-side" id="side" aria-label="เมนูหลัก">
+        <div class="x-logo">
+          <span class="x-tile"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.4-.6-.6-2.4z"/></svg></span>
+          <div><b>IT&amp;MAINT</b><small>Smart Asset · Smart Work</small></div>
+        </div>
+        <nav class="x-nav" id="nav"></nav>
+      </aside>
+      <div class="x-main">
+        <header class="x-top">
+          <button class="x-ib x-menu" id="menu" type="button" aria-label="เปิดเมนู"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+          <select class="x-sel" aria-label="เลือกไซต์"><option>ทุกไซต์</option><option>โรงงานสมุทรสาคร</option><option>โรงงานระยอง</option></select>
+          <label class="x-in x-search"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9AA6C8" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input id="q" type="search" placeholder="ค้นหาทรัพย์สิน ใบงาน เหตุการณ์…" aria-label="ค้นหา" style="background:none;border:0;outline:0" /></label>
+          <button class="x-btn x-pri" type="button" data-toast="เปิดฟอร์มแจ้งซ่อมใหม่">+ <span class="x-pri-t">แจ้งซ่อม</span></button>
+          <button class="x-ib" type="button" aria-label="การแจ้งเตือน" data-toast="มีการแจ้งเตือนใหม่ 4 รายการ"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10 21h4"/></svg><span class="x-badge"></span></button>
+          <div class="x-ava"><span>A</span><em>Admin</em></div>
+        </header>
+
+        <div class="x-ph">
+          <span class="x-tile" style="background:linear-gradient(135deg,#F97316,#EC4899)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></span>
+          <div><h1>ปฏิทินรวม</h1><p>Master Calendar · กำหนดการจากทุกโมดูลในที่เดียว</p></div>
+        </div>
+
+        <div class="x-body">
+          <section class="x-card" aria-label="ปฏิทิน">
+            <div class="x-ctl">
+              <h2 id="ttl">ตุลาคม 2569</h2>
+              <button class="x-btn" id="prev" type="button">‹ <span id="pl">เดือนก่อน</span></button>
+              <button class="x-btn" id="today" type="button">วันนี้</button>
+              <button class="x-btn" id="next" type="button"><span id="nl">เดือนถัดไป</span> ›</button>
+              <div class="x-seg" role="group" aria-label="มุมมอง">
+                <button type="button" data-v="month" aria-pressed="true">เดือน</button><button type="button" data-v="week" aria-pressed="false">สัปดาห์</button><button type="button" data-v="list" aria-pressed="false">รายการ</button>
+              </div>
+              <button class="x-btn" type="button" id="ics">ส่งออก .ics</button>
+              <button class="x-btn x-pri" type="button" id="addHol">+ วันหยุด</button>
+            </div>
+            <div class="x-chips" id="chips" aria-label="ตัวกรองประเภท"></div>
+            <div id="view"></div>
+          </section>
+          <aside class="x-card x-ag" id="agenda" aria-label="7 วันข้างหน้า"></aside>
+        </div>
+      </div>
+    </div>
+
+    <div class="x-card x-pop" id="pop" hidden role="dialog" aria-label="รายละเอียดเหตุการณ์">
+      <button class="x-ib x-x" type="button" id="popX" aria-label="ปิด"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+      <div id="popB"></div>
+    </div>
+
+    <dialog class="x-card" id="dlg">
+      <form method="dialog" id="holForm">
+        <h3 style="font-size:18px">เพิ่มวันหยุด</h3>
+        <label for="hn">ชื่อวันหยุด</label><input class="x-in" id="hn" required placeholder="เช่น วันหยุดชดเชย" />
+        <label for="hd">วันที่</label><input class="x-in" id="hd" type="date" required value="2026-10-19" />
+        <label for="hs">ไซต์</label><select class="x-sel" id="hs"><option>ทุกไซต์</option><option>โรงงานสมุทรสาคร</option><option>โรงงานระยอง</option></select>
+        <div class="x-row"><button class="x-btn" type="button" id="hc">ยกเลิก</button><button class="x-btn x-pri" type="submit">บันทึก</button></div>
+      </form>
+    </dialog>
+    <div class="x-toast" id="toast" hidden role="status"></div>
+
+    <script src="../../assets/hark.js"></script>
+    <script>
+      const P = { grid:'<rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/>', tv:'<rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8"/>', cal:'<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/>', box:'<path d="m3 7 9-4 9 4-9 4zM3 7v10l9 4 9-4V7M12 11v10"/>', key:'<circle cx="8" cy="15" r="4"/><path d="m11 12 9-9M17 6l3 3"/>', wrench:'<path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.4-.6-.6-2.4z"/>', check:'<path d="M9 11l3 3 8-8"/><path d="M20 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>', chart:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>', gear:'<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M5 19l2-2M17 7l2-2"/>' };
+      const ic = (k) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${P[k]}</svg>`;
+      const NAV = [["ภาพรวม",[["Command Center","grid"],["จอแสดงผล TV","tv"],["ปฏิทินรวม","cal",1]]],["ทรัพย์สิน",[["ทะเบียนทรัพย์สิน","box"],["ไลเซนส์ซอฟต์แวร์","key"],["สัญญา & ประกัน","check"]]],["ซ่อมบำรุง",[["ใบงานซ่อม","wrench"],["แผน PM","cal"],["สอบเทียบ","chart"]]],["คลัง & จัดซื้อ",[["คลังอะไหล่","box"],["ตรวจนับสต็อก","check"],["ใบขอซื้อ","key"]]],["วิเคราะห์",[["รายงาน","chart"],["KPI & SLA","grid"]]],["ระบบ",[["ผู้ใช้ & สิทธิ์","key"],["ตั้งค่า","gear"]]]];
+      document.getElementById("nav").innerHTML = NAV.map(([g, items]) => `<p class="x-grp">${g}</p>` + items.map(([n, k, on]) => `<a href="#" class="${on ? "on" : ""}" ${on ? 'aria-current="page"' : `data-toast="${n} (ตัวอย่าง)"`}>${ic(k)}${n}</a>`).join("")).join("");
+
+      const T = { sla:["ใบงานครบกำหนด SLA","#F87171"], pm:["PM ครบกำหนด","#60A5FA"], cal:["สอบเทียบ","#22D3EE"], war:["หมดประกัน","#FBBF24"], lic:["ไลเซนส์หมดอายุ","#A78BFA"], con:["สัญญาสิ้นสุด","#FB923C"], st:["ตรวจนับ","#34D399"], ret:["กำหนดคืน","#FDE047"], doc:["เอกสารหมดอายุ","#CBD5E1"], hol:["วันหยุด","#F472B6"] };
+      const RAW = [
+        ["lic",13,"Microsoft 365 E3 หมดอายุ","LIC-M365-E3 · 250 ที่นั่ง"],["hol",13,"วันคล้ายวันสวรรคต ร.9","ทุกไซต์"],["lic",22,"FortiCare FW-001 หมดอายุ","FW-001 FortiGate 200F"],["war",21,"FW-001 หมดประกัน","FW-001 FortiGate 200F"],
+        ["hol",23,"วันปิยมหาราช","ทุกไซต์"],["cal",26,"GAU-011 สอบเทียบครบกำหนด","GAU-011 เกจวัดแรงดัน"],["st",9,"ตรวจนับ ST-2569-0002","คลังอะไหล่ · โรงงานสมุทรสาคร",23],["st",12,"ตรวจนับ ST-2569-0001 สิ้นสุด","คลัง IT · อาคารสำนักงาน · โรงงานสมุทรสาคร"],
+        ["pm",14,"PM แอร์ AHU รายเดือน","AHU-01"],["pm",15,"PM เครื่องกำเนิดไฟฟ้า","GEN-001"],["pm",20,"PM ตรวจแบตเตอรี่ UPS","UPS-001"],["pm",27,"PM ลิฟต์โดยสาร","LFT-001"],["pm",30,"PM ระบบดับเพลิง","FP-001"],
+        ["ret",18,"NB-0231 กำหนดคืน","NB-0231 Notebook Dell Latitude"],["lic",25,"Veeam Backup หมดอายุ","LIC-VEEAM-01"],["con",31,"สัญญา MA ลิฟต์สิ้นสุด","CT-MA-LIFT-2568"],
+        ["war",29,"SRV-004 หมดประกัน","SRV-004 Dell PowerEdge R750"],["con",16,"สัญญาเช่าเครื่องถ่ายเอกสารสิ้นสุด","CT-RENT-COPIER-03"],["doc",28,"ใบอนุญาตหม้อน้ำหมดอายุ","DOC-BOILER-01"],
+        ["sla",1,"WO-2569-0001 แอร์ห้องเซิร์ฟเวอร์ไม่เย็น","AC-SRV-02"],["sla",2,"WO-2569-0002 เครื่องพิมพ์ชั้น 3 กระดาษติด","PR-0312"],["sla",5,"WO-2569-0003 สวิตช์ชั้น 2 พอร์ตเสีย","SW-0207"],
+        ["sla",6,"WO-2569-0004 UPS แจ้งเตือนแบตเตอรี่","UPS-001"],["sla",8,"WO-2569-0005 ปั๊มน้ำอาคาร B เสียงดัง","PMP-B01"],["sla",11,"WO-2569-0006 โปรเจคเตอร์ห้องประชุม 1","PJ-0104"],
+        ["sla",11,"WO-2569-0007 ไฟฉุกเฉินชั้น 1 ไม่ติด","EL-0110"],["sla",12,"WO-2569-0008 Access Point ล็อบบี้หลุด","AP-0101"],["sla",13,"WO-2569-0009 คอมพิวเตอร์บัญชีบูตช้า","PC-0456"],
+        ["sla",14,"WO-2569-0010 ประตูอัตโนมัติค้าง","DR-0001"],["sla",16,"WO-2569-0011 กล้อง CCTV ลานจอด","CAM-0218"],["sla",19,"WO-2569-0012 ลิฟต์ตัวที่ 2 สะดุด","LFT-002"],
+        ["sla",22,"WO-2569-0013 UPS ห้อง NOC","UPS-003"],["sla",26,"WO-2569-0014 ท่อน้ำรั่วห้องน้ำชั้น 4","PLB-0401"],["sla",28,"WO-2569-0015 NAS ดิสก์เตือน","NAS-001"]
+      ];
+      const pad = (n) => String(n).padStart(2, "0");
+      const ymd = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+      const parse = (k) => { const [y, m, d] = k.split("-").map(Number); return new Date(y, m - 1, d); };
+      const add = (d, n) => new Date(d.getFullYear(), d.getMonth(), d.getDate() + n);
+      const E = RAW.map((a, i) => ({ id: i, t: a[0], s: "2026-10-" + pad(a[1]), e: "2026-10-" + pad(a[4] || a[1]), title: a[2], asset: a[3] }));
+      const MS = ["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."];
+      const ML = ["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"];
+      const DOW = ["อา","จ","อ","พ","พฤ","ศ","ส"], DOWL = ["อาทิตย์","จันทร์","อังคาร","พุธ","พฤหัสบดี","ศุกร์","เสาร์"];
+      const th = (d) => `${d.getDate()} ${MS[d.getMonth()]} ${d.getFullYear() + 543}`;
+      const TODAY = new Date(2026, 9, 11), TK = ymd(TODAY);
+      let cur = new Date(TODAY), view = "month", q = "";
+      const off = new Set();
+      const $ = (id) => document.getElementById(id);
+
+      const vis = () => E.filter((e) => !off.has(e.t) && (!q || (e.title + " " + e.asset).toLowerCase().includes(q)));
+      const on = (K, ev) => ev.filter((e) => e.s <= K && e.e >= K);
+      const bar = (e, sub) => `<button type="button" class="x-bar" data-ev="${e.id}" style="--c:${T[e.t][1]}" title="${e.title}"><span>${e.title}${sub ? `<small>${T[e.t][0]} · ${e.asset}${e.s !== e.e ? ` · ถึง ${th(parse(e.e))}` : ""}</small>` : ""}</span></button>`;
+
+      function chips() {
+        $("chips").innerHTML = Object.entries(T).map(([k, [n, c]]) => `<button type="button" class="x-chip" data-f="${k}" aria-pressed="${!off.has(k)}" style="--c:${c}"><i></i>${n}<b>${E.filter((e) => e.t === k).length}</b></button>`).join("");
+      }
+
+      function month() {
+        const y = cur.getFullYear(), m = cur.getMonth(), first = new Date(y, m, 1), start = add(first, -first.getDay());
+        const weeks = Math.ceil((first.getDay() + new Date(y, m + 1, 0).getDate()) / 7), ev = vis();
+        let h = '<div class="x-dow">' + DOW.map((d) => `<span>${d}</span>`).join("") + "</div>";
+        for (let w = 0; w < weeks; w++) {
+          const ws = add(start, w * 7), wsK = ymd(ws), weK = ymd(add(ws, 6));
+          const spans = ev.filter((e) => e.s !== e.e && e.s <= weK && e.e >= wsK), n = spans.length;
+          let cells = "", lists = "";
+          for (let i = 0; i < 7; i++) {
+            const d = add(ws, i), K = ymd(d), singles = ev.filter((e) => e.s === e.e && e.s === K), all = on(K, ev);
+            const lim = Math.max(1, 3 - spans.filter((e) => e.s <= K && e.e >= K).length);
+            cells += `<div class="x-day${d.getMonth() !== m ? " is-out" : ""}${K === TK ? " is-today" : ""}" style="grid-column:${i + 1}" data-day="${K}" role="button" tabindex="0" aria-label="${th(d)} · ${all.length} รายการ"><span class="x-num">${d.getDate()}</span><span class="x-dots">${singles.slice(0, 6).map((e) => `<i style="--c:${T[e.t][1]}"></i>`).join("")}</span></div>`;
+            lists += `<div class="x-evs" style="grid-column:${i + 1};grid-row:${n + 2}">${singles.slice(0, lim).map((e) => bar(e)).join("")}${singles.length > lim ? `<button type="button" class="x-more" data-day="${K}">+${singles.length - lim} เพิ่มเติม</button>` : ""}</div>`;
+          }
+          const sb = spans.map((e, li) => {
+            const a = e.s < wsK ? 0 : Math.round((parse(e.s) - ws) / 864e5), b = e.e > weK ? 6 : Math.round((parse(e.e) - ws) / 864e5);
+            return bar(e).replace('class="x-bar"', 'class="x-bar x-span"').replace('style="', `style="grid-column:${a + 1}/${b + 2};grid-row:${li + 2};`);
+          }).join("");
+          h += `<div class="x-week" style="grid-template-rows:32px repeat(${n},auto) 1fr">${cells}${sb}${lists}</div>`;
+        }
+        return h;
+      }
+
+      function days(list, ev, mode) {
+        return list.map((d) => {
+          const K = ymd(d), items = mode === "week" ? on(K, ev) : ev.filter((e) => e.s === K || (e.s < K && e.e >= K && d.getDate() === 1));
+          if (mode === "list" && !items.length) return "";
+          return `<div class="x-dg${K === TK ? " is-t" : ""}"><h4><b>${d.getDate()} ${MS[d.getMonth()]}</b>${DOWL[d.getDay()]}${K === TK ? " · วันนี้" : ""}</h4><div>${items.map((e) => bar(e, 1)).join("") || '<p class="x-empty">ไม่มีกำหนดการ</p>'}</div></div>`;
+        }).join("") || '<p class="x-empty">ไม่มีกำหนดการในเดือนนี้</p>';
+      }
+
+      function render() {
+        const ev = vis(), y = cur.getFullYear(), m = cur.getMonth();
+        let html;
+        if (view === "month") { html = month(); $("ttl").textContent = `${ML[m]} ${y + 543}`; }
+        else if (view === "week") {
+          const ws = add(cur, -cur.getDay()), we = add(ws, 6), list = [...Array(7)].map((_, i) => add(ws, i));
+          html = `<div class="x-list">${days(list, ev, "week")}</div>`;
+          $("ttl").textContent = `${ws.getDate()} ${MS[ws.getMonth()]} – ${th(we)}`;
+        } else {
+          const n = new Date(y, m + 1, 0).getDate(), list = [...Array(n)].map((_, i) => new Date(y, m, i + 1));
+          html = `<div class="x-list">${days(list, ev, "list")}</div>`; $("ttl").textContent = `${ML[m]} ${y + 543}`;
+        }
+        $("view").innerHTML = html;
+        const unit = view === "week" ? "สัปดาห์" : "เดือน";
+        $("pl").textContent = unit + "ก่อน"; $("nl").textContent = unit + "ถัดไป";
+        document.querySelectorAll("[data-v]").forEach((b) => b.setAttribute("aria-pressed", b.dataset.v === view));
+        let ag = "", cnt = 0;
+        for (let i = 0; i < 7; i++) {
+          const d = add(TODAY, i), K = ymd(d), items = ev.filter((e) => (e.s < TK ? TK : e.s) === K && e.e >= TK);
+          cnt += items.length;
+          if (items.length) ag += `<h4>${i === 0 ? "วันนี้ · " : i === 1 ? "พรุ่งนี้ · " : ""}${DOWL[d.getDay()]} ${d.getDate()} ${MS[d.getMonth()]}</h4><div>${items.map((e) => bar(e, 1)).join("")}</div>`;
+        }
+        $("agenda").innerHTML = `<h3>7 วันข้างหน้า</h3><p>${th(TODAY)} – ${th(add(TODAY, 6))} · ${cnt} รายการ</p>${ag || '<p class="x-empty">ไม่มีกำหนดการ</p>'}`;
+      }
+
+      function toast(msg) { const t = $("toast"); t.textContent = msg; t.hidden = false; clearTimeout(toast.h); toast.h = setTimeout(() => (t.hidden = true), 2600); }
+      function openEv(id) {
+        const e = E.find((x) => x.id === +id), [n, c] = T[e.t];
+        $("popB").innerHTML = `<span class="x-tag" style="--c:${c}"><i></i>${n}</span><h3>${e.title}</h3><dl><dt>ประเภท</dt><dd>${n}</dd><dt>ทรัพย์สิน</dt><dd>${e.asset}</dd><dt>วันที่</dt><dd>${th(parse(e.s))}${e.s !== e.e ? " – " + th(parse(e.e)) : ""}</dd></dl><button class="x-btn x-pri" type="button" data-toast="กำลังเปิด ${e.title}">เปิดรายการ →</button>`;
+        $("pop").hidden = false; $("popX").focus();
+      }
+      function openDay(K) {
+        const items = on(K, vis());
+        $("popB").innerHTML = `<h3>${DOWL[parse(K).getDay()]} ${th(parse(K))}</h3><div style="display:flex;flex-direction:column;gap:6px">${items.map((e) => bar(e, 1)).join("") || '<p class="x-empty">ไม่มีกำหนดการ</p>'}</div>`;
+        $("pop").hidden = false; $("popX").focus();
+      }
+
+      document.addEventListener("click", (ev) => {
+        const t = ev.target;
+        const b = t.closest("[data-ev]"); if (b) { ev.preventDefault(); return openEv(b.dataset.ev); }
+        const d = t.closest("[data-day]"); if (d) return openDay(d.dataset.day);
+        const f = t.closest("[data-f]"); if (f) { off.has(f.dataset.f) ? off.delete(f.dataset.f) : off.add(f.dataset.f); chips(); render(); return; }
+        const v = t.closest("[data-v]"); if (v) { view = v.dataset.v; return render(); }
+        const ts = t.closest("[data-toast]"); if (ts) { ev.preventDefault(); toast(ts.dataset.toast); }
+        if (!t.closest("#side") && !t.closest("#menu")) $("side").classList.remove("open");
+      });
+      document.addEventListener("keydown", (ev) => {
+        if (ev.key === "Escape") $("pop").hidden = true;
+        if ((ev.key === "Enter" || ev.key === " ") && ev.target.matches(".x-day")) { ev.preventDefault(); openDay(ev.target.dataset.day); }
+      });
+      $("popX").onclick = () => ($("pop").hidden = true);
+      $("menu").onclick = () => $("side").classList.toggle("open");
+      const step = (s) => { cur = view === "week" ? add(cur, 7 * s) : new Date(cur.getFullYear(), cur.getMonth() + s, 1); render(); };
+      $("prev").onclick = () => step(-1); $("next").onclick = () => step(1);
+      $("today").onclick = () => { cur = new Date(TODAY); render(); };
+      $("q").oninput = (e) => { q = e.target.value.trim().toLowerCase(); render(); };
+      $("ics").onclick = () => toast(`ส่งออก ${vis().length} รายการเป็นไฟล์ .ics แล้ว`);
+      $("addHol").onclick = () => $("dlg").showModal();
+      $("hc").onclick = () => $("dlg").close();
+      $("holForm").onsubmit = () => {
+        const name = $("hn").value.trim(), K = $("hd").value; if (!name || !K) return false;
+        E.push({ id: E.length, t: "hol", s: K, e: K, title: name, asset: $("hs").value });
+        off.delete("hol"); cur = parse(K); chips(); render(); $("hn").value = "";
+        toast(`เพิ่มวันหยุด “${name}” วันที่ ${th(parse(K))} แล้ว`);
+      };
+      chips(); render();
+    </script>
+  </body>
+</html>
