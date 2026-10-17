@@ -86,6 +86,7 @@
       .x-in{min-height:44px;width:100%;border:1px solid var(--x-line);border-radius:10px;background:#0A1430;padding:0 10px;font-size:14px;color:var(--x-tx);color-scheme:dark}
       textarea.x-in{padding:8px 10px;min-height:64px;resize:vertical}
       .x-req{color:#F472B6}
+      .x-err{color:#FB7185;font-size:12px;font-weight:500}.x-in.bad,.x-sel.bad{border-color:#FB7185!important;box-shadow:0 0 0 3px rgba(251,113,133,.18)}.x-saved{font-size:12px;color:#4ADE80;align-self:center}
       .x-opts{display:grid;gap:6px}.x-opts div{display:flex;gap:6px}
       .x-perm{width:100%;border-collapse:collapse;font-size:13px}.x-perm td,.x-perm th{padding:0 6px;border-bottom:1px solid rgba(86,140,255,.14);text-align:left}
       .x-chips{display:flex;flex-wrap:wrap;gap:6px}.x-chip{font-size:12px;padding:3px 10px;border-radius:999px;border:1px solid var(--x-line);color:var(--x-tx2)}
@@ -177,15 +178,32 @@
     function renderTable(){
       const d=T[cur],rows=d.rows.map((r,i)=>[r,i]).filter(([r])=>!q||r.join(" ").toLowerCase().includes(q));
       $("#pane").innerHTML=head(d.t,`${d.rows.length} รายการ`)+`<table class="x-tbl"><thead><tr>${d.cols.map(c=>`<th>${c}</th>`).join("")}<th><span class="x-hide">การทำงาน</span></th></tr></thead><tbody>${rows.map(([r,i])=>`<tr>${r.map((c,j)=>`<td data-l="${d.cols[j]}">${j===d.tog?sw(c,d.cols[j]+" "+r[0]):(j===0&&d.icon?`<span style="display:inline-flex;gap:8px;align-items:center"><span class="x-tile g${i%6+1}">${ic("tag")}</span>${esc(c)}</span>`:j===0?`<b>${esc(c)}</b>`:esc(c))}</td>`).join("")}<td class="x-act"><button class="x-ico" data-ed="${i}" aria-label="แก้ไข ${esc(r[0])}">${ic("edit")}</button><button class="x-ico" data-del="${i}" aria-label="ลบ ${esc(r[0])}">${ic("trash")}</button></td></tr>`).join("")||`<tr><td colspan="9">ไม่พบข้อมูล</td></tr>`}</tbody></table>`;
-      $("#pane").onclick=e=>{const b=e.target.closest("button");if(!b)return;if(b.id==="addBtn")rowModal(-1);else if(b.dataset.ed)rowModal(+b.dataset.ed);else if(b.dataset.del){const r=d.rows.splice(+b.dataset.del,1)[0];renderTable();toast("ลบ "+r[0]+" แล้ว")}};
-      $("#pane").onchange=e=>{if(e.target.type==="checkbox"){const tr=e.target.closest("tr"),i=+tr.querySelector("[data-ed]").dataset.ed;d.rows[i][d.tog]=e.target.checked?1:0}};
+      $("#pane").onclick=e=>{const b=e.target.closest("button");if(!b)return;if(b.id==="addBtn")rowModal(-1);else if(b.dataset.ed)rowModal(+b.dataset.ed);else if(b.dataset.del){const k=+b.dataset.del,row=d.rows[k];confirmDel("ลบ"+d.t+"?","ต้องการลบ <b>"+esc(row[0])+"</b> ออกจาก"+esc(d.t)+" ใช่หรือไม่? ข้อมูลที่อ้างอิงอยู่จะแสดงเป็น “ไม่ระบุ”",()=>{d.rows.splice(d.rows.indexOf(row),1);saveMaster();renderTable();toast("ลบ "+row[0]+" แล้ว")})}};
+      $("#pane").onchange=e=>{if(e.target.type==="checkbox"){const tr=e.target.closest("tr"),i=+tr.querySelector("[data-ed]").dataset.ed;d.rows[i][d.tog]=e.target.checked?1:0;saveMaster();toast((e.target.checked?"เปิดใช้งาน ":"ปิดใช้งาน ")+d.rows[i][0])}};
     }
+    const REQN=d=>d.cols.map((c,j)=>j!==d.tog&&j<2);
+    function setErr(el,msg){el.classList.add("bad");el.setAttribute("aria-invalid","true");const m=document.createElement("small");m.className="x-err";m.textContent=msg;el.insertAdjacentElement("afterend",m)}
+    function clrErr(box){box.querySelectorAll(".x-err").forEach(n=>n.remove());box.querySelectorAll(".bad").forEach(n=>{n.classList.remove("bad");n.removeAttribute("aria-invalid")})}
+    function saveMaster(){try{const o={};Object.entries(T).forEach(([k,v])=>{if(v.rows)o[k]=v.rows});localStorage.setItem("mdcf-tables",JSON.stringify(o))}catch(e){}}
+    try{const o=JSON.parse(localStorage.getItem("mdcf-tables")||"null");if(o)Object.entries(o).forEach(([k,rows])=>{if(T[k]&&Array.isArray(rows))T[k].rows=rows})}catch(e){}
     function rowModal(i){
-      const d=T[cur],r=i<0?d.cols.map((c,j)=>j===d.tog?1:""):d.rows[i],m=$("#modal");
-      m.innerHTML=`<form method="dialog"><h2 style="font-size:18px;margin:0 0 12px">${i<0?"เพิ่ม":"แก้ไข"}${d.t}</h2><div class="x-form">${d.cols.map((c,j)=>j===d.tog?"":`<label class="x-f full">${c}<input class="x-in" name="c${j}" value="${esc(r[j])}" ${j===0?"required":""}></label>`).join("")}</div><div style="display:flex;gap:8px;justify-content:flex-end;margin-top:16px"><button class="x-btn" value="cancel" formnovalidate>ยกเลิก</button><button class="x-btn x-pri" value="ok">บันทึก</button></div></form>`;
-      m.onclose=()=>{if(m.returnValue!=="ok")return;const f=m.querySelector("form"),n=d.cols.map((c,j)=>j===d.tog?r[j]:f["c"+j].value.trim());i<0?d.rows.push(n):(d.rows[i]=n);renderTable();toast("บันทึก "+n[0]+" แล้ว")};
-      m.returnValue="";m.showModal();
+      const d=T[cur],r=i<0?d.cols.map((c,j)=>j===d.tog?1:""):d.rows[i],m=$("#modal"),req=REQN(d);
+      m.innerHTML=`<form novalidate><h2 style="font-size:18px;margin:0 0 12px">${i<0?"เพิ่ม":"แก้ไข"}${d.t}${i<0?"":" · "+esc(r[0])}</h2><div class="x-form">${d.cols.map((c,j)=>j===d.tog?"":`<label class="x-f full">${c}${req[j]?' <span class="x-req">*</span>':""}<input class="x-in" name="c${j}" value="${esc(r[j])}" placeholder="${esc(c)}"></label>`).join("")}</div><div style="display:flex;gap:8px;justify-content:flex-end;margin-top:16px"><button type="button" class="x-btn" data-mc>ยกเลิก</button><button type="button" class="x-btn x-pri" data-ms>บันทึก</button></div></form>`;
+      const f=m.querySelector("form");
+      const save=()=>{clrErr(f);const bad=[];d.cols.forEach((c,j)=>{if(j===d.tog)return;const el=f.elements["c"+j],v=el.value.trim();
+          if(req[j]&&!v){setErr(el,"กรุณากรอก"+c);bad.push(el)}
+          else if(j===0&&v&&d.rows.some((x,k)=>k!==i&&String(x[0]).toLowerCase()===v.toLowerCase())){setErr(el,c+" นี้มีอยู่แล้ว");bad.push(el)}});
+        if(bad.length){bad[0].focus();return}
+        const n=d.cols.map((c,j)=>j===d.tog?r[j]:f.elements["c"+j].value.trim());i<0?d.rows.push(n):(d.rows[i]=n);saveMaster();m.close();renderTable();toast((i<0?"เพิ่ม ":"บันทึก ")+n[0]+" แล้ว")};
+      f.onclick=e=>{if(e.target.closest("[data-mc]"))m.close();else if(e.target.closest("[data-ms]"))save()};
+      f.onsubmit=e=>{e.preventDefault();save()};
+      f.oninput=e=>{const t=e.target;if(t.classList.contains("bad")&&t.value.trim()){t.classList.remove("bad");const n=t.nextElementSibling;if(n&&n.classList.contains("x-err"))n.remove()}};
+      m.onclose=null;if(!m.open)m.showModal();f.querySelector("input").focus();
     }
+    function confirmDel(title,body,onOk){const m=$("#modal");
+      m.innerHTML=`<div><h2 style="font-size:18px;margin:0 0 10px">${esc(title)}</h2><p class="x-sub" style="margin:0 0 16px">${body}</p><div style="display:flex;gap:8px;justify-content:flex-end"><button type="button" class="x-btn" data-mc>ยกเลิก</button><button type="button" class="x-btn x-pri" data-mok>ลบ</button></div></div>`;
+      m.onclose=null;m.querySelector("div").onclick=e=>{if(e.target.closest("[data-mc]"))m.close();else if(e.target.closest("[data-mok]")){m.close();onOk()}};
+      if(!m.open)m.showModal();m.querySelector("[data-mc]").focus()}
     // Custom field builder
     const TY={text:["ข้อความ","Aa","g1"],number:["ตัวเลข","12","g3"],date:["วันที่","D","g4"],select:["ตัวเลือก (dropdown)","▾","g2"],multi:["หลายตัวเลือก","☰","g6"],bool:["ใช่/ไม่ใช่","✓","g3"],user:["ผู้ใช้","@","g5"],asset:["ทรัพย์สิน (ลิงก์)","⛓","g1"],file:["ไฟล์/รูป","▣","g4"],url:["URL","//","g6"],formula:["สูตรคำนวณ","ƒx","g2"]};
     const ROLES=["Admin","ผู้จัดการ","ช่างเทคนิค","ผู้ใช้ทั่วไป"];
@@ -198,6 +216,7 @@
       "ยานพาหนะ|ทรัพย์สิน":[F("ทะเบียนรถ","text",{key:"plate",req:1,uniq:1}),F("เลขไมล์","number",{key:"odometer"}),F("วันต่อภาษี","date",{key:"tax_due",req:1}),F("ประเภทเชื้อเพลิง","select",{key:"fuel",opts:["ดีเซล","เบนซิน","ไฟฟ้า"]})],
       "เครื่องมือวัด|ทรัพย์สิน":[F("ช่วงการวัด","text",{key:"range"}),F("ความละเอียด","number",{key:"resolution"}),F("วันสอบเทียบถัดไป","date",{key:"next_cal",req:1}),F("ใบรับรองสอบเทียบ","file",{key:"cal_cert"})]
     };
+    try{const sv=JSON.parse(localStorage.getItem("mdcf-db")||"null");if(sv&&sv.DB){Object.keys(sv.DB).forEach(k=>DB[k]=sv.DB[k]);uid=Math.max(uid,sv.uid||0)}}catch(e){}
     let cat=CATS[0],apply=APPLY[0],ed=null,dragOn=false;
     const list=()=>DB[cat+"|"+apply]||(DB[cat+"|"+apply]=[]);
     const tile=t=>`<span class="x-tile ${TY[t][2]}">${TY[t][1]}</span>`;
@@ -212,7 +231,7 @@
       $("#catSel").onchange=e=>{cat=e.target.value;ed=null;renderCF()};
       $("#applySeg").onclick=e=>{const b=e.target.closest("button");if(b){apply=b.textContent;ed=null;renderCF()}};
       $("#pal").onclick=e=>{const b=e.target.closest("button");if(b)openEd(F("",b.dataset.t,{opts:["select","multi"].includes(b.dataset.t)?["ตัวเลือก 1","ตัวเลือก 2"]:[]}),true)};
-      $("#saveBtn").onclick=()=>toast(`บันทึกฟิลด์ ${list().length} รายการ · มีผลทันทีกับฟอร์มและรายงาน`);
+      $("#saveBtn").onclick=()=>{const b=$("#saveBtn");b.disabled=true;b.textContent="กำลังบันทึก…";setTimeout(()=>{try{localStorage.setItem("mdcf-db",JSON.stringify({uid,DB}))}catch(e){}b.disabled=false;b.textContent="บันทึกโครงสร้าง";let sv=$("#cfSaved");if(!sv){sv=document.createElement("span");sv.id="cfSaved";sv.className="x-saved";sv.setAttribute("role","status");b.before(sv)}sv.textContent="✓ บันทึกแล้ว "+new Date().toLocaleTimeString("th-TH",{hour:"2-digit",minute:"2-digit"})+" น.";toast(`บันทึกฟิลด์ ${list().length} รายการ (${cat} · ${apply}) · มีผลทันทีกับฟอร์มและรายงาน`)},400)};
       $("#addBtn").onclick=()=>openEd(F("","text"),true);
       renderList();renderPrev();
     }
@@ -223,7 +242,7 @@
       ul.onchange=e=>{const li=e.target.closest("li"),f=L.find(x=>x.id==li.dataset.id),sws=li.querySelectorAll("input");f.req=sws[0].checked;f.table=sws[1].checked;renderPrev()};
       ul.onclick=e=>{const li=e.target.closest("li[data-id]");if(!li)return;const i=L.findIndex(x=>x.id==li.dataset.id);
         if(e.target.closest("[data-e]"))openEd(L[i],false);
-        else if(e.target.closest("[data-d]")){const f=L.splice(i,1)[0];if(ed&&ed.f.id===f.id)closeEd();renderList();renderPrev();toast("ลบฟิลด์ "+f.label)}};
+        else if(e.target.closest("[data-d]")){const f=L[i];confirmDel("ลบฟิลด์ “"+f.label+"”?","ข้อมูลในฟิลด์ <b>"+esc(f.label)+"</b> ("+esc(f.key)+") ของ"+esc(apply)+"ทุกรายการในหมวด "+esc(cat)+" จะถูกซ่อน และนำออกจากฟอร์ม/รายงาน",()=>{const k=L.indexOf(f);if(k>-1)L.splice(k,1);if(ed&&ed.f.id===f.id)closeEd();renderList();renderPrev();toast("ลบฟิลด์ "+f.label+" แล้ว")})}};
       ul.onkeydown=e=>{const h=e.target.closest(".x-handle");if(!h||!["ArrowUp","ArrowDown"].includes(e.key))return;e.preventDefault();const i=L.findIndex(x=>x.id==h.parentNode.dataset.id),j=i+(e.key==="ArrowUp"?-1:1);if(j<0||j>=L.length)return;L.splice(j,0,L.splice(i,1)[0]);renderList();renderPrev();ul.children[j].querySelector(".x-handle").focus()};
       ul.querySelectorAll(".x-handle").forEach(h=>{
         h.onpointerdown=e=>{const row=h.parentNode;row.classList.add("is-drag");h.setPointerCapture(e.pointerId);dragOn=true;
@@ -258,8 +277,8 @@
     function openEd(f,isNew){
       ed={f:JSON.parse(JSON.stringify(f)),isNew,auto:isNew};const e=$("#editor"),x=ed.f;e.hidden=false;
       e.innerHTML=`<h3>${tile(x.type)} ${isNew?"ฟิลด์ใหม่":"แก้ไขฟิลด์"} · ${TY[x.type][0]}<button class="x-ico" id="edX" aria-label="ปิด">${ic("x")}</button></h3><div class="x-form">
-      <label class="x-f">ชื่อฟิลด์<input class="x-in" id="eL" value="${esc(x.label)}" placeholder="เช่น Serial Number"></label>
-      <label class="x-f">คีย์ (auto)<input class="x-in" id="eK" value="${esc(x.key)}" style="font-family:var(--sans)"></label>
+      <label class="x-f">ชื่อฟิลด์ <span class="x-req">*</span><input class="x-in" id="eL" value="${esc(x.label)}" placeholder="เช่น Serial Number"></label>
+      <label class="x-f">คีย์ (auto) <span class="x-req">*</span><input class="x-in" id="eK" value="${esc(x.key)}" style="font-family:var(--sans)"></label>
       <label class="x-f full">คำอธิบาย<input class="x-in" id="eD" value="${esc(x.desc)}"></label>
       <label class="x-f">${x.type==="formula"?"สูตร":"ค่าเริ่มต้น"}<input class="x-in" id="eV" value="${esc(x.def)}" placeholder="${x.type==="formula"?"เช่น ราคา * 0.07":""}"></label>
       ${x.type==="text"?`<label class="x-f">Pattern (Regex)<input class="x-in" id="eP" value="${esc(x.pattern)}"></label>`:""}
@@ -268,7 +287,7 @@
       <div class="x-f full">สิทธิ์ดู/แก้ไขตามบทบาท<table class="x-perm"><thead><tr><th>บทบาท</th><th>ดู</th><th>แก้ไข</th></tr></thead><tbody>${ROLES.map((r,i)=>`<tr><td>${r}</td>${[0,1].map(j=>`<td><label class="x-chk"><input type="checkbox" data-p="${i},${j}" ${x.perm[i][j]?"checked":""} aria-label="${r} ${j?"แก้ไข":"ดู"}"></label></td>`).join("")}</tr>`).join("")}</tbody></table></div></div>
       <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px"><button class="x-btn" id="edC">ยกเลิก</button><button class="x-btn x-pri" id="edS">${isNew?"เพิ่มฟิลด์":"บันทึกฟิลด์"}</button></div>`;
       const opts=()=>{const o=$("#eO");if(!o)return;o.innerHTML=x.opts.map((v,i)=>`<div><input class="x-in" data-o="${i}" value="${esc(v)}" aria-label="ตัวเลือก ${i+1}"><button class="x-ico" data-or="${i}" type="button" aria-label="ลบตัวเลือก">${ic("trash")}</button></div>`).join("")};opts();
-      e.oninput=ev=>{const t=ev.target;
+      e.oninput=ev=>{const t=ev.target;if(t.classList.contains("bad")){t.classList.remove("bad");const n=t.nextElementSibling;if(n&&n.classList.contains("x-err"))n.remove()}
         if(t.id==="eL"){x.label=t.value;if(ed.auto){x.key=slug(t.value)||"field_"+x.id;$("#eK").value=x.key}}
         else if(t.id==="eK"){x.key=t.value;ed.auto=false}else if(t.id==="eD")x.desc=t.value;else if(t.id==="eV")x.def=t.value;else if(t.id==="eP")x.pattern=t.value;
         else if(t.dataset.o)x.opts[+t.dataset.o]=t.value;};
@@ -276,7 +295,15 @@
       e.onclick=ev=>{const b=ev.target.closest("button");if(!b)return;
         if(b.id==="eOA"){x.opts.push("ตัวเลือก "+(x.opts.length+1));opts()}else if(b.dataset.or){x.opts.splice(+b.dataset.or,1);opts()}
         else if(b.id==="edX"||b.id==="edC")closeEd();
-        else if(b.id==="edS"){if(!x.label.trim()){$("#eL").focus();return toast("กรุณาตั้งชื่อฟิลด์")}const L=list();if(isNew)L.push(x);else L[L.findIndex(y=>y.id===x.id)]=x;toast((isNew?"เพิ่ม":"บันทึก")+"ฟิลด์ "+x.label);closeEd()}};
+        else if(b.id==="edS"){clrErr(e);const L=list(),bad=[];x.label=x.label.trim();x.key=String(x.key).trim();
+          if(!x.label){setErr($("#eL"),"กรุณาตั้งชื่อฟิลด์");bad.push($("#eL"))}
+          else if(L.some(y=>y.id!==x.id&&y.label.toLowerCase()===x.label.toLowerCase())){setErr($("#eL"),"มีฟิลด์ชื่อนี้ในหมวดนี้แล้ว");bad.push($("#eL"))}
+          if(!x.key){setErr($("#eK"),"กรุณาระบุคีย์");bad.push($("#eK"))}
+          else if(!/^[a-z][a-z0-9_]*$/.test(x.key)){setErr($("#eK"),"คีย์ใช้ได้เฉพาะ a-z, 0-9, _ และขึ้นต้นด้วยตัวอักษร");bad.push($("#eK"))}
+          else if(L.some(y=>y.id!==x.id&&y.key===x.key)){setErr($("#eK"),"คีย์นี้ถูกใช้แล้ว");bad.push($("#eK"))}
+          if($("#eP")&&x.pattern){try{new RegExp(x.pattern)}catch(err){setErr($("#eP"),"Regex ไม่ถูกต้อง");bad.push($("#eP"))}}
+          if(["select","multi"].includes(x.type)){x.opts=x.opts.map(v=>v.trim()).filter(Boolean);if(!x.opts.length){const o=$("#eO");const m=document.createElement("small");m.className="x-err";m.textContent="ต้องมีอย่างน้อย 1 ตัวเลือก";o.after(m);bad.push($("#eOA"))}}
+          if(bad.length){bad[0].focus();return}if(isNew)L.push(x);else L[L.findIndex(y=>y.id===x.id)]=x;toast((isNew?"เพิ่ม":"บันทึก")+"ฟิลด์ "+x.label);closeEd()}};
       renderList();e.scrollIntoView({behavior:"smooth",block:"nearest"});$("#eL").focus({preventScroll:true});
     }
     function closeEd(){ed=null;const e=$("#editor");e.hidden=true;e.innerHTML="";renderList();renderPrev()}
