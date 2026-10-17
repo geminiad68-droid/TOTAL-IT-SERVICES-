@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="th" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark" />
+    <title>ITMAINT Users RBAC</title>
+    <link rel="stylesheet" href="../../assets/hark.css" />
+    <style>
+      :root { color-scheme: dark; --sans: "Noto Sans Thai", "Geist", -apple-system, "Segoe UI", Tahoma, sans-serif;
+        --x-bg: #0a1024; --x-card: #0f1733; --x-card2: #141e42; --x-line: rgb(77 124 255 / .30); --x-line2: rgb(120 150 255 / .14);
+        --x-text: #e8ecf8; --x-muted: #a3aed0; --x-blue: #4d7cff; --x-glow: 0 0 0 1px rgb(77 124 255 / .10), 0 0 22px rgb(56 110 255 / .14);
+        --x-primary: linear-gradient(135deg, #c2410c, #be185d); }
+      html, body { background: var(--x-bg); color: var(--x-text); }
+      body { font: var(--type-body); overflow-x: hidden; }
+      .x-app { display: grid; grid-template-columns: 252px minmax(0, 1fr); min-height: 100vh; }
+      .x-side { position: sticky; top: 0; height: 100vh; overflow-y: auto; background: #0b1230; border-right: 1px solid var(--x-line2); padding: 16px 12px 24px; }
+      .x-logo { display: flex; gap: 10px; align-items: center; padding: 4px 8px 16px; }
+      .x-logo b { display: block; font: var(--weight-bold) 20px/1.1 var(--sans); letter-spacing: .3px; }
+      .x-logo small { color: var(--x-muted); font-size: 12px; }
+      .x-grp { font: var(--type-tag); color: var(--x-muted); padding: 14px 10px 4px; }
+      .x-nav a { display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 10px; border-radius: var(--r-s); text-decoration: none; color: #c9d2ee; font: var(--type-small); }
+      .x-nav a:hover { background: rgb(77 124 255 / .10); }
+      .x-nav a.on { background: linear-gradient(90deg, #2c5bf0, #3a6cff); color: #fff; box-shadow: 0 0 18px rgb(58 108 255 / .45); }
+      .x-nav svg { width: 18px; height: 18px; flex: none; }
+      .x-top { position: sticky; top: 0; z-index: 5; display: flex; gap: 10px; align-items: center; padding: 12px var(--gutter); background: rgb(10 16 36 / .88); backdrop-filter: var(--hark-blur); border-bottom: 1px solid var(--x-line2); }
+      .x-in, .x-sel { min-height: 44px; background: var(--x-card); border: 1px solid var(--x-line); border-radius: var(--r-s); color: var(--x-text); font: var(--type-small); padding: 0 12px; min-width: 0; }
+      .x-sel { appearance: none; padding-right: 30px; background-image: linear-gradient(45deg, transparent 50%, var(--x-muted) 50%), linear-gradient(135deg, var(--x-muted) 50%, transparent 50%); background-position: right 16px center, right 11px center; background-size: 5px 5px; background-repeat: no-repeat; }
+      .x-in:focus, .x-sel:focus { outline: 2px solid var(--x-blue); outline-offset: 1px; }
+      .x-search { flex: 1; position: relative; max-width: 520px; display: flex; min-width: 0; }
+      .x-search .x-in { width: 100%; }
+      .x-search .x-in { flex: 1; padding-left: 38px; padding-right: 64px; }
+      .x-search > svg { position: absolute; left: 12px; top: 13px; width: 18px; height: 18px; color: var(--x-muted); }
+      .x-kbd { position: absolute; right: 8px; top: 10px; font: var(--type-caption); border: 1px solid var(--x-line); border-radius: 6px; padding: 2px 6px; color: var(--x-muted); }
+      .x-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 44px; min-width: 44px; padding: 0 14px; border-radius: var(--r-s); border: 1px solid var(--x-line); background: var(--x-card); color: var(--x-text); font: var(--type-label); cursor: pointer; white-space: nowrap; text-decoration: none; }
+      .x-btn:hover { border-color: var(--x-blue); }
+      .x-btn:disabled { opacity: .38; cursor: not-allowed; border-color: var(--x-line2); }
+      .x-btn svg { width: 18px; height: 18px; }
+      .x-pri { background: var(--x-primary); border-color: transparent; color: #fff; box-shadow: 0 6px 18px rgb(190 24 93 / .35); }
+      .x-ico { padding: 0; position: relative; }
+      .x-badge { position: absolute; top: 6px; right: 6px; min-width: 16px; height: 16px; border-radius: 8px; background: #e11d48; color: #fff; font: 600 12px/16px var(--sans); padding: 0 3px; }
+      .x-me { display: flex; align-items: center; gap: 8px; font: var(--type-label); }
+      .x-me small { display: block; color: var(--x-muted); font: var(--type-caption); }
+      .x-av { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; flex: none; color: #fff; font: 600 13px/1 var(--sans); }
+      .x-main { padding: 20px var(--gutter) 40px; display: grid; gap: 16px; min-width: 0; align-content: start; }
+      .x-card { background: linear-gradient(180deg, var(--x-card2), var(--x-card)); border: 1px solid var(--x-line); border-radius: var(--r-m); box-shadow: var(--x-glow); padding: 16px; min-width: 0; }
+      .x-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+      .x-ph { justify-content: space-between; }
+      .x-ph h1 { font: var(--type-title); font-weight: 600; }
+      .x-ph p { color: var(--x-muted); font: var(--type-small); }
+      .x-tabs { display: flex; gap: 4px; padding: 4px; background: var(--x-card); border: 1px solid var(--x-line2); border-radius: var(--r-s); width: max-content; max-width: 100%; overflow-x: auto; }
+      .x-tabs button { min-height: 44px; padding: 0 16px; border: 0; border-radius: 9px; background: none; color: var(--x-muted); font: var(--type-label); cursor: pointer; white-space: nowrap; }
+      .x-tabs button[aria-selected="true"] { background: linear-gradient(90deg, #2c5bf0, #3a6cff); color: #fff; }
+      .x-tile { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; color: #fff; flex: none; }
+      .x-tile svg { width: 20px; height: 20px; }
+      .g1 { background: linear-gradient(135deg, #3b82f6, #7c3aed); } .g2 { background: linear-gradient(135deg, #f97316, #db2777); }
+      .g3 { background: linear-gradient(135deg, #10b981, #0e7490); } .g4 { background: linear-gradient(135deg, #a855f7, #db2777); }
+      .g5 { background: linear-gradient(135deg, #06b6d4, #2563eb); } .g6 { background: linear-gradient(135deg, #f59e0b, #dc2626); }
+      .x-kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+      .x-kpi { display: flex; gap: 12px; align-items: center; }
+      .x-kpi > div { min-width: 0; overflow-wrap: anywhere; }
+      .x-kpi b { display: block; font: var(--type-figure); font-weight: 600; }
+      .x-kpi span { color: var(--x-muted); font: var(--type-small); }
+      .x-filters { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr); gap: 10px; margin-bottom: 12px; }
+      .x-user { display: flex; gap: 10px; align-items: center; }
+      .x-user small { color: var(--x-muted); }
+      .x-role { display: inline-block; padding: 4px 10px; border-radius: var(--r-pill); font: var(--type-tag); background: rgb(77 124 255 / .14); border: 1px solid rgb(77 124 255 / .4); color: #c7d5ff; }
+      .x-role.r0 { background: rgb(219 39 119 / .15); border-color: rgb(244 114 182 / .45); color: #fbcfe8; }
+      .x-role.r5 { background: rgb(249 115 22 / .14); border-color: rgb(251 146 60 / .45); color: #fed7aa; }
+      .x-st { display: inline-flex; align-items: center; gap: 6px; font: var(--type-tag); }
+      .x-st::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 8px #22c55e; }
+      .x-st.off::before { background: #f59e0b; box-shadow: none; } .x-st.lock::before { background: #ef4444; box-shadow: none; }
+      .x-on { color: #4ade80; }
+      .x-acts { display: flex; gap: 4px; }
+      .x-acts .x-btn { background: transparent; }
+      #utable td, #utable th { vertical-align: middle; }
+      .x-rbac { display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 16px; align-items: start; }
+      .x-roles { display: grid; gap: 8px; }
+      .x-rc { display: flex; align-items: center; gap: 10px; width: 100%; min-height: 56px; padding: 8px 12px; text-align: left; border-radius: var(--r-s); border: 1px solid var(--x-line2); background: var(--x-card); color: var(--x-text); font: var(--type-label); cursor: pointer; }
+      .x-rc.on { border-color: var(--x-blue); box-shadow: 0 0 16px rgb(77 124 255 / .35); background: #1a2a5e; color: #fff; }
+      .x-rc.on em { color: #dbe4ff; }
+      .x-rc .x-tile { width: 34px; height: 34px; border-radius: 10px; }
+      .x-rc em { margin-left: auto; font-style: normal; color: var(--x-muted); font: var(--type-caption); white-space: nowrap; }
+      .x-rname { font: var(--type-heading); font-weight: 600; background: transparent; border: 1px solid transparent; color: var(--x-text); border-radius: 8px; padding: 4px 6px; margin-left: -6px; width: 100%; min-height: 44px; }
+      .x-rname:hover, .x-rname:focus { border-color: var(--x-line); outline: 0; }
+      .x-mods { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 12px; margin-top: 14px; }
+      .x-mod { border: 1px solid var(--x-line2); border-radius: var(--r-s); padding: 10px 12px 12px; background: rgb(10 16 36 / .45); }
+      .x-mh { display: flex; align-items: center; gap: 10px; min-height: 44px; font: var(--type-label); cursor: pointer; }
+      .x-mh em { margin-left: auto; font-style: normal; color: var(--x-muted); font: var(--type-caption); }
+      .x-mh input { width: 20px; height: 20px; accent-color: var(--x-blue); }
+      .x-perms { display: flex; flex-wrap: wrap; gap: 6px; }
+      .x-sw { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 10px; border-radius: 10px; border: 1px solid var(--x-line2); font: var(--type-small); cursor: pointer; color: var(--x-muted); }
+      .x-sw input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+      .x-sw i { width: 30px; height: 18px; border-radius: 9px; background: #2a345a; position: relative; transition: background var(--dur-quick); flex: none; }
+      .x-sw i::after { content: ""; position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; border-radius: 50%; background: #c9d2ee; transition: transform var(--dur-quick) var(--ease-out); }
+      .x-sw:has(input:checked) { color: var(--x-text); border-color: rgb(77 124 255 / .5); }
+      .x-sw input:checked + i { background: var(--x-blue); } .x-sw input:checked + i::after { transform: translateX(12px); background: #fff; }
+      .x-sw:has(input:focus-visible) { outline: 2px solid var(--x-blue); }
+      dialog { background: var(--x-card); color: var(--x-text); border: 1px solid var(--x-line); border-radius: var(--r-m); box-shadow: var(--x-glow), 0 20px 60px #000a; padding: 0; width: min(680px, calc(100vw - 24px)); max-height: calc(100vh - 24px); }
+      dialog::backdrop { background: rgb(4 8 22 / .72); backdrop-filter: blur(4px); }
+      dialog form { padding: 20px; display: grid; gap: 14px; }
+      .x-fg { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+      .x-fg label { display: grid; gap: 6px; font: var(--type-tag); color: var(--x-muted); }
+      .x-toast { position: fixed; bottom: 20px; left: 50%; transform: translate(-50%, 20px); opacity: 0; pointer-events: none; z-index: 50; background: #111a3a; border: 1px solid rgb(74 222 128 / .5); color: var(--x-text); padding: 12px 18px; border-radius: var(--r-s); box-shadow: 0 0 22px rgb(34 197 94 / .25); font: var(--type-label); transition: all var(--dur-quick) var(--ease-out); max-width: calc(100vw - 32px); }
+      .x-toast.show { opacity: 1; transform: translate(-50%, 0); }
+      .x-menu { display: none; }
+      [hidden] { display: none !important; }
+      @media (max-width: 1080px) { .x-rbac { grid-template-columns: minmax(0, 1fr); } .x-roles { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); } }
+      @media (max-width: 900px) {
+        .x-app { grid-template-columns: minmax(0, 1fr); }
+        .x-side { position: fixed; z-index: 30; left: 0; width: 272px; transform: translateX(-100%); transition: transform var(--dur-quick) var(--ease-out); }
+        .x-side.open { transform: none; box-shadow: 0 0 60px #000c; }
+        .x-menu { display: inline-flex; }
+        .x-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .x-hide-m { display: none !important; }
+      }
+      @media (max-width: 599px) {
+        .x-filters, .x-fg { grid-template-columns: minmax(0, 1fr); }
+        .x-top { gap: 6px; padding-inline: 10px; } .x-kbd, .x-me span { display: none; }
+        .x-ph .x-pri { width: 100%; }
+        #utable tbody tr { border-bottom: 1px solid var(--x-line2); }
+        .x-roles { grid-template-columns: minmax(0, 1fr); }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="x-app">
+      <aside class="x-side" id="side" aria-label="เมนูหลัก">
+        <div class="x-logo">
+          <svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#38bdf8"/><stop offset="1" stop-color="#2563eb"/></linearGradient></defs><path d="M20 2l16 9v18l-16 9-16-9V11z" fill="url(#lg)"/><path d="M14 13h12v4h-4v10h-4V17h-4z" fill="#fff"/></svg>
+          <div><b>IT&amp;MAINT</b><small>Smart Asset · Smart Work</small></div>
+        </div>
+        <nav class="x-nav" id="nav"></nav>
+      </aside>
+      <div style="min-width:0">
+        <header class="x-top">
+          <button class="x-btn x-ico x-menu" id="menuBtn" aria-label="เปิดเมนู"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+          <select class="x-sel x-hide-m" aria-label="เลือกไซต์"><option>ทุกไซต์</option><option>โรงงานสมุทรสาคร</option><option>โรงงานระยอง</option></select>
+          <div class="x-search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input class="x-in" id="gsearch" placeholder="ค้นหา Ticket / ทรัพย์สิน / ผู้ใช้ / เมนู..." aria-label="ค้นหา" /><span class="x-kbd">Ctrl + K</span></div>
+          <button class="x-btn x-pri x-hide-m" data-toast="เปิดฟอร์มแจ้งซ่อม">+ แจ้งซ่อม</button>
+          <button class="x-btn x-ico" aria-label="การแจ้งเตือน 3 รายการ" data-toast="มีการแจ้งเตือนใหม่ 3 รายการ"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 16V11a6 6 0 0112 0v5l2 2H4zM10 20a2 2 0 004 0"/></svg><span class="x-badge">3</span></button>
+          <div class="x-me"><span class="x-av g4">AD</span><span>Admin<small>ผู้ดูแลระบบสูงสุด</small></span></div>
+        </header>
+        <main class="x-main">
+          <div class="x-row x-ph">
+            <div><h1>ผู้ใช้งาน &amp; บทบาทสิทธิ์</h1><p>จัดการบัญชีผู้ใช้ บทบาท และสิทธิ์การเข้าถึงแต่ละโมดูล</p></div>
+            <button class="x-btn x-pri" id="addBtn">+ เพิ่มผู้ใช้</button>
+          </div>
+          <div class="x-tabs" role="tablist">
+            <button role="tab" aria-selected="true" aria-controls="tabUsers" id="t1">ผู้ใช้งาน</button>
+            <button role="tab" aria-selected="false" aria-controls="tabRbac" id="t2">บทบาท &amp; สิทธิ์ (RBAC)</button>
+          </div>
+
+          <section id="tabUsers" role="tabpanel" aria-labelledby="t1" style="display:grid;gap:16px">
+            <div class="x-kpis" id="kpis"></div>
+            <div class="x-card">
+              <div class="x-filters">
+                <input class="x-in" id="fq" placeholder="ค้นหา ชื่อผู้ใช้ / ชื่อ / อีเมล / รหัสพนักงาน" aria-label="ค้นหาผู้ใช้" />
+                <select class="x-sel" id="frole" aria-label="บทบาท"></select>
+                <select class="x-sel" id="fst" aria-label="สถานะ"><option value="">ทุกสถานะ</option><option>ใช้งาน</option><option>ระงับ</option><option>ถูกล็อก</option></select>
+              </div>
+              <div class="table-wrap">
+                <table id="utable">
+                  <thead><tr><th scope="col">ผู้ใช้</th><th scope="col">แผนก/ไซต์ · ตำแหน่ง</th><th scope="col">บทบาท</th><th scope="col">ขอบเขตข้อมูล</th><th scope="col">เข้าใช้ล่าสุด</th><th scope="col">สถานะ</th><th scope="col">การจัดการ</th></tr></thead>
+                  <tbody id="ubody"></tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <section id="tabRbac" role="tabpanel" aria-labelledby="t2" hidden>
+            <div class="x-rbac">
+              <div class="x-card">
+                <div class="x-row x-ph" style="margin-bottom:12px"><b>บทบาท (<span id="rcount">11</span>)</b><button class="x-btn" id="newRole">+ สร้างบทบาท</button></div>
+                <div class="x-roles" id="roles"></div>
+              </div>
+              <div class="x-card">
+                <div class="x-row x-ph">
+                  <div style="flex:1;min-width:220px"><input class="x-rname" id="rname" aria-label="ชื่อบทบาท" /><p class="x-muted" id="rdesc" style="color:var(--x-muted);font:var(--type-small)"></p></div>
+                  <div class="x-row"><button class="x-btn" id="selAll">เลือกทั้งหมด</button><button class="x-btn" id="clrAll">ล้าง</button><button class="x-btn x-pri" id="savePerm">บันทึกสิทธิ์</button></div>
+                </div>
+                <p style="color:var(--x-muted);font:var(--type-caption);margin-top:8px" id="pcount"></p>
+                <div class="x-mods" id="mods"></div>
+              </div>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <dialog id="dlg" aria-labelledby="dlgTitle">
+      <form method="dialog" id="uform">
+        <div class="x-row x-ph"><h2 id="dlgTitle" style="font:var(--type-heading);font-weight:600">เพิ่มผู้ใช้</h2><button class="x-btn x-ico" value="cancel" formnovalidate aria-label="ปิด"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+        <div class="x-fg" id="fields">
+          <label>ชื่อ-สกุล<input class="x-in" name="name" required /></label>
+          <label>Username<input class="x-in" name="user" required pattern="[A-Za-z0-9._\-]+" /></label>
+          <label>อีเมล<input class="x-in" name="email" type="email" /></label>
+          <label>รหัสพนักงาน<input class="x-in" name="emp" /></label>
+          <label>แผนก<input class="x-in" name="dept" /></label>
+          <label>ไซต์<select class="x-sel" name="site"><option>โรงงานสมุทรสาคร</option><option>โรงงานระยอง</option></select></label>
+          <label>ตำแหน่ง<input class="x-in" name="pos" /></label>
+          <label>บทบาท<select class="x-sel" name="role" id="frm-role"></select></label>
+          <label>ขอบเขตข้อมูล<select class="x-sel" name="scope"><option>ทั้งหมด</option><option>ไซต์ของตน</option><option>เฉพาะที่ถือครอง</option></select></label>
+          <label>LINE / Telegram ผูกบัญชี<select class="x-sel" name="bind"><option>ยังไม่ผูก</option><option>LINE</option><option>Telegram</option><option>LINE + Telegram</option></select></label>
+        </div>
+        <div class="x-row x-ph"><button type="button" class="x-btn" id="addField">+ เพิ่มฟิลด์</button>
+          <div class="x-row"><button class="x-btn" value="cancel" formnovalidate>ยกเลิก</button><button class="x-btn x-pri" value="ok" id="saveUser">บันทึก</button></div></div>
+      </form>
+    </dialog>
+    <div class="x-toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script src="../../assets/hark.js"></script>
+    <script>
+      (function () {
+        var $ = function (s) { return document.querySelector(s); };
+        var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); };
+        function forceDark() { document.documentElement.setAttribute("data-theme", "dark"); }
+        forceDark(); document.addEventListener("DOMContentLoaded", forceDark); window.addEventListener("load", forceDark);
+        var P = { home: "M3 11l9-7 9 7v9h-6v-6H9v6H3z", box: "M3 7l9-4 9 4v10l-9 4-9-4zM3 7l9 4 9-4M12 11v10", wrench: "M14 6a4 4 0 005 5l-9 9-3-3 9-9a4 4 0 01-2-2z", cart: "M3 4h3l2 11h11l2-8H7M9 20h.01M18 20h.01", chart: "M4 20V10M10 20V4M16 20v-7M22 20H2", gear: "M12 9a3 3 0 100 6 3 3 0 000-6zM12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M5 19l2-2M17 7l2-2", users: "M9 11a4 4 0 100-8 4 4 0 000 8zM2 21a7 7 0 0114 0M17 11a3 3 0 000-6M22 21a6 6 0 00-5-6", shield: "M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6z", key: "M8 14a4 4 0 110-8 4 4 0 010 8zM11 10h10M18 10v4M15 10v3", bell: "M6 16V11a6 6 0 0112 0v5l2 2H4zM10 20a2 2 0 004 0", log: "M6 3h9l4 4v14H6zM9 12h7M9 16h7M9 8h3", db: "M4 6c0-2 16-2 16 0v12c0 2-16 2-16 0zM4 6c0 2 16 2 16 0M4 12c0 2 16 2 16 0", edit: "M4 20h4L19 9l-4-4L4 16zM14 6l4 4", lock: "M6 11h12v10H6zM8 11V7a4 4 0 018 0v4", ban: "M12 3a9 9 0 100 18 9 9 0 000-18zM6 6l12 12", on: "M5 12h14M12 5v14", ok: "M5 12l4 4L19 6" };
+        var ico = function (n) { return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="' + P[n] + '"/></svg>'; };
+
+        var NAV = [["ภาพรวม", [["Command Center", "home"], ["จอ TV / ปฏิทิน", "chart"]]], ["ทรัพย์สิน", [["ทะเบียนทรัพย์สิน", "box"], ["โอนย้าย / ยืม-คืน", "box"], ["ตรวจนับ & DAM", "log"]]], ["ซ่อมบำรุง", [["ใบแจ้งซ่อม / ใบสั่งงาน", "wrench"], ["แผน PM / IoT / สอบเทียบ", "wrench"]]], ["คลัง & จัดซื้อ", [["คลังอะไหล่", "box"], ["PR / PO / งบประมาณ", "cart"]]], ["วิเคราะห์", [["รายงาน & RCA/FMEA", "chart"]]], ["ระบบ", [["ผู้ใช้งาน", "users", 1], ["บทบาท & สิทธิ์ (RBAC)", "shield", 2], ["ข้อมูลหลัก", "db"], ["ตั้งค่าระบบ", "gear"], ["การแจ้งเตือน & Cron", "bell"], ["REST API & Token", "key"], ["Audit Log", "log"]]]];
+        $("#nav").innerHTML = NAV.map(function (g) { return '<div class="x-grp">' + g[0] + "</div>" + g[1].map(function (i) { return '<a href="#" data-go="' + (i[2] || "") + '"' + (i[2] === 1 ? ' class="on" aria-current="page"' : "") + ">" + ico(i[1]) + i[0] + "</a>"; }).join(""); }).join("");
+
+        var ROLES = [
+          ["ผู้ดูแลระบบสูงสุด", "เข้าถึงทุกโมดูลและทุกข้อมูล รวมถึงการตั้งค่าระบบ", "g4"], ["ผู้จัดการทรัพย์สิน", "ดูแลทะเบียน โอนย้าย ตรวจนับ และจำหน่ายทรัพย์สิน", "g1"],
+          ["บัญชีสินทรัพย์", "ค่าเสื่อม งบประมาณ และอนุมัติการจำหน่าย", "g3"], ["ผู้ดูแลระบบ IT", "จัดการผู้ใช้ การตั้งค่า IoT และ API", "g5"],
+          ["ผู้จัดการซ่อมบำรุง", "คัดกรองใบแจ้งซ่อม มอบหมายและอนุมัติใบสั่งงาน", "g6"], ["ช่างซ่อมบำรุง", "รับงาน อัปเดต และปิดใบสั่งงานของตน", "g2"],
+          ["เจ้าหน้าที่คลัง", "รับเข้า เบิกจ่าย และปรับยอดอะไหล่", "g3"], ["เจ้าหน้าที่จัดซื้อ", "จัดการ PR/PO และติดตามงบจัดซื้อ", "g1"],
+          ["ผู้ตรวจสอบ", "ดูข้อมูลทุกโมดูลแบบอ่านอย่างเดียว และ Audit Log", "g5"], ["ผู้แจ้งซ่อม/ผู้ใช้งานทั่วไป", "แจ้งซ่อมและดูทรัพย์สินที่ถือครอง", "g4"],
+          ["ผู้บริหาร", "ภาพรวม รายงาน และอนุมัติรายการสำคัญ", "g6"]];
+        var MODS = [["ov", "ภาพรวม", "ดู Command Center|ดูจอ TV|ดูปฏิทิน"], ["asset", "ทะเบียนทรัพย์สิน", "ดู|เพิ่ม|แก้ไข|ลบ|นำเข้า|ส่งออก|พิมพ์ป้าย"], ["move", "โอนย้าย/ยืม-คืน/จำหน่าย", "ดู|ขอ|อนุมัติ"],
+          ["req", "ใบแจ้งซ่อม", "ดู|แจ้งซ่อม|คัดกรอง"], ["wo", "ใบสั่งงาน", "ดู|ดูทั้งหมด|สร้าง|อัปเดต|มอบหมาย|อนุมัติ|ปิดงาน|ยกเลิก"], ["pm", "แผน PM", "ดู|สร้าง|แก้ไข|อนุมัติ"],
+          ["iot", "IoT", "ดู|จัดการอุปกรณ์|ตั้งค่า Alert"], ["cal", "สอบเทียบ", "ดู|บันทึกผล|แก้ไข|อนุมัติ"], ["cnt", "ตรวจนับ", "ดู|สร้างรอบ|ตรวจนับ|อนุมัติผล"],
+          ["dam", "DAM", "ดู|อัปโหลด|แก้ไข|ลบ"], ["store", "คลังอะไหล่", "ดู|รับเข้า|เบิกจ่าย|ปรับยอด|โอนคลัง"], ["pr", "จัดซื้อ", "ดู|จัดการ PR/PO|อนุมัติ"],
+          ["bud", "งบประมาณ", "ดู|จัดการ|อนุมัติ"], ["rca", "RCA/FMEA", "ดู|สร้าง|อนุมัติ"], ["rep", "รายงาน", "ดู|ส่งออก|ตั้งเวลาส่ง"], ["usr", "ผู้ใช้", "ดู|เพิ่ม|แก้ไข|ระงับ/รีเซ็ต"],
+          ["set", "ตั้งค่าระบบ", "ดู|แก้ไข|จัดการ API Token"], ["aud", "Audit Log", "ดู|ส่งออก"], ["cf", "ฟิลด์เพิ่มเติม", "ดู|จัดการ"]].map(function (m) { return { k: m[0], n: m[1], p: m[2].split("|") }; });
+        var ALL = []; MODS.forEach(function (m) { m.p.forEach(function (_, i) { ALL.push(m.k + "." + i); }); });
+        // preset spec: "mod" = whole module, "mod.i" = one, "*.0" = every view
+        var SPEC = ["*", "ov asset move cnt dam rep cf req.0 wo.0 pm.0 cal.0 bud.0 rca.0", "ov.0 asset.0 asset.5 move.0 move.2 cnt.0 cnt.3 bud rep.0 rep.1 aud.0",
+          "ov asset.0 asset.1 asset.2 usr set aud cf iot rep.0", "ov asset.0 req wo pm iot cal store.0 store.2 pr.0 pr.1 rca rep.0 rep.1",
+          "ov.0 ov.2 asset.0 req.0 req.1 wo.0 wo.3 wo.6 pm.0 cal.0 cal.1 store.0 store.2 rca.0", "ov.0 asset.0 store cnt.0 cnt.2 pr.0 pr.1 rep.0",
+          "ov.0 pr store.0 bud.0 rep.0 rep.1", "*.0 aud rep.1", "ov.0 asset.0 req.0 req.1 move.0 move.1", "ov *.0 move.2 pr.2 bud.2 rca.2 rep"];
+        function expand(s) {
+          if (s === "*") return ALL.slice(); var out = {};
+          s.split(" ").forEach(function (t) { ALL.forEach(function (id) { var m = id.split(".")[0], i = id.split(".")[1];
+            if (t === id || t === m || (t.indexOf("*.") === 0 && t.slice(2) === i && i === "0")) out[id] = 1; }); });
+          return ALL.filter(function (id) { return out[id]; });
+        }
+        var roles = ROLES.map(function (r, i) { return { n: r[0], d: r[1], g: r[2], perms: new Set(expand(SPEC[i])) }; });
+
+        var S = ["โรงงานสมุทรสาคร", "โรงงานระยอง"];
+        var U = [["ผู้ดูแลระบบ", "admin", "ฝ่ายเทคโนโลยีสารสนเทศ", 0, "System Administrator", 0, "ทั้งหมด", "ออนไลน์"], ["กมลวรรณ ทรัพย์มั่น", "asset.mgr", "ฝ่ายบริหารทรัพย์สิน", 0, "ผู้จัดการฝ่ายทรัพย์สิน", 1, "ทั้งหมด", "วันนี้ 09:12"],
+          ["นภา สุขเจริญ", "account", "ฝ่ายบัญชี", 0, "นักบัญชีสินทรัพย์", 2, "ทั้งหมด", "วันนี้ 08:47"], ["ณัฐพล ไอที", "it.admin", "ฝ่ายเทคโนโลยีสารสนเทศ", 0, "IT Administrator", 3, "ทั้งหมด", "วันนี้ 10:05"],
+          ["ประเสริฐ ช่างใหญ่", "maint.mgr", "ฝ่ายซ่อมบำรุง", 0, "ผู้จัดการซ่อมบำรุง", 4, "ไซต์ของตน", "วันนี้ 07:58"], ["สมชัย กิตติศักดิ์", "somchai", "ฝ่ายซ่อมบำรุง", 0, "ช่างไฟฟ้า", 5, "ไซต์ของตน", "ออนไลน์"],
+          ["วิชัย ธนชัย", "wichai", "ฝ่ายซ่อมบำรุง", 0, "ช่างกล", 5, "ไซต์ของตน", "เมื่อวาน 17:30"], ["ธนพล ศรีวิชัย", "thanapol", "ฝ่ายซ่อมบำรุง", 1, "ช่างกล", 5, "ไซต์ของตน", "เมื่อวาน 16:02"],
+          ["อนุชา ผ่องภัทร", "anucha", "ฝ่ายซ่อมบำรุง", 0, "ช่างแอร์", 5, "ไซต์ของตน", "วันนี้ 08:15"], ["ปรีชา มณีรัตน์", "preecha", "ฝ่ายซ่อมบำรุง", 1, "ช่างเทคนิคเครื่องมือวัด", 5, "ไซต์ของตน", "2 วันก่อน"],
+          ["สุดา คลังดี", "store", "แผนกคลังสินค้า", 0, "เจ้าหน้าที่คลัง", 6, "ไซต์ของตน", "วันนี้ 09:40"], ["วรรณา จัดหา", "purchase", "ฝ่ายจัดซื้อ", 0, "เจ้าหน้าที่จัดซื้อ", 7, "ทั้งหมด", "วันนี้ 10:21"],
+          ["ศรีพร ตรวจสอบ", "auditor", "ฝ่ายตรวจสอบภายใน", 0, "ผู้ตรวจสอบภายใน", 8, "ทั้งหมด", "3 วันก่อน"], ["มานะ ผลิตดี", "user", "ฝ่ายผลิต", 0, "หัวหน้าไลน์ผลิต", 9, "เฉพาะที่ถือครอง", "เมื่อวาน 14:10"],
+          ["วีระ ผู้บริหาร", "exec", "สำนักกรรมการผู้จัดการ", 0, "ผู้บริหาร", 10, "ทั้งหมด", "วันนี้ 08:02"]];
+        var users = U.map(function (u, i) { return { name: u[0], user: u[1], email: u[1] + "@itmaint.co.th", emp: "EMP" + String(1001 + i), dept: u[2], site: S[u[3]], pos: u[4], role: u[5], scope: u[6], last: u[7], st: "ใช้งาน" }; });
+        var grads = ["g1", "g2", "g3", "g4", "g5", "g6"];
+        var initials = function (n) { var p = n.trim().split(/\s+/); return (p[0][0] + (p[1] ? p[1][0] : p[0][1] || "")).toUpperCase(); };
+
+        var toastT; function toast(m) { var t = $("#toast"); t.textContent = "✓ " + m; t.classList.add("show"); clearTimeout(toastT); toastT = setTimeout(function () { t.classList.remove("show"); }, 2600); }
+        document.addEventListener("click", function (e) { var b = e.target.closest("[data-toast]"); if (b) toast(b.getAttribute("data-toast")); });
+
+        function roleOpts() { return roles.map(function (r, i) { return '<option value="' + i + '">' + esc(r.n) + "</option>"; }).join(""); }
+        function fillSelects() { var v = $("#frole").value; $("#frole").innerHTML = '<option value="">ทุกบทบาท (' + roles.length + ")</option>" + roleOpts(); $("#frole").value = v; $("#frm-role").innerHTML = roleOpts(); }
+
+        function kpis() {
+          var k = [["ผู้ใช้", users.length, "users", "g1"], ["ใช้งาน", users.filter(function (u) { return u.st === "ใช้งาน"; }).length, "ok", "g3"],
+            ["ออนไลน์ตอนนี้", users.filter(function (u) { return u.last === "ออนไลน์"; }).length, "on", "g5"], ["ล็อก", users.filter(function (u) { return u.st === "ถูกล็อก"; }).length, "lock", "g2"]];
+          $("#kpis").innerHTML = k.map(function (x) { return '<div class="x-card x-kpi"><span class="x-tile ' + x[3] + '">' + ico(x[2]) + "</span><div><b>" + x[1] + "</b><span>" + x[0] + "</span></div></div>"; }).join("");
+        }
+        function renderUsers() {
+          var q = $("#fq").value.trim().toLowerCase(), r = $("#frole").value, s = $("#fst").value;
+          var rows = users.map(function (u, i) { return [u, i]; }).filter(function (p) { var u = p[0];
+            return (!q || [u.user, u.name, u.email, u.emp].join(" ").toLowerCase().indexOf(q) > -1) && (r === "" || u.role == r) && (!s || u.st === s); });
+          $("#ubody").innerHTML = rows.length ? rows.map(function (p) { var u = p[0], i = p[1], adm = u.user === "admin";
+            return '<tr><th scope="row"><div class="x-user"><span class="x-av ' + grads[i % 6] + '">' + esc(initials(u.name)) + "</span><div>" + esc(u.name) + "<small>" + esc(u.user) + "</small></div></div></th>" +
+              '<td data-label="แผนก/ไซต์ · ตำแหน่ง">' + esc(u.dept) + " / " + esc(u.site) + "<small>" + esc(u.pos) + "</small></td>" +
+              '<td data-label="บทบาท"><span class="x-role r' + u.role + '">' + esc(roles[u.role].n) + "</span></td>" +
+              '<td data-label="ขอบเขตข้อมูล">' + esc(u.scope) + "</td>" +
+              '<td data-label="เข้าใช้ล่าสุด"' + (u.last === "ออนไลน์" ? ' class="x-on">● ' : ">") + esc(u.last) + "</td>" +
+              '<td data-label="สถานะ"><span class="x-st' + (u.st === "ระงับ" ? " off" : u.st === "ถูกล็อก" ? " lock" : "") + '">' + u.st + "</span></td>" +
+              '<td data-label="การจัดการ"><div class="x-acts"><button class="x-btn x-ico" data-act="edit" data-i="' + i + '" aria-label="แก้ไข ' + esc(u.user) + '" title="แก้ไข">' + ico("edit") + "</button>" +
+              '<button class="x-btn x-ico" data-act="reset" data-i="' + i + '" aria-label="รีเซ็ตรหัสผ่าน ' + esc(u.user) + '" title="รีเซ็ตรหัสผ่าน">' + ico("key") + "</button>" +
+              '<button class="x-btn x-ico" data-act="ban" data-i="' + i + '"' + (adm ? " disabled" : "") + ' aria-label="' + (u.st === "ระงับ" ? "เปิดใช้งาน " : "ระงับ ") + esc(u.user) + '" title="' + (adm ? "ระงับไม่ได้: บัญชีผู้ดูแลระบบสูงสุด" : u.st === "ระงับ" ? "เปิดใช้งาน" : "ระงับ") + '">' + ico(u.st === "ระงับ" ? "ok" : "ban") + "</button></div></td></tr>";
+          }).join("") : '<tr><td colspan="7" style="color:var(--x-muted);text-align:center;padding:24px">ไม่พบผู้ใช้ที่ตรงกับตัวกรอง</td></tr>';
+          kpis();
+        }
+        ["#fq", "#frole", "#fst"].forEach(function (s) { $(s).addEventListener("input", renderUsers); });
+        $("#gsearch").addEventListener("input", function () { $("#fq").value = this.value; showTab(1); renderUsers(); });
+        document.addEventListener("keydown", function (e) { if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") { e.preventDefault(); $("#gsearch").focus(); } });
+
+        var editing = -1, extra = 0, dlg = $("#dlg"), form = $("#uform");
+        function openForm(i) {
+          editing = i; form.reset(); fillSelects();
+          [].slice.call(form.querySelectorAll(".x-extra")).forEach(function (n) { n.remove(); });
+          $("#dlgTitle").textContent = i < 0 ? "เพิ่มผู้ใช้" : "แก้ไขผู้ใช้";
+          if (i >= 0) { var u = users[i]; ["name", "user", "email", "emp", "dept", "site", "pos", "role", "scope"].forEach(function (k) { form.elements[k].value = u[k]; }); form.elements.bind.value = u.bind || "ยังไม่ผูก"; }
+          dlg.showModal();
+        }
+        $("#addBtn").addEventListener("click", function () { showTab(1); openForm(-1); });
+        $("#addField").addEventListener("click", function () { extra++; var l = document.createElement("label"); l.className = "x-extra";
+          l.innerHTML = '<input class="x-in" placeholder="ชื่อฟิลด์" aria-label="ชื่อฟิลด์เพิ่มเติม ' + extra + '" value="ฟิลด์เพิ่มเติม ' + extra + '" /><input class="x-in" placeholder="ค่า" aria-label="ค่าของฟิลด์เพิ่มเติม ' + extra + '" />';
+          $("#fields").appendChild(l); l.querySelectorAll("input")[1].focus(); });
+        form.addEventListener("submit", function (e) {
+          if (e.submitter && e.submitter.value !== "ok") return;
+          var f = form.elements, d = { name: f.name.value.trim(), user: f.user.value.trim(), email: f.email.value.trim() || f.user.value.trim() + "@itmaint.co.th", emp: f.emp.value.trim() || "EMP" + (1001 + users.length), dept: f.dept.value.trim() || "-", site: f.site.value, pos: f.pos.value.trim() || "-", role: +f.role.value, scope: f.scope.value, bind: f.bind.value };
+          if (users.some(function (u, i) { return u.user === d.user && i !== editing; })) { e.preventDefault(); f.user.setCustomValidity("มี username นี้แล้ว"); f.user.reportValidity(); f.user.setCustomValidity(""); return; }
+          if (editing < 0) { d.last = "ยังไม่เคยเข้าใช้"; d.st = "ใช้งาน"; users.push(d); toast("เพิ่มผู้ใช้ " + d.name + " แล้ว"); }
+          else { Object.assign(users[editing], d); toast("บันทึกข้อมูล " + d.name + " แล้ว"); }
+          renderUsers(); renderRoles();
+        });
+        $("#ubody").addEventListener("click", function (e) {
+          var b = e.target.closest("[data-act]"); if (!b || b.disabled) return; var u = users[+b.dataset.i];
+          if (b.dataset.act === "edit") openForm(+b.dataset.i);
+          if (b.dataset.act === "reset") toast("ส่งลิงก์รีเซ็ตรหัสผ่านไปที่ " + u.email + " แล้ว");
+          if (b.dataset.act === "ban") { u.st = u.st === "ระงับ" ? "ใช้งาน" : "ระงับ"; toast((u.st === "ระงับ" ? "ระงับ " : "เปิดใช้งาน ") + u.user + " แล้ว"); renderUsers(); }
+        });
+
+        var cur = 0;
+        function renderRoles() {
+          $("#rcount").textContent = roles.length;
+          $("#roles").innerHTML = roles.map(function (r, i) { var n = users.filter(function (u) { return u.role === i; }).length;
+            return '<button class="x-rc' + (i === cur ? " on" : "") + '" data-r="' + i + '" aria-pressed="' + (i === cur) + '"><span class="x-tile ' + r.g + '">' + ico("shield") + "</span>" + esc(r.n) + "<em>" + n + " คน</em></button>"; }).join("");
+        }
+        function renderPerms() {
+          var r = roles[cur]; $("#rname").value = r.n; $("#rdesc").textContent = r.d;
+          $("#pcount").textContent = "เปิดสิทธิ์ " + r.perms.size + " จาก " + ALL.length + " สิทธิ์";
+          $("#mods").innerHTML = MODS.map(function (m) { var on = m.p.filter(function (_, i) { return r.perms.has(m.k + "." + i); }).length;
+            return '<div class="x-mod"><label class="x-mh"><input type="checkbox" data-g="' + m.k + '"' + (on === m.p.length ? " checked" : "") + (on && on < m.p.length ? ' data-ind="1"' : "") + " />" + m.n + "<em>" + on + "/" + m.p.length + '</em></label><div class="x-perms">' +
+              m.p.map(function (p, i) { var id = m.k + "." + i; return '<label class="x-sw"><input type="checkbox" data-p="' + id + '"' + (r.perms.has(id) ? " checked" : "") + ' aria-label="' + m.n + ": " + p + '" /><i></i>' + p + "</label>"; }).join("") + "</div></div>"; }).join("");
+          [].slice.call(document.querySelectorAll("[data-ind]")).forEach(function (c) { c.indeterminate = true; });
+        }
+        $("#roles").addEventListener("click", function (e) { var b = e.target.closest("[data-r]"); if (!b) return; cur = +b.dataset.r; renderRoles(); renderPerms(); });
+        $("#mods").addEventListener("change", function (e) { var t = e.target, r = roles[cur];
+          if (t.dataset.p) { t.checked ? r.perms.add(t.dataset.p) : r.perms.delete(t.dataset.p); }
+          if (t.dataset.g) { var m = MODS.filter(function (x) { return x.k === t.dataset.g; })[0]; m.p.forEach(function (_, i) { t.checked ? r.perms.add(m.k + "." + i) : r.perms.delete(m.k + "." + i); }); }
+          renderPerms(); var el = document.querySelector('[data-p="' + t.dataset.p + '"],[data-g="' + t.dataset.g + '"]'); if (el) el.focus();
+        });
+        $("#rname").addEventListener("change", function () { var v = this.value.trim(); if (v) { roles[cur].n = v; renderRoles(); fillSelects(); renderUsers(); } });
+        $("#selAll").addEventListener("click", function () { roles[cur].perms = new Set(ALL); renderPerms(); });
+        $("#clrAll").addEventListener("click", function () { roles[cur].perms = new Set(); renderPerms(); });
+        $("#savePerm").addEventListener("click", function () { toast("บันทึก " + roles[cur].perms.size + " สิทธิ์ ให้บทบาท " + roles[cur].n); });
+        $("#newRole").addEventListener("click", function () { roles.push({ n: "บทบาทใหม่ " + (roles.length - 10), d: "บทบาทที่สร้างเอง เริ่มจากสิทธิ์ดูภาพรวม", g: grads[roles.length % 6], perms: new Set(["ov.0"]) });
+          cur = roles.length - 1; renderRoles(); renderPerms(); fillSelects(); toast("สร้างบทบาทใหม่แล้ว ตั้งชื่อได้ที่หัวข้อด้านขวา"); $("#rname").focus(); $("#rname").select(); });
+
+        function showTab(n) { $("#t1").setAttribute("aria-selected", n === 1); $("#t2").setAttribute("aria-selected", n === 2); $("#tabUsers").hidden = n !== 1; $("#tabRbac").hidden = n !== 2;
+          [].slice.call(document.querySelectorAll("#nav a")).forEach(function (a) { var on = a.dataset.go == n; a.classList.toggle("on", on); on ? a.setAttribute("aria-current", "page") : a.removeAttribute("aria-current"); }); }
+        $("#t1").addEventListener("click", function () { showTab(1); }); $("#t2").addEventListener("click", function () { showTab(2); });
+        $(".x-tabs").addEventListener("keydown", function (e) { if (e.key === "ArrowRight" || e.key === "ArrowLeft") { var n = $("#t1").getAttribute("aria-selected") === "true" ? 2 : 1; showTab(n); $("#t" + n).focus(); } });
+        $("#nav").addEventListener("click", function (e) { var a = e.target.closest("a"); if (!a) return; e.preventDefault(); $("#side").classList.remove("open");
+          if (a.dataset.go) showTab(+a.dataset.go); else toast("เปิดเมนู " + a.textContent + " (ตัวอย่าง)"); });
+        $("#menuBtn").addEventListener("click", function () { $("#side").classList.toggle("open"); });
+
+        fillSelects(); renderUsers(); renderRoles(); renderPerms();
+      })();
+    </script>
+  </body>
+</html>
