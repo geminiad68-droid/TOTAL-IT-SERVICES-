@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="color-scheme" content="dark" />
+<title>ITMAINT Settings Notify</title>
+<style>
+*{box-sizing:border-box}
+:root{--bg:#0A1024;--side:#0B1330;--card:#0F1833;--card2:#14204A;--field:#0A1230;--line:rgba(96,148,255,.28);--line2:rgba(120,160,255,.16);--glow:0 0 0 1px rgba(88,140,255,.08),0 0 24px -8px rgba(70,130,255,.45);--tx:#E8EDFF;--tx2:#9DAAD2;--blue:#5B9BFF;--ok:#34D399;--amber:#FBBF24;--bad:#FB7185;--r:16px;--grad:linear-gradient(135deg,#C2410C,#BE185D)}
+html,body{margin:0;background:var(--bg);color:var(--tx);font:14px/1.5 "Noto Sans Thai",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color-scheme:dark}
+body{overflow-x:hidden}
+button,input,select{font:inherit;color:inherit}
+svg{flex:none}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.app{display:grid;grid-template-columns:252px minmax(0,1fr);min-height:100vh}
+.app>div:last-child{min-width:0}
+.tab,.top{max-width:100%}
+/* sidebar */
+.side{position:sticky;top:0;height:100vh;overflow-y:auto;background:var(--side);border-right:1px solid var(--line2);padding:18px 12px 24px}
+.logo{display:flex;gap:10px;align-items:center;padding:4px 8px 18px}
+.logo b{display:block;font-size:16px;letter-spacing:.3px}.logo small{color:var(--tx2);font-size:12px}
+.grp{margin:14px 8px 6px;font-size:12px;color:var(--tx2);letter-spacing:.4px}
+.nav a{display:flex;align-items:center;gap:10px;min-height:44px;padding:0 12px;border-radius:10px;color:#C7D2F2;text-decoration:none;border:1px solid transparent}
+.nav a:hover{background:rgba(91,155,255,.08)}
+.nav a.on{background:linear-gradient(90deg,rgba(91,155,255,.22),rgba(91,155,255,.05));border-color:var(--line);color:#fff;box-shadow:var(--glow)}
+.scrim{display:none}
+/* top bar */
+.top{position:sticky;top:0;z-index:20;display:flex;gap:10px;align-items:center;padding:12px 24px;background:rgba(10,16,36,.88);backdrop-filter:blur(12px);border-bottom:1px solid var(--line2)}
+.search{flex:1;min-width:0;max-width:460px;display:flex;align-items:center;gap:8px;min-height:44px;padding:0 12px;border-radius:12px;background:var(--field);border:1px solid var(--line2);color:var(--tx2)}
+.search input{flex:1;min-width:0;background:none;border:0;outline:0;color:var(--tx)}
+kbd{font:12px ui-monospace,monospace;border:1px solid var(--line);border-radius:6px;padding:1px 6px;color:var(--tx2)}
+.sp{flex:1}
+.ava{display:flex;align-items:center;gap:8px;min-height:44px;padding:0 10px 0 4px;border-radius:12px;background:none;border:1px solid var(--line2);cursor:pointer}
+.ava i{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-weight:600;background:linear-gradient(135deg,#2563EB,#7C3AED)}
+/* controls */
+.in{width:100%;min-height:44px;background:var(--field);border:1px solid rgba(120,160,255,.25);border-radius:10px;color:var(--tx);padding:0 12px}
+.in[readonly]{color:var(--tx2);background:#0C142E}
+select.in{padding-right:8px}
+.in:focus{border-color:var(--blue);outline:0;box-shadow:0 0 0 3px rgba(91,155,255,.2)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:0 16px;border-radius:10px;background:var(--card2);border:1px solid var(--line);color:var(--tx);cursor:pointer;white-space:nowrap;font-weight:500}
+.btn:hover{border-color:var(--blue)}
+.btn.pri{background:var(--grad);border:0;color:#fff;font-weight:600;box-shadow:0 6px 20px -8px rgba(190,24,93,.7)}
+.btn:disabled{opacity:.6;cursor:wait}
+.ib{width:44px;min-height:44px;padding:0;position:relative}
+.ib .badge{position:absolute;top:8px;right:9px;width:8px;height:8px;border-radius:50%;background:#F43F5E}
+.grpi{display:flex;gap:8px}.grpi .in{flex:1;min-width:0}
+.sw{position:relative;display:inline-flex;align-items:center;min-height:44px;min-width:52px;cursor:pointer}
+.sw input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
+.sw span{width:46px;height:26px;border-radius:13px;background:#26325C;border:1px solid var(--line);position:relative;transition:.2s}
+.sw span::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#AEB9DD;transition:.2s}
+.sw input:checked+span{background:var(--grad);border-color:transparent}
+.sw input:checked+span::after{left:23px;background:#fff}
+.sw input:focus-visible+span{outline:2px solid var(--blue);outline-offset:2px}
+.seg{display:inline-flex;padding:3px;border-radius:12px;background:var(--field);border:1px solid var(--line2)}
+.seg button,.chips button{min-height:40px;min-width:44px;padding:0 14px;border-radius:9px;border:1px solid transparent;background:none;cursor:pointer;color:var(--tx2)}
+.seg button[aria-pressed=true]{background:var(--card2);border-color:var(--line);color:#fff}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips button{min-height:44px;border-color:var(--line2);background:var(--field)}
+.chips button[aria-pressed=true]{background:rgba(91,155,255,.2);border-color:var(--blue);color:#fff}
+input[type=range]{width:100%;accent-color:#E1306C;min-height:44px}
+/* page */
+.main{padding:24px;max-width:1400px;width:100%}
+.ph{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;justify-content:space-between;margin-bottom:18px}
+.ph h1{margin:0;font-size:24px;font-weight:600}.ph p{margin:4px 0 0;color:var(--tx2)}
+.crumb{font-size:12px;color:var(--tx2)}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding:4px;margin-bottom:20px;border-radius:14px;background:var(--card);border:1px solid var(--line2);scrollbar-width:none}
+.tab{display:flex;align-items:center;gap:8px;min-height:44px;padding:0 16px;border-radius:10px;border:1px solid transparent;background:none;color:var(--tx2);cursor:pointer;white-space:nowrap}
+.tab[aria-selected=true]{background:var(--card2);border-color:var(--line);color:#fff;box-shadow:var(--glow)}
+.card{background:linear-gradient(180deg,#111C3D,var(--card));border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--glow);padding:18px;min-width:0}
+.ch{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.ch h3{margin:0;font-size:16px;font-weight:600}.ch p{margin:0;color:var(--tx2);font-size:12px}
+.ch .sp{flex:1}
+.tile{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;color:#fff;flex:none;box-shadow:inset 0 1px 0 rgba(255,255,255,.25)}
+.g1{background:linear-gradient(135deg,#2563EB,#06B6D4)}.g2{background:linear-gradient(135deg,#7C3AED,#DB2777)}.g3{background:linear-gradient(135deg,#EA580C,#DB2777)}.g4{background:linear-gradient(135deg,#059669,#0891B2)}.g5{background:linear-gradient(135deg,#4F46E5,#7C3AED)}.g6{background:linear-gradient(135deg,#D97706,#DC2626)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:16px;align-items:start}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:16px;align-items:start}
+.f{display:grid;grid-template-columns:minmax(120px,42%) minmax(0,1fr);gap:6px 12px;align-items:center;padding:7px 0}
+.f>label,.f>.lb{color:#C7D2F2}
+.f small,.hint{color:var(--tx2);font-size:12px}
+.sub{margin:10px 0 2px;font-size:12px;color:var(--blue);letter-spacing:.3px}
+.unit{display:flex;align-items:center;gap:8px}.unit .in{flex:1;min-width:0}.unit span{color:var(--tx2);white-space:nowrap}
+.gl{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.gl label{display:block;font-size:12px;color:var(--tx2);margin-bottom:4px}
+.dl{display:grid;grid-template-columns:auto 1fr;gap:0}
+.dl dt,.dl dd{margin:0;padding:10px 0;border-top:1px solid var(--line2)}
+.dl dt{color:var(--tx2)}.dl dd{text-align:right;font-weight:500}
+.ok{color:var(--ok)}.amber{color:var(--amber)}.bad{color:var(--bad)}
+.stat{display:inline-flex;align-items:center;gap:6px;font-size:12px;padding:3px 10px;border-radius:999px;border:1px solid var(--line2);background:var(--field);white-space:nowrap}
+.stat::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.logo-up{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.logo-up .pv{width:44px;height:44px;border-radius:10px;border:1px dashed var(--line);display:grid;place-items:center;color:var(--tx2)}
+.save{position:sticky;bottom:12px;z-index:5;margin-top:18px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;padding:12px 16px;border-radius:var(--r);background:rgba(15,24,51,.92);backdrop-filter:blur(10px);border:1px solid var(--line);box-shadow:var(--glow)}
+.save p{margin:0;color:var(--tx2)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:12px;margin-bottom:16px}
+.kpi{display:flex;gap:12px;align-items:center}
+.kpi b{display:block;font-size:24px;line-height:1.2;font-weight:600}.kpi span{color:var(--tx2);font-size:12px}
+.kpi.warn{border-color:rgba(251,191,36,.45);box-shadow:0 0 24px -10px rgba(251,191,36,.6)}
+.acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+/* rules matrix */
+.mx{padding:0;overflow:hidden}
+.mx-r{display:grid;grid-template-columns:minmax(0,1.5fr) repeat(3,minmax(0,1fr));gap:10px;align-items:center;padding:8px 18px;border-top:1px solid var(--line2)}
+.mx-h{border-top:0;background:var(--card2);color:var(--tx2);font-size:12px;min-height:48px}
+.mx-h div{display:flex;align-items:center;gap:8px}
+.mx-n{font-weight:500}.mx-n small{display:block;color:var(--tx2);font-weight:400;font-size:12px}
+.mx-c{display:flex;align-items:center;gap:6px;min-width:0}
+.mx-c .lbm{display:none}
+.cb{display:inline-grid;place-items:center;min-width:44px;min-height:44px;cursor:pointer}
+.cb input{width:20px;height:20px;accent-color:#E1306C;cursor:pointer}
+.mx-c select{flex:1;min-width:0;padding:0 6px}
+.mx-c.off select{opacity:.45}
+/* cron */
+.code{display:flex;gap:10px;align-items:flex-start;background:#060B1C;border:1px solid var(--line2);border-radius:12px;padding:8px 8px 8px 14px}
+.code code{flex:1;min-width:0;font:13px/1.6 ui-monospace,SFMono-Regular,Menlo,monospace;color:#9FE6C4;white-space:pre-wrap;word-break:break-all;padding:10px 0}
+.jt{width:100%;border-collapse:collapse}
+.jt th,.jt td{text-align:left;padding:10px 12px;border-top:1px solid var(--line2);vertical-align:middle}
+.jt thead th{border-top:0;color:var(--tx2);font-size:12px;font-weight:500;background:var(--card2)}
+.jt td.ms{font-family:ui-monospace,monospace;font-size:13px;white-space:nowrap}
+.jt .ra{display:flex;gap:6px;justify-content:flex-end}
+.jt tr.flash td{animation:fl 1.2s}
+@keyframes fl{from{background:rgba(52,211,153,.18)}to{background:transparent}}
+.tw{padding:0;overflow:hidden}
+/* modal & toast */
+.modal{position:fixed;inset:0;z-index:50;display:grid;place-items:center;padding:16px;background:rgba(3,6,18,.7);backdrop-filter:blur(4px)}
+.modal[hidden]{display:none}
+.dlg{width:min(520px,100%);max-height:90vh;overflow:auto}
+.toasts{position:fixed;right:16px;bottom:16px;z-index:60;display:grid;gap:8px;width:min(360px,calc(100vw - 32px))}
+.toast{display:flex;gap:10px;align-items:center;padding:12px 14px;border-radius:12px;background:#121C3F;border:1px solid rgba(52,211,153,.45);box-shadow:0 10px 30px -10px #000,0 0 20px -8px rgba(52,211,153,.5);animation:tin .25s}
+.toast .tile{width:30px;height:30px;border-radius:9px}
+@keyframes tin{from{opacity:0;transform:translateY(8px)}}
+.menu-btn{display:none}
+@media (max-width:1000px){
+ .app{grid-template-columns:minmax(0,1fr)}
+ .jt thead{display:none}
+ .jt tr{display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;padding:12px;border-top:1px solid var(--line2)}
+ .jt td{border:0;padding:2px 0}
+ .jt td::before{content:attr(data-l);display:block;font-size:12px;color:var(--tx2)}
+ .jt td:first-child,.jt td:last-child{grid-column:1/-1}
+ .jt td:last-child::before{display:none}
+ .jt .ra{justify-content:stretch}.jt .ra .btn{flex:1}
+ .side{position:fixed;z-index:40;left:0;width:272px;transform:translateX(-100%);transition:transform .25s}
+ .side.open{transform:none}
+ .scrim.open{display:block;position:fixed;inset:0;z-index:35;background:rgba(3,6,18,.6)}
+ .menu-btn{display:inline-flex}
+}
+@media (max-width:720px){
+ .top{padding:10px 12px;gap:8px;flex-wrap:wrap}
+ .top .site,.ava .nm,.search kbd,.rp-t{display:none}
+ .search{order:5;flex-basis:100%;max-width:none}
+ .main{padding:16px 12px}
+ .f{grid-template-columns:1fr}
+ .gl{grid-template-columns:1fr}
+ .mx-h{display:none}
+ .mx-r{grid-template-columns:repeat(3,minmax(0,1fr));padding:12px}
+ .mx-n{grid-column:1/-1}
+ .mx-c{flex-direction:column;align-items:stretch;gap:2px}
+ .mx-c .lbm{display:flex;align-items:center;font-size:12px;color:var(--tx2)}
+ .mx-c .cb{min-width:0;justify-content:start;grid-auto-flow:column;gap:6px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="side" id="side" aria-label="เมนูหลัก">
+    <div class="logo"><span class="tile g3" id="lg"></span><div><b>IT&amp;MAINT</b><small>Smart Asset · Smart Work</small></div></div>
+    <nav class="nav" id="nav"></nav>
+  </aside>
+  <div class="scrim" id="scrim"></div>
+  <div>
+    <header class="top">
+      <button class="btn ib menu-btn" id="menu" aria-label="เปิดเมนู"></button>
+      <select class="in site" style="width:auto" aria-label="เลือกไซต์"><option>ทุกไซต์</option><option>โรงงานสมุทรสาคร</option><option>โรงงานระยอง</option></select>
+      <label class="search"><span id="si"></span><input id="q" placeholder="ค้นหาทรัพย์สิน ใบงาน เมนู…" aria-label="ค้นหา" /><kbd>Ctrl K</kbd></label>
+      <span class="sp"></span>
+      <button class="btn pri" id="newReq"><span id="pi"></span><span class="rp-t">แจ้งซ่อม</span></button>
+      <button class="btn ib" id="bell" aria-label="การแจ้งเตือน"><span class="badge"></span></button>
+      <button class="ava" aria-label="บัญชี Admin"><i>A</i><span class="nm">Admin</span></button>
+    </header>
+    <main class="main">
+      <div class="ph"><div><div class="crumb">ระบบ / ตั้งค่าระบบ</div><h1>ตั้งค่าระบบ &amp; การแจ้งเตือน</h1><p>ค่ากลางของระบบ ช่องทางส่ง กฎการแจ้งเตือน และงานตั้งเวลา</p></div></div>
+      <div class="tabs" role="tablist" id="tabs">
+        <button class="tab" role="tab" aria-selected="true" aria-controls="p-gen" data-i="gear">ตั้งค่าทั่วไป</button>
+        <button class="tab" role="tab" aria-selected="false" aria-controls="p-ch" data-i="send">ช่องทางแจ้งเตือน</button>
+        <button class="tab" role="tab" aria-selected="false" aria-controls="p-rule" data-i="bell">กฎการแจ้งเตือน</button>
+        <button class="tab" role="tab" aria-selected="false" aria-controls="p-cron" data-i="clock">งานตั้งเวลา (Cron)</button>
+      </div>
+
+      <section id="p-gen" role="tabpanel"></section>
+      <section id="p-ch" role="tabpanel" hidden></section>
+      <section id="p-rule" role="tabpanel" hidden></section>
+      <section id="p-cron" role="tabpanel" hidden></section>
+    </main>
+  </div>
+</div>
+<div class="modal" id="modal" hidden><div class="card dlg" role="dialog" aria-modal="true" aria-labelledby="mt"><div class="ch"><h3 id="mt"></h3><span class="sp"></span><button class="btn ib" data-close aria-label="ปิด" id="mx"></button></div><div id="mb"></div></div></div>
+<div class="toasts" id="toasts" aria-live="polite"></div>
+<script>
+const P={grid:'M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z',radar:'M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM12 12l6-6',box:'M3 7l9-4 9 4-9 4-9-4zM3 7v10l9 4 9-4V7M12 11v10',swap:'M7 4L3 8l4 4M3 8h14M17 20l4-4-4-4M21 16H7',check:'M5 12l5 5 9-10',wrench:'M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.4-.6-.6-2.4z',cal:'M4 5h16v16H4zM4 10h16M9 3v4M15 3v4',alert:'M12 3l10 18H2zM12 10v5M12 18h.01',cart:'M3 4h2l2.4 11h11L21 7H6M9 20h.01M18 20h.01',pack:'M21 8l-9-5-9 5v8l9 5 9-5zM3 8l9 5 9-5M12 13v8',chart:'M4 20V10M10 20V4M16 20v-7M22 20H2',coin:'M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM15 9a3 3 0 0 0-3-1.5c-1.7 0-3 .9-3 2s1.3 2 3 2 3 .9 3 2-1.3 2-3 2a3 3 0 0 1-3-1.5M12 6v1.5M12 16.5V18',user:'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21a8 8 0 0 1 16 0',gear:'M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z',bell:'M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a1.9 1.9 0 0 0 3.4 0',clock:'M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM12 6v6l4 2',doc:'M14 3H6v18h12V7zM14 3v4h4M9 13h6M9 17h6',search:'M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16zM21 21l-4.3-4.3',plus:'M12 5v14M5 12h14',copy:'M9 9h11v11H9zM5 15H4V4h11v1',send:'M22 2L11 13M22 2l-7 20-4-9-9-4z',mail:'M3 5h18v14H3zM3 6l9 7 9-7',chat:'M21 12a8 8 0 0 1-11.6 7.1L3 21l1.9-6.4A8 8 0 1 1 21 12z',tag:'M20.6 13.4l-7.2 7.2a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8zM7.5 7.5h.01',book:'M4 4h11a3 3 0 0 1 3 3v13H7a3 3 0 0 1-3-3zM4 17a3 3 0 0 1 3-3h11',server:'M3 4h18v6H3zM3 14h18v6H3zM7 7h.01M7 17h.01',menu:'M3 6h18M3 12h18M3 18h18',play:'M7 4l13 8-13 8z',x:'M6 6l12 12M18 6L6 18',upload:'M12 16V4M6 10l6-6 6 6M4 20h16',key:'M21 2l-9.6 9.6M15.5 7.5l3 3L22 7l-3-3M7.5 22a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11z',eye:'M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12zM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z',inbox:'M3 13h5l2 3h4l2-3h5M5 5h14l2 8v6H3v-6z',x2:'M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM15 9l-6 6M9 9l6 6',pin:'M12 22s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12zM12 12a2 2 0 1 0 0-4 2 2 0 0 0 0 4z',shield:'M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z'};
+const I=(n,s=18)=>`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${P[n]}"/></svg>`;
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c]);
+
+/* shell */
+$('#lg').innerHTML=I('shield',20);$('#menu').innerHTML=I('menu');$('#si').innerHTML=I('search');$('#pi').innerHTML=I('plus');$('#bell').insertAdjacentHTML('afterbegin',I('bell'));$('#mx').innerHTML=I('x');
+const NAV=[['ภาพรวม',[['แดชบอร์ด','grid'],['ศูนย์บัญชาการ','radar']]],['ทรัพย์สิน',[['ทะเบียนทรัพย์สิน','box'],['โอนย้าย / ยืม-คืน','swap'],['ตรวจนับ','check']]],['ซ่อมบำรุง',[['ใบงาน & แจ้งซ่อม','wrench'],['PM & สอบเทียบ','cal'],['RCA / CAPA / FMEA','alert']]],['คลัง & จัดซื้อ',[['อะไหล่ & คลัง','pack'],['ใบสั่งซื้อ (PO)','cart']]],['วิเคราะห์',[['รายงาน','chart'],['งบประมาณ','coin']]],['ระบบ',[['ผู้ใช้ & สิทธิ์','user'],['ตั้งค่าระบบ','gear',1],['การแจ้งเตือน & Cron','bell'],['บันทึกการใช้งาน','doc']]]];
+$('#nav').innerHTML=NAV.map(([g,items])=>`<div class="grp">${g}</div>`+items.map(([t,i,on])=>`<a href="#" ${on?'class="on" aria-current="page"':''} data-nav="${t}">${I(i)}${t}</a>`).join('')).join('');
+$$('.tab').forEach(t=>t.insertAdjacentHTML('afterbegin',I(t.dataset.i)));
+
+/* helpers */
+const F=(l,c,h='')=>`<div class="f"><label>${l}</label><div>${c}${h?`<small>${h}</small>`:''}</div></div>`;
+const U=(id,v,u,t='number')=>`<div class="unit"><input class="in" id="${id}" type="${t}" value="${v}"><span>${u}</span></div>`;
+const SW=(id,on,l)=>`<label class="sw"><input type="checkbox" id="${id}" ${on?'checked':''} aria-label="${l}"><span></span></label>`;
+const CH=(t,i,g,sub='',extra='')=>`<div class="ch"><span class="tile ${g}">${I(i,20)}</span><div><h3>${t}</h3>${sub?`<p>${sub}</p>`:''}</div><span class="sp"></span>${extra}</div>`;
+const CP=(id,v,l)=>`<div class="grpi"><input class="in" id="${id}" value="${v}" readonly aria-label="${l}"><button class="btn ib" data-copy="#${id}" aria-label="คัดลอก ${l}">${I('copy')}</button></div>`;
+const PW=(id,v,l)=>`<div class="grpi"><input class="in" id="${id}" type="password" value="${v}" aria-label="${l}"><button class="btn ib" data-eye="#${id}" aria-label="แสดง/ซ่อน ${l}">${I('eye')}</button></div>`;
+const B=(t,toast,pri)=>`<button class="btn${pri?' pri':''}" data-toast="${toast}">${t}</button>`;
+
+/* tab 1: general */
+const days=['จ','อ','พ','พฤ','ศ','ส','อา'];
+$('#p-gen').innerHTML=`<div class="grid">
+<div class="card">${CH('ทั่วไป','gear','g1','ข้อมูลองค์กรและการแสดงผล')}
+${F('ชื่อบริษัท <small>(บนป้าย/รายงาน)</small>','<input class="in" value="บริษัท สมาร์ท แอสเซท จำกัด" aria-label="ชื่อบริษัท">')}
+${F('โลโก้',`<div class="logo-up"><span class="pv" id="lpv">${I('upload')}</span><label class="btn">${I('upload')}อัปโหลดโลโก้<input type="file" accept="image/*" id="logo" hidden></label><small id="lname">PNG/SVG ไม่เกิน 2 MB</small></div>`)}
+${F('ธีม','<div class="seg" id="theme"><button aria-pressed="true">มืด</button><button aria-pressed="false">สว่าง</button></div>')}
+</div>
+<div class="card">${CH('ทรัพย์สิน & ป้าย','tag','g2','รูปแบบรหัสและป้าย QR')}
+${F('จำนวนหลัก Asset Tag',U('digits',4,'หลัก'),'ตัวอย่าง: <b id="tagex">AST-0001</b>')}
+${F('ขนาดป้ายเริ่มต้น','<select class="in" aria-label="ขนาดป้าย"><option selected>A4 · 24 ดวง</option><option>A4 · 40 ดวง</option><option>A4 · 65 ดวง</option><option>ม้วน 50×25 มม.</option></select>')}
+</div>
+<div class="card">${CH('ซ่อมบำรุง','wrench','g3','ตรวจจับเสียซ้ำ และเวลาทำการสำหรับ SLA')}
+<p class="sub">ตรวจจับเสียซ้ำ</p>
+${F('ช่วงวัน',U('rd',180,'วัน'))}${F('จำนวนครั้ง',U('rc',2,'ครั้งขึ้นไป'))}
+<p class="sub">เวลาทำการ (SLA)</p>
+${F('เวลาเริ่มงาน','<input class="in" type="time" value="08:00" aria-label="เวลาเริ่มงาน">')}${F('เวลาเลิกงาน','<input class="in" type="time" value="17:00" aria-label="เวลาเลิกงาน">')}
+${F('วันทำงาน',`<div class="chips" id="days">${days.map((d,i)=>`<button aria-pressed="${i<5}">${d}</button>`).join('')}</div>`,'จ–ศ')}
+</div>
+<div class="card">${CH('EAM','chart','g5','วิเคราะห์ความคุ้มค่าการซ่อม')}
+${F('แจ้งเปลี่ยนทดแทนเมื่อค่าซ่อมสะสม','<input type="range" id="eam" min="20" max="100" step="5" value="60" aria-label="เกณฑ์ค่าซ่อมสะสม">','≥ <b id="eamv">60%</b> ของราคาทุน')}
+</div>
+<div class="card">${CH('สินทรัพย์ถาวร','book','g4','ค่าเสื่อมราคา')}
+${F('ปิดงวดค่าเสื่อมอัตโนมัติต้นเดือน',SW('dep',0,'ปิดงวดค่าเสื่อมอัตโนมัติ')+'<small id="depv"> ปิดอยู่</small>')}
+</div>
+<div class="card">${CH('GL accounts','coin','g6','ผังบัญชีสำหรับบันทึกรายการ')}
+<div class="gl">${[['เงินสด/ธนาคาร',1120],['เจ้าหนี้',2110],['ส่วนเกินทุนจากการตีราคา',3310],['ขาดทุนจากการด้อยค่า',5390],['กำไรจากการจำหน่าย',4910],['ขาดทุนจากการจำหน่าย',5910]].map(([l,v],i)=>`<div><label for="gl${i}">${l}</label><input class="in" id="gl${i}" value="${v}" inputmode="numeric"></div>`).join('')}</div>
+</div>
+<div class="card">${CH('จัดซื้อ','cart','g1','ภาษีและวงเงินอนุมัติ')}
+${F('VAT',U('vat',7,'%'))}${F('วงเงิน PO ที่ออกเองได้',U('po','50,000','บาท','text'))}
+</div>
+<div class="card">${CH('ข้อมูลระบบ','server','g5','อ่านอย่างเดียว')}
+<dl class="dl"><dt>เวอร์ชัน</dt><dd>2.0.0</dd><dt>โหมด</dt><dd>Production</dd><dt>HTTPS</dt><dd class="ok">✓ เปิดใช้งาน</dd><dt>เขตเวลา</dt><dd>Asia/Bangkok</dd><dt>Upload สูงสุด</dt><dd>1024M</dd></dl>
+</div></div>
+<div class="save"><p>การตั้งค่ามีผลกับทุกไซต์</p>${B(I('check')+'บันทึกการตั้งค่า','บันทึกการตั้งค่าแล้ว',1)}</div>`;
+
+/* tab 2: channels */
+const host='https://itmaint.example.co.th';
+$('#p-ch').innerHTML=`<div class="kpis">
+<div class="card kpi"><span class="tile g1">${I('inbox',20)}</span><div><b>0</b><span>รอส่งในคิว</span></div></div>
+<div class="card kpi"><span class="tile g4">${I('check',20)}</span><div><b>0</b><span>ส่งสำเร็จวันนี้</span></div></div>
+<div class="card kpi"><span class="tile g2">${I('x2',20)}</span><div><b>0</b><span>ส่งไม่สำเร็จ</span></div></div>
+<div class="card kpi warn"><span class="tile g6">${I('clock',20)}</span><div><b class="amber" style="font-size:18px">ยังไม่ทำงาน</b><span>Cron · ดูวิธีตั้งที่แท็บงานตั้งเวลา</span></div></div>
+</div><div class="grid3">
+<div class="card">${CH('LINE Messaging API','chat','g4','ส่งผ่าน LINE Official Account',SW('lineOn',1,'เปิดใช้งาน LINE'))}
+${F('Channel Access Token',PW('lt','eyJhbGciOiJIUzI1NiJ9.itmaint.line.token','Channel Access Token'))}
+${F('Channel Secret',PW('ls','8f2c1d0b9a7e4c3f','Channel Secret'))}
+${F('ลิงก์เพิ่มเพื่อน OA','<input class="in" value="https://lin.ee/itmaint" aria-label="ลิงก์เพิ่มเพื่อน OA">')}
+${F('Webhook URL',CP('lw',host+'/api/webhook/line','Webhook URL LINE'),'นำไปใส่ใน LINE Developers Console')}
+<div class="acts">${B('ตรวจการเชื่อมต่อ','LINE: เชื่อมต่อสำเร็จ')}${B('ทดสอบส่ง','LINE: ส่งข้อความทดสอบสำเร็จ')}${B('บันทึก','บันทึกการตั้งค่า LINE แล้ว',1)}</div></div>
+<div class="card">${CH('Telegram Bot','send','g1','ส่งผ่านบอท Telegram',SW('tgOn',1,'เปิดใช้งาน Telegram'))}
+${F('Bot Token',PW('tt','7311029458:AAH-itmaint-bot-token','Bot Token'))}
+${F('ชื่อบอท','<input class="in" value="@itmaint_alert_bot" aria-label="ชื่อบอท">')}
+${F('Webhook',CP('tw',host+'/api/webhook/telegram','Webhook Telegram'))}
+<div class="acts">${B('ตรวจ Token','Telegram: Token ถูกต้อง')}${B('ตั้ง Webhook','Telegram: ตั้ง Webhook สำเร็จ')}${B('ทดสอบ','Telegram: ส่งข้อความทดสอบสำเร็จ',1)}</div></div>
+<div class="card">${CH('Email (SMTP)','mail','g2','ส่งอีเมลแจ้งเตือนและรายงาน',SW('mailOn',1,'เปิดใช้งาน Email'))}
+${F('วิธีส่ง','<select class="in" aria-label="วิธีส่ง"><option selected>SMTP</option><option>PHP mail()</option></select>')}
+${F('การเข้ารหัส','<select class="in" id="enc" aria-label="การเข้ารหัส"><option value="587" selected>STARTTLS (587)</option><option value="465">SSL/TLS (465)</option><option value="25">ไม่เข้ารหัส (25)</option></select>')}
+${F('Host','<input class="in" value="smtp.gmail.com" aria-label="Host">')}
+${F('Port','<input class="in" id="port" type="number" value="587" aria-label="Port">')}
+${F('ผู้ใช้','<input class="in" value="alerts@itmaint.co.th" aria-label="ผู้ใช้">')}
+${F('App Password',PW('ap','abcd efgh ijkl mnop','App Password'))}
+${F('อีเมลผู้ส่ง','<input class="in" type="email" value="alerts@itmaint.co.th" aria-label="อีเมลผู้ส่ง">')}
+${F('ชื่อผู้ส่ง','<input class="in" value="IT&amp;MAINT" aria-label="ชื่อผู้ส่ง">')}
+<div class="acts">${B('ทดสอบส่ง','Email: ส่งอีเมลทดสอบสำเร็จ')}${B('บันทึก','บันทึกการตั้งค่า Email แล้ว',1)}</div></div>
+</div>`;
+
+/* tab 3: rules */
+const LV=['≥ ทั่วไป','≥ เตือน','≥ ด่วน'];
+const RULES=[['ใบงาน & แจ้งซ่อม','',[1,0],[1,0],[1,1]],['PM & สอบเทียบ','',[1,0],[1,1],[1,0]],['ทรัพย์สิน','โอนย้าย ยืม-คืน จำหน่าย',[1,0],[0,0],[1,0]],['อะไหล่ & จัดซื้อ','',[1,1],[0,1],[1,0]],['IT & ไลเซนส์','',[1,1],[1,1],[1,0]],['IoT & Tracking/Geofence','',[1,2],[1,1],[0,2]],['ตรวจนับ','',[1,0],[0,0],[1,0]],['เอกสาร (DAM)','',[0,1],[0,1],[1,0]],['งบประมาณ','',[1,1],[0,1],[1,1]],['RCA/CAPA/FMEA','',[1,1],[0,1],[1,0]],['สรุปงานประจำวัน','ส่งทุกวัน 07:30',[1,0],[0,0],[1,0]],['ระบบ','',[0,2],[1,2],[1,2]]];
+const CHN=[['LINE','chat'],['Telegram','send'],['Email','mail']];
+$('#p-rule').innerHTML=`<div class="card mx"><div class="mx-r mx-h"><div>หมวดการแจ้งเตือน</div>${CHN.map(([c,i])=>`<div>${I(i,16)}${c}</div>`).join('')}</div>
+${RULES.map(([n,s,...cells],r)=>`<div class="mx-r"><div class="mx-n">${n}${s?`<small>${s}</small>`:''}</div>${cells.map(([on,lv],c)=>`<div class="mx-c${on?'':' off'}"><label class="cb"><input type="checkbox" ${on?'checked':''} aria-label="${n} ทาง ${CHN[c][0]}"><span class="lbm">${CHN[c][0]}</span></label><select class="in" aria-label="ระดับ ${n} ทาง ${CHN[c][0]}">${LV.map((l,i)=>`<option ${i===lv?'selected':''}>${l}</option>`).join('')}</select></div>`).join('')}</div>`).join('')}
+</div><div class="save"><p>ส่งเฉพาะเหตุการณ์ที่ระดับเท่ากับหรือสูงกว่าที่เลือก</p>${B(I('check')+'บันทึกกฎ','บันทึกกฎการแจ้งเตือนแล้ว',1)}</div>`;
+
+/* tab 4: cron */
+const JOBS=[['ส่งคิวแจ้งเตือน','ทุกนาที','10:42:00','สำเร็จ','ok','8 ms'],['ยกระดับใบงานเกิน SLA','ทุก 5 นาที','—','ยังไม่เคยรัน','',''],['สร้างใบงาน PM ที่ถึงรอบ','ทุก 1 ชม.','10:00:00','สร้าง 2 ใบ PM-2569-0024, 0025','ok','34 ms'],['ตรวจยืม-คืนเกินกำหนด','ทุก 1 ชม.','10:00:00','สำเร็จ','ok','21 ms'],['เตือนหมดอายุ','ทุกวัน 07:00','—','ยังไม่เคยรัน','',''],['เตือน CAPA เกินกำหนด','ทุกวัน 08:00','—','ยังไม่เคยรัน','',''],['เตือนใช้งบเกินเกณฑ์','ทุกวัน 08:15','—','ยังไม่เคยรัน','',''],['สรุปงานประจำวัน','ทุกวัน 07:30','—','ยังไม่เคยรัน','',''],['ปิดงวดค่าเสื่อมอัตโนมัติ','วันที่ 1 เวลา 02:00','—','ยังไม่เคยรัน','',''],['ล้างข้อมูลชั่วคราว','ทุกวัน 03:00','—','ยังไม่เคยรัน','','']];
+const HIST=JOBS.map(j=>j[4]?[[j[2],j[3],j[5]]]:[]);
+const row=(j,i)=>`<td data-l="งาน"><b>${j[0]}</b></td><td data-l="รอบเวลา">${j[1]}</td><td data-l="รันล่าสุด" class="ms">${j[2]}</td><td data-l="ผล"><span class="stat ${j[4]||''}" style="${j[4]?'':'color:var(--tx2)'}">${j[3]}</span></td><td data-l="ใช้เวลา" class="ms">${j[5]||'—'}</td><td><div class="ra"><button class="btn" data-run="${i}">${I('play',14)}รันเลย</button><button class="btn" data-hist="${i}">${I('clock',14)}ประวัติ</button></div></td>`;
+$('#p-cron').innerHTML=`<div class="grid" style="margin-bottom:16px">
+<div class="card">${CH('ตั้ง crontab บนเซิร์ฟเวอร์','server','g1','แนะนำ: รันทุกนาที ระบบจะจัดรอบของแต่ละงานเอง',`<span class="stat amber">ยังไม่ทำงาน</span>`)}
+<div class="code"><code id="crontab">* * * * * php /var/www/itmaint/bin/cron.php --quiet</code><button class="btn ib" data-copy="#crontab" aria-label="คัดลอกคำสั่ง crontab">${I('copy')}</button></div>
+<p class="hint">เพิ่มด้วย <code>crontab -e</code> ในผู้ใช้เดียวกับเว็บเซิร์ฟเวอร์</p></div>
+<div class="card">${CH('Web-cron key','key','g3','สำหรับโฮสต์ที่ไม่มี crontab ให้บริการภายนอกเรียก URL นี้ทุกนาที')}
+${F('URL',CP('wc',host+'/cron.php?key=wc_7Gk2pQ9xLm4R','Web-cron URL'))}
+<div class="acts"><button class="btn" id="regen">${I('key')}สร้างคีย์ใหม่</button></div></div></div>
+<div class="card tw"><table class="jt"><thead><tr><th>งาน</th><th>รอบเวลา</th><th>รันล่าสุด</th><th>ผล</th><th>ใช้เวลา</th><th style="text-align:right">การทำงาน</th></tr></thead>
+<tbody id="jobs">${JOBS.map((j,i)=>`<tr id="job${i}">${row(j,i)}</tr>`).join('')}</tbody></table></div>`;
+
+/* behaviour */
+function toast(msg){const t=document.createElement('div');t.className='toast';t.innerHTML=`<span class="tile g4">${I('check',16)}</span><span>${esc(msg)}</span>`;$('#toasts').append(t);setTimeout(()=>t.remove(),3200)}
+let lastFocus;
+function modal(title,html){lastFocus=document.activeElement;$('#mt').textContent=title;$('#mb').innerHTML=html;$('#modal').hidden=false;$('#mx').focus()}
+function closeModal(){$('#modal').hidden=true;lastFocus&&lastFocus.focus()}
+function copy(text){(navigator.clipboard?navigator.clipboard.writeText(text):Promise.reject()).catch(()=>{const a=document.createElement('textarea');a.value=text;document.body.append(a);a.select();document.execCommand('copy');a.remove()});toast('คัดลอกแล้ว')}
+const now=()=>new Date().toLocaleTimeString('en-GB',{hour12:false});
+
+$$('.tab').forEach(t=>t.onclick=()=>{$$('.tab').forEach(x=>{const on=x===t;x.setAttribute('aria-selected',on);$('#'+x.getAttribute('aria-controls')).hidden=!on});t.scrollIntoView({block:'nearest',inline:'nearest'})});
+$('#tabs').onkeydown=e=>{if(!['ArrowLeft','ArrowRight'].includes(e.key))return;const ts=$$('.tab'),i=ts.indexOf(document.activeElement),n=ts[(i+(e.key==='ArrowRight'?1:-1)+ts.length)%ts.length];n.focus();n.click()};
+
+document.addEventListener('click',e=>{
+  const b=e.target.closest('button,a');if(!b)return;
+  if(b.dataset.nav!==undefined){e.preventDefault();if(!b.classList.contains('on'))toast('เปิดเมนู: '+b.dataset.nav);return}
+  if(b.dataset.toast){toast(b.dataset.toast);return}
+  if(b.dataset.copy){const el=$(b.dataset.copy);copy(el.value||el.textContent);return}
+  if(b.dataset.eye){const el=$(b.dataset.eye);el.type=el.type==='password'?'text':'password';return}
+  if(b.dataset.close!==undefined){closeModal();return}
+  if(b.parentElement.matches('.seg,.chips')){const seg=b.parentElement.matches('.seg');if(seg)[...b.parentElement.children].forEach(x=>x.setAttribute('aria-pressed',x===b));else b.setAttribute('aria-pressed',b.getAttribute('aria-pressed')!=='true');return}
+  if(b.dataset.run){const i=+b.dataset.run;b.disabled=true;b.lastChild.textContent='กำลังรัน…';setTimeout(()=>{const j=JOBS[i],ms=Math.round(5+Math.random()*55)+' ms';j[2]=now();j[3]='สำเร็จ';j[4]='ok';j[5]=ms;HIST[i].unshift([j[2],'สำเร็จ',ms]);const tr=$('#job'+i);tr.innerHTML=row(j,i);tr.classList.remove('flash');void tr.offsetWidth;tr.classList.add('flash');toast(`${j[0]}: รันสำเร็จ (${ms})`)},700);return}
+  if(b.dataset.hist){const i=+b.dataset.hist,h=HIST[i];modal('ประวัติ: '+JOBS[i][0],h.length?`<dl class="dl">${h.map(r=>`<dt class="ms">${r[0]}</dt><dd><span class="stat ok">${esc(r[1])}</span> <span class="hint">${r[2]}</span></dd>`).join('')}</dl>`:'<p class="hint">ยังไม่มีประวัติการรัน</p>');return}
+});
+$('#modal').onclick=e=>{if(e.target.id==='modal')closeModal()};
+document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();$('#q').focus()}if(e.key==='Escape'){if(!$('#modal').hidden)closeModal();closeSide()}});
+$('#regen').onclick=()=>{$('#wc').value=host+'/cron.php?key=wc_'+Math.random().toString(36).slice(2,14);toast('สร้าง Web-cron key ใหม่แล้ว')};
+$('.ava').onclick=()=>modal('บัญชีผู้ใช้',`<dl class="dl"><dt>ชื่อ</dt><dd>Admin</dd><dt>บทบาท</dt><dd>ผู้ดูแลระบบ</dd><dt>ไซต์</dt><dd>โรงงานสมุทรสาคร</dd></dl><div class="acts"><button class="btn" data-close>ปิด</button><button class="btn pri" data-toast="ออกจากระบบ (ตัวอย่าง)">ออกจากระบบ</button></div>`);
+$('#bell').onclick=()=>modal('การแจ้งเตือน','<p class="hint">ไม่มีการแจ้งเตือนใหม่ · Cron ยังไม่ทำงาน คิวจะยังไม่ถูกส่ง</p>');
+$('#newReq').onclick=()=>{modal('แจ้งซ่อม',`${F('ทรัพย์สิน','<input class="in" placeholder="รหัส เช่น AST-0001" aria-label="ทรัพย์สิน">')}${F('อาการ','<input class="in" placeholder="อธิบายอาการ" aria-label="อาการ">')}${F('ความเร่งด่วน','<select class="in" aria-label="ความเร่งด่วน"><option>ทั่วไป</option><option>เตือน</option><option>ด่วน</option></select>')}<div class="acts"><button class="btn" data-close>ยกเลิก</button><button class="btn pri" id="sendReq">ส่งแจ้งซ่อม</button></div>`);$('#sendReq').onclick=()=>{closeModal();toast('สร้างใบแจ้งซ่อมแล้ว')}};
+const side=$('#side'),scrim=$('#scrim');function closeSide(){side.classList.remove('open');scrim.classList.remove('open')}
+$('#menu').onclick=()=>{side.classList.add('open');scrim.classList.add('open')};scrim.onclick=closeSide;
+$('#digits').oninput=e=>{const n=Math.min(8,Math.max(1,+e.target.value||1));$('#tagex').textContent='AST-'+'1'.padStart(n,'0')};
+$('#eam').oninput=e=>$('#eamv').textContent=e.target.value+'%';
+$('#dep').onchange=e=>$('#depv').textContent=e.target.checked?' เปิดอยู่':' ปิดอยู่';
+$('#enc').onchange=e=>$('#port').value=e.target.value;
+$('#logo').onchange=e=>{const f=e.target.files[0];if(f){$('#lname').textContent=f.name;$('#lpv').innerHTML=I('check')}};
+$('#p-rule').addEventListener('change',e=>{if(e.target.type==='checkbox')e.target.closest('.mx-c').classList.toggle('off',!e.target.checked)});
+</script>
+</body>
+</html>
