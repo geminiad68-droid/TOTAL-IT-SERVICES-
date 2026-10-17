@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="th" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ITMAINT DAM</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400&display=swap" />
+    <link rel="stylesheet" href="../../assets/hark.css" />
+    <link rel="stylesheet" href="../../assets/hark-hero.css" />
+    <style>
+      :root { --x-bg:#0A1024; --x-card:#111a36; --x-card2:#0e1630; --x-line:rgba(86,140,255,.28); --x-glow:0 0 0 1px rgba(86,140,255,.12),0 0 18px rgba(64,120,255,.12); --x-tx:#e8edfb; --x-tx2:#9aa7c7; --x-pri:linear-gradient(135deg,#c2410c,#be185d); color-scheme:dark; }
+      body { background:var(--x-bg); color:var(--x-tx); font-family:var(--sans),"Noto Sans Thai",system-ui,sans-serif; }
+      .page.x-app { max-width:none; padding:0; display:grid; grid-template-columns:248px minmax(0,1fr); gap:0; min-height:100vh; }
+      .x-side { background:#0b1330; border-right:1px solid var(--x-line); padding:16px 12px; position:sticky; top:0; height:100vh; overflow-y:auto; }
+      .x-logo { display:flex; gap:10px; align-items:center; padding:4px 8px 16px; }
+      .x-logo b { display:block; font:var(--type-label); font-weight:600; }
+      .x-logo small { color:var(--x-tx2); font:var(--type-caption); }
+      .x-grp { margin:14px 8px 4px; font:var(--type-caption); color:var(--x-tx2); letter-spacing:.04em; }
+      .x-nav a { display:flex; align-items:center; gap:10px; min-height:var(--tap); padding:0 10px; border-radius:var(--r-s); color:var(--x-tx2); text-decoration:none; font:var(--type-small); }
+      .x-nav a:hover { background:rgba(86,140,255,.08); color:var(--x-tx); }
+      .x-nav a.on { background:linear-gradient(90deg,rgba(86,140,255,.22),rgba(86,140,255,.04)); color:var(--x-tx); box-shadow:inset 2px 0 0 #5b8cff; }
+      .x-top { display:flex; align-items:center; gap:10px; padding:12px 20px; border-bottom:1px solid var(--x-line); background:rgba(10,16,36,.85); backdrop-filter:blur(12px); position:sticky; top:0; z-index:5; flex-wrap:wrap; }
+      .x-sel, .x-in { min-height:var(--tap); background:var(--x-card2); color:var(--x-tx); border:1px solid var(--x-line); border-radius:var(--r-s); padding:0 12px; font:var(--type-small); font-family:inherit; }
+      .x-search { flex:1; min-width:160px; display:flex; align-items:center; gap:8px; }
+      .x-search input { flex:1; min-width:0; background:none; border:0; color:inherit; font:inherit; outline:none; }
+      .x-kbd { font:var(--type-caption); color:var(--x-tx2); border:1px solid var(--x-line); border-radius:6px; padding:2px 6px; }
+      .x-btn { min-height:var(--tap); min-width:var(--tap); display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:0 16px; border-radius:var(--r-s); border:1px solid var(--x-line); background:var(--x-card2); color:var(--x-tx); font:var(--type-small); font-family:inherit; font-weight:500; cursor:pointer; text-decoration:none; }
+      .x-btn:hover { border-color:#5b8cff; }
+      .x-pri { background:var(--x-pri); border-color:transparent; color:#fff; }
+      .x-ghost { background:transparent; }
+      .x-ico { padding:0; width:var(--tap); position:relative; }
+      .x-badge { position:absolute; top:8px; right:8px; width:8px; height:8px; border-radius:50%; background:#f43f5e; }
+      .x-av { width:36px; height:36px; border-radius:50%; background:linear-gradient(135deg,#3b82f6,#8b5cf6); display:grid; place-items:center; font:var(--type-caption); font-weight:600; }
+      .x-main { padding:20px; display:grid; gap:16px; min-width:0; }
+      .x-head { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+      .x-head h1 { font:var(--type-title); flex:1; min-width:200px; }
+      .x-head h1 small { display:block; font:var(--type-small); color:var(--x-tx2); margin-top:4px; }
+      .x-card { background:var(--x-card); border:1px solid var(--x-line); border-radius:16px; box-shadow:var(--x-glow); }
+      .x-body { display:grid; grid-template-columns:240px minmax(0,1fr); gap:16px; align-items:start; }
+      .x-panel { padding:12px; display:grid; gap:2px; }
+      .x-panel h3 { font:var(--type-caption); color:var(--x-tx2); margin:10px 8px 4px; letter-spacing:.04em; }
+      .x-f { display:flex; align-items:center; gap:8px; min-height:var(--tap); padding:0 10px; border-radius:var(--r-s); border:0; background:none; color:var(--x-tx2); font:var(--type-small); font-family:inherit; text-align:left; cursor:pointer; width:100%; }
+      .x-f span { flex:1; }
+      .x-f em { font-style:normal; font:var(--type-caption); background:#1f2d5c; color:var(--x-tx); border-radius:var(--r-pill); padding:1px 8px; }
+      .x-f:hover { color:var(--x-tx); background:#16224a; }
+      .x-f.on { color:var(--x-tx); background:#1e3170; }
+      .x-f.on em { background:#2a3f86; }
+      .x-tools { display:flex; gap:8px; flex-wrap:wrap; padding:12px; }
+      .x-tools .x-search { min-width:200px; }
+      .x-seg { display:inline-flex; border:1px solid var(--x-line); border-radius:var(--r-s); overflow:hidden; }
+      .x-seg button { min-height:var(--tap); padding:0 14px; background:var(--x-card2); color:var(--x-tx2); border:0; font:var(--type-small); font-family:inherit; cursor:pointer; }
+      .x-seg button.on { background:#1e3170; color:var(--x-tx); }
+      .x-sum { padding:4px 12px; }
+      .x-sum summary { min-height:var(--tap); display:flex; align-items:center; gap:8px; cursor:pointer; font:var(--type-small); font-weight:500; list-style:none; }
+      .x-sum summary::-webkit-details-marker { display:none; }
+      .x-sum summary::after { content:"▾"; margin-left:auto; color:var(--x-tx2); }
+      .x-sum[open] summary::after { content:"▴"; }
+      .x-sumrow { display:flex; flex-wrap:wrap; gap:8px; padding-bottom:12px; }
+      .x-pill { font:var(--type-caption); padding:6px 10px; border-radius:var(--r-pill); background:var(--x-card2); border:1px solid var(--x-line); color:var(--x-tx2); }
+      .x-pill b { color:var(--x-tx); }
+      .x-warn { background:#3a1c10; border-color:#c2410c; color:#fdba74; }
+      .x-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:14px; }
+      .x-file { overflow:hidden; cursor:pointer; text-align:left; padding:0; color:inherit; font-family:inherit; display:flex; flex-direction:column; transition:border-color var(--dur-quick) var(--ease-out); }
+      .x-file:hover { border-color:#5b8cff; }
+      .x-thumb { height:120px; display:grid; place-items:center; position:relative; }
+      .x-thumb .x-chip { position:absolute; top:10px; left:10px; }
+      .x-chip { font:var(--type-caption); padding:3px 9px; border-radius:var(--r-pill); background:rgba(10,16,36,.7); border:1px solid rgba(255,255,255,.2); color:#fff; }
+      .x-info { padding:12px; display:grid; gap:6px; }
+      .x-info h4 { margin:0; font:var(--type-small); font-weight:600; }
+      .x-meta { font:var(--type-caption); color:var(--x-tx2); display:flex; gap:8px; flex-wrap:wrap; }
+      .x-fn { font:var(--type-caption); font-family:"Geist Mono",monospace; color:var(--x-tx2); overflow-wrap:anywhere; }
+      .x-tags { font:var(--type-caption); color:#93b4ff; display:flex; gap:6px; flex-wrap:wrap; }
+      .x-exp { font:var(--type-caption); color:#fdba74; }
+      .x-list { grid-template-columns:1fr; }
+      .x-list .x-file { flex-direction:row; align-items:center; }
+      .x-list .x-thumb { height:auto; width:72px; align-self:stretch; min-height:72px; }
+      .x-list .x-thumb .x-chip { display:none; }
+      .x-list .x-thumb svg { width:30px; height:30px; }
+      .x-empty { color:var(--x-tx2); padding:32px; text-align:center; }
+      dialog { background:var(--x-card); color:var(--x-tx); border:1px solid var(--x-line); border-radius:16px; box-shadow:var(--x-glow),0 30px 80px rgba(0,0,0,.6); padding:0; width:min(720px,calc(100vw - 24px)); max-height:calc(100vh - 24px); }
+      dialog::backdrop { background:rgba(3,6,18,.72); backdrop-filter:blur(4px); }
+      .x-dh { display:flex; align-items:center; gap:10px; padding:14px 16px; border-bottom:1px solid var(--x-line); }
+      .x-dh h2 { font:var(--type-heading); flex:1; overflow-wrap:anywhere; }
+      .x-db { padding:16px; display:grid; gap:14px; }
+      .x-drop { border:2px dashed var(--x-line); border-radius:16px; padding:28px; text-align:center; color:var(--x-tx2); font:var(--type-small); }
+      .x-drop.on { border-color:#5b8cff; background:rgba(86,140,255,.08); }
+      .x-form { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+      .x-form label { display:grid; gap:6px; font:var(--type-caption); color:var(--x-tx2); }
+      .x-df { display:flex; gap:8px; justify-content:flex-end; flex-wrap:wrap; padding:14px 16px; border-top:1px solid var(--x-line); }
+      .x-prev { height:220px; border-radius:16px; display:grid; place-items:center; }
+      .x-kv { display:grid; grid-template-columns:auto 1fr; gap:6px 16px; font:var(--type-small); margin:0; }
+      .x-kv dt { color:var(--x-tx2); }
+      .x-kv dd { margin:0; overflow-wrap:anywhere; }
+      .x-ver { list-style:none; margin:0; padding:0; display:grid; gap:6px; }
+      .x-ver li { display:flex; gap:10px; align-items:center; padding:10px 12px; border:1px solid var(--x-line); border-radius:var(--r-s); background:var(--x-card2); font:var(--type-small); }
+      .x-ver li span { flex:1; color:var(--x-tx2); }
+      .x-sub { font:var(--type-label); font-weight:600; }
+      .x-toast { position:fixed; bottom:20px; left:50%; transform:translate(-50%,40px); opacity:0; background:#13204a; border:1px solid #5b8cff; color:var(--x-tx); padding:12px 18px; border-radius:var(--r-s); box-shadow:var(--x-glow); font:var(--type-small); transition:all var(--dur-quick) var(--ease-out); z-index:50; max-width:calc(100vw - 24px); }
+      .x-toast.on { opacity:1; transform:translate(-50%,0); }
+      .x-menu { display:none; }
+      @media (max-width:900px) {
+        .page.x-app { grid-template-columns:minmax(0,1fr); }
+        .x-side { position:fixed; left:0; top:0; z-index:20; width:260px; transform:translateX(-100%); transition:transform var(--dur-quick) var(--ease-out); }
+        .x-side.on { transform:none; box-shadow:0 0 60px rgba(0,0,0,.7); }
+        .x-menu { display:inline-flex; }
+        .x-body { grid-template-columns:minmax(0,1fr); }
+        .x-panel { grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); }
+        .x-panel h3 { grid-column:1/-1; }
+      }
+      @media (max-width:560px) {
+        .x-top, .x-main { padding:12px; }
+        .x-hide { display:none; }
+        .x-form { grid-template-columns:1fr; }
+        .x-grid { grid-template-columns:1fr 1fr; gap:10px; }
+        .x-grid.x-list { grid-template-columns:1fr; }
+        .x-tools .x-search { flex-basis:100%; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page x-app" id="top">
+      <aside class="x-side" id="side" aria-label="เมนูหลัก">
+        <div class="x-logo">
+          <svg width="36" height="36" viewBox="0 0 36 36" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3b82f6"/><stop offset="1" stop-color="#a855f7"/></linearGradient></defs><rect width="36" height="36" rx="10" fill="url(#lg)"/><path d="M11 24l5-12 4 8 2-4 3 8" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div><b>IT&amp;MAINT</b><small>Smart Asset · Smart Work</small></div>
+        </div>
+        <nav class="x-nav" id="nav"></nav>
+      </aside>
+      <div style="min-width:0">
+        <header class="x-top">
+          <button class="x-btn x-ico x-menu" id="menuBtn" aria-label="เปิดเมนู">☰</button>
+          <select class="x-sel x-hide" aria-label="เลือกไซต์"><option>ทุกไซต์</option><option>โรงงานสมุทรสาคร</option><option>โรงงานระยอง</option></select>
+          <label class="x-in x-search"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2" fill="none"/><path d="M20 20l-4-4" stroke="currentColor" stroke-width="2"/></svg><input id="gsearch" placeholder="ค้นหาทั่วระบบ…" aria-label="ค้นหาทั่วระบบ" /><span class="x-kbd x-hide">Ctrl K</span></label>
+          <button class="x-btn x-pri" id="repairBtn">+ แจ้งซ่อม</button>
+          <button class="x-btn x-ico" aria-label="การแจ้งเตือน"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 16V11a6 6 0 0112 0v5l2 2H4zM10 21h4" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linejoin="round"/></svg><span class="x-badge"></span></button>
+          <span class="x-av" title="Admin">AD</span><span class="x-hide" style="font:var(--type-small)">Admin</span>
+        </header>
+        <main class="x-main">
+          <div class="x-head">
+            <h1>คลังดิจิทัล (DAM)<small>เอกสาร แบบ คู่มือ และรูปถ่าย ผูกกับทรัพย์สินทุกชิ้น</small></h1>
+            <button class="x-btn x-ghost" id="folderBtn">+ โฟลเดอร์</button>
+            <button class="x-btn x-pri" id="upBtn"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4m0 0l-5 5m5-5l5 5M4 20h16" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/></svg>อัปโหลด</button>
+          </div>
+          <div class="x-body">
+            <div class="x-card x-panel" id="panel"></div>
+            <div style="display:grid;gap:14px;min-width:0">
+              <div class="x-card x-tools">
+                <label class="x-in x-search"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2" fill="none"/><path d="M20 20l-4-4" stroke="currentColor" stroke-width="2"/></svg><input id="q" placeholder="ค้นหา ชื่อ/ไฟล์/คำอธิบาย/แท็ก" aria-label="ค้นหาไฟล์" /></label>
+                <select class="x-sel" id="ftype" aria-label="ประเภท"></select>
+                <select class="x-sel" id="sort" aria-label="เรียงตาม"><option value="new">ล่าสุด</option><option value="name">ชื่อ</option><option value="size">ขนาด</option><option value="exp">วันหมดอายุ</option></select>
+                <div class="x-seg" role="group" aria-label="มุมมอง"><button class="on" data-v="grid">กริด</button><button data-v="list">รายการ</button></div>
+              </div>
+              <details class="x-card x-sum" open><summary>สรุปตามประเภท <span class="x-pill x-warn" id="expPill"></span></summary><div class="x-sumrow" id="sum"></div></details>
+              <div class="x-grid" id="grid"></div>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <dialog id="upDlg" aria-label="อัปโหลดไฟล์">
+      <form method="dialog" id="upForm">
+        <div class="x-dh"><h2>อัปโหลดไฟล์</h2><button class="x-btn x-ico" value="x" aria-label="ปิด" formnovalidate>✕</button></div>
+        <div class="x-db">
+          <label class="x-drop" id="drop"><svg width="40" height="40" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 18a5 5 0 01-.5-10A6 6 0 0118 9a4.5 4.5 0 01-1 9M12 12v8m0-8l-3 3m3-3l3 3" stroke="#93b4ff" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg><p>ลากไฟล์มาวางที่นี่ หรือ <u>เลือกไฟล์</u></p><p id="dropName" class="x-fn"></p><input type="file" id="fileIn" hidden /></label>
+          <div class="x-form" id="fields">
+            <label>ชื่อเอกสาร<input class="x-in" id="uTitle" required placeholder="เช่น คู่มือปั๊มน้ำ P-04" /></label>
+            <label>ประเภท<select class="x-sel" id="uType"></select></label>
+            <label>แท็ก<input class="x-in" id="uTags" placeholder="#ISO17025 #งานซ่อม" /></label>
+            <label>ผูกกับทรัพย์สิน<input class="x-in" id="uAsset" placeholder="เช่น CNC-001" /></label>
+            <label>วันหมดอายุ<input class="x-in" type="date" id="uExp" /></label>
+            <label>โฟลเดอร์<select class="x-sel" id="uFolder"></select></label>
+          </div>
+          <button type="button" class="x-btn x-ghost" id="addField" style="justify-self:start">+ เพิ่มฟิลด์</button>
+        </div>
+        <div class="x-df"><button class="x-btn x-ghost" value="x" formnovalidate>ยกเลิก</button><button class="x-btn x-pri" value="ok">บันทึก</button></div>
+      </form>
+    </dialog>
+
+    <dialog id="pvDlg" aria-label="ดูตัวอย่างไฟล์">
+      <div class="x-dh"><h2 id="pvTitle"></h2><button class="x-btn x-ico" aria-label="ปิด" onclick="pvDlg.close()">✕</button></div>
+      <div class="x-db" id="pvBody"></div>
+      <div class="x-df"><button class="x-btn x-ghost" data-t="เริ่มดาวน์โหลดแล้ว">ดาวน์โหลด</button><button class="x-btn x-ghost" data-t="Check-out ไฟล์แล้ว คุณกำลังแก้ไขอยู่">Check-out</button><button class="x-btn x-pri" data-t="คัดลอกลิงก์แชร์แล้ว">แชร์</button></div>
+    </dialog>
+    <div class="x-toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script src="../../assets/hark.js"></script>
+    <script>
+      const $ = (s) => document.querySelector(s);
+      const NAV = [["ภาพรวม",["แดชบอร์ด","ปฏิทินงาน"]],["ทรัพย์สิน",["ทะเบียนทรัพย์สิน","QR / ป้ายทรัพย์สิน","คลังดิจิทัล (DAM)"]],["ซ่อมบำรุง",["ใบแจ้งซ่อม","PM ตามแผน","ผู้รับเหมา"]],["คลัง & จัดซื้อ",["อะไหล่ & สต็อก","ใบขอซื้อ / PO"]],["วิเคราะห์",["รายงาน","MTBF / MTTR"]],["ระบบ",["ผู้ใช้ & สิทธิ์","ตั้งค่า"]]];
+      $("#nav").innerHTML = NAV.map(([g, items]) => `<p class="x-grp">${g}</p>` + items.map((i) => `<a href="#" class="${i.includes("DAM") ? "on" : ""}" ${i.includes("DAM") ? 'aria-current="page"' : ""}>${i}</a>`).join("")).join("");
+      const TYPES = { "คู่มือ":["#2563eb","#7c3aed","doc"], "แบบ Drawing":["#0891b2","#2563eb","draw"], "SOP":["#059669","#0d9488","list"], "ใบกำกับ/ใบเสร็จ":["#d97706","#dc2626","money"], "ใบรับประกัน":["#7c3aed","#db2777","shield"], "ใบรับรอง/สอบเทียบ":["#0d9488","#2563eb","badge"], "รูปถ่าย":["#db2777","#f97316","img"], "วิดีโอ":["#dc2626","#7c3aed","play"], "สัญญา":["#475569","#2563eb","doc"], "รายงาน":["#4f46e5","#0891b2","chart"] };
+      const ICON = { doc:'<path d="M14 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V8zM14 3v5h5M9 13h6M9 17h6"/>', draw:'<path d="M3 21l6-6M14 4l6 6-9 9H5v-6zM12 6l6 6"/>', list:'<path d="M9 6h11M9 12h11M9 18h11M4 6h1M4 12h1M4 18h1"/>', money:'<path d="M6 3h12v18l-3-2-3 2-3-2-3 2zM9 8h6M9 12h6M9 16h3"/>', shield:'<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6zM9 12l2 2 4-4"/>', badge:'<circle cx="12" cy="9" r="6"/><path d="M9 14l-2 7 5-3 5 3-2-7M10 9l1.5 1.5L14 8"/>', img:'<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 17l-5-5-9 8"/>', play:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M10 9l5 3-5 3z"/>', chart:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>' };
+      const svg = (t, s) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON[TYPES[t][2]]}</svg>`;
+      const grad = (t) => `background:linear-gradient(135deg,${TYPES[t][0]},${TYPES[t][1]})`;
+      const FOLDERS = [["none","ไม่อยู่ในโฟลเดอร์"],["manual","คู่มือเครื่องจักร"],["drawing","แบบ Drawing"],["sop","SOP/วิดีโอ"],["fin","เอกสารการเงิน (ใบกำกับ/ใบเสร็จ)"],["warr","ใบรับประกัน & ใบสอบเทียบ"],["photo","รูปถ่ายงานซ่อม"]];
+      let id = 0;
+      const F = (title, file, type, folder, size, o = {}) => ({ id: ++id, title, file, type, folder, size, ver: 1, tags: [], assets: [], mine: false, co: false, trash: false, exp: "", expTh: "", desc: "", date: 30 - id, ...o });
+      const files = [
+        F("ใบสอบเทียบเกจวัดแรงดัน GAU-011","GAU-011_Calibration_Cert.pdf","ใบรับรอง/สอบเทียบ","warr",0.8,{ exp:"2026-11-15", expTh:"15 พ.ย. 2569", tags:["ISO17025"], assets:["GAU-011"], mine:true, desc:"ใบรับรองผลสอบเทียบจากห้องแล็บ ISO/IEC 17025" }),
+        F("ใบรับประกันปั๊มดับเพลิง FW-001","FW-001_Warranty.pdf","ใบรับประกัน","warr",0.5,{ exp:"2026-10-21", expTh:"21 ต.ค. 2569", assets:["FW-001"], desc:"ใบรับประกันจากผู้ผลิต" }),
+        F("คู่มือบำรุงรักษาเครื่อง CNC-001","CNC-001_Maintenance_v2.pdf","คู่มือ","manual",6.4,{ ver:2, assets:["CNC-001"], co:true, mine:true, desc:"รอบ PM และจุดหล่อลื่น ฉบับปรับปรุง" }),
+        F("คู่มือการใช้งานปั๊มลม CMP-02","CMP-02_Operation_Manual.pdf","คู่มือ","manual",3.2,{ assets:["CMP-02"], desc:"ขั้นตอนเปิด/ปิด และค่าแรงดันใช้งาน" }),
+        F("แบบผังสายพาน CONV-03","CONV-03_Layout.png","แบบ Drawing","drawing",2.1,{ assets:["CONV-03"], desc:"ผังติดตั้งสายพานลำเลียงไลน์ 3" }),
+        F("SOP เปลี่ยนสายพาน","SOP-Belt-Replacement","SOP","sop",48,{ tags:["SOP","ความปลอดภัย"], assets:["CONV-03"], desc:"วิดีโอขั้นตอนเปลี่ยนสายพานพร้อม LOTO" }),
+        F("รูปก่อนซ่อมมอเตอร์ MTR-007","MTR-007_before.png","รูปถ่าย","photo",1.6,{ tags:["งานซ่อม"], assets:["MTR-007"], mine:true, desc:"สภาพขดลวดก่อนพันใหม่" }),
+        F("ใบกำกับภาษี PO ไตรมาส 3","Invoice_PO_Q3.pdf","ใบกำกับ/ใบเสร็จ","fin",0.3,{ desc:"รวมใบกำกับจาก PO ไตรมาส 3" }),
+        F("แผนบำรุงรักษา UPS","UPS_plan.txt","รายงาน","none",0.01,{ assets:["UPS-01"], desc:"แผนเปลี่ยนแบตเตอรี่ UPS ห้อง Server" }),
+      ];
+      const st = { filter: "all", folder: null, q: "", type: "", sort: "new", view: "grid" };
+      const fmtSize = (m) => (m < 1 ? Math.max(1, Math.round(m * 1024)) + " KB" : m.toFixed(1) + " MB");
+      const live = () => files.filter((f) => !f.trash);
+      function panel() {
+        const L = live(), q = [["all","ทั้งหมด",L.length],["mine","ของฉัน",L.filter((f) => f.mine).length],["exp","ใกล้/หมดอายุ",L.filter((f) => f.exp).length],["co","Check-out อยู่",L.filter((f) => f.co).length],["trash","ถังขยะ",files.filter((f) => f.trash).length]];
+        $("#panel").innerHTML = `<h3>ตัวกรองด่วน</h3>` + q.map(([k, n, c]) => `<button class="x-f ${st.filter === k && !st.folder ? "on" : ""}" data-f="${k}"><span>${n}</span><em>${c}</em></button>`).join("") +
+          `<h3>โฟลเดอร์</h3>` + FOLDERS.map(([k, n]) => `<button class="x-f ${st.folder === k ? "on" : ""}" data-d="${k}"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z" fill="#5b8cff" opacity=".7"/></svg><span>${n}</span><em>${L.filter((f) => f.folder === k).length}</em></button>`).join("");
+      }
+      function summary() {
+        const L = live(), c = {};
+        L.forEach((f) => (c[f.type] = (c[f.type] || 0) + 1));
+        $("#sum").innerHTML = Object.keys(TYPES).filter((t) => c[t]).map((t) => `<span class="x-pill">${t} <b>${c[t]}</b></span>`).join("");
+        $("#expPill").textContent = "เอกสารใกล้หมดอายุ " + L.filter((f) => f.exp).length;
+      }
+      function render() {
+        panel(); summary();
+        const q = st.q.toLowerCase();
+        let L = files.filter((f) => (st.filter === "trash" && !st.folder ? f.trash : !f.trash));
+        if (st.folder) L = L.filter((f) => f.folder === st.folder);
+        else if (st.filter === "mine") L = L.filter((f) => f.mine);
+        else if (st.filter === "exp") L = L.filter((f) => f.exp);
+        else if (st.filter === "co") L = L.filter((f) => f.co);
+        if (st.type) L = L.filter((f) => f.type === st.type);
+        if (q) L = L.filter((f) => [f.title, f.file, f.desc, f.type, ...f.tags].join(" ").toLowerCase().includes(q));
+        const s = { new: (a, b) => b.date - a.date, name: (a, b) => a.title.localeCompare(b.title, "th"), size: (a, b) => b.size - a.size, exp: (a, b) => (a.exp || "9") .localeCompare(b.exp || "9") }[st.sort];
+        L.sort(s);
+        const g = $("#grid");
+        g.className = "x-grid" + (st.view === "list" ? " x-list" : "");
+        g.innerHTML = L.length ? L.map((f) => `<button class="x-card x-file" data-id="${f.id}"><div class="x-thumb" style="${grad(f.type)}"><span class="x-chip">${f.type}</span>${svg(f.type, 48)}</div><div class="x-info"><h4>${f.title}</h4><p class="x-fn">${f.file}</p><p class="x-meta"><span>v${f.ver}</span><span>${fmtSize(f.size)}</span>${f.co ? "<span>🔒 Check-out</span>" : ""}</p>${f.exp ? `<p class="x-exp">⚠ หมด ${f.expTh}</p>` : ""}${f.tags.length ? `<p class="x-tags">${f.tags.map((t) => "#" + t).join(" ")}</p>` : ""}</div></button>`).join("") : `<p class="x-card x-empty">ไม่พบไฟล์ที่ตรงกับเงื่อนไข</p>`;
+      }
+      $("#panel").addEventListener("click", (e) => {
+        const b = e.target.closest("button"); if (!b) return;
+        if (b.dataset.f) { st.filter = b.dataset.f; st.folder = null; } else { st.folder = st.folder === b.dataset.d ? null : b.dataset.d; }
+        render();
+      });
+      const topts = '<option value="">ทุกประเภท</option>' + Object.keys(TYPES).map((t) => `<option>${t}</option>`).join("");
+      $("#ftype").innerHTML = topts;
+      $("#uType").innerHTML = Object.keys(TYPES).map((t) => `<option>${t}</option>`).join("");
+      $("#uFolder").innerHTML = FOLDERS.map(([k, n]) => `<option value="${k}">${n}</option>`).join("");
+      $("#ftype").onchange = (e) => { st.type = e.target.value; render(); };
+      $("#sort").onchange = (e) => { st.sort = e.target.value; render(); };
+      $("#q").oninput = (e) => { st.q = e.target.value; render(); };
+      document.querySelectorAll(".x-seg button").forEach((b) => (b.onclick = () => { st.view = b.dataset.v; document.querySelectorAll(".x-seg button").forEach((x) => x.classList.toggle("on", x === b)); render(); }));
+      document.addEventListener("keydown", (e) => { if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") { e.preventDefault(); $("#gsearch").focus(); } });
+      $("#gsearch").oninput = (e) => { $("#q").value = st.q = e.target.value; render(); };
+      $("#menuBtn").onclick = () => $("#side").classList.toggle("on");
+      document.addEventListener("click", (e) => { if (!e.target.closest("#side,#menuBtn")) $("#side").classList.remove("on"); });
+      let tt;
+      function toast(m) { const t = $("#toast"); t.textContent = m; t.classList.add("on"); clearTimeout(tt); tt = setTimeout(() => t.classList.remove("on"), 2600); }
+      $("#repairBtn").onclick = () => toast("เปิดฟอร์มแจ้งซ่อมแล้ว");
+      $("#folderBtn").onclick = () => toast("สร้างโฟลเดอร์ใหม่แล้ว");
+      // upload
+      const up = $("#upDlg"), drop = $("#drop"), fin = $("#fileIn");
+      let picked = "";
+      $("#upBtn").onclick = () => { $("#upForm").reset(); picked = ""; $("#dropName").textContent = ""; up.showModal(); };
+      const pick = (f) => { if (!f) return; picked = f.name; $("#dropName").textContent = f.name; if (!$("#uTitle").value) $("#uTitle").value = f.name.replace(/\.[^.]+$/, ""); };
+      drop.onclick = (e) => { if (e.target !== fin) fin.click(); e.preventDefault(); };
+      fin.onchange = () => pick(fin.files[0]);
+      ["dragenter","dragover"].forEach((ev) => drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.add("on"); }));
+      ["dragleave","drop"].forEach((ev) => drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.remove("on"); }));
+      drop.addEventListener("drop", (e) => pick(e.dataTransfer.files[0]));
+      let nf = 0;
+      $("#addField").onclick = () => { const l = document.createElement("label"); l.innerHTML = `ฟิลด์เพิ่มเติม ${++nf}<input class="x-in" placeholder="ชื่อฟิลด์: ค่า" />`; $("#fields").appendChild(l); };
+      up.addEventListener("close", () => {
+        if (up.returnValue !== "ok") return;
+        const d = $("#uExp").value, title = $("#uTitle").value.trim();
+        const expTh = d ? new Date(d).toLocaleDateString("th-TH", { day: "numeric", month: "short", year: "numeric" }) : "";
+        files.push(F(title, picked || title.replace(/\s+/g, "_") + ".pdf", $("#uType").value, $("#uFolder").value, 1.2, { date: 100 + id, mine: true, exp: d, expTh, tags: $("#uTags").value.split(/[\s,]+/).filter(Boolean).map((t) => t.replace(/^#/, "")), assets: $("#uAsset").value ? [$("#uAsset").value] : [], desc: "อัปโหลดใหม่" }));
+        st.filter = "all"; st.folder = null; render(); toast(`อัปโหลด “${title}” เรียบร้อย`);
+      });
+      // preview
+      const pv = $("#pvDlg");
+      $("#grid").addEventListener("click", (e) => {
+        const b = e.target.closest(".x-file"); if (!b) return;
+        const f = files.find((x) => x.id == b.dataset.id);
+        $("#pvTitle").textContent = f.title;
+        const vers = f.ver > 1 ? [[2,"12 ก.ย. 2568 · Admin"],[1,"3 มี.ค. 2567 · ช่างสมชาย"]] : [[1,"12 ก.ย. 2568 · Admin"]];
+        $("#pvBody").innerHTML = `<div class="x-prev" style="${grad(f.type)}">${svg(f.type, 88)}</div>
+          <dl class="x-kv"><dt>ไฟล์</dt><dd class="x-fn">${f.file}</dd><dt>ประเภท</dt><dd>${f.type}</dd><dt>ขนาด</dt><dd>${fmtSize(f.size)}</dd><dt>โฟลเดอร์</dt><dd>${FOLDERS.find((x) => x[0] === f.folder)[1]}</dd><dt>คำอธิบาย</dt><dd>${f.desc}</dd>${f.exp ? `<dt>หมดอายุ</dt><dd class="x-exp">${f.expTh}</dd>` : ""}${f.tags.length ? `<dt>แท็ก</dt><dd class="x-tags">${f.tags.map((t) => "#" + t).join(" ")}</dd>` : ""}</dl>
+          <p class="x-sub">ประวัติเวอร์ชัน</p><ul class="x-ver">${vers.map(([v, t], i) => `<li><b>v${v}</b><span>${t}</span>${i === 0 ? '<span class="x-chip" style="flex:none">ปัจจุบัน</span>' : ""}</li>`).join("")}</ul>
+          <p class="x-sub">ทรัพย์สินที่ผูกไว้</p><div class="x-tags">${f.assets.length ? f.assets.map((a) => `<span class="x-pill">🔗 ${a}</span>`).join("") : '<span class="x-meta">ยังไม่ได้ผูก</span>'}</div>`;
+        pv.showModal();
+      });
+      pv.querySelectorAll("[data-t]").forEach((b) => (b.onclick = () => toast(b.dataset.t)));
+      render();
+    </script>
+  </body>
+</html>
