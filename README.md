@@ -39,4 +39,4 @@ IT&MAINT — Smart Asset · Smart Work : UX/UI mockups (Thai, dark theme) สำ
 
 - `docs/TOTAL_IT_SERVICES_UAT.xlsx` — UAT 545 test cases, 12 E2E scenarios, Defect Log, Sign-off
 
-เปิดดูได้ด้วย GitHub Pages (Settings → Pages → Branch: main / root)
+เว็บจริง: https://geminiad68-droid.github.io/TOTAL-IT-SERVICES-/ — เมนูด้านซ้ายทุกหน้าลิงก์ไปยังหน้าจอจริง (assets/site-nav.js)
