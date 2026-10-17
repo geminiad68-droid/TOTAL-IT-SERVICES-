@@ -79,6 +79,7 @@
       .x-list .x-thumb .x-chip { display:none; }
       .x-list .x-thumb svg { width:30px; height:30px; }
       .x-empty { color:var(--x-tx2); padding:32px; text-align:center; }
+      .x-req { color:#f87171; }
       dialog { background:var(--x-card); color:var(--x-tx); border:1px solid var(--x-line); border-radius:16px; box-shadow:var(--x-glow),0 30px 80px rgba(0,0,0,.6); padding:0; width:min(720px,calc(100vw - 24px)); max-height:calc(100vh - 24px); }
       dialog::backdrop { background:rgba(3,6,18,.72); backdrop-filter:blur(4px); }
       .x-dh { display:flex; align-items:center; gap:10px; padding:14px 16px; border-bottom:1px solid var(--x-line); }
@@ -162,27 +163,35 @@
 
     <dialog id="upDlg" aria-label="อัปโหลดไฟล์">
       <form method="dialog" id="upForm">
-        <div class="x-dh"><h2>อัปโหลดไฟล์</h2><button class="x-btn x-ico" value="x" aria-label="ปิด" formnovalidate>✕</button></div>
+        <div class="x-dh"><h2>อัปโหลดไฟล์</h2><button type="button" class="x-btn x-ico" data-x aria-label="ปิด">✕</button></div>
         <div class="x-db">
           <label class="x-drop" id="drop"><svg width="40" height="40" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 18a5 5 0 01-.5-10A6 6 0 0118 9a4.5 4.5 0 01-1 9M12 12v8m0-8l-3 3m3-3l3 3" stroke="#93b4ff" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg><p>ลากไฟล์มาวางที่นี่ หรือ <u>เลือกไฟล์</u></p><p id="dropName" class="x-fn"></p><input type="file" id="fileIn" hidden /></label>
           <div class="x-form" id="fields">
-            <label>ชื่อเอกสาร<input class="x-in" id="uTitle" required placeholder="เช่น คู่มือปั๊มน้ำ P-04" /></label>
-            <label>ประเภท<select class="x-sel" id="uType"></select></label>
+            <label>ชื่อเอกสาร <span class="x-req">*</span><input class="x-in" id="uTitle" placeholder="เช่น คู่มือปั๊มน้ำ P-04" /></label>
+            <label>ประเภท <span class="x-req">*</span><select class="x-sel" id="uType"></select></label>
             <label>แท็ก<input class="x-in" id="uTags" placeholder="#ISO17025 #งานซ่อม" /></label>
             <label>ผูกกับทรัพย์สิน<input class="x-in" id="uAsset" placeholder="เช่น CNC-001" /></label>
             <label>วันหมดอายุ<input class="x-in" type="date" id="uExp" /></label>
-            <label>โฟลเดอร์<select class="x-sel" id="uFolder"></select></label>
+            <label>โฟลเดอร์ <span class="x-req">*</span><select class="x-sel" id="uFolder"></select></label>
           </div>
           <button type="button" class="x-btn x-ghost" id="addField" style="justify-self:start">+ เพิ่มฟิลด์</button>
         </div>
-        <div class="x-df"><button class="x-btn x-ghost" value="x" formnovalidate>ยกเลิก</button><button class="x-btn x-pri" value="ok">บันทึก</button></div>
+        <div class="x-df"><button type="button" class="x-btn x-ghost" data-x>ยกเลิก</button><button type="button" class="x-btn x-pri" id="upSave">บันทึก</button></div>
       </form>
     </dialog>
 
     <dialog id="pvDlg" aria-label="ดูตัวอย่างไฟล์">
-      <div class="x-dh"><h2 id="pvTitle"></h2><button class="x-btn x-ico" aria-label="ปิด" onclick="pvDlg.close()">✕</button></div>
+      <div class="x-dh"><h2 id="pvTitle"></h2><button type="button" class="x-btn x-ico" aria-label="ปิด" onclick="pvDlg.close()">✕</button></div>
       <div class="x-db" id="pvBody"></div>
-      <div class="x-df"><button class="x-btn x-ghost" data-t="เริ่มดาวน์โหลดแล้ว">ดาวน์โหลด</button><button class="x-btn x-ghost" data-t="Check-out ไฟล์แล้ว คุณกำลังแก้ไขอยู่">Check-out</button><button class="x-btn x-pri" data-t="คัดลอกลิงก์แชร์แล้ว">แชร์</button></div>
+      <div class="x-df"><span id="pvMsg" class="x-meta" style="margin-right:auto;align-self:center"></span><button type="button" class="x-btn x-ghost" id="pvTrash" disabled>ย้ายไปถังขยะ</button><button type="button" class="x-btn x-ghost" id="pvDl" disabled>ดาวน์โหลด</button><button type="button" class="x-btn x-ghost" id="pvCo" disabled>Check-out</button><button type="button" class="x-btn x-pri" id="pvShare" disabled>แชร์</button></div>
+    </dialog>
+    <dialog id="fdDlg" aria-label="สร้างโฟลเดอร์" style="width:min(460px,calc(100vw - 24px))">
+      <div class="x-dh"><h2>สร้างโฟลเดอร์ใหม่</h2><button type="button" class="x-btn x-ico" data-x aria-label="ปิด">✕</button></div>
+      <div class="x-db"><div class="x-form" style="grid-template-columns:1fr">
+        <label>ชื่อโฟลเดอร์ <span class="x-req">*</span><input class="x-in" id="fdName" placeholder="เช่น เอกสาร ISO 9001" /></label>
+        <label>คำอธิบาย<input class="x-in" id="fdDesc" placeholder="ใช้เก็บเอกสารอะไร" /></label>
+      </div></div>
+      <div class="x-df"><button type="button" class="x-btn x-ghost" data-x>ยกเลิก</button><button type="button" class="x-btn x-pri" id="fdSave">บันทึก</button></div>
     </dialog>
     <div class="x-toast" id="toast" role="status" aria-live="polite"></div>
 
@@ -246,8 +255,8 @@
       });
       const topts = '<option value="">ทุกประเภท</option>' + Object.keys(TYPES).map((t) => `<option>${t}</option>`).join("");
       $("#ftype").innerHTML = topts;
-      $("#uType").innerHTML = Object.keys(TYPES).map((t) => `<option>${t}</option>`).join("");
-      $("#uFolder").innerHTML = FOLDERS.map(([k, n]) => `<option value="${k}">${n}</option>`).join("");
+      $("#uType").innerHTML = '<option value="">— เลือกประเภท —</option>' + Object.keys(TYPES).map((t) => `<option>${t}</option>`).join("");
+      $("#uFolder").innerHTML = '<option value="">— เลือกโฟลเดอร์ —</option>' + FOLDERS.map(([k, n]) => `<option value="${k}">${n}</option>`).join("");
       $("#ftype").onchange = (e) => { st.type = e.target.value; render(); };
       $("#sort").onchange = (e) => { st.sort = e.target.value; render(); };
       $("#q").oninput = (e) => { st.q = e.target.value; render(); };
@@ -293,6 +302,66 @@
         pv.showModal();
       });
       pv.querySelectorAll("[data-t]").forEach((b) => (b.onclick = () => toast(b.dataset.t)));
+      /* ---- real behaviours ---- */
+      const esc = (v) => String(v ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+      document.querySelectorAll("dialog [data-x]").forEach((b) => (b.onclick = () => b.closest("dialog").close("x")));
+      function errs(box, list) {
+        box.querySelectorAll(".x-ferr").forEach((n) => n.remove()); box.querySelectorAll("[aria-invalid]").forEach((n) => { n.removeAttribute("aria-invalid"); n.style.borderColor = ""; });
+        list.forEach(([el, m]) => { el.setAttribute("aria-invalid", "true"); el.style.borderColor = "#f87171"; const d = document.createElement("span"); d.className = "x-ferr"; d.style.cssText = "color:#f87171;font-size:12px"; d.textContent = m; el.after(d); });
+        if (list.length) { list[0][0].focus(); list[0][0].scrollIntoView({ block: "center" }); }
+        return !list.length;
+      }
+      /* upload: validated save */
+      $("#upBtn").onclick = () => { $("#upForm").reset(); picked = ""; $("#dropName").textContent = ""; errs($("#upForm"), []); up.returnValue = ""; up.showModal(); };
+      $("#upSave").onclick = () => {
+        const L = [];
+        if (!$("#uTitle").value.trim()) L.push([$("#uTitle"), "กรุณากรอกชื่อเอกสาร"]);
+        if (!$("#uType").value) L.push([$("#uType"), "กรุณาเลือกประเภท"]);
+        if (!$("#uFolder").value) L.push([$("#uFolder"), "กรุณาเลือกโฟลเดอร์"]);
+        if (!errs($("#upForm"), L)) return;
+        up.returnValue = "ok"; up.close("ok");
+        if (!up.hasAttribute("open") && up.returnValue !== "ok") {}
+      };
+      /* new folder */
+      const fd = $("#fdDlg");
+      $("#folderBtn").onclick = () => { $("#fdName").value = ""; $("#fdDesc").value = ""; errs(fd, []); fd.showModal(); $("#fdName").focus(); };
+      $("#fdSave").onclick = () => {
+        const n = $("#fdName").value.trim(), L = [];
+        if (!n) L.push([$("#fdName"), "กรุณากรอกชื่อโฟลเดอร์"]);
+        else if (FOLDERS.some((f) => f[1] === n)) L.push([$("#fdName"), "มีโฟลเดอร์ชื่อนี้อยู่แล้ว"]);
+        if (!errs(fd, L)) return;
+        const k = "f" + Date.now().toString(36); FOLDERS.push([k, n]);
+        $("#uFolder").insertAdjacentHTML("beforeend", `<option value="${k}">${esc(n)}</option>`);
+        st.folder = k; st.filter = "all"; fd.close("ok"); render(); toast(`สร้างโฟลเดอร์ “${n}” แล้ว`);
+      };
+      /* preview actions */
+      let cur = null;
+      $("#grid").addEventListener("click", (e) => { const b = e.target.closest(".x-file"); if (!b) return; cur = files.find((x) => x.id == b.dataset.id); pvSync(); });
+      function pvSync() { if (!cur) return; ["#pvTrash","#pvDl","#pvCo","#pvShare"].forEach((q) => ($(q).disabled = false)); $("#pvCo").textContent = cur.co ? "Check-in (v" + (cur.ver + 1) + ")" : "Check-out"; $("#pvTrash").textContent = cur.trash ? "กู้คืน" : "ย้ายไปถังขยะ"; $("#pvMsg").textContent = cur.co ? "🔒 Check-out อยู่ · ผู้อื่นแก้ไขไม่ได้" : ""; }
+      $("#pvDl").onclick = () => {
+        if (!cur) return;
+        const body = `IT&MAINT · คลังดิจิทัล (DAM)\r\nชื่อเอกสาร: ${cur.title}\r\nไฟล์: ${cur.file}\r\nประเภท: ${cur.type}\r\nเวอร์ชัน: v${cur.ver}\r\nทรัพย์สินที่ผูก: ${cur.assets.join(", ") || "-"}\r\nคำอธิบาย: ${cur.desc}\r\n`;
+        const name = /\.[a-z0-9]{2,4}$/i.test(cur.file) ? cur.file : cur.file + ".txt";
+        const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob(["\uFEFF" + body], { type: "application/octet-stream" })); a.download = name; document.body.appendChild(a); a.click(); a.remove();
+        $("#pvMsg").textContent = "⬇ ดาวน์โหลด " + name; toast(`ดาวน์โหลด ${name} แล้ว`);
+      };
+      $("#pvCo").onclick = () => {
+        if (!cur) return;
+        if (cur.co) { cur.co = false; cur.ver++; toast(`Check-in ${cur.title} เป็น v${cur.ver} แล้ว`); }
+        else { cur.co = true; cur.mine = true; toast(`Check-out ${cur.title} แล้ว · คุณกำลังแก้ไขอยู่`); }
+        render(); pvSync();
+        const meta = $("#pvBody .x-ver"); if (meta) meta.insertAdjacentHTML("afterbegin", `<li><b>${cur.co ? "🔒" : "v" + cur.ver}</b><span>${cur.co ? "Check-out โดย Admin · เมื่อสักครู่" : "Check-in โดย Admin · เมื่อสักครู่"}</span></li>`);
+      };
+      $("#pvShare").onclick = async () => {
+        if (!cur) return;
+        const link = location.href.split("#")[0].split("?")[0] + "?file=" + cur.id + "&share=" + Math.random().toString(36).slice(2, 10);
+        try { await navigator.clipboard.writeText(link); } catch (e) {}
+        $("#pvBody .x-share")?.remove();
+        $("#pvBody").insertAdjacentHTML("beforeend", `<div class="x-share"><p class="x-sub">ลิงก์แชร์ (หมดอายุใน 7 วัน · อ่านอย่างเดียว)</p><input class="x-in" readonly value="${esc(link)}" style="width:100%" aria-label="ลิงก์แชร์" /></div>`);
+        toast("คัดลอกลิงก์แชร์ไปยังคลิปบอร์ดแล้ว");
+      };
+      $("#pvTrash").onclick = () => { if (!cur) return; cur.trash = !cur.trash; render(); pv.close(); toast(cur.trash ? `ย้าย “${cur.title}” ไปถังขยะแล้ว` : `กู้คืน “${cur.title}” แล้ว`); };
+      const qf = new URLSearchParams(location.search).get("file"); if (qf) setTimeout(() => { const b = document.querySelector(`.x-file[data-id="${qf}"]`); b && b.click(); }, 0);
       render();
     </script>
       <script src="../../assets/site-nav.js"></script>
