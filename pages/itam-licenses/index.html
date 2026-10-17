@@ -83,6 +83,10 @@
       .x-form { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
       .x-form label { display: flex; flex-direction: column; gap: 6px; font: var(--type-small); color: var(--x-dim); }
       .x-form .full { grid-column: 1 / -1; }
+      .x-err { color: #FF9AA4; font: var(--type-caption); margin: 0; } .x-err:empty { display: none; }
+      [aria-invalid=true] { border-color: #FF5A6E !important; }
+      .x-chk { flex-direction: row !important; align-items: center; gap: 10px !important; color: var(--x-ink) !important; min-height: var(--tap); }
+      .x-chk input { width: 20px; height: 20px; accent-color: #4C8DFF; }
       .x-field:focus, .x-sel:focus { outline: 2px solid #4C8DFF; outline-offset: 1px; }
       .x-toast { position: fixed; bottom: 24px; right: 24px; z-index: 30; background: #111B38; border: 1px solid rgba(61,220,151,.45); color: var(--x-ink); border-radius: 16px; padding: 14px 18px; box-shadow: 0 8px 30px rgba(0,0,0,.5); font: var(--type-label); }
       @media (max-width: 1100px) { .x-kpis { grid-template-columns: repeat(2, 1fr); } .x-grid2, .x-devs, .x-iss { grid-template-columns: 1fr; } }
@@ -132,7 +136,7 @@
               <p>ทะเบียนฮาร์ดแวร์ · ไลเซนส์ vs การติดตั้งจริง · Discovery Agent/API · OS End-of-Support · ISO/IEC 19770 &amp; ISO 27001 A.5.9</p>
             </div>
             <div class="x-acts">
-              <button class="x-btn x-ghost" type="button" onclick="toast('กำลังสร้างรายงาน Compliance (PDF)…')">รายงาน Compliance</button>
+              <button class="x-btn x-ghost" type="button" onclick="openReport()">รายงาน Compliance</button>
               <button class="x-btn x-pri" type="button" onclick="openM()">+ ไลเซนส์</button>
             </div>
           </div>
@@ -172,29 +176,23 @@
 
           <!-- COMPLIANCE -->
           <section id="cmp" role="tabpanel" hidden>
-            <div class="x-iss">
-              <div class="x-card"><header class="x-dev" style="display:flex;gap:12px;align-items:center"><span class="x-tile g2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l10 18H2zM12 10v5M12 18v.5"/></svg></span><div><h3 style="margin:0">AutoCAD เกินสิทธิ์ +2</h3><span class="x-tag t-red">ความเสี่ยงสูง</span></div></header>
-                <p>ติดตั้งจริง 17 เครื่อง แต่มีสิทธิ์ 15 ที่นั่ง ตรวจพบโดย Discovery Agent · ISO/IEC 19770</p>
-                <div class="x-acts"><button class="x-btn x-pri" type="button" onclick="toast('สร้าง PR ซื้อ AutoCAD เพิ่ม 2 ที่นั่งแล้ว')">ซื้อเพิ่ม 2 สิทธิ์</button><button class="x-btn x-ghost" type="button" onclick="toast('ส่งงานถอนการติดตั้งให้ทีม IT แล้ว')">ถอนการติดตั้ง</button></div></div>
-              <div class="x-card"><header style="display:flex;gap:12px;align-items:center"><span class="x-tile g3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 9l6 6M15 9l-6 6"/></svg></span><div><h3 style="margin:0">WinRAR ติดตั้งไม่มีไลเซนส์ 3 เครื่อง</h3><span class="x-tag t-amb">ไม่มีสิทธิ์ใช้งาน</span></div></header>
-                <p>ซอฟต์แวร์ไม่ได้รับอนุญาตบน 3 เครื่อง · ISO 27001 A.5.9 (ทะเบียนสินทรัพย์สารสนเทศ)</p>
-                <div class="x-acts"><button class="x-btn x-pri" type="button" onclick="toast('สั่งถอน WinRAR และติดตั้ง 7-Zip แทนแล้ว')">แทนด้วย 7-Zip</button><button class="x-btn x-ghost" type="button" onclick="toast('สร้าง PR ซื้อ WinRAR 3 สิทธิ์แล้ว')">ซื้อไลเซนส์</button></div></div>
-            </div>
+            <div class="x-iss" id="iss"></div>
+            <p style="color:var(--x-dim);font:var(--type-caption);margin:12px 0 0">อ้างอิง ISO/IEC 19770-1 (SAM) และ ISO 27001 A.5.9</p>
           </section>
         </main>
       </div>
     </div>
 
     <div class="x-modal" id="m" hidden role="dialog" aria-modal="true" aria-labelledby="mt">
-      <form class="x-card x-dlg" id="f">
+      <form class="x-card x-dlg" id="f" novalidate>
         <h3 id="mt" style="font:var(--type-heading)">เพิ่มไลเซนส์</h3>
         <div class="x-form" id="ff">
-          <label class="full">ชื่อซอฟต์แวร์<input class="x-field" name="n" required placeholder="เช่น Microsoft Visio" /></label>
-          <label>ผู้ผลิต<input class="x-field" name="v" placeholder="เช่น Microsoft" /></label>
-          <label>ประเภท<select class="x-sel" name="t"><option>Subscription</option><option>Perpetual</option><option>Support</option><option>Per-device</option></select></label>
-          <label>จำนวนสิทธิ์<input class="x-field" name="s" type="number" min="1" value="1" required /></label>
-          <label>วันหมดอายุ<input class="x-field" name="d" type="date" required /></label>
-          <label>ค่าใช้จ่าย (บาท/ปี)<input class="x-field" name="c" type="number" min="0" value="0" /></label>
+          <label class="full">ชื่อซอฟต์แวร์ *<input class="x-field" name="n" required placeholder="เช่น Microsoft Visio" /></label>
+          <label>ผู้ผลิต *<input class="x-field" name="v" required placeholder="เช่น Microsoft" /></label>
+          <label>ประเภท *<select class="x-sel" name="t" required><option value="">— เลือกประเภท —</option><option>Subscription</option><option>Perpetual</option><option>Support</option><option>Per-device</option></select></label>
+          <label>จำนวนสิทธิ์ *<input class="x-field" name="s" type="number" min="1" required placeholder="เช่น 10" /></label>
+          <label>วันหมดอายุ *<input class="x-field" name="d" type="date" required /></label>
+          <label>ค่าใช้จ่าย (บาท/ปี)<input class="x-field" name="c" type="number" min="0" placeholder="เช่น 45000" /></label>
           <label>License Key<input class="x-field" name="k" placeholder="XXXXX-XXXXX-XXXXX" /></label>
         </div>
         <div class="x-acts" style="justify-content:space-between;margin-top:16px;flex-wrap:wrap">
@@ -202,6 +200,29 @@
           <span class="x-acts"><button class="x-btn x-ghost" type="button" onclick="closeM()">ยกเลิก</button><button class="x-btn x-pri" type="submit">บันทึก</button></span>
         </div>
       </form>
+    </div>
+    <div class="x-modal" id="am" hidden role="dialog" aria-modal="true" aria-labelledby="amt">
+      <form class="x-card x-dlg" id="af" novalidate>
+        <h3 id="amt" style="font:var(--type-heading);margin:0 0 4px"></h3>
+        <p id="ams" style="color:var(--x-dim);font:var(--type-small);margin:0 0 14px"></p>
+        <div class="x-form" id="aff"></div>
+        <div class="x-acts" style="justify-content:flex-end;margin-top:16px;flex-wrap:wrap" id="afa">
+          <button class="x-btn x-ghost" type="button" data-close>ยกเลิก</button><button class="x-btn x-pri" type="submit" id="afok">ยืนยัน</button>
+        </div>
+      </form>
+    </div>
+    <div class="x-modal" id="rm" hidden role="dialog" aria-modal="true" aria-labelledby="rmt">
+      <div class="x-card x-dlg" style="width:min(760px,100%)">
+        <h3 id="rmt" style="font:var(--type-heading);margin:0 0 4px">รายงาน Compliance ไลเซนส์ซอฟต์แวร์</h3>
+        <p id="rms" style="color:var(--x-dim);font:var(--type-small);margin:0 0 14px"></p>
+        <div class="x-kpis" id="rk" style="grid-template-columns:repeat(4,1fr);margin-bottom:14px"></div>
+        <div class="x-scroll"><table class="x-tbl" id="rt"></table></div>
+        <div class="x-acts" style="justify-content:flex-end;margin-top:16px;flex-wrap:wrap">
+          <button class="x-btn x-ghost" type="button" data-close>ปิด</button>
+          <button class="x-btn x-ghost" type="button" id="rprint">พิมพ์ / PDF</button>
+          <button class="x-btn x-pri" type="button" id="rcsv">ดาวน์โหลด CSV</button>
+        </div>
+      </div>
     </div>
     <div class="x-toast" id="toast" hidden role="status"></div>
 
@@ -250,7 +271,7 @@
       $("#devs").innerHTML = devs.map(([id, m, i, g, ls, os, w, wt, stale]) => `<article class="x-card x-dev"><header><span class="x-tile ${g}">${svg(i)}</span><div><h3 style="margin:0">${id}</h3><small>${m}</small></div></header>
         <dl><dt>Last-seen</dt><dd><span class="x-tag ${stale ? "t-red" : "t-blu"}">${ls}</span></dd><dt>OS</dt><dd${os.includes("EOS") ? ' style="color:#FF8A95"' : ""}>${os}</dd><dt>ประกัน</dt><dd><span class="x-tag ${wt}">${w}</span></dd></dl></article>`).join("");
 
-      const lics = Hark.data("lic-data");
+      const lics = Hark.data("lic-data"); const BASE_N = lics.length;
       const baht = (n) => "฿" + n.toLocaleString("th-TH");
       function row(l) {
         const p = Math.round((l.u / l.s) * 100), over = l.u > l.s;
@@ -258,10 +279,15 @@
         const mask = l.k ? l.k.replace(/[A-Z0-9](?=.{4})/g, "•") : "—";
         return `<tr><td><b>${l.n}</b><br><small style="color:var(--x-dim)">${l.v || "—"}</small></td><td>${l.t}</td>
           <td>${l.u}/${l.s}${over ? ` <span class="x-tag t-red">เกิน +${l.u - l.s}</span>` : ""}<div class="x-bar${over ? " over" : ""}"><i style="width:${Math.min(p, 100)}%"></i></div></td>
-          <td><span class="x-tag ${dt}">อีก ${l.d} วัน</span></td><td>${baht(l.c)}</td>
+          <td>${l.d == null ? '<span class="x-tag t-blu">ซื้อขาด</span>' : `<span class="x-tag ${dt}">อีก ${l.d} วัน</span>`}</td><td>${baht(l.c)}</td>
           <td><span class="x-key"><span data-k="${l.k}" data-m="${mask}">${mask}</span>${l.k ? `<button class="x-eye" type="button" aria-label="แสดง License Key">${svg("eye", 18)}</button>` : ""}</span></td></tr>`;
       }
-      const renderL = () => { $("#lrows").innerHTML = lics.map(row).join(""); };
+      let LQ = "";
+      const renderL = () => {
+        const list = lics.filter((l) => !LQ || (l.n + " " + (l.v || "") + " " + l.t).toLowerCase().includes(LQ));
+        $("#lrows").innerHTML = list.map(row).join("") || `<tr><td colspan="6" style="color:var(--x-dim)">ไม่พบไลเซนส์ที่ตรงกับ “${esc(LQ)}”</td></tr>`;
+      };
+      const esc = (t) => String(t ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
       renderL();
       $("#lrows").addEventListener("click", (e) => {
         const b = e.target.closest(".x-eye"); if (!b) return;
@@ -277,7 +303,7 @@
 
       let tt; function toast(msg) { const t = $("#toast"); t.textContent = "✓ " + msg; t.hidden = false; clearTimeout(tt); tt = setTimeout(() => (t.hidden = true), 2800); }
       function openM() { $("#m").hidden = false; $("#f [name=n]").focus(); }
-      function closeM() { $("#m").hidden = true; $("#f").reset(); document.querySelectorAll(".x-extra").forEach((e) => e.remove()); }
+      function closeM() { $("#m").hidden = true; $("#f").reset(); clearErr($("#f")); document.querySelectorAll(".x-extra").forEach((e) => e.remove()); }
       $("#m").addEventListener("click", (e) => { if (e.target.id === "m") closeM(); });
       document.addEventListener("keydown", (e) => {
         if (e.key === "Escape" && !$("#m").hidden) closeM();
@@ -290,15 +316,114 @@
         $("#ff").appendChild(l); l.querySelector("input").focus();
       });
       $("#f").addEventListener("submit", (e) => {
-        e.preventDefault(); const f = new FormData(e.target);
+        e.preventDefault();
+        if (!validate($("#f"))) return;
+        const f = new FormData(e.target);
         const d = Math.max(0, Math.ceil((new Date(f.get("d")) - new Date()) / 864e5));
         const l = { n: f.get("n"), v: f.get("v"), t: f.get("t"), u: 0, s: +f.get("s"), d, c: +f.get("c") || 0, k: f.get("k").trim().toUpperCase() };
         lics.push(l); renderL();
-        $("#kLic").textContent = 9 + lics.length - 6;
+        $("#kLic").textContent = 9 + lics.length - BASE_N;
         $("#kCost").textContent = (lics.reduce((a, x) => a + x.c, 0) / 1e6).toFixed(2) + "M";
         closeM(); toast(`เพิ่มไลเซนส์ “${l.n}” แล้ว`);
         document.querySelector('[data-t="lic"]').click();
       });
+
+      // ---------- validation helpers ----------
+      function clearErr(form) { form.querySelectorAll(".x-err").forEach((m) => m.remove()); form.querySelectorAll("[aria-invalid]").forEach((x) => x.removeAttribute("aria-invalid")); }
+      function mark(el, msg) { el.setAttribute("aria-invalid", "true"); const host = el.closest("label, fieldset"); const m = document.createElement("p"); m.className = "x-err"; m.textContent = msg; host.appendChild(m); }
+      function validate(form) {
+        clearErr(form); let first = null;
+        form.querySelectorAll("[required]").forEach((el) => {
+          const v = el.value.trim(); let msg = "";
+          if (!v) msg = el.tagName === "SELECT" ? "กรุณาเลือกรายการ" : "กรุณากรอกข้อมูลช่องนี้";
+          else if (el.type === "number" && el.min !== "" && +v < +el.min) msg = "ต้องไม่น้อยกว่า " + el.min;
+          else if (el.type === "email" && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)) msg = "รูปแบบอีเมลไม่ถูกต้อง";
+          if (msg) { mark(el, msg); first = first || el; }
+        });
+        form.querySelectorAll("fieldset[data-min]").forEach((fs) => {
+          if (fs.querySelectorAll("input:checked").length < +fs.dataset.min) { mark(fs.querySelector("input"), "กรุณาเลือกอย่างน้อย " + fs.dataset.min + " เครื่อง"); first = first || fs.querySelector("input"); }
+        });
+        if (first) first.focus();
+        return !first;
+      }
+      const fixErr = (e) => { const t = e.target; const host = t.closest && t.closest("label, fieldset"); if (!host) return; if (t.type === "checkbox") host.querySelectorAll("[aria-invalid]").forEach((x) => x.removeAttribute("aria-invalid")); else t.removeAttribute("aria-invalid"); const m = host.querySelector(".x-err"); if (m && (t.type === "checkbox" || String(t.value).trim())) m.remove(); };
+      ["#f", "#af"].forEach((id) => { $(id).addEventListener("input", fixErr); $(id).addEventListener("change", fixErr); });
+      $("#q").addEventListener("input", (e) => { LQ = e.target.value.trim().toLowerCase(); renderL(); if (LQ) document.querySelector('[data-t="lic"]').click(); });
+
+      // ---------- compliance issues ----------
+      const ISS = [
+        { id: "acad", tile: "g2", icon: "ovr", t: "AutoCAD เกินสิทธิ์ +2", tag: ["t-red", "ความเสี่ยงสูง"], d: "ติดตั้งจริง 17 เครื่อง แต่มีสิทธิ์ 15 ที่นั่ง ตรวจพบโดย Discovery Agent · ISO/IEC 19770", acts: [["buy", "ซื้อเพิ่ม 2 สิทธิ์"], ["uninst", "ถอนการติดตั้ง"]], log: [], done: false },
+        { id: "rar", tile: "g3", icon: "key", t: "WinRAR ติดตั้งไม่มีไลเซนส์ 3 เครื่อง", tag: ["t-amb", "ไม่มีสิทธิ์ใช้งาน"], d: "ซอฟต์แวร์ไม่ได้รับอนุญาตบน 3 เครื่อง · ISO 27001 A.5.9 (ทะเบียนสินทรัพย์สารสนเทศ)", acts: [["zip", "แทนด้วย 7-Zip"], ["buyrar", "ซื้อไลเซนส์"]], log: [], done: false },
+      ];
+      function renderIss() {
+        $("#iss").innerHTML = ISS.map((x) => `<div class="x-card" data-iss="${x.id}"><header style="display:flex;gap:12px;align-items:center"><span class="x-tile ${x.done ? "g5" : x.tile}">${svg(x.done ? "fw" : x.icon)}</span><div><h3 style="margin:0">${x.t}</h3><span class="x-tag ${x.done ? "t-grn" : x.tag[0]}">${x.done ? "แก้ไขแล้ว" : x.tag[1]}</span></div></header>
+          <p>${x.d}</p>${x.log.map((l) => `<p style="color:var(--x-ink);margin-top:-6px">✓ ${l}</p>`).join("")}
+          ${x.done ? "" : `<div class="x-acts">${x.acts.map(([k, l], i) => `<button class="x-btn ${i ? "x-ghost" : "x-pri"}" type="button" data-a="${k}">${l}</button>`).join("")}</div>`}</div>`).join("");
+        const open = ISS.filter((x) => !x.done).length, b = document.querySelector('[data-t="cmp"] b'); b.textContent = open; b.hidden = !open;
+        const k = [...document.querySelectorAll("#kpis .x-kpi")].find((n) => n.textContent.includes("เกินสิทธิ์")); if (k) k.querySelector("strong").textContent = open;
+      }
+      let onAct = null;
+      function openAct(title, sub, html, ok, fn) {
+        $("#amt").textContent = title; $("#ams").textContent = sub; $("#aff").innerHTML = html; $("#afok").textContent = ok; onAct = fn;
+        clearErr($("#af")); $("#am").hidden = false; const f0 = $("#aff").querySelector("input,select"); if (f0) f0.focus();
+      }
+      const closeAct = () => { $("#am").hidden = true; };
+      $("#am").addEventListener("click", (e) => { if (e.target.id === "am" || e.target.closest("[data-close]")) closeAct(); });
+      $("#af").addEventListener("submit", (e) => { e.preventDefault(); if (!validate($("#af"))) return; const v = Object.fromEntries(new FormData($("#af"))); v.pcs = [...$("#af").querySelectorAll("[name=pcs]:checked")].map((c) => c.value); closeAct(); onAct(v); renderIss(); renderL(); });
+      const inp = (n, l, t = "text", ph = "", extra = "") => `<label${extra}>${l} *<input class="x-field" name="${n}" type="${t}" required placeholder="${ph}"${t === "number" ? ' min="1"' : ""} /></label>`;
+      const sel = (n, l, opts) => `<label class="full">${l} *<select class="x-sel" name="${n}" required><option value="">— เลือก —</option>${opts.map((o) => `<option>${o}</option>`).join("")}</select></label>`;
+      const checks = (l, opts, min) => `<fieldset class="full" data-min="${min}" style="grid-column:1/-1;border:1px solid var(--x-line);border-radius:var(--r-s);padding:8px 12px;margin:0"><legend style="color:var(--x-dim);font:var(--type-small)">${l}</legend>${opts.map(([v, n]) => `<label class="x-chk"><input type="checkbox" name="pcs" value="${v}" />${v} <span style="color:var(--x-dim)">${n}</span></label>`).join("")}</fieldset>`;
+      const WHEN = ["ทันที", "คืนนี้ 22:00", "เสาร์นี้ 08:00"];
+      let prSeq = 4; const nextPR = () => "PR-2569-" + String(prSeq++).padStart(4, "0");
+      const find = (n) => lics.find((l) => l.n === n);
+      const ACT = {
+        buy: (x) => openAct("ซื้อ AutoCAD เพิ่ม", "สร้างใบขอซื้อ (PR) ส่งอนุมัติ · สิทธิ์ 15 / ติดตั้ง 17", inp("qty", "จำนวนสิทธิ์", "number", "อย่างน้อย 2") + inp("price", "ราคา/สิทธิ์/ปี (บาท)", "number", "เช่น 11500") + inp("vendor", "ผู้ขาย", "text", "เช่น บจก. ซินเน็ค", ' class="full"'), "สร้าง PR", (v) => {
+          if (+v.qty < 2) toast("หมายเหตุ: ยังเกินสิทธิ์อยู่ " + (2 - v.qty) + " เครื่อง");
+          const l = find("AutoCAD"), no = nextPR(); l.s += +v.qty; l.c += +v.qty * +v.price;
+          x.done = l.u <= l.s; x.log.push(`สร้าง ${no} ซื้อเพิ่ม ${v.qty} สิทธิ์ (${esc(v.vendor)}) · ${baht(+v.qty * +v.price)} · ใช้ ${l.u}/${l.s}`);
+          toast(`สร้าง ${no} ซื้อ AutoCAD เพิ่ม ${v.qty} สิทธิ์แล้ว`);
+        }),
+        uninst: (x) => openAct("ถอนการติดตั้ง AutoCAD", "เลือกเครื่องที่ใช้งานน้อยที่สุด · สั่งผ่าน Discovery Agent", checks("เครื่องที่ติดตั้ง AutoCAD (เลือกอย่างน้อย 2)", [["PC-ENG-07", "ใช้ล่าสุด 96 วันก่อน"], ["PC-ENG-12", "ใช้ล่าสุด 71 วันก่อน"], ["NB-0187", "ใช้ล่าสุด 12 วันก่อน"], ["PC-ENG-03", "ใช้ล่าสุด 2 วันก่อน"]], 2) + sel("when", "กำหนดเวลา", WHEN), "สั่งถอนการติดตั้ง", (v) => {
+          const l = find("AutoCAD"); l.u = Math.max(0, l.u - v.pcs.length); x.done = l.u <= l.s;
+          x.log.push(`สั่งถอนการติดตั้ง ${v.pcs.join(", ")} (${v.when}) · ใช้ ${l.u}/${l.s}`); toast(`ส่งงานถอน AutoCAD ${v.pcs.length} เครื่องให้ทีม IT แล้ว`);
+        }),
+        zip: (x) => openAct("แทน WinRAR ด้วย 7-Zip", "7-Zip เป็นฟรีแวร์ (LGPL) ไม่ต้องใช้ไลเซนส์", checks("เครื่องที่พบ WinRAR", [["NB-0231", "ไม่รายงานตัว 34 วัน"], ["NB-0187", ""], ["PC-0412", ""]], 1) + sel("when", "กำหนดเวลา", WHEN), "สั่งดำเนินการ", (v) => {
+          x.left = (x.left ?? 3) - v.pcs.length; x.done = x.left <= 0;
+          x.log.push(`ถอน WinRAR + ติดตั้ง 7-Zip: ${v.pcs.join(", ")} (${v.when})${x.done ? "" : ` · เหลือ ${x.left} เครื่อง`}`); toast(`สั่งแทน WinRAR ด้วย 7-Zip ${v.pcs.length} เครื่องแล้ว`);
+        }),
+        buyrar: (x) => openAct("ซื้อไลเซนส์ WinRAR", "สร้างใบขอซื้อ (PR) · ติดตั้งอยู่ 3 เครื่อง", inp("qty", "จำนวนสิทธิ์", "number", "อย่างน้อย 3") + inp("price", "ราคา/สิทธิ์ (บาท)", "number", "เช่น 1200") + inp("vendor", "ผู้ขาย", "text", "เช่น บจก. ซอฟต์แวร์ไลน์", ' class="full"'), "สร้าง PR", (v) => {
+          const no = nextPR(), n = x.left ?? 3; lics.push({ n: "WinRAR", v: "win.rar GmbH", t: "Perpetual", u: n, s: +v.qty, d: null, c: 0, k: "" });
+          x.done = +v.qty >= n; x.log.push(`สร้าง ${no} ซื้อ WinRAR ${v.qty} สิทธิ์ (${esc(v.vendor)}) · ${baht(+v.qty * +v.price)} · เพิ่มเข้าทะเบียนไลเซนส์`);
+          $("#kLic").textContent = 9 + lics.length - BASE_N; toast(`สร้าง ${no} ซื้อ WinRAR ${v.qty} สิทธิ์แล้ว`);
+        }),
+      };
+      $("#iss").addEventListener("click", (e) => { const b = e.target.closest("[data-a]"); if (b) ACT[b.dataset.a](ISS.find((x) => x.id === b.closest("[data-iss]").dataset.iss)); });
+      renderIss();
+
+      // ---------- compliance report ----------
+      const status = (l) => l.u > l.s ? ["t-red", "เกินสิทธิ์ +" + (l.u - l.s)] : l.d != null && l.d <= 30 ? ["t-amb", "ต่ออายุภายใน " + l.d + " วัน"] : ["t-grn", "ถูกต้อง"];
+      function reportRows() {
+        const r = lics.map((l) => [l.n, l.v || "—", l.t, l.u, l.s, l.d == null ? "—" : l.d, status(l)[1]]);
+        ISS.filter((x) => x.id === "rar" && !x.done).forEach((x) => r.push(["WinRAR", "win.rar GmbH", "ไม่มีไลเซนส์", x.left ?? 3, 0, "—", "ติดตั้งไม่มีไลเซนส์"]));
+        return r;
+      }
+      function openReport() {
+        const rows = reportRows(), bad = rows.filter((r) => /เกิน|ไม่มี/.test(r[6])).length, soon = rows.filter((r) => /ต่ออายุ/.test(r[6])).length;
+        $("#rms").textContent = "ณ วันที่ " + new Date().toLocaleDateString("th-TH", { day: "numeric", month: "short", year: "numeric" }) + " · ทุกไซต์ · ISO/IEC 19770-1 & ISO 27001 A.5.9";
+        $("#rk").innerHTML = [["ไลเซนส์ทั้งหมด", rows.length, "g1"], ["ถูกต้อง", rows.length - bad - soon, "g5"], ["ต้องต่ออายุ ≤30 วัน", soon, "g3"], ["ไม่สอดคล้อง", bad, "g2"]].map(([l, v, g]) => `<div class="x-card x-kpi"><span class="x-tile ${g}">${svg(g === "g2" ? "ovr" : g === "g3" ? "clk" : "key")}</span><div><small>${l}</small><strong>${v}</strong></div></div>`).join("");
+        $("#rt").innerHTML = `<thead><tr><th>ซอฟต์แวร์</th><th>ผู้ผลิต</th><th>ประเภท</th><th>ใช้</th><th>สิทธิ์</th><th>หมดอายุ (วัน)</th><th>สถานะ</th></tr></thead><tbody>` +
+          rows.map((r) => `<tr><td><b>${esc(r[0])}</b></td><td>${esc(r[1])}</td><td>${esc(r[2])}</td><td>${r[3]}</td><td>${r[4]}</td><td>${r[5]}</td><td><span class="x-tag ${/เกิน|ไม่มี/.test(r[6]) ? "t-red" : /ต่ออายุ/.test(r[6]) ? "t-amb" : "t-grn"}">${r[6]}</span></td></tr>`).join("") + "</tbody>";
+        $("#rm").hidden = false; $("#rcsv").focus();
+      }
+      $("#rm").addEventListener("click", (e) => { if (e.target.id === "rm" || e.target.closest("[data-close]")) $("#rm").hidden = true; });
+      $("#rprint").onclick = () => window.print();
+      $("#rcsv").onclick = () => {
+        const rows = [["ซอฟต์แวร์", "ผู้ผลิต", "ประเภท", "ใช้", "สิทธิ์", "หมดอายุ (วัน)", "สถานะ"]].concat(reportRows());
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(new Blob(["\ufeff" + rows.map((r) => r.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(",")).join("\r\n")], { type: "text/csv;charset=utf-8" }));
+        a.download = "license-compliance-report.csv"; document.body.appendChild(a); a.click(); a.remove(); toast("ดาวน์โหลดรายงาน Compliance (CSV) แล้ว");
+      };
+      document.addEventListener("keydown", (e) => { if (e.key === "Escape") { $("#rm").hidden = true; closeAct(); } });
 
       const types = Hark.data("type-data");
       new Chart($("#cType"), { type: "doughnut", data: { labels: types.map((d) => d.t), datasets: [{ data: types.map((d) => d.n) }] },
