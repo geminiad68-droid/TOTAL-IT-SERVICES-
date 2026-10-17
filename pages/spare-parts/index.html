@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="th" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ITMAINT Spare Parts</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400&display=swap"
+    />
+    <link rel="stylesheet" href="../../assets/hark.css" />
+    <link rel="stylesheet" href="../../assets/hark-hero.css" />
+    <style>
+      :root { color-scheme: dark; --x-bg: #0A1024; --x-card: #0f1838; --x-card2: #131e46; --x-line: rgb(80 130 255 / 0.28); --x-glow: 0 0 0 1px rgb(80 130 255 / 0.12), 0 0 18px rgb(60 110 255 / 0.12); --x-muted: #9aa6c8; --x-grad: linear-gradient(135deg, #d9480f, #c2255c); }
+      body { background: var(--x-bg); color: #eef1fa; }
+      .x-app { display: grid; grid-template-columns: 248px minmax(0, 1fr); min-height: 100vh; }
+      .x-side { background: #0b1330; border-right: 1px solid var(--x-line); padding: 18px 12px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+      .x-logo { display: flex; gap: 10px; align-items: center; padding: 4px 8px 18px; }
+      .x-logo b { font: var(--weight-bold) 20px/1.1 var(--sans); display: block; }
+      .x-logo small { color: var(--x-muted); font: var(--type-caption); }
+      .x-grp { font: var(--type-tag); color: var(--x-muted); padding: 14px 10px 6px; }
+      .x-item { display: flex; align-items: center; gap: 10px; min-height: var(--tap); padding: 0 10px; border-radius: var(--r-s); font: var(--type-small); color: #d7ddf0; text-decoration: none; }
+      .x-item:hover { background: rgb(80 130 255 / 0.1); }
+      .x-item.is-on { background: linear-gradient(90deg, #1f4fd8, #2a64f0); color: #fff; font-weight: var(--weight-medium); }
+      .x-item .x-badge { margin-left: auto; }
+      .x-badge { background: #e03131; color: #fff; border-radius: var(--r-pill); font: var(--type-tag); padding: 1px 7px; }
+      .x-mainwrap { min-width: 0; }
+      .x-top { display: flex; gap: 12px; align-items: center; padding: 14px 24px; border-bottom: 1px solid var(--x-line); background: rgb(10 16 36 / 0.85); backdrop-filter: var(--hark-blur); position: sticky; top: 0; z-index: 5; }
+      .x-search { flex: 1; display: flex; align-items: center; gap: 8px; background: var(--x-card); border: 1px solid var(--x-line); border-radius: var(--r-s); padding: 0 12px; min-height: var(--tap); }
+      .x-search input { flex: 1; min-width: 0; background: none; border: 0; color: inherit; font: var(--type-small); outline: none; }
+      .x-kbd { font: var(--type-caption); color: var(--x-muted); border: 1px solid var(--x-line); border-radius: 6px; padding: 1px 6px; white-space: nowrap; }
+      .x-in, .x-sel { background: var(--x-card); border: 1px solid var(--x-line); color: inherit; border-radius: var(--r-s); min-height: var(--tap); padding: 0 12px; font: var(--type-small); width: 100%; }
+      .x-sel option { background: var(--x-card); }
+      .x-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: var(--tap); padding: 0 16px; border-radius: var(--r-s); font: var(--type-label); color: #eef1fa; background: #121c40; border: 1px solid var(--x-line); cursor: pointer; white-space: nowrap; }
+      .x-btn:hover { background: #1a2756; }
+      .x-btn--p { background: var(--x-grad); border-color: transparent; color: #fff; box-shadow: 0 4px 18px rgb(194 37 92 / 0.35); }
+      .x-btn--p:hover { filter: brightness(1.1); background: var(--x-grad); }
+      .x-icon { width: var(--tap); min-width: var(--tap); flex: none; padding: 0; position: relative; }
+      .x-icon .x-badge { position: absolute; top: 2px; right: 2px; padding: 0 5px; }
+      .x-user { display: flex; align-items: center; gap: 8px; font: var(--type-label); }
+      .x-user small { display: block; color: var(--x-muted); font: var(--type-caption); }
+      .x-av { width: 36px; height: 36px; border-radius: 50%; background: var(--x-grad); display: grid; place-items: center; font: var(--type-tag); }
+      .x-body { padding: 24px; display: grid; gap: 20px; }
+      .x-head { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; }
+      .x-head h1 { font: var(--type-title); }
+      .x-head p { color: var(--x-muted); font: var(--type-small); }
+      .x-acts { display: flex; gap: 8px; flex-wrap: wrap; }
+      .x-card { background: linear-gradient(180deg, var(--x-card2), var(--x-card)); border: 1px solid var(--x-line); border-radius: var(--r-m); box-shadow: var(--x-glow); }
+      .x-kpis { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 14px; }
+      .x-kpi { padding: 16px; display: flex; gap: 12px; align-items: center; }
+      .x-kpi b { display: block; font: var(--type-figure); }
+      .x-kpi span { color: var(--x-muted); font: var(--type-caption); }
+      .x-tile { width: 44px; height: 44px; border-radius: var(--r-s); display: grid; place-items: center; flex: none; color: #fff; }
+      .x-g1 { background: linear-gradient(135deg, #3b82f6, #1e40af); } .x-g2 { background: linear-gradient(135deg, #22c55e, #0f766e); }
+      .x-g3 { background: linear-gradient(135deg, #f97316, #c2410c); } .x-g4 { background: linear-gradient(135deg, #ef4444, #be185d); }
+      .x-g5 { background: linear-gradient(135deg, #a855f7, #6d28d9); }
+      .x-panel { padding: 8px 20px 20px; }
+      .x-tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--x-line); margin: 0 -20px 16px; padding: 0 12px; overflow-x: auto; }
+      .x-tab { background: none; border: 0; color: var(--x-muted); font: var(--type-label); min-height: var(--tap); padding: 0 14px; cursor: pointer; border-bottom: 2px solid transparent; white-space: nowrap; display: inline-flex; gap: 6px; align-items: center; }
+      .x-tab[aria-selected="true"] { color: #fff; border-bottom-color: #4c7dff; }
+      .x-filters { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1.4fr); gap: 10px; margin-bottom: 14px; }
+      .x-code { font: 12px/1.3 "Geist Mono", monospace; color: #8fb0ff; }
+      .x-crit { display: inline-block; margin-left: 6px; font: var(--type-tag); color: #ffc2cf; background: #3a1430; border: 1px solid #8a1f45; border-radius: var(--r-pill); padding: 0 8px; vertical-align: 1px; }
+      .x-bar { position: relative; height: 6px; background: rgb(255 255 255 / 0.08); border-radius: 3px; margin-top: 6px; width: 120px; }
+      .x-bar i { position: absolute; inset: 0 auto 0 0; border-radius: 3px; background: linear-gradient(90deg, #22c55e, #16a34a); }
+      .x-bar.is-low i { background: linear-gradient(90deg, #f43f5e, #e11d48); }
+      .x-bar em { position: absolute; top: -3px; width: 2px; height: 12px; background: #fbbf24; }
+      .x-low { color: #ff8095; }
+      .x-type { font: var(--type-tag); border-radius: var(--r-pill); padding: 2px 10px; white-space: nowrap; }
+      .x-t-in { background: rgb(34 197 94 / 0.16); color: #86efac; } .x-t-out { background: rgb(249 115 22 / 0.16); color: #fdba74; }
+      .x-t-adj { background: rgb(168 85 247 / 0.18); color: #d8b4fe; } .x-t-tr { background: rgb(59 130 246 / 0.18); color: #93c5fd; }
+      .x-sugg { display: grid; gap: 12px; }
+      .x-sg { padding: 16px; display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
+      .x-sg div { flex: 1; min-width: 200px; }
+      .x-sg small { display: block; color: var(--x-muted); font: var(--type-caption); }
+      .x-qty { font: var(--type-heading); text-align: right; } .x-qty small { text-align: right; }
+      .x-dlg { background: #0e1736; color: #eef1fa; border: 1px solid var(--x-line); border-radius: var(--r-m); box-shadow: var(--x-glow), 0 20px 60px rgb(0 0 0 / 0.6); padding: 0; width: min(640px, 94vw); }
+      .x-dlg::backdrop { background: rgb(4 8 20 / 0.7); backdrop-filter: blur(4px); }
+      .x-dlg form { padding: 22px; display: grid; gap: 16px; }
+      .x-dlg h2 { font: var(--type-heading); }
+      .x-form { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+      .x-form label { display: grid; gap: 6px; font: var(--type-tag); color: var(--x-muted); }
+      .x-form .x-full { grid-column: 1 / -1; }
+      .x-tog { display: flex !important; align-items: center; gap: 10px; min-height: var(--tap); color: #eef1fa !important; }
+      .x-tog input { width: 22px; height: 22px; accent-color: #e11d48; }
+      .x-foot { display: flex; justify-content: flex-end; gap: 8px; }
+      .x-toast { position: fixed; right: 20px; bottom: 20px; z-index: 50; background: #111c44; border: 1px solid rgb(34 197 94 / 0.5); color: #eef1fa; border-radius: var(--r-s); padding: 12px 16px; font: var(--type-label); box-shadow: var(--x-glow), 0 10px 30px rgb(0 0 0 / 0.5); opacity: 0; transform: translateY(10px); transition: all var(--dur-quick) var(--ease-out); pointer-events: none; }
+      .x-toast.is-on { opacity: 1; transform: none; }
+      .x-hide { display: none !important; }
+      .table-wrap th, .table-wrap td { border-bottom-color: rgb(80 130 255 / 0.14); vertical-align: middle; }
+      @media (max-width: 1100px) { .x-kpis { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+      @media (max-width: 860px) { .x-app { grid-template-columns: 1fr; } .x-side { display: none; } .x-user span, .x-kbd { display: none; } .x-filters, .x-form { grid-template-columns: 1fr; } .x-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); } .x-body, .x-top { padding-inline: 14px; } .x-top { flex-wrap: wrap; } .x-top .x-sel { flex: 1; min-width: 0; } .x-search { order: 5; flex: 1 1 100%; } .x-acts { width: 100%; } .x-acts .x-btn { flex: 1; } .x-panel { padding-inline: 14px; } .x-tabs { margin-inline: -14px; } }
+      @media (max-width: 480px) { .x-kpis { gap: 10px; } .x-kpi { padding: 12px; min-width: 0; } .x-kpi > div { min-width: 0; } .x-kpi .x-tile { display: none; } .x-acts .x-btn { padding: 0 10px; } .x-user span { display: none; } }
+      .x-mainwrap, .x-body { overflow-x: clip; }
+    </style>
+  </head>
+  <body>
+    <div class="page x-app" id="top" style="max-width:none;padding:0;display:grid">
+      <aside class="x-side" aria-label="เมนูหลัก">
+        <div class="x-logo">
+          <svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#60a5fa"/><stop offset="1" stop-color="#2563eb"/></linearGradient></defs><path d="M20 3l15 8.5v17L20 37 5 28.5v-17z" fill="url(#lg)"/><path d="M14 14l12 0-6 6 6 6H14" fill="none" stroke="#fff" stroke-width="2.5" stroke-linejoin="round"/></svg>
+          <div><b>IT&amp;MAINT</b><small>Smart Asset · Smart Work</small></div>
+        </div>
+        <nav>
+          <p class="x-grp">ภาพรวม</p>
+          <a class="x-item" href="#top">แดชบอร์ด</a>
+          <a class="x-item" href="#top">Command Center</a>
+          <p class="x-grp">ทรัพย์สิน</p>
+          <a class="x-item" href="#top">ทะเบียนทรัพย์สิน</a>
+          <a class="x-item" href="#top">Tracking / ยืม-โอน-ย้าย</a>
+          <p class="x-grp">ซ่อมบำรุง</p>
+          <a class="x-item" href="#top">แจ้งซ่อม / Service Desk</a>
+          <a class="x-item" href="#top">แผนบำรุงรักษา (PM)</a>
+          <p class="x-grp">คลัง &amp; จัดซื้อ</p>
+          <a class="x-item is-on" href="#top" aria-current="page">คลังอะไหล่ <span class="x-badge">3</span></a>
+          <a class="x-item" href="#top">จัดซื้อ PR/PO &amp; สัญญา</a>
+          <a class="x-item" href="#top">ต้นทุน &amp; งบประมาณ</a>
+          <p class="x-grp">วิเคราะห์</p>
+          <a class="x-item" href="#top">รายงาน &amp; KPI</a>
+          <p class="x-grp">ระบบ</p>
+          <a class="x-item" href="#top">ตั้งค่า / ผู้ใช้งาน</a>
+        </nav>
+      </aside>
+      <div class="x-mainwrap">
+        <header class="x-top">
+          <select class="x-sel" style="width:auto" aria-label="เลือกไซต์"><option>ทุกไซต์</option><option>สมุทรสาคร</option><option>ระยอง</option></select>
+          <label class="x-search"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input id="gsearch" placeholder="ค้นหา Ticket / ทรัพย์สิน / อะไหล่ / เมนู..." aria-label="ค้นหา" /><span class="x-kbd">Ctrl + K</span></label>
+          <button class="x-btn x-btn--p" type="button" onclick="toast('เปิดฟอร์มแจ้งซ่อมแล้ว')">+ แจ้งซ่อม</button>
+          <button class="x-btn x-icon" type="button" aria-label="การแจ้งเตือน 3 รายการ" onclick="document.querySelector('[data-tab=sugg]').click();toast('แจ้งเตือน: อะไหล่ต่ำกว่าจุดสั่งซื้อ ' + document.getElementById('kLow').textContent + ' รายการ')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 16V11a6 6 0 0112 0v5l2 2H4z"/><path d="M10 21h4"/></svg><span class="x-badge">3</span></button>
+          <div class="x-user"><div class="x-av">AD</div><span>Admin<small>ผู้ดูแลระบบ</small></span></div>
+        </header>
+        <main class="x-body">
+          <div class="x-head">
+            <div><h1>คลังอะไหล่ (Spare Parts)</h1><p>คงเหลือ จุดสั่งซื้อ และความเคลื่อนไหวของอะไหล่ทุกคลัง</p></div>
+            <div class="x-acts">
+              <button class="x-btn" type="button" id="csv">CSV</button>
+              <button class="x-btn x-btn--p" type="button" onclick="openDlg('dlgNew')">+ อะไหล่ใหม่</button>
+              <button class="x-btn" type="button" onclick="openDlg('dlgMove')">รับเข้า/เบิกจ่าย</button>
+            </div>
+          </div>
+          <section class="x-kpis" aria-label="สรุป">
+            <div class="x-card x-kpi"><div class="x-tile x-g1"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 7l9-4 9 4-9 4z"/><path d="M3 7v10l9 4 9-4V7"/></svg></div><div><b id="kItems">10</b><span>รายการอะไหล่</span></div></div>
+            <div class="x-card x-kpi"><div class="x-tile x-g2"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M15 9h-4a2 2 0 000 4h2a2 2 0 010 4H9M12 6v2M12 16v2"/></svg></div><div><b id="kValue">46,810</b><span>มูลค่าคงคลัง (บาท)</span></div></div>
+            <div class="x-card x-kpi"><div class="x-tile x-g3"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18v.5"/></svg></div><div><b id="kLow">3</b><span>ต่ำกว่าจุดสั่งซื้อ</span></div></div>
+            <div class="x-card x-kpi"><div class="x-tile x-g4"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M6 18L18 6"/></svg></div><div><b id="kOut">0</b><span>หมดสต็อก</span></div></div>
+            <div class="x-card x-kpi"><div class="x-tile x-g5"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></div><div><b id="kUse">985</b><span>เบิกใช้ 30 วัน (หน่วย)</span></div></div>
+          </section>
+          <section class="x-card x-panel">
+            <div class="x-tabs" role="tablist">
+              <button class="x-tab" role="tab" aria-selected="true" data-tab="parts" type="button">อะไหล่ &amp; คงเหลือ</button>
+              <button class="x-tab" role="tab" aria-selected="false" data-tab="moves" type="button">ความเคลื่อนไหว</button>
+              <button class="x-tab" role="tab" aria-selected="false" data-tab="sugg" type="button">เสนอแนะสั่งซื้อ <span class="x-badge" id="sgCount">3</span></button>
+            </div>
+            <div id="tab-parts">
+              <div class="x-filters">
+                <input class="x-in" id="fq" placeholder="ค้นหา รหัส / ชื่อ / สเปก" aria-label="ค้นหาอะไหล่" />
+                <select class="x-sel" id="fs" aria-label="สถานะ"><option value="all">ทุกรายการ</option><option value="low">ต่ำกว่าจุดสั่งซื้อ</option><option value="out">หมดสต็อก</option><option value="crit">อะไหล่วิกฤต</option></select>
+                <select class="x-sel" id="fw" aria-label="คลัง"><option value="all">ทุกคลัง</option><option value="SKN">WH-SKN คลังอะไหล่สมุทรสาคร</option><option value="RYG">WH-RYG คลังอะไหล่ระยอง</option></select>
+              </div>
+              <div class="table-wrap"><table>
+                <thead><tr><th scope="col">อะไหล่</th><th scope="col">คงเหลือ</th><th scope="col">รายคลัง</th><th scope="col">จุดสั่งซื้อ/สูงสุด</th><th scope="col">ค้างรับ</th><th scope="col">ต้นทุนเฉลี่ย</th><th scope="col">มูลค่า</th></tr></thead>
+                <tbody id="partsBody"></tbody>
+              </table></div>
+            </div>
+            <div id="tab-moves" class="x-hide">
+              <div class="table-wrap"><table>
+                <thead><tr><th scope="col">วันที่</th><th scope="col">ประเภท</th><th scope="col">อะไหล่</th><th scope="col">จำนวน</th><th scope="col">อ้างอิง</th><th scope="col">ผู้ทำ</th></tr></thead>
+                <tbody id="movesBody"></tbody>
+              </table></div>
+            </div>
+            <div id="tab-sugg" class="x-hide"><div class="x-sugg" id="suggList"></div></div>
+          </section>
+        </main>
+      </div>
+    </div>
+    <div class="x-toast" id="toast" role="status" aria-live="polite"></div>
+    <dialog class="x-dlg" id="dlgNew" aria-labelledby="hNew">
+      <form method="dialog" id="fNew">
+        <h2 id="hNew">อะไหล่ใหม่</h2>
+        <div class="x-form" id="newFields">
+          <label>รหัส<input class="x-in" name="code" required placeholder="SP-XXX-000" /></label>
+          <label>ชื่อ<input class="x-in" name="name" required /></label>
+          <label class="x-full">สเปก<input class="x-in" name="spec" /></label>
+          <label>หน่วย<select class="x-sel" name="unit"><option>ชิ้น</option><option>ตัว</option><option>เส้น</option><option>ลิตร</option><option>ตลับ</option><option>ถัง</option></select></label>
+          <label>หมวด<select class="x-sel" name="cat"><option>เครื่องกล</option><option>ไฟฟ้า</option><option>IT</option><option>วัสดุสิ้นเปลือง</option><option>HVAC</option></select></label>
+          <label class="x-tog x-full"><input type="checkbox" name="crit" /> อะไหล่วิกฤต</label>
+          <label>จุดสั่งซื้อ<input class="x-in" name="min" type="number" min="0" value="2" /></label>
+          <label>สูงสุด<input class="x-in" name="max" type="number" min="0" value="10" /></label>
+          <label>คลัง<select class="x-sel" name="wh"><option value="SKN">WH-SKN คลังอะไหล่สมุทรสาคร</option><option value="RYG">WH-RYG คลังอะไหล่ระยอง</option></select></label>
+          <label>ผู้ขายหลัก<input class="x-in" name="vendor" /></label>
+        </div>
+        <div><button class="x-btn" type="button" id="addField">+ เพิ่มฟิลด์</button></div>
+        <div class="x-foot"><button class="x-btn" type="button" value="cancel" onclick="this.closest('dialog').close()">ยกเลิก</button><button class="x-btn x-btn--p" type="submit">บันทึก</button></div>
+      </form>
+    </dialog>
+    <dialog class="x-dlg" id="dlgMove" aria-labelledby="hMove">
+      <form method="dialog" id="fMove">
+        <h2 id="hMove">รับเข้า/เบิกจ่าย</h2>
+        <div class="x-form">
+          <label>ประเภท<select class="x-sel" name="type"><option value="in">รับเข้า</option><option value="out">เบิก WO</option><option value="adj">ปรับปรุง</option><option value="tr">โอนคลัง</option></select></label>
+          <label>คลัง<select class="x-sel" name="wh"><option value="SKN">WH-SKN คลังอะไหล่สมุทรสาคร</option><option value="RYG">WH-RYG คลังอะไหล่ระยอง</option></select></label>
+          <label class="x-full">อะไหล่<select class="x-sel" name="part" id="movePart"></select></label>
+          <label>จำนวน<input class="x-in" name="qty" type="number" required value="1" /></label>
+          <label>อ้างอิง (WO/PO)<input class="x-in" name="ref" placeholder="WO-2569-0000" /></label>
+        </div>
+        <p class="fineprint" style="color:var(--x-muted)">ปรับปรุงใส่ค่าลบเพื่อลดยอด · โอนคลังย้ายจากคลังที่เลือกไปอีกคลัง</p>
+        <div class="x-foot"><button class="x-btn" type="button" onclick="this.closest('dialog').close()">ยกเลิก</button><button class="x-btn x-btn--p" type="submit">บันทึก</button></div>
+      </form>
+    </dialog>
+    <script>
+      document.documentElement.setAttribute("data-theme", "dark");
+      try { localStorage.setItem("hark-theme", "dark"); } catch (e) {}
+      const P = [
+        { code: "SP-BRG-6205", name: "ลูกปืน 6205-2RS", spec: "25x52x15 mm ฝายาง", unit: "ตัว", crit: true, SKN: 3, RYG: 0, min: 6, max: 20, po: 8, cost: 185 },
+        { code: "SP-BLT-A42", name: "สายพาน A42", spec: "V-Belt ร่อง A ยาว 42 นิ้ว", unit: "เส้น", crit: true, SKN: 8, RYG: 4, min: 6, max: 24, po: 0, cost: 240 },
+        { code: "SP-FLT-CMP", name: "ไส้กรองปั๊มลม", spec: "Air filter สกรู 15 kW", unit: "ชิ้น", crit: false, SKN: 2, RYG: 0, min: 4, max: 12, po: 0, cost: 650 },
+        { code: "SP-CNT-LC1D", name: "คอนแทคเตอร์ LC1D18", spec: "18A คอยล์ 220VAC", unit: "ตัว", crit: true, SKN: 5, RYG: 3, min: 4, max: 12, po: 0, cost: 1450 },
+        { code: "SP-FUS-10A", name: "ฟิวส์ 10A", spec: "10x38 mm gG", unit: "ชิ้น", crit: false, SKN: 60, RYG: 40, min: 30, max: 150, po: 0, cost: 12 },
+        { code: "SP-OIL-68", name: "น้ำมันไฮดรอลิก ISO VG68", spec: "ถัง 20 ลิตร", unit: "ลิตร", crit: false, SKN: 60, RYG: 40, min: 60, max: 300, po: 0, cost: 95 },
+        { code: "SP-SEN-PT100", name: "เซนเซอร์ PT100", spec: "3-wire 0–400°C", unit: "ตัว", crit: true, SKN: 1, RYG: 0, min: 2, max: 6, po: 0, cost: 1200 },
+        { code: "SP-RAM-16G", name: "แรม DDR4 16GB", spec: "3200 MHz SODIMM", unit: "แผง", crit: false, SKN: 3, RYG: 2, min: 2, max: 10, po: 0, cost: 1350 },
+        { code: "SP-TON-HP", name: "ตลับหมึก HP 26A", spec: "CF226A ดำ", unit: "ตลับ", crit: false, SKN: 3, RYG: 2, min: 2, max: 8, po: 0, cost: 1890 },
+        { code: "SP-REF-R32", name: "น้ำยาแอร์ R32", spec: "ถัง 3 กก.", unit: "ถัง", crit: false, SKN: 1, RYG: 1, min: 1, max: 4, po: 0, cost: 1187.5 },
+      ];
+      const M = [
+        { d: "20/05/2569", t: "out", code: "SP-OIL-68", q: -40, ref: "WO-2569-0142", by: "สมชาย ก." },
+        { d: "19/05/2569", t: "in", code: "SP-FUS-10A", q: 50, ref: "PO-2569-0031", by: "วิภา ส." },
+        { d: "18/05/2569", t: "out", code: "SP-BRG-6205", q: -4, ref: "WO-2569-0139", by: "สมชาย ก." },
+        { d: "17/05/2569", t: "tr", code: "SP-BLT-A42", q: 4, ref: "WH-SKN → WH-RYG", by: "วิภา ส." },
+        { d: "15/05/2569", t: "out", code: "SP-SEN-PT100", q: -1, ref: "WO-2569-0131", by: "ธนา ร." },
+        { d: "14/05/2569", t: "adj", code: "SP-FUS-10A", q: -2, ref: "ตรวจนับประจำเดือน", by: "Admin" },
+        { d: "12/05/2569", t: "in", code: "SP-CNT-LC1D", q: 4, ref: "PO-2569-0028", by: "วิภา ส." },
+        { d: "10/05/2569", t: "out", code: "SP-TON-HP", q: -2, ref: "WO-2569-0120", by: "ธนา ร." },
+      ];
+      const TYPES = { in: ["รับเข้า", "x-t-in"], out: ["เบิก WO", "x-t-out"], adj: ["ปรับปรุง", "x-t-adj"], tr: ["โอนคลัง", "x-t-tr"] };
+      let used30 = 985, prNo = 4;
+      const $ = (id) => document.getElementById(id);
+      const fmt = (n, d = 0) => n.toLocaleString("en-US", { minimumFractionDigits: d, maximumFractionDigits: d });
+      const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+      const qty = (p) => p.SKN + p.RYG;
+      const isLow = (p) => qty(p) > 0 && qty(p) < p.min;
+      const nameOf = (c) => (P.find((p) => p.code === c) || { name: c }).name;
+      function label(tbody) {
+        const names = [...tbody.closest("table").querySelectorAll("thead th")].map((th) => th.textContent.trim());
+        tbody.querySelectorAll("tr").forEach((tr) => [...tr.children].forEach((c, i) => c.tagName === "TD" && c.setAttribute("data-label", names[i])));
+      }
+      function renderParts() {
+        const q = $("fq").value.trim().toLowerCase(), s = $("fs").value, w = $("fw").value;
+        const rows = P.filter((p) => {
+          if (q && !(p.code + p.name + p.spec).toLowerCase().includes(q)) return false;
+          if (s === "low" && !isLow(p)) return false;
+          if (s === "out" && qty(p) > 0) return false;
+          if (s === "crit" && !p.crit) return false;
+          if (w !== "all" && !p[w]) return false;
+          return true;
+        });
+        $("partsBody").innerHTML = rows.length ? rows.map((p) => {
+          const n = qty(p), low = isLow(p) || n === 0, pct = Math.min(100, (n / p.max) * 100), mk = (p.min / p.max) * 100;
+          return `<tr><th scope="row"><span class="x-code">${esc(p.code)}</span>${p.crit ? '<span class="x-crit">วิกฤต</span>' : ""}<small style="color:#eef1fa;font-weight:500">${esc(p.name)}</small><small>${esc(p.spec)}</small></th>
+            <td class="num ${low ? "x-low" : ""}">${fmt(n)} <small>${esc(p.unit)}</small><div class="x-bar ${low ? "is-low" : ""}" title="จุดสั่งซื้อ ${p.min} / สูงสุด ${p.max}"><i style="width:${pct}%"></i><em style="left:${mk}%"></em></div></td>
+            <td><small style="margin:0">WH-SKN ${fmt(p.SKN)}</small><small>WH-RYG ${fmt(p.RYG)}</small></td>
+            <td>${p.min} · ${p.max}</td><td class="${p.po ? "" : "muted"}">${p.po || "–"}</td>
+            <td>${fmt(p.cost, 2)}</td><td class="num">${fmt(n * p.cost, 2)}</td></tr>`;
+        }).join("") : '<tr><td colspan="7" class="muted">ไม่พบรายการที่ตรงกับตัวกรอง</td></tr>';
+        label($("partsBody"));
+        $("kItems").textContent = P.length;
+        $("kValue").textContent = fmt(P.reduce((a, p) => a + qty(p) * p.cost, 0));
+        $("kLow").textContent = P.filter(isLow).length;
+        $("kOut").textContent = P.filter((p) => qty(p) === 0).length;
+        $("kUse").textContent = fmt(used30);
+        $("movePart").innerHTML = P.map((p) => `<option value="${esc(p.code)}">${esc(p.code)} · ${esc(p.name)}</option>`).join("");
+      }
+      function renderMoves() {
+        $("movesBody").innerHTML = M.map((m) => `<tr><th scope="row" class="rowhead">${m.d}</th><td><span class="x-type ${TYPES[m.t][1]}">${TYPES[m.t][0]}</span></td>
+          <td><span class="x-code">${esc(m.code)}</span><small>${esc(nameOf(m.code))}</small></td><td class="num ${m.q < 0 ? "x-low" : ""}">${m.q > 0 ? "+" : ""}${fmt(m.q)}</td>
+          <td class="x-code">${esc(m.ref || "–")}</td><td>${esc(m.by)}</td></tr>`).join("");
+        label($("movesBody"));
+      }
+      function renderSugg() {
+        const list = P.filter((p) => isLow(p) || qty(p) === 0);
+        $("sgCount").textContent = list.length;
+        document.querySelector(".x-item.is-on .x-badge").textContent = list.length;
+        $("suggList").innerHTML = list.length ? list.map((p) => {
+          const s = Math.max(0, p.max - qty(p) - p.po);
+          return `<div class="x-card x-sg"><div class="x-tile x-g3"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 4h2l2.5 11h11L21 7H6.5"/><circle cx="9" cy="19" r="1.5"/><circle cx="17" cy="19" r="1.5"/></svg></div>
+            <div><span class="x-code">${esc(p.code)}</span>${p.crit ? '<span class="x-crit">วิกฤต</span>' : ""}<b style="display:block">${esc(p.name)}</b><small>คงเหลือ ${qty(p)} · จุดสั่งซื้อ ${p.min} · สูงสุด ${p.max} · ค้างรับ ${p.po}</small></div>
+            <p class="x-qty">${s} ${esc(p.unit)}<small>เสนอสั่ง ≈ ${fmt(s * p.cost, 2)} บาท</small></p>
+            <button class="x-btn x-btn--p" type="button" data-pr="${esc(p.code)}" data-q="${s}">สร้าง PR</button></div>`;
+        }).join("") : '<p class="muted">ไม่มีรายการที่ต้องสั่งซื้อ</p>';
+      }
+      function renderAll() { renderParts(); renderMoves(); renderSugg(); }
+      let tt;
+      function toast(msg) { const t = $("toast"); t.textContent = "✓ " + msg; t.classList.add("is-on"); clearTimeout(tt); tt = setTimeout(() => t.classList.remove("is-on"), 2800); }
+      function openDlg(id) { $(id).showModal(); }
+      document.querySelectorAll(".x-tab").forEach((b) => b.addEventListener("click", () => {
+        document.querySelectorAll(".x-tab").forEach((x) => { x.setAttribute("aria-selected", x === b); $("tab-" + x.dataset.tab).classList.toggle("x-hide", x !== b); });
+      }));
+      ["fq", "fs", "fw"].forEach((id) => $(id).addEventListener("input", renderParts));
+      $("suggList").addEventListener("click", (e) => {
+        const b = e.target.closest("[data-pr]"); if (!b) return;
+        const p = P.find((x) => x.code === b.dataset.pr), no = "PR-2569-" + String(prNo++).padStart(4, "0");
+        p.po += +b.dataset.q; renderAll();
+        toast(`สร้าง ${no} แล้ว · ${p.name} ${b.dataset.q} ${p.unit}`);
+      });
+      $("addField").addEventListener("click", () => {
+        const l = document.createElement("div"); l.className = "x-full x-form"; l.style.gridTemplateColumns = "1fr 1fr";
+        l.innerHTML = '<input class="x-in" placeholder="ชื่อฟิลด์" aria-label="ชื่อฟิลด์ใหม่" /><input class="x-in" placeholder="ค่า" aria-label="ค่าของฟิลด์" />';
+        $("newFields").appendChild(l); l.querySelector("input").focus();
+      });
+      $("fNew").addEventListener("submit", (e) => {
+        const f = new FormData(e.target), code = f.get("code").trim().toUpperCase();
+        if (P.some((p) => p.code === code)) { e.preventDefault(); toast("รหัสนี้มีอยู่แล้ว"); return; }
+        P.unshift({ code, name: f.get("name"), spec: f.get("spec") || "–", unit: f.get("unit"), crit: !!f.get("crit"), SKN: 0, RYG: 0, min: +f.get("min"), max: +f.get("max"), po: 0, cost: 0, vendor: f.get("vendor") });
+        e.target.reset(); renderAll(); toast(`เพิ่มอะไหล่ ${code} แล้ว`);
+      });
+      $("fMove").addEventListener("submit", (e) => {
+        const f = new FormData(e.target), p = P.find((x) => x.code === f.get("part")), t = f.get("type"), w = f.get("wh"), o = w === "SKN" ? "RYG" : "SKN";
+        let q = Math.trunc(+f.get("qty"));
+        if (t !== "adj") q = Math.abs(q);
+        if ((t === "out" || t === "tr") && q > p[w]) { e.preventDefault(); toast(`ยอดใน WH-${w} ไม่พอ (มี ${p[w]})`); return; }
+        if (t === "in") p[w] += q;
+        if (t === "out") { p[w] -= q; used30 += q; }
+        if (t === "adj") p[w] = Math.max(0, p[w] + q);
+        if (t === "tr") { p[w] -= q; p[o] += q; }
+        const d = new Date();
+        M.unshift({ d: `${String(d.getDate()).padStart(2, "0")}/${String(d.getMonth() + 1).padStart(2, "0")}/${d.getFullYear() + 543}`, t, code: p.code, q: t === "out" ? -q : q, ref: t === "tr" ? `WH-${w} → WH-${o}` : f.get("ref"), by: "Admin" });
+        renderAll(); toast(`บันทึก${TYPES[t][0]} ${p.code} จำนวน ${q} ${p.unit} แล้ว`);
+      });
+      $("csv").addEventListener("click", () => {
+        const csv = "รหัส,ชื่อ,คงเหลือ,WH-SKN,WH-RYG,จุดสั่งซื้อ,สูงสุด,ค้างรับ,ต้นทุนเฉลี่ย,มูลค่า\n" + P.map((p) => [p.code, p.name, qty(p), p.SKN, p.RYG, p.min, p.max, p.po, p.cost, qty(p) * p.cost].join(",")).join("\n");
+        const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob(["\ufeff" + csv], { type: "text/csv" })); a.download = "spare-parts.csv"; a.click();
+        toast("ส่งออก CSV แล้ว");
+      });
+      document.addEventListener("keydown", (e) => { if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") { e.preventDefault(); $("gsearch").focus(); } });
+      $("gsearch").addEventListener("input", (e) => { $("fq").value = e.target.value; renderParts(); });
+      renderAll();
+    </script>
+    <script src="../../assets/hark.js"></script>
+  </body>
+</html>
