@@ -1,0 +1,456 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>IT&MAINT — แผน PM &amp; เช็คลิสต์</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400&display=swap"
+    />
+    <link rel="stylesheet" href="../../assets/hark.css" />
+    <link rel="stylesheet" href="../../assets/hark-hero.css" />
+    <style>
+      :root {
+        --x-bg: #0a1024;
+        --x-card: #111a33;
+        --x-card2: #0e1630;
+        --x-edge: #2a4a8c;
+        --x-glow: 0 0 0 1px #2a4a8c66, 0 0 18px #2a6cff1f;
+        --x-ink: #eaf0ff;
+        --x-ink2: #94a3c4;
+        --x-blue: #3b82f6;
+        --x-pink: #ec4899;
+        --x-orange: #f97316;
+        --x-red: #f1555b;
+        --x-green: #22c58b;
+      }
+      html, body { background: var(--x-bg); }
+      body { color: var(--x-ink); font: var(--type-body); margin: 0; }
+      .x-app { display: grid; grid-template-columns: 252px 1fr; min-height: 100vh; }
+      .x-side { background: #080d1e; border-right: 1px solid #1b2850; padding: 16px 12px; }
+      .x-logo { display: flex; gap: 10px; align-items: center; padding: 8px 8px 16px; }
+      .x-logo b { display: block; font: var(--weight-bold) 17px/1.2 var(--sans); letter-spacing: .02em; }
+      .x-logo span { color: var(--x-ink2); font: var(--type-caption); }
+      .x-grp { color: #6c7ca3; font: var(--type-tag); letter-spacing: .08em; text-transform: uppercase; padding: 14px 10px 6px; }
+      .x-nav a { display: flex; align-items: center; gap: 10px; min-height: var(--tap); padding: 0 10px; border-radius: var(--r-s); color: #c3cde6; text-decoration: none; font: var(--type-small); }
+      .x-nav a:hover { background: #142145; color: #fff; }
+      .x-nav a.is-on { background: linear-gradient(90deg, #1b2b5c, #142145); color: #fff; box-shadow: inset 0 0 0 1px #2a4a8c; }
+      .x-nav a .x-n { margin-left: auto; background: #22305c; color: #cfe0ff; border-radius: var(--r-pill); font: var(--type-tag); padding: 3px 8px; }
+      .x-nav a.is-on .x-n { background: #2563eb; color: #fff; }
+      .x-main { padding: 0 24px 40px; min-width: 0; }
+      .x-top { position: sticky; top: 0; z-index: 20; display: flex; gap: 12px; align-items: center; padding: 14px 0; background: #0a1024e6; backdrop-filter: var(--hark-blur); border-bottom: 1px solid #16224a; }
+      .x-sel, .x-search, .x-ico { background: var(--x-card2); border: 1px solid #22356b; color: var(--x-ink); border-radius: var(--r-s); min-height: var(--tap); font: var(--type-small); }
+      .x-sel { padding: 0 12px; }
+      .x-search { flex: 1; display: flex; align-items: center; gap: 8px; padding: 0 12px; color: var(--x-ink2); }
+      .x-search input { flex: 1; background: none; border: 0; color: var(--x-ink); font: var(--type-small); outline: none; }
+      .x-kbd { font: var(--weight-regular) 12px/1 "Geist Mono", monospace; color: #9fb0d6; border: 1px solid #2a3b6e; border-radius: 6px; padding: 5px 7px; }
+      .x-ico { width: var(--tap); flex: none; display: grid; place-items: center; position: relative; cursor: pointer; }
+      .x-ico .x-dot { position: absolute; top: 6px; right: 6px; background: #c42b35; color: #fff; font: var(--type-tag); border-radius: 999px; min-width: 17px; text-align: center; }
+      .x-btn { display: inline-flex; align-items: center; gap: 6px; min-height: var(--tap); padding: 0 16px; border-radius: var(--r-s); border: 1px solid #2a4a8c; background: #121d3c; color: var(--x-ink); font: var(--type-label); cursor: pointer; }
+      .x-btn:hover { background: #18254c; }
+      .x-btn--primary { border: 0; background: linear-gradient(90deg, #d2531a, #c62b6b); color: #fff; box-shadow: 0 6px 20px #d2531a33; }
+      .x-btn--sm { min-width: var(--tap); justify-content: center; min-height: var(--tap); padding: 0 12px; font: var(--type-tag); }
+      .x-avatar { display: flex; gap: 8px; align-items: center; padding-left: 4px; }
+      .x-avatar div { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(140deg, #3b82f6, #ec4899); display: grid; place-items: center; font: var(--type-tag); color: #fff; }
+      .x-avatar p { margin: 0; font: var(--type-tag); color: var(--x-ink2); }
+      .x-avatar p b { display: block; font: var(--type-label); color: var(--x-ink); }
+      h1.x-h1 { font: var(--weight-bold) 26px/1.25 var(--sans); margin: 22px 0 6px; }
+      .x-sub { color: var(--x-ink2); font: var(--type-small); margin: 0; }
+      .x-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+      .x-between { display: flex; gap: 16px; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; }
+      .x-card { background: linear-gradient(180deg, var(--x-card), var(--x-card2)); border-radius: var(--r-m); box-shadow: var(--x-glow); padding: 16px; }
+      .x-kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin: 18px 0; }
+      .x-kpi { display: flex; gap: 12px; align-items: center; }
+      .x-kpi p { margin: 0; }
+      .x-kpi .x-lab { color: var(--x-ink2); font: var(--type-tag); }
+      .x-kpi .x-fig { font: var(--weight-bold) 26px/1.1 var(--sans); }
+      .x-kpi .x-note { color: var(--x-ink2); font: var(--type-caption); margin-top: 4px; }
+      .x-tile { width: 42px; height: 42px; border-radius: var(--r-s); display: grid; place-items: center; flex: none; }
+      .x-t1 { background: linear-gradient(140deg, #2563eb, #22d3ee); }
+      .x-t2 { background: linear-gradient(140deg, #e11d48, #f97316); }
+      .x-t3 { background: linear-gradient(140deg, #7c3aed, #ec4899); }
+      .x-t4 { background: linear-gradient(140deg, #0f766e, #22c55e); }
+      .x-tabs { display: flex; gap: 6px; background: #0d1530; border: 1px solid #1d2b57; border-radius: var(--r-pill); padding: 5px; width: fit-content; margin: 8px 0 16px; }
+      .x-tabs button { min-height: var(--tap); padding: 0 18px; border: 0; border-radius: var(--r-pill); background: none; color: var(--x-ink2); font: var(--type-label); cursor: pointer; }
+      .x-tabs button[aria-selected="true"] { background: linear-gradient(90deg, #1d3a7a, #24306b); color: #fff; box-shadow: inset 0 0 0 1px #3b82f6aa; }
+      .x-filters { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+      .x-filters input, .x-filters select { background: #0d1530; border: 1px solid #22356b; color: var(--x-ink); border-radius: var(--r-s); min-height: var(--tap); padding: 0 12px; font: var(--type-small); }
+      .x-filters input { min-width: 280px; }
+      .x-tbl { width: 100%; border-collapse: collapse; font: var(--type-small); }
+      .x-tbl th { text-align: left; color: #8ea0c8; font: var(--type-tag); letter-spacing: .04em; padding: 10px 12px; border-bottom: 1px solid #22305c; white-space: nowrap; }
+      .x-tbl td { padding: 12px; border-bottom: 1px solid #18234a; vertical-align: top; }
+      .x-tbl tr:hover td { background: #121d3c66; }
+      .x-id { font: var(--weight-regular) 12px/1.3 "Geist Mono", monospace; color: #8ea0c8; }
+      .x-tt { font: var(--type-label); color: var(--x-ink); }
+      .x-mut { color: var(--x-ink2); font: var(--type-caption); }
+      .x-chip { display: inline-flex; align-items: center; gap: 5px; border-radius: var(--r-pill); padding: 4px 10px; font: var(--type-tag); border: 1px solid #2a4a8c; color: #bcd0f5; background: #13203f; }
+      .x-chip--red { border-color: #6a2630; background: #2a131a; color: #ff9aa0; }
+      .x-chip--green { border-color: #1d5b45; background: #0f2a22; color: #6ee7b7; }
+      .x-chip--orange { border-color: #6b3a16; background: #2a1a0e; color: #fdba74; }
+      .x-link { color: #7fb0ff; text-decoration: none; border-bottom: 1px solid #7fb0ff55; }
+      .x-cal { display: grid; grid-template-columns: repeat(13, 1fr); gap: 6px; }
+      .x-cal button { aspect-ratio: 1; border: 1px solid #1d2b57; border-radius: 8px; background: #0d1530; color: #8ea0c8; font: var(--weight-regular) 11px/1 "Geist Mono", monospace; display: grid; place-items: center; gap: 3px; cursor: pointer; padding: 2px; min-height: 34px; }
+      .x-cal button:hover, .x-cal button.is-on { border-color: #3b82f6; color: #fff; }
+      .x-cal .d { display: flex; gap: 2px; }
+      .x-cal i { width: 5px; height: 5px; border-radius: 50%; display: block; }
+      .x-wk { display: grid; grid-template-columns: repeat(13, 1fr); gap: 6px; color: #6c7ca3; font: var(--type-caption); margin-bottom: 6px; text-align: center; }
+      .x-clcards { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+      .x-cl li { list-style: none; display: flex; gap: 8px; align-items: flex-start; padding: 8px 0; border-top: 1px solid #18234a; font: var(--type-small); color: #cbd6ef; }
+      .x-cl { margin: 10px 0 0; padding: 0; }
+      .x-box { width: 16px; height: 16px; border: 1px solid #3b82f6; border-radius: 4px; flex: none; margin-top: 2px; }
+      .x-modal { position: fixed; inset: 0; background: #04081488; backdrop-filter: blur(6px); display: none; place-items: center; padding: 20px; z-index: 60; }
+      .x-modal[open] { display: grid; }
+      .x-modal form { background: linear-gradient(180deg, #131d3a, #0d1530); border-radius: var(--r-l); box-shadow: 0 0 0 1px #2a4a8c, 0 30px 80px #000a; width: min(680px, 100%); max-height: 88vh; overflow: auto; padding: 22px; }
+      .x-f { display: grid; gap: 6px; margin-bottom: 12px; }
+      .x-f label { font: var(--type-tag); color: #9fb0d6; }
+      .x-f input, .x-f select { background: #0a1228; border: 1px solid #22356b; border-radius: var(--r-s); color: var(--x-ink); min-height: var(--tap); padding: 0 12px; font: var(--type-small); }
+      .x-g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+      .x-toast { position: fixed; right: 20px; bottom: 20px; z-index: 80; display: grid; gap: 8px; }
+      .x-toast div { background: #0f1b38; box-shadow: var(--x-glow); border-radius: var(--r-s); padding: 12px 16px; font: var(--type-small); color: var(--x-ink); animation: xin var(--dur-quick) var(--ease-out); }
+      @keyframes xin { from { opacity: 0; transform: translateY(8px); } }
+      .x-ring text { fill: #fff; }
+      [hidden] { display: none !important; }
+      @media (max-width: 900px) {
+        .x-app { grid-template-columns: minmax(0, 1fr); }
+        .x-side { display: none; }
+        .x-top { flex-wrap: wrap; }
+        .x-search { order: 5; flex: 1 1 100%; }
+        .x-sel { flex: 1 1 0; min-width: 0; }
+        .x-avatar p, .x-kbd { display: none; }
+        .x-filters input, .x-filters select { min-width: 0; flex: 1 1 100%; }
+        .x-tabs { width: auto; overflow-x: auto; }
+        .x-tabs button { flex: none; }
+        #panel-cal { overflow-x: auto; }
+        .x-cal, .x-wk { grid-template-columns: repeat(13, 44px); width: max-content; }
+        .x-cal button { min-height: var(--tap); }
+        .x-g2 { grid-template-columns: 1fr; }
+        .x-kpis { grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); }
+        .x-kpi > * { min-width: 0; }
+        .x-main { padding: 0 16px 32px; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="x-app">
+      <aside class="x-side">
+        <div class="x-logo">
+          <svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3b82f6"/><stop offset="1" stop-color="#22d3ee"/></linearGradient></defs><rect width="34" height="34" rx="10" fill="url(#lg)"/><path d="M11 22l6-12 6 12-6-4z" fill="#07122b"/></svg>
+          <div><b>IT&amp;MAINT</b><span>Smart Asset · Smart Work</span></div>
+        </div>
+        <nav class="x-nav">
+          <p class="x-grp">ภาพรวม</p>
+          <a href="#">หน้าหลัก</a>
+          <a href="#">Command Center</a>
+          <p class="x-grp">ทรัพย์สิน</p>
+          <a href="#">ทะเบียนทรัพย์สิน</a>
+          <a href="#">IT Asset &amp; License</a>
+          <p class="x-grp">ซ่อมบำรุง</p>
+          <a href="#">ใบสั่งงาน (WO) <span class="x-n">18</span></a>
+          <a href="#">ใบแจ้งซ่อม</a>
+          <a class="is-on" href="#">แผน PM &amp; เช็คลิสต์ <span class="x-n">6</span></a>
+          <a href="#">Predictive / IoT</a>
+          <a href="#">สอบเทียบเครื่องมือ</a>
+          <p class="x-grp">คลัง &amp; จัดซื้อ</p>
+          <a href="#">คลังอะไหล่</a>
+          <a href="#">PR / PO</a>
+          <p class="x-grp">วิเคราะห์</p>
+          <a href="#">รายงาน / Dashboard</a>
+          <p class="x-grp">ระบบ</p>
+          <a href="#">ตั้งค่า / จัดการระบบ</a>
+        </nav>
+      </aside>
+
+      <main class="x-main">
+        <header class="x-top">
+          <select class="x-sel" aria-label="เลือกไซต์">
+            <option value="all">ทุกไซต์</option>
+            <option value="โรงงานสมุทรสาคร">โรงงานสมุทรสาคร</option>
+            <option value="โรงงานระยอง">โรงงานระยอง</option>
+          </select>
+          <div class="x-search">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5L14 14"/></svg>
+            <input id="gsearch" placeholder="ค้นหาแผน PM / ทรัพย์สิน / ใบสั่งงาน…" />
+            <span class="x-kbd">Ctrl + K</span>
+          </div>
+          <button class="x-btn x-btn--primary" id="btnReport">+ แจ้งซ่อม</button>
+          <button class="x-ico" id="btnBell" aria-label="การแจ้งเตือน 3 รายการ">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4.5 7a4.5 4.5 0 119 0c0 3 1 4.5 1 4.5h-11S4.5 10 4.5 7z"/><path d="M7.5 14a1.6 1.6 0 003 0"/></svg>
+            <span class="x-dot">3</span>
+          </button>
+          <div class="x-avatar"><div>AD</div><p><b>Admin</b>ผู้ดูแลระบบ</p></div>
+        </header>
+
+        <div class="x-between">
+          <div>
+            <h1 class="x-h1">แผนบำรุงรักษาเชิงป้องกัน (PM)</h1>
+            <p class="x-sub">ตามเวลา (Fixed/Floating) หรือตามมิเตอร์ · สร้างใบสั่งงานล่วงหน้าตาม Lead days · 1 แผนมีงานค้างได้ 1 ใบ</p>
+          </div>
+          <div class="x-row">
+            <button class="x-btn" id="btnDue">สร้างใบงานที่ถึงรอบ</button>
+            <button class="x-btn x-btn--primary" id="btnNew">+ แผนใหม่</button>
+          </div>
+        </div>
+
+        <section class="x-kpis">
+          <div class="x-card x-kpi">
+            <svg class="x-ring" width="58" height="58" viewBox="0 0 58 58" aria-hidden="true"><circle cx="29" cy="29" r="24" fill="none" stroke="#1d2b57" stroke-width="7"/><circle cx="29" cy="29" r="24" fill="none" stroke="#f97316" stroke-width="7" stroke-linecap="round" stroke-dasharray="45 151" transform="rotate(-90 29 29)"/><text x="29" y="33" text-anchor="middle" font-size="14" font-weight="600">30%</text></svg>
+            <p><span class="x-lab">PM Compliance 90 วัน</span><br /><span class="x-fig">30%</span><span class="x-note">เสร็จตามกำหนด 3 จาก 10 แผน</span></p>
+          </div>
+          <div class="x-card x-kpi">
+            <span class="x-tile x-t2"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#fff" stroke-width="1.7"><path d="M10 3l7 13H3z"/><path d="M10 8v4M10 14h.01"/></svg></span>
+            <p><span class="x-lab">แผนเกินกำหนด</span><br /><span class="x-fig">6</span><span class="x-note">ต้องจัดการทันที</span></p>
+          </div>
+          <div class="x-card x-kpi">
+            <span class="x-tile x-t1"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#fff" stroke-width="1.7"><rect x="3" y="4.5" width="14" height="12" rx="2"/><path d="M3 8.5h14M7 3v3M13 3v3"/></svg></span>
+            <p><span class="x-lab">ครบใน 14 วัน</span><br /><span class="x-fig">2</span><span class="x-note">เตรียมอะไหล่และช่าง</span></p>
+          </div>
+          <div class="x-card x-kpi">
+            <span class="x-tile x-t4"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#fff" stroke-width="1.7"><path d="M4 10.5l4 4 8-9"/></svg></span>
+            <p><span class="x-lab">ถึงรอบสร้างใบงาน</span><br /><span class="x-fig">0</span><span class="x-note">ตาม Lead days วันนี้</span></p>
+          </div>
+        </section>
+
+        <div class="x-tabs" role="tablist">
+          <button role="tab" aria-selected="true" data-tab="plans">แผน PM</button>
+          <button role="tab" aria-selected="false" data-tab="cal">ปฏิทิน 90 วัน</button>
+          <button role="tab" aria-selected="false" data-tab="cl">เช็คลิสต์</button>
+        </div>
+
+        <section class="x-card" id="panel-plans">
+          <div class="x-filters">
+            <input id="q" placeholder="ค้นหาชื่อแผน รหัส หรือทรัพย์สิน…" />
+            <select id="state">
+              <option value="all">ทุกแผน</option>
+              <option value="over">เกินกำหนด</option>
+              <option value="soon">ครบใน 14 วัน</option>
+              <option value="off">ปิดใช้งาน</option>
+            </select>
+          </div>
+          <div style="overflow-x:auto">
+            <table class="x-tbl">
+              <thead>
+                <tr><th>แผน</th><th>ทรัพย์สิน</th><th>รอบ</th><th>ครบกำหนด</th><th>ผู้รับผิดชอบ</th><th>ใบงานค้าง</th></tr>
+              </thead>
+              <tbody id="rows"></tbody>
+            </table>
+          </div>
+          <p class="x-mut" style="margin:12px 0 0" id="count"></p>
+        </section>
+
+        <section class="x-card" id="panel-cal" hidden>
+          <div class="x-between" style="margin-bottom:14px">
+            <div><p class="x-tt">ปฏิทินงาน PM 90 วัน · ต.ค. – ธ.ค. 2569</p><p class="x-mut">แต่ละคอลัมน์คือ 1 สัปดาห์ · คลิกวันเพื่อดูแผนที่ครบกำหนด</p></div>
+            <div class="x-row"><span class="x-chip x-chip--red">เกินกำหนด</span><span class="x-chip x-chip--orange">ครบกำหนด</span><span class="x-chip x-chip--green">เสร็จแล้ว</span></div>
+          </div>
+          <div class="x-wk" id="wks"></div>
+          <div class="x-cal" id="cal"></div>
+          <div id="dayinfo" style="margin-top:16px"></div>
+        </section>
+
+        <section id="panel-cl" hidden>
+          <div class="x-clcards" id="clcards"></div>
+        </section>
+      </main>
+    </div>
+
+    <div class="x-modal" id="modal" role="dialog" aria-modal="true" aria-label="สร้างแผน PM ใหม่">
+      <form id="form">
+        <div class="x-between" style="margin-bottom:16px">
+          <p class="x-tt" style="font-size:18px">+ แผน PM ใหม่</p>
+          <button type="button" class="x-btn x-btn--sm" id="close">ปิด</button>
+        </div>
+        <div class="x-f"><label for="f-name">ชื่อแผน</label><input id="f-name" required placeholder="เช่น ตรวจสายพานลำเลียง" /></div>
+        <div class="x-g2">
+          <div class="x-f"><label for="f-asset">ทรัพย์สิน</label><select id="f-asset"><option>CONV-03 สายพานลำเลียง</option><option>MTR-007 มอเตอร์ไลน์ 2</option><option>CMP-02 เครื่องอัดอากาศ</option><option>AHU-05 เครื่องส่งลมเย็น</option><option>CNC-001 เครื่องกัด CNC</option><option>SRV-001 เซิร์ฟเวอร์หลัก</option></select></div>
+          <div class="x-f"><label for="f-type">ประเภทรอบ</label><select id="f-type"><option>ตามเวลา (Fixed)</option><option>ตามเวลา (Floating)</option><option>ตามมิเตอร์</option></select></div>
+        </div>
+        <div class="x-g2">
+          <div class="x-f"><label for="f-every">ทุก N วัน / ชม.</label><input id="f-every" type="number" value="30" min="1" /></div>
+          <div class="x-f"><label for="f-lead">Lead days</label><input id="f-lead" type="number" value="7" min="0" /></div>
+        </div>
+        <div class="x-g2">
+          <div class="x-f"><label for="f-tech">ช่างผู้รับผิดชอบ</label><select id="f-tech"><option>สมชาย ว.</option><option>ปิยะ ก.</option><option>อรทัย ส.</option><option>ธนกร พ.</option></select></div>
+          <div class="x-f"><label for="f-cl">เช็คลิสต์</label><select id="f-cl"><option>CL-001 ตรวจสายพาน</option><option>CL-002 ตรวจมอเตอร์</option><option>CL-003 ระบบลม</option><option>CL-004 งาน IT</option></select></div>
+        </div>
+        <div class="x-f"><label for="f-part">อะไหล่ที่ใช้</label><input id="f-part" placeholder="เช่น ไส้กรองอากาศ x1, จาระบี x2" /></div>
+        <div id="extra"></div>
+        <div class="x-row" style="margin-top:16px">
+          <button type="button" class="x-btn" id="addf">+ เพิ่มฟิลด์</button>
+          <button type="submit" class="x-btn x-btn--primary" style="margin-left:auto">บันทึกแผน</button>
+        </div>
+      </form>
+    </div>
+    <div class="x-toast" id="toast"></div>
+
+    <script>
+      const plans = [
+        { id: "PMP-2569-0001", t: "ตรวจสายพานและปรับความตึง", cl: "CL-001", asset: "CONV-03 สายพานลำเลียง", loc: "ไลน์ผลิต 1", cyc: "ทุก 1 เดือน", kind: "ตามเวลา (Fixed)", due: "02 ต.ค. 2569", late: 12, tech: "สมชาย ว.", wo: "WO-2569-0142", state: "over" },
+        { id: "PMP-2569-0002", t: "วัดอุณหภูมิและความต้านทานฉนวน", cl: "CL-002", asset: "MTR-007 มอเตอร์ไลน์ 2", loc: "ไลน์ผลิต 2", cyc: "ทุก 3 เดือน", kind: "ตามเวลา (Floating)", due: "05 ต.ค. 2569", late: 9, tech: "ปิยะ ก.", wo: null, state: "over" },
+        { id: "PMP-2569-0003", t: "เปลี่ยนไส้กรองอากาศ 500 ชม.", cl: "CL-003", asset: "CMP-02 เครื่องอัดอากาศ", loc: "ห้องเครื่อง", cyc: "ทุก 500 ชม.", kind: "ตามมิเตอร์ (ใช้แล้ว 486 ชม.)", due: "11 ต.ค. 2569", late: 3, tech: "ธนกร พ.", wo: "WO-2569-0151", state: "over" },
+        { id: "PMP-2569-0004", t: "ล้างคอยล์และเปลี่ยนแผ่นกรอง", cl: "CL-003", asset: "AHU-05 เครื่องส่งลมเย็น", loc: "อาคาร B ชั้น 3", cyc: "ทุก 2 เดือน", kind: "ตามเวลา (Fixed)", due: "19 ต.ค. 2569", late: -5, tech: "อรทัย ส.", wo: null, state: "soon" },
+        { id: "PMP-2569-0005", t: "ตรวจซีลและอัดจาระบีปั๊มน้ำ", cl: "CL-002", asset: "PMP-11 ปั๊มน้ำหล่อเย็น", loc: "ห้องเครื่อง", cyc: "ทุก 1 เดือน", kind: "ตามเวลา (Fixed)", due: "08 ต.ค. 2569", late: 6, tech: "ธนกร พ.", wo: null, state: "over" },
+        { id: "PMP-2569-0006", t: "หล่อลื่นรางและตรวจระบบน้ำยา", cl: "CL-001", asset: "CNC-001 เครื่องกัด CNC", loc: "โรงงานระยอง", cyc: "ทุก 250 ชม.", kind: "ตามมิเตอร์ (ใช้แล้ว 198 ชม.)", due: "27 ต.ค. 2569", late: -13, tech: "สมชาย ว.", wo: null, state: "soon" },
+        { id: "PMP-2569-0007", t: "สำรองข้อมูลและอัปเดต firmware", cl: "CL-004", asset: "SRV-001 เซิร์ฟเวอร์หลัก", loc: "ห้อง Data Center", cyc: "ทุก 1 เดือน", kind: "ตามเวลา (Fixed)", due: "04 ต.ค. 2569", late: 10, tech: "อรทัย ส.", wo: "WO-2569-0138", state: "over" },
+        { id: "PMP-2569-0008", t: "ตรวจแบตเตอรี่และเติมน้ำกลั่น", cl: "CL-002", asset: "FL-02 รถโฟล์คลิฟท์", loc: "คลังสินค้า", cyc: "ทุก 1 เดือน", kind: "ตามเวลา (Fixed)", due: "01 ต.ค. 2569", late: 13, tech: "ปิยะ ก.", wo: null, state: "over" },
+      ];
+
+      const el = (id) => document.getElementById(id);
+      let woSeq = 160;
+
+      function toast(msg) {
+        const d = document.createElement("div");
+        d.textContent = msg;
+        el("toast").append(d);
+        setTimeout(() => d.remove(), 3600);
+      }
+
+      function dueCell(p) {
+        if (p.late > 0) return `${p.due}<br /><span class="x-chip x-chip--red">เกิน ${p.late} วัน</span>`;
+        return `${p.due}<br /><span class="x-chip">อีก ${-p.late} วัน</span>`;
+      }
+
+      function render() {
+        const q = el("q").value.trim().toLowerCase();
+        const st = el("state").value;
+        const list = plans.filter((p) => {
+          const hit = (p.id + p.t + p.asset + p.cl).toLowerCase().includes(q);
+          const ok = st === "all" ? true : st === "off" ? !!p.off : !p.off && p.state === st;
+          return hit && ok;
+        });
+        el("rows").innerHTML = list
+          .map(
+            (p, i) => `<tr>
+          <td><span class="x-id">${p.id}</span><br /><span class="x-tt">${p.t}</span> <span class="x-chip">${p.cl}</span>${p.off ? ' <span class="x-chip">ปิดใช้งาน</span>' : ""}</td>
+          <td>${p.asset}<br /><span class="x-mut">${p.loc}</span></td>
+          <td>${p.cyc}<br /><span class="x-mut">${p.kind}</span></td>
+          <td>${dueCell(p)}</td>
+          <td>${p.tech}</td>
+          <td>${p.wo ? `<a class="x-link" href="#">${p.wo}</a><br /><span class="x-mut">กำลังดำเนินการ</span>` : `<button class="x-btn x-btn--sm" data-make="${plans.indexOf(p)}">สร้างใบงาน</button>`}</td>
+        </tr>`
+          )
+          .join("") || `<tr><td colspan="6" class="x-mut">ไม่มีแผนในสถานะนี้</td></tr>`;
+        el("count").textContent = `แสดง ${list.length} จาก ${plans.length} แผน · มีงานค้าง ${plans.filter((p) => p.wo).length} ใบ`;
+        el("rows").querySelectorAll("[data-make]").forEach((b) =>
+          b.addEventListener("click", () => {
+            const p = plans[+b.dataset.make];
+            p.wo = "WO-2569-0" + ++woSeq;
+            render();
+            toast(`สร้าง ${p.wo} จากแผน ${p.id} แล้ว · มอบหมาย ${p.tech}`);
+          })
+        );
+      }
+      el("q").addEventListener("input", render);
+      el("state").addEventListener("change", render);
+      render();
+
+      /* tabs */
+      document.querySelectorAll('[role="tab"]').forEach((t) =>
+        t.addEventListener("click", () => {
+          document.querySelectorAll('[role="tab"]').forEach((o) => o.setAttribute("aria-selected", String(o === t)));
+          ["plans", "cal", "cl"].forEach((k) => (el("panel-" + k).hidden = k !== t.dataset.tab));
+        })
+      );
+
+      /* calendar */
+      const months = ["ต.ค.", "พ.ย.", "ธ.ค."];
+      const days = [];
+      for (let w = 0; w < 13; w++) for (let d = 0; d < 7; d++) days.push({ w, d, n: w * 7 + d + 1 });
+      const events = {};
+      plans.forEach((p, i) => {
+        const idx = [1, 4, 10, 18, 7, 26, 3, 2][i];
+        (events[idx] = events[idx] || []).push(p);
+      });
+      [34, 35, 48, 61, 62, 75, 88].forEach((k) => (events[k] = events[k] || [plans[k % 8]]));
+      el("wks").innerHTML = Array.from({ length: 13 }, (_, i) => `<span>W${i + 1}<br />${months[Math.floor(i / 4.4)]}</span>`).join("");
+      el("cal").innerHTML = days
+        .map((x) => {
+          const ev = events[x.n] || [];
+          const dots = ev
+            .map((p) => `<i style="background:${p.late > 0 ? "var(--x-red)" : x.n > 40 ? "var(--x-green)" : "var(--x-orange)"}"></i>`)
+            .join("");
+          return `<button data-n="${x.n}" aria-label="วันที่ ${x.n} มี ${ev.length} แผน"><span>${x.n}</span><span class="d">${dots}</span></button>`;
+        })
+        .join("");
+      el("cal").addEventListener("click", (e) => {
+        const b = e.target.closest("button");
+        if (!b) return;
+        el("cal").querySelectorAll("button").forEach((o) => o.classList.toggle("is-on", o === b));
+        const ev = events[+b.dataset.n] || [];
+        el("dayinfo").innerHTML = ev.length
+          ? `<p class="x-tt">วันที่ ${b.dataset.n} ของช่วง 90 วัน · ${ev.length} แผน</p>` +
+            ev.map((p) => `<p class="x-mut" style="margin:6px 0"><span class="x-id">${p.id}</span> · ${p.t} · ${p.asset} · ${p.tech}</p>`).join("")
+          : `<p class="x-mut">วันที่ ${b.dataset.n}: ไม่มีแผน PM ครบกำหนด</p>`;
+      });
+
+      /* checklists */
+      const cls = [
+        { id: "CL-001", t: "ตรวจสายพาน / ระบบขับเคลื่อน", n: 12, items: ["สภาพสายพาน ไม่มีรอยฉีกขาด", "ความตึงสายพาน (มม.)|10|20", "ลูกกลิ้งหมุนอิสระ ไม่มีเสียงผิดปกติ"] },
+        { id: "CL-002", t: "ตรวจมอเตอร์ / ปั๊ม / แบตเตอรี่", n: 9, items: ["อุณหภูมิตลับลูกปืน (°C)|40|75", "ค่าความต้านทานฉนวน (MΩ)|1|999", "ไม่มีการรั่วซึมของน้ำมันหรือน้ำ"] },
+        { id: "CL-003", t: "ระบบลม / ระบบปรับอากาศ", n: 14, items: ["แรงดันลมขาออก (bar)|6|8", "สภาพไส้กรอง เปลี่ยนเมื่อถึงรอบ", "ระบายน้ำในถังพักลมแล้ว"] },
+        { id: "CL-004", t: "งาน IT / เซิร์ฟเวอร์", n: 8, items: ["สำรองข้อมูลสำเร็จและทดสอบกู้คืน", "อุณหภูมิห้องเซิร์ฟเวอร์ (°C)|18|25", "อัปเดต firmware เป็นเวอร์ชันล่าสุด"] },
+      ];
+      el("clcards").innerHTML = cls
+        .map(
+          (c) => `<div class="x-card">
+        <div class="x-between"><p class="x-tt"><span class="x-id">${c.id}</span><br />${c.t}</p><span class="x-chip">${c.n} รายการ</span></div>
+        <ul class="x-cl">${c.items
+          .map((i) => {
+            const [name, min, max] = i.split("|");
+            return `<li><span class="x-box"></span><span>${name}${
+              min ? `<br /><span class="x-mut">ค่าที่วัดได้ · ช่วงปกติ ${min}–${max} · แนบรูปถ่าย</span>` : `<br /><span class="x-mut">ผ่าน / ไม่ผ่าน · แนบรูปถ่าย</span>`
+            }</span></li>`;
+          })
+          .join("")}</ul>
+        <p class="x-mut" style="margin:10px 0 0">ดูอีก ${c.n - 3} รายการในแบบฟอร์มเต็ม</p>
+      </div>`
+        )
+        .join("");
+
+      /* modal */
+      const modal = el("modal");
+      el("btnNew").addEventListener("click", () => modal.setAttribute("open", ""));
+      el("close").addEventListener("click", () => modal.removeAttribute("open"));
+      modal.addEventListener("click", (e) => { if (e.target === modal) modal.removeAttribute("open"); });
+      let extraN = 0;
+      el("addf").addEventListener("click", () => {
+        extraN++;
+        const d = document.createElement("div");
+        d.className = "x-g2";
+        d.innerHTML = `<div class="x-f"><label>ชื่อฟิลด์เพิ่มเติม ${extraN}</label><input placeholder="เช่น เลขมิเตอร์ล่าสุด" /></div><div class="x-f"><label>ค่า</label><input placeholder="เช่น 486 ชม." /></div>`;
+        el("extra").append(d);
+      });
+      el("form").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const name = el("f-name").value.trim();
+        const type = el("f-type").value;
+        const every = el("f-every").value;
+        const lead = el("f-lead").value || 7;
+        const id = "PMP-2569-" + String(plans.length + 1).padStart(4, "0");
+        plans.push({
+          id, t: name, cl: el("f-cl").value.split(" ")[0],
+          asset: el("f-asset").value, loc: "รอระบุตำแหน่ง",
+          cyc: type === "ตามมิเตอร์" ? `ทุก ${every} ชม.` : `ทุก ${every} วัน`,
+          kind: type, due: "15 พ.ย. 2569", late: -32, tech: el("f-tech").value, wo: null, state: "ok",
+        });
+        modal.removeAttribute("open");
+        el("form").reset();
+        el("extra").innerHTML = "";
+        render();
+        toast(`บันทึกแผน ${id} · ${name} แล้ว · Lead days ${lead} วัน`);
+      });
+
+      /* top bar */
+      el("btnDue").addEventListener("click", () => toast("ตรวจรอบแล้ว: วันนี้ยังไม่มีแผนที่ถึงรอบสร้างใบงาน (0 รายการ)"));
+      el("btnReport").addEventListener("click", () => toast("เปิดฟอร์มแจ้งซ่อมใหม่"));
+      el("btnBell").addEventListener("click", () => toast("แจ้งเตือน 3 รายการ: แผนเกินกำหนด 6 แผน · WO-2569-0142 ใกล้ครบ SLA · อะไหล่ไส้กรองใกล้หมด"));
+      document.addEventListener("keydown", (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") { e.preventDefault(); el("gsearch").focus(); }
+        if (e.key === "Escape") modal.removeAttribute("open");
+      });
+    </script>
+    <script src="../../assets/hark.js"></script>
+  </body>
+</html>
