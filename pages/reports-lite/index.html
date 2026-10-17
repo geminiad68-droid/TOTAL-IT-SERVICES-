@@ -69,6 +69,8 @@ tbody tr:hover{background:rgba(91,140,255,.06)}
 .checks{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:12px}
 .checks label{display:flex;align-items:center;gap:8px;min-height:var(--tap)}
 .checks input{width:18px;height:18px}
+.err{color:#FB7185;font-size:12px;font-weight:500}.field.bad{border-color:#FB7185!important;box-shadow:0 0 0 3px rgba(251,113,133,.18)}.req{color:#FB7185}
+.cap{margin:-8px 0 12px;font-size:12px;color:var(--tx2)}.loading{opacity:.45;pointer-events:none;transition:opacity .15s}
 .mact{display:flex;gap:8px;justify-content:flex-end}
 .toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:#16224A;border:1px solid var(--blue);border-radius:12px;padding:12px 18px;display:none;z-index:20}
 .toast.show{display:block}
@@ -102,27 +104,28 @@ tbody tr:hover{background:rgba(91,140,255,.06)}
     <div class="card list" id="list"><button class="btn pri add" id="openM">+ รายงานกำหนดเอง</button></div>
     <div>
       <div class="card filters">
-        <label>ตั้งแต่<input class="field" value="1 พ.ย. 2568" size="11" /></label>
-        <label>ถึง<input class="field" value="11 ต.ค. 2569" size="11" /></label>
-        <label>ไซต์<select class="field"><option>ทุกไซต์</option><option>โรงงานสมุทรสาคร</option><option>โรงงานระยอง</option></select></label>
-        <label>ช่วงลัด<select class="field"><option>12 เดือนล่าสุด</option><option>เดือนนี้</option><option>ไตรมาสนี้</option><option>ปีนี้</option></select></label>
+        <label>ตั้งแต่<input class="field" id="dFrom" type="date" value="2025-11-01" min="2025-01-01" max="2026-12-31" /></label>
+        <label>ถึง<input class="field" id="dTo" type="date" value="2026-10-11" min="2025-01-01" max="2026-12-31" /></label>
+        <label>ไซต์<select class="field" id="fSite"><option>ทุกไซต์</option><option>โรงงานสมุทรสาคร</option><option>โรงงานระยอง</option></select></label>
+        <label>ช่วงลัด<select class="field" id="fQuick"><option>12 เดือนล่าสุด</option><option>เดือนนี้</option><option>ไตรมาสนี้</option><option>ปีนี้</option><option value="">กำหนดเอง</option></select></label>
         <div class="acts">
-          <button class="btn pri" data-toast="แสดงรายงานแล้ว">แสดง</button>
-          <button class="btn" data-toast="กำลังส่งออก Excel…">Excel</button>
-          <button class="btn" data-toast="กำลังส่งออก CSV…">CSV</button>
-          <button class="btn" data-toast="ส่งไปยังเครื่องพิมพ์แล้ว">พิมพ์</button>
+          <button class="btn pri" id="showBtn">แสดง</button>
+          <button class="btn">Excel</button>
+          <button class="btn">CSV</button>
+          <button class="btn">พิมพ์</button>
         </div>
       </div>
+      <p class="cap" id="rcap"></p>
       <div id="rKpi">
         <div class="kpis">
-          <div class="card kpi"><span class="ic g3">⚡</span><div><b>12</b><span>Breakdown</span></div></div>
-          <div class="card kpi"><span class="ic g1">⏱</span><div><b>15,136 ชม.</b><span>MTBF A/B</span></div></div>
-          <div class="card kpi"><span class="ic g4">◉</span><div><b>99.71%</b><span>Availability</span></div></div>
-          <div class="card kpi"><span class="ic g2">▤</span><div><b>18</b><span>Backlog</span></div></div>
-          <div class="card kpi"><span class="ic g5">฿</span><div><b>61,695 บาท</b><span>ค่าใช้จ่ายรวม</span></div></div>
+          <div class="card kpi"><span class="ic g3">⚡</span><div><b id="kB">12</b><span>Breakdown</span></div></div>
+          <div class="card kpi"><span class="ic g1">⏱</span><div><b id="kM">15,136 ชม.</b><span>MTBF A/B</span></div></div>
+          <div class="card kpi"><span class="ic g4">◉</span><div><b id="kA">99.71%</b><span>Availability</span></div></div>
+          <div class="card kpi"><span class="ic g2">▤</span><div><b id="kBl">18</b><span>Backlog</span></div></div>
+          <div class="card kpi"><span class="ic g5">฿</span><div><b id="kC">61,695 บาท</b><span>ค่าใช้จ่ายรวม</span></div></div>
         </div>
         <div class="card chart">
-          <h3>ใบงานรายเดือน</h3>
+          <h3>ใบงานรายเดือน</h3><div id="chartBox">
           <svg viewBox="0 0 600 220" role="img" aria-label="ใบงานรายเดือน พ.ย.68 ถึง ต.ค.69 สูงสุด 13 ใบในเดือน ต.ค.69">
             <defs><linearGradient id="gb" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#EC4899"/><stop offset="1" stop-color="#EA580C"/></linearGradient></defs>
             <g stroke="rgba(96,140,255,.15)"><line x1="40" y1="30" x2="590" y2="30"/><line x1="40" y1="110" x2="590" y2="110"/><line x1="40" y1="190" x2="590" y2="190" stroke="rgba(96,140,255,.4)"/></g>
@@ -132,7 +135,7 @@ tbody tr:hover{background:rgba(91,140,255,.06)}
             </g>
             <g fill="#E7ECFA" font-size="11" text-anchor="middle"><text x="63" y="172">1</text><text x="155" y="172">1</text><text x="247" y="159">2</text><text x="293" y="172">1</text><text x="385" y="172">1</text><text x="431" y="159">2</text><text x="477" y="172">1</text><text x="569" y="24">13</text></g>
             <g fill="#9AA7C7" font-size="11" text-anchor="middle"><text x="63" y="208">พ.ย.68</text><text x="109" y="208">ธ.ค.</text><text x="155" y="208">ม.ค.69</text><text x="201" y="208">ก.พ.</text><text x="247" y="208">มี.ค.</text><text x="293" y="208">เม.ย.</text><text x="339" y="208">พ.ค.</text><text x="385" y="208">มิ.ย.</text><text x="431" y="208">ก.ค.</text><text x="477" y="208">ส.ค.</text><text x="523" y="208">ก.ย.</text><text x="569" y="208">ต.ค.</text></g>
-          </svg>
+          </svg></div>
         </div>
       </div>
       <div class="card tcard"><h3 id="tTitle"></h3><div class="tw"><table id="tbl"></table></div></div>
@@ -144,17 +147,17 @@ tbody tr:hover{background:rgba(91,140,255,.06)}
 <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mT">
   <div class="card">
     <h2 id="mT">สร้างรายงานกำหนดเอง</h2>
-    <label class="fm">ชื่อรายงาน<input class="field" id="mName" placeholder="เช่น ค่าซ่อมรายไตรมาส" /></label>
-    <label class="fm">แหล่งข้อมูล<select class="field" id="mSrc"><option>ใบสั่งงาน</option><option>ทรัพย์สิน</option><option>อะไหล่ &amp; คลัง</option><option>แผน PM</option><option>ตรวจนับ</option></select></label>
-    <div class="fm">คอลัมน์</div>
-    <div class="checks">
-      <label><input type="checkbox" checked />เลขที่ใบงาน</label><label><input type="checkbox" checked />ทรัพย์สิน</label>
-      <label><input type="checkbox" checked />ประเภทงาน</label><label><input type="checkbox" />ช่างผู้รับผิดชอบ</label>
-      <label><input type="checkbox" />Downtime</label><label><input type="checkbox" checked />ค่าใช้จ่าย</label>
+    <label class="fm">ชื่อรายงาน <span class="req">*</span><input class="field" id="mName" placeholder="เช่น ค่าซ่อมรายไตรมาส" /></label>
+    <label class="fm">แหล่งข้อมูล <span class="req">*</span><select class="field" id="mSrc"><option value="">— เลือกแหล่งข้อมูล —</option><option>ใบสั่งงาน</option><option>ทรัพย์สิน</option><option>อะไหล่ &amp; คลัง</option><option>แผน PM</option><option>ตรวจนับ</option></select></label>
+    <div class="fm">คอลัมน์ <span class="req">*</span></div>
+    <div class="checks" id="mCols">
+      <label><input type="checkbox" />เลขที่ใบงาน</label><label><input type="checkbox" />ทรัพย์สิน</label>
+      <label><input type="checkbox" />ประเภทงาน</label><label><input type="checkbox" />ช่างผู้รับผิดชอบ</label>
+      <label><input type="checkbox" />Downtime</label><label><input type="checkbox" />ค่าใช้จ่าย</label>
       <label><input type="checkbox" />สถานะ SLA</label><label><input type="checkbox" />รวมฟิลด์เพิ่มเติม</label>
     </div>
-    <label class="fm">จัดกลุ่มตาม<select class="field"><option>เดือน</option><option>ทรัพย์สิน</option><option>หมวด</option><option>ช่าง</option><option>ไซต์</option></select></label>
-    <label class="fm">ตั้งเวลาส่งอีเมล<select class="field"><option>ไม่ส่ง</option><option>ทุกวัน 08:00</option><option>ทุกจันทร์ 08:00</option><option>วันที่ 1 ของเดือน</option></select></label>
+    <label class="fm">จัดกลุ่มตาม<select class="field" id="mGrp"><option>เดือน</option><option>ทรัพย์สิน</option><option>หมวด</option><option>ช่าง</option><option>ไซต์</option></select></label>
+    <label class="fm">ตั้งเวลาส่งอีเมล<select class="field" id="mSch"><option>ไม่ส่ง</option><option>ทุกวัน 08:00</option><option>ทุกจันทร์ 08:00</option><option>วันที่ 1 ของเดือน</option></select></label>
     <div class="mact"><button class="btn" id="mCancel">ยกเลิก</button><button class="btn pri" id="mSave">บันทึก</button></div>
   </div>
 </div>
@@ -166,14 +169,14 @@ var kpiRows=[[1,1,0,1,"3.5","3.5","100%","8,450"],[0,0,0,0,"—","0","—","0"],
 function bar(v,max,t){return {b:Math.round(v/max*120),t:t}}
 var R=[
  {g:"ซ่อมบำรุง",n:"KPI งานซ่อมบำรุงรายเดือน",kpi:1,c:["เดือน","ใบงาน","Breakdown","PM","เสร็จ/ปิด","MTTR (ชม.)","Downtime (ชม.)","PM Compliance %","ค่าใช้จ่าย (บาท)"],r:kpiRows.map(function(x,i){return [M[i]].concat(x)})},
- {g:"ซ่อมบำรุง",n:"สรุปใบสั่งงานตามประเภท & SLA",c:["ประเภท","จำนวน","ผ่าน SLA","เกิน SLA","% ผ่าน SLA"],r:[["Breakdown",12,9,3,"75%"],["PM",7,6,1,"86%"],["แจ้งซ่อมทั่วไป",3,3,0,"100%"],["ตรวจสอบ",0,0,0,"—"]]},
- {g:"ซ่อมบำรุง",n:"PM Compliance ตามแผน",c:["แผน PM","ทรัพย์สิน","ตามแผน","ทำจริง","Compliance"],r:[["PM-CONV รายเดือน","CONV-03",12,11,"92%"],["PM-AHU รายไตรมาส","AHU-05",4,4,"100%"],["PM-CMP รายเดือน","CMP-02",12,9,"75%"],["PM-MTR รายครึ่งปี","MTR-007",2,1,"50%"]]},
- {g:"ต้นทุน",n:"ค่าซ่อมบำรุงตามทรัพย์สิน",c:["ทรัพย์สิน","ค่าแรง","ค่าอะไหล่","รวม (บาท)"],r:[["CONV-03 สายพานลำเลียง","9,600","14,850","24,450"],["MTR-007 มอเตอร์ปั๊ม","5,200","11,320","16,520"],["CMP-02 ปั๊มลม","4,400","8,975","13,375"],["AHU-05 เครื่องส่งลมเย็น","3,000","4,350","7,350"]]},
- {g:"ความน่าเชื่อถือ",n:"Bad Actors",c:["รหัส","ทรัพย์สิน","Downtime","ครั้ง"],r:[["CONV-03","สายพานลำเลียง",bar(261,261,"261 ชม."),3],["MTR-007","มอเตอร์ปั๊ม",bar(142,261,"142 ชม."),2],["CMP-02","ปั๊มลม",bar(96,261,"96 ชม."),2],["AHU-05","เครื่องส่งลมเย็น",bar(48,261,"48 ชม."),1]]},
- {g:"บุคลากร",n:"ผลงานช่าง",c:["ช่าง","ใบงานที่ปิด","เวลาเฉลี่ย","ผ่าน SLA %"],r:[["สมชัย",bar(9,9,"9"),"3.2 ชม.","94%"],["วิชัย",bar(7,9,"7"),"4.1 ชม.","88%"],["ธนพล",bar(5,9,"5"),"3.8 ชม.","90%"],["อนุชา",bar(4,9,"4"),"5.0 ชม.","80%"],["ปรีชา",bar(3,9,"3"),"4.6 ชม.","83%"]]},
- {g:"ทรัพย์สิน",n:"สรุปทะเบียนตามหมวด",c:["หมวด","จำนวน","มูลค่า (บาท)"],r:[["เครื่องจักรการผลิต",42,"18,450,000"],["ระบบปรับอากาศ",26,"3,920,000"],["ระบบไฟฟ้า",31,"2,610,000"],["คอมพิวเตอร์ & IT",118,"4,280,000"]]},
- {g:"ทรัพย์สิน",n:"ผลการตรวจนับ",c:["รอบตรวจนับ","ทั้งหมด","พบ","ไม่พบ","ความครบถ้วน"],r:[["Q1/2569",217,214,3,"98.6%"],["Q2/2569",217,215,2,"99.1%"],["Q3/2569",217,217,0,"100%"]]},
- {g:"คลัง",n:"การจ่ายอะไหล่",c:["รหัสอะไหล่","รายการ","จำนวนจ่าย","มูลค่า (บาท)"],r:[["SP-BLT-12","สายพาน 12 นิ้ว",4,"9,600"],["SP-BRG-6205","ลูกปืน 6205",16,"3,840"],["SP-FLT-AHU","ไส้กรองอากาศ AHU",24,"4,350"],["SP-OIL-CMP","น้ำมันปั๊มลม 4 ล.",6,"2,700"]]}
+ {g:"ซ่อมบำรุง",sc:[1,2,3],n:"สรุปใบสั่งงานตามประเภท & SLA",c:["ประเภท","จำนวน","ผ่าน SLA","เกิน SLA","% ผ่าน SLA"],r:[["Breakdown",12,9,3,"75%"],["PM",7,6,1,"86%"],["แจ้งซ่อมทั่วไป",3,3,0,"100%"],["ตรวจสอบ",0,0,0,"—"]]},
+ {g:"ซ่อมบำรุง",sc:[2,3],n:"PM Compliance ตามแผน",c:["แผน PM","ทรัพย์สิน","ตามแผน","ทำจริง","Compliance"],r:[["PM-CONV รายเดือน","CONV-03",12,11,"92%"],["PM-AHU รายไตรมาส","AHU-05",4,4,"100%"],["PM-CMP รายเดือน","CMP-02",12,9,"75%"],["PM-MTR รายครึ่งปี","MTR-007",2,1,"50%"]]},
+ {g:"ต้นทุน",sc:[1,2,3],n:"ค่าซ่อมบำรุงตามทรัพย์สิน",c:["ทรัพย์สิน","ค่าแรง","ค่าอะไหล่","รวม (บาท)"],r:[["CONV-03 สายพานลำเลียง","9,600","14,850","24,450"],["MTR-007 มอเตอร์ปั๊ม","5,200","11,320","16,520"],["CMP-02 ปั๊มลม","4,400","8,975","13,375"],["AHU-05 เครื่องส่งลมเย็น","3,000","4,350","7,350"]]},
+ {g:"ความน่าเชื่อถือ",sc:[2,3],n:"Bad Actors",c:["รหัส","ทรัพย์สิน","Downtime","ครั้ง"],r:[["CONV-03","สายพานลำเลียง",bar(261,261,"261 ชม."),3],["MTR-007","มอเตอร์ปั๊ม",bar(142,261,"142 ชม."),2],["CMP-02","ปั๊มลม",bar(96,261,"96 ชม."),2],["AHU-05","เครื่องส่งลมเย็น",bar(48,261,"48 ชม."),1]]},
+ {g:"บุคลากร",sc:[1],n:"ผลงานช่าง",c:["ช่าง","ใบงานที่ปิด","เวลาเฉลี่ย","ผ่าน SLA %"],r:[["สมชัย",bar(9,9,"9"),"3.2 ชม.","94%"],["วิชัย",bar(7,9,"7"),"4.1 ชม.","88%"],["ธนพล",bar(5,9,"5"),"3.8 ชม.","90%"],["อนุชา",bar(4,9,"4"),"5.0 ชม.","80%"],["ปรีชา",bar(3,9,"3"),"4.6 ชม.","83%"]]},
+ {g:"ทรัพย์สิน",sc:[1,2],snap:1,n:"สรุปทะเบียนตามหมวด",c:["หมวด","จำนวน","มูลค่า (บาท)"],r:[["เครื่องจักรการผลิต",42,"18,450,000"],["ระบบปรับอากาศ",26,"3,920,000"],["ระบบไฟฟ้า",31,"2,610,000"],["คอมพิวเตอร์ & IT",118,"4,280,000"]]},
+ {g:"ทรัพย์สิน",sc:[1,2,3],snap:1,n:"ผลการตรวจนับ",c:["รอบตรวจนับ","ทั้งหมด","พบ","ไม่พบ","ความครบถ้วน"],r:[["Q1/2569",217,214,3,"98.6%"],["Q2/2569",217,215,2,"99.1%"],["Q3/2569",217,217,0,"100%"]]},
+ {g:"คลัง",sc:[2,3],n:"การจ่ายอะไหล่",c:["รหัสอะไหล่","รายการ","จำนวนจ่าย","มูลค่า (บาท)"],r:[["SP-BLT-12","สายพาน 12 นิ้ว",4,"9,600"],["SP-BRG-6205","ลูกปืน 6205",16,"3,840"],["SP-FLT-AHU","ไส้กรองอากาศ AHU",24,"4,350"],["SP-OIL-CMP","น้ำมันปั๊มลม 4 ล.",6,"2,700"]]}
 ];
 var cur=0,list=document.getElementById("list"),addBtn=document.getElementById("openM");
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]})}
@@ -187,16 +190,17 @@ function drawList(){
   });
 }
 function show(){
-  var r=R[cur];
+  var r=view(R[cur]);
   document.getElementById("rKpi").style.display=r.kpi?"":"none";
   document.getElementById("tTitle").textContent=r.n;
   var h="<thead><tr>"+r.c.map(function(c){return "<th scope='col'>"+esc(c)+"</th>"}).join("")+"</tr></thead><tbody>";
-  if(!r.r.length)h+="<tr><td colspan='"+r.c.length+"'>ยังไม่มีข้อมูล · กด แสดง เพื่อสร้างรายงาน</td></tr>";
+  if(!r.r.length)h+="<tr><td colspan='"+r.c.length+"'>"+(r.kpi||r.sc?"ไม่มีข้อมูลในช่วงที่เลือก":"ยังไม่มีข้อมูล · กด แสดง เพื่อสร้างรายงาน")+"</td></tr>";
   r.r.forEach(function(row,i){
-    h+="<tr"+(r.kpi&&i===11?" class='hl'":"")+">"+row.map(function(v){
+    h+="<tr"+(r.kpi&&r.hl===i?" class='hl'":"")+">"+row.map(function(v){
       return "<td>"+(v&&v.t!==undefined?"<span class='bar'><s><i style='width:"+v.b+"px'></i></s>"+esc(v.t)+"</span>":esc(v))+"</td>"}).join("")+"</tr>";
   });
   document.getElementById("tbl").innerHTML=h+"</tbody>";
+  if(r.kpi)drawKpi(r);
 }
 var toastEl=document.getElementById("toast"),tt;
 function toast(m){toastEl.textContent=m;toastEl.classList.add("show");clearTimeout(tt);tt=setTimeout(function(){toastEl.classList.remove("show")},2400)}
@@ -208,15 +212,88 @@ addBtn.onclick=function(){modal.classList.add("open");document.getElementById("m
 document.getElementById("mCancel").onclick=closeM;
 modal.onclick=function(e){if(e.target===modal)closeM()};
 document.addEventListener("keydown",function(e){if(e.key==="Escape")closeM()});
+/* ===== filters: date range + site really recompute the report ===== */
+var TODAY=new Date(2026,9,11),SITEF={"ทุกไซต์":1,"โรงงานสมุทรสาคร":0.62,"โรงงานระยอง":0.38};
+var F={from:new Date(2025,10,1),to:TODAY,site:"ทุกไซต์",at:null};
+function $id(i){return document.getElementById(i)}
+function pad(n){return (n<10?"0":"")+n}
+function iso(d){return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())}
+function thd(d){return d.toLocaleDateString("th-TH",{day:"numeric",month:"short",year:"numeric"})}
+function monthIdx(){var out=[];for(var i=0;i<12;i++){var s0=new Date(2025,10+i,1),e0=new Date(2025,11+i,0);if(s0<=F.to&&e0>=F.from)out.push(i)}return out}
+function numOf(c){if(typeof c==="number")return c;var t=String(c);return /^[\d,]+(\.\d+)?$/.test(t)?parseFloat(t.replace(/,/g,"")):null}
+function fmtLike(c,v){var dec=(String(c).split(".")[1]||"").length;v=dec?Math.round(v*Math.pow(10,dec))/Math.pow(10,dec):Math.round(v);return typeof c==="number"?v:v.toLocaleString("en-US",{minimumFractionDigits:dec,maximumFractionDigits:dec})}
+function scaleCell(c,k){
+  if(k===1)return c;
+  if(c&&c.t!==undefined){var m=String(c.t).match(/^([\d.,]+)(.*)$/);return m?{b:c.b,t:fmtLike(m[1],parseFloat(m[1].replace(/,/g,""))*k)+m[2]}:c}
+  var n=numOf(c);return n===null?c:fmtLike(c,n*k)}
+function view(r){
+  var sf=SITEF[F.site]||1,idx=monthIdx();
+  if(r.kpi){
+    var rows=idx.map(function(i){var x=kpiRows[i];return [M[i]].concat(x.map(function(v,j){return (j<=3||j===5||j===7)?scaleCell(v,sf):v}))});
+    return {g:r.g,n:r.n,kpi:1,c:r.c,r:rows,idx:idx,sf:sf,hl:idx.indexOf(11)};
+  }
+  if(!r.sc)return r;
+  var k=(r.snap?1:idx.length/12)*sf;
+  return {g:r.g,n:r.n,c:r.c,sc:r.sc,r:(idx.length||r.snap)?r.r.map(function(row){return row.map(function(c,j){return r.sc.indexOf(j)>-1?scaleCell(c,k):c})}):[]};
+}
+function drawKpi(v){
+  var sum=function(j){return v.r.reduce(function(a,x){return a+(numOf(x[j])||0)},0)};
+  $id("kB").textContent=sum(2).toLocaleString("en-US");
+  $id("kC").textContent=sum(8).toLocaleString("en-US")+" บาท";
+  $id("kBl").textContent=Math.round(18*v.sf);
+  $id("kM").textContent=F.site==="โรงงานระยอง"?"9,870 ชม.":"15,136 ชม.";
+  $id("kA").textContent=F.site==="โรงงานระยอง"?"99.42%":"99.71%";
+  var vals=v.r.map(function(x){return numOf(x[1])||0}),labs=v.idx.map(function(i,n){var m=M[i].split(" ");return (n===0||m[0]==="ม.ค.")?m[0]+m[1].slice(2):m[0]});
+  var max=Math.max.apply(null,[1].concat(vals)),n=Math.max(1,vals.length),bw=550/n,w=Math.min(26,bw*.6);
+  var g='<svg viewBox="0 0 600 220" role="img" aria-label="ใบงานรายเดือน '+esc(v.r.map(function(x){return x[0]+" "+x[1]}).join(", ")||"ไม่มีข้อมูล")+'"><defs><linearGradient id="gb" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#EC4899"/><stop offset="1" stop-color="#EA580C"/></linearGradient></defs>'+
+   '<g stroke="rgba(96,140,255,.15)"><line x1="40" y1="30" x2="590" y2="30"/><line x1="40" y1="110" x2="590" y2="110"/><line x1="40" y1="190" x2="590" y2="190" stroke="rgba(96,140,255,.4)"/></g>'+
+   '<g fill="#9AA7C7" font-size="11" text-anchor="end"><text x="32" y="34">'+max+'</text><text x="32" y="114">'+(Math.round(max/2*10)/10)+'</text><text x="32" y="194">0</text></g>';
+  if(!vals.length)g+='<text x="315" y="115" fill="#9AA7C7" font-size="13" text-anchor="middle">ไม่มีข้อมูลในช่วงที่เลือก</text>';
+  vals.forEach(function(val,i){var h=Math.max(2,Math.round(val/max*160)),x=40+i*bw+(bw-w)/2,cx=x+w/2;
+    g+='<rect x="'+x+'" y="'+(190-h)+'" width="'+w+'" height="'+h+'" rx="3" fill="url(#gb)"/>'+(val?'<text x="'+cx+'" y="'+(184-h)+'" fill="#E7ECFA" font-size="11" text-anchor="middle">'+val+'</text>':'')+'<text x="'+cx+'" y="208" fill="#9AA7C7" font-size="11" text-anchor="middle">'+esc(labs[i])+'</text>'});
+  $id("chartBox").innerHTML=g+"</svg>";
+}
+function caption(){var at=F.at||new Date();$id("rcap").textContent="ช่วง "+thd(F.from)+" – "+thd(F.to)+" · "+F.site+" · "+monthIdx().length+" เดือน · สร้างเมื่อ "+thd(at)+" "+at.toLocaleTimeString("th-TH",{hour:"2-digit",minute:"2-digit"})+" น."}
+function clearErr(box){box.querySelectorAll(".err").forEach(function(n){n.remove()});box.querySelectorAll(".bad").forEach(function(n){n.classList.remove("bad");n.removeAttribute("aria-invalid")})}
+function fErr(el,msg){el.classList.add("bad");el.setAttribute("aria-invalid","true");var m=document.createElement("small");m.className="err";m.textContent=msg;(el.closest("label")||el.parentNode).appendChild(m)}
+function applyFilters(silent){
+  var box=document.querySelector(".filters");clearErr(box);
+  var a=$id("dFrom").value,b=$id("dTo").value;
+  if(!a){fErr($id("dFrom"),"กรุณาเลือกวันที่เริ่ม");$id("dFrom").focus();return}
+  if(!b){fErr($id("dTo"),"กรุณาเลือกวันที่สิ้นสุด");$id("dTo").focus();return}
+  var from=new Date(a+"T00:00:00"),to=new Date(b+"T00:00:00");
+  if(from>to){fErr($id("dTo"),"วันที่สิ้นสุดต้องไม่ก่อนวันที่เริ่ม");$id("dTo").focus();return}
+  F={from:from,to:to,site:$id("fSite").value,at:new Date()};
+  var btn=$id("showBtn");
+  [$id("rKpi"),document.querySelector(".tcard")].forEach(function(e){e.classList.add("loading")});btn.disabled=true;btn.textContent="กำลังโหลด…";
+  setTimeout(function(){show();caption();[$id("rKpi"),document.querySelector(".tcard")].forEach(function(e){e.classList.remove("loading")});btn.disabled=false;btn.textContent="แสดง";
+    if(!silent)toast("แสดง “"+R[cur].n+"” · "+thd(from)+" – "+thd(to)+" · "+F.site)},350);
+}
+var QUICK={"12 เดือนล่าสุด":new Date(2025,10,1),"เดือนนี้":new Date(2026,9,1),"ไตรมาสนี้":new Date(2026,9,1),"ปีนี้":new Date(2026,0,1)};
+$id("fQuick").onchange=function(){var q=QUICK[this.value];if(!q)return;$id("dFrom").value=iso(q);$id("dTo").value=iso(TODAY);applyFilters()};
+["dFrom","dTo"].forEach(function(i){$id(i).addEventListener("change",function(){$id("fQuick").value=""})});
+$id("showBtn").onclick=function(){applyFilters()};
+/* custom report */
+addBtn.onclick=function(){clearErr(modal);$id("mName").value="";$id("mSrc").value="";modal.querySelectorAll("#mCols input").forEach(function(c){c.checked=false});$id("mGrp").selectedIndex=0;$id("mSch").selectedIndex=0;modal.classList.add("open");$id("mName").focus()};
+modal.addEventListener("input",function(e){var t=e.target;if(t.classList.contains("bad")){t.classList.remove("bad");var m=t.parentNode.querySelector(".err");if(m)m.remove()}});
+modal.addEventListener("change",function(e){if(e.target.type==="checkbox"){var m=$id("mCols").nextElementSibling;if(m&&m.classList.contains("err"))m.remove()}else modal.dispatchEvent(new Event("input"))});
 document.getElementById("mSave").onclick=function(){
-  var n=document.getElementById("mName").value.trim()||"รายงานกำหนดเอง "+(R.length-8);
-  var cols=[].map.call(modal.querySelectorAll(".checks input:checked"),function(c){return c.parentNode.textContent});
-  if(!cols.length)cols=["รายการ"];
-  R.push({g:"กำหนดเอง",n:n,c:cols,r:[]});cur=R.length-1;
-  drawList();show();closeM();document.getElementById("mName").value="";
-  toast("บันทึกรายงาน “"+n+"” แล้ว");
+  clearErr(modal);
+  var n=$id("mName").value.trim(),src=$id("mSrc").value,bad=[];
+  var cols=[].map.call(modal.querySelectorAll("#mCols input:checked"),function(c){return c.parentNode.textContent.trim()});
+  if(!n){fErr($id("mName"),"กรุณากรอกชื่อรายงาน");bad.push($id("mName"))}
+  if(!src){fErr($id("mSrc"),"กรุณาเลือกแหล่งข้อมูล");bad.push($id("mSrc"))}
+  if(!cols.length){var m=document.createElement("small");m.className="err";m.style.display="block";m.style.margin="-8px 0 12px";m.textContent="เลือกอย่างน้อย 1 คอลัมน์";$id("mCols").insertAdjacentElement("afterend",m);bad.push(modal.querySelector("#mCols input"))}
+  if(bad.length){bad[0].focus();return}
+  var S={"เลขที่ใบงาน":["WO-2569-0141","WO-2569-0138","WO-2569-0127"],"ทรัพย์สิน":["CONV-03","CMP-02","MTR-007"],"ประเภทงาน":["Breakdown","PM","Corrective"],"ช่างผู้รับผิดชอบ":["สมชัย","วิชัย","ธนพล"],"Downtime":["4.5 ชม.","1.0 ชม.","2.2 ชม."],"ค่าใช้จ่าย":["4,960","1,250","3,400"],"สถานะ SLA":["ผ่าน","ผ่าน","เกิน"],"รวมฟิลด์เพิ่มเติม":["แผนก: ผลิต","แผนก: ซ่อมบำรุง","แผนก: ผลิต"]};
+  var rep={g:"กำหนดเอง",n:n,src:src,grp:$id("mGrp").value,sch:$id("mSch").value,c:cols,r:[0,1,2].map(function(i){return cols.map(function(c){return (S[c]||["—","—","—"])[i]})})};
+  R.push(rep);cur=R.length-1;
+  try{var sv=JSON.parse(localStorage.getItem("rl-custom")||"[]");sv.push(rep);localStorage.setItem("rl-custom",JSON.stringify(sv))}catch(e){}
+  drawList();show();closeM();
+  toast("บันทึกรายงาน “"+n+"” แล้ว · จาก "+src+(rep.sch!=="ไม่ส่ง"?" · ส่งอีเมล "+rep.sch:""));
 };
-drawList();show();
+try{JSON.parse(localStorage.getItem("rl-custom")||"[]").forEach(function(r){R.push(r)})}catch(e){}
+drawList();show();caption();
 </script>
     <script src="../../assets/site-nav.js"></script>
 </body>
