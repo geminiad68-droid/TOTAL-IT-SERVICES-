@@ -247,7 +247,7 @@
           <section class="x-card x-hide" id="p-ct" role="tabpanel" aria-labelledby="tab-ct">
             <div class="x-scroll">
               <table class="x-t">
-                <thead><tr><th>เลขที่</th><th>ผู้ขาย</th><th>ประเภท</th><th>ทรัพย์สินที่ครอบคลุม</th><th>เริ่ม – สิ้นสุด</th><th style="text-align: right">มูลค่า/ปี (บาท)</th></tr></thead>
+                <thead><tr><th>เลขที่</th><th>ผู้ขาย</th><th>ประเภท</th><th>ทรัพย์สินที่ครอบคลุม</th><th>เริ่ม – สิ้นสุด</th><th style="text-align: right">มูลค่า/ปี (บาท)</th><th></th></tr></thead>
                 <tbody id="ct-body"></tbody>
               </table>
             </div>
@@ -266,13 +266,13 @@
         <button class="x-x" type="button" data-close aria-label="ปิด">✕</button>
       </div>
       <div class="x-2">
-        <div class="x-f"><label for="m-type">ประเภท</label><select id="m-type"><option>ขอซื้อทั่วไป</option><option>เติมสต็อก</option><option>ขอซื้อเร่งด่วน</option></select></div>
-        <div class="x-f"><label for="m-bud">งบประมาณ</label><select id="m-bud"><option>OPEX</option><option>CAPEX</option></select></div>
+        <div class="x-f"><label for="m-type">ประเภท *</label><select id="m-type" required aria-describedby="e-type"><option value="">— เลือกประเภท —</option><option>ขอซื้อทั่วไป</option><option>เติมสต็อก</option><option>ขอซื้อเร่งด่วน</option></select><p class="x-err" id="e-type" role="alert"></p></div>
+        <div class="x-f"><label for="m-bud">งบประมาณ *</label><select id="m-bud" required aria-describedby="e-bud"><option value="">— เลือกงบ —</option><option>OPEX</option><option>CAPEX</option></select><p class="x-err" id="e-bud" role="alert"></p></div>
       </div>
       <div class="x-f"><label for="m-purpose">วัตถุประสงค์ / เหตุผล *</label><input id="m-purpose" required aria-describedby="e-purpose" placeholder="เช่น ต่ออายุไลเซนส์ / เติมสต็อกอะไหล่" /><p class="x-err" id="e-purpose" role="alert"></p></div>
       <div class="x-2">
         <div class="x-f"><label for="m-site">ไซต์ *</label><select id="m-site" required aria-describedby="e-site"><option value="">— เลือกไซต์ —</option><option>โรงงานสมุทรสาคร</option><option>โรงงานระยอง</option></select><p class="x-err" id="e-site" role="alert"></p></div>
-        <div class="x-f"><label for="m-cc">ศูนย์ต้นทุน</label><input id="m-cc" value="CC-IT-01" /></div>
+        <div class="x-f"><label for="m-cc">ศูนย์ต้นทุน</label><input id="m-cc" placeholder="เช่น CC-IT-01" /></div>
       </div>
       <p class="x-sub" style="margin: 6px 0 8px">รายการ (Line items)</p>
       <div id="lines"></div>
@@ -288,6 +288,8 @@
         <button class="x-cta" type="button" id="m-save">บันทึกและส่งอนุมัติ</button>
       </div>
     </div>
+
+    <div class="x-modal" id="modal2" role="dialog" aria-modal="true" aria-labelledby="m2-title"></div>
 
     <div class="x-toast" id="toast" role="status" aria-live="polite"></div>
 
@@ -337,18 +339,19 @@
       function renderPO() { document.getElementById("po-body").innerHTML = PO.map(function (r) {
         return '<tr><td><b class="x-mono">' + r[0] + "</b></td><td>" + r[1] + '</td><td class="x-mono" style="color: var(--x-ink-2)">' + r[2] +
           '</td><td class="x-num">' + baht(r[3]) + "</td><td>" + r[4] + "</td><td>" + tagFor(r[5]) +
-          '</td><td><button class="x-mini x-mini--cta" type="button" data-recv="' + r[0] + '"' + (r[5] === "รับครบ" ? " disabled style=\"opacity:.45\"" : "") + ">รับของ</button></td></tr>";
+          '</td><td style="white-space: nowrap"><button class="x-mini" type="button" data-pov="' + r[0] + '">ดู</button> <button class="x-mini x-mini--cta" type="button" data-recv="' + r[0] + '"' + (r[5] === "รับครบ" ? " disabled style=\"opacity:.45\"" : "") + ">รับของ</button></td></tr>";
       }).join(""); }
       renderPO();
 
-      document.getElementById("ct-body").innerHTML = CT.map(function (r) {
+      function renderCT() { document.getElementById("ct-body").innerHTML = CT.map(function (r) {
         var cls = r[5] <= 30 ? "t-red" : r[5] <= 60 ? "t-wait" : "t-ok";
         return '<tr><td><b class="x-mono">' + r[0] + "</b></td><td>" + r[1] + '</td><td><span class="x-tag t-blue">' + r[2] + "</span></td><td>" + r[3] +
-          "</td><td>" + r[4] + '<span class="x-sub"><span class="x-tag ' + cls + '">หมดใน ' + r[5] + ' วัน</span></span></td><td class="x-num">' + baht(r[6]) + "</td></tr>";
-      }).join("");
+          "</td><td>" + r[4] + '<span class="x-sub"><span class="x-tag ' + cls + '">หมดใน ' + r[5] + ' วัน</span></span></td><td class="x-num">' + baht(r[6]) +
+          '</td><td><button class="x-mini" type="button" data-renew="' + r[0] + '">ต่ออายุ</button></td></tr>';
+      }).join(""); renderKPI(); }
 
       var veil = document.getElementById("veil"), drawer = document.getElementById("drawer"), modal = document.getElementById("modal");
-      function closeAll() { [veil, drawer, modal].forEach(function (e) { e.removeAttribute("data-open"); }); }
+      function closeAll() { [veil, drawer, modal, document.getElementById("modal2")].forEach(function (e) { e.removeAttribute("data-open"); }); }
       veil.onclick = closeAll;
       document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeAll(); });
       document.addEventListener("click", function (e) { if (e.target.closest("[data-close]")) closeAll(); });
@@ -373,12 +376,21 @@
           }).join("") + '</tbody></table></div>' +
           '<div class="x-total"><span class="x-sub" style="margin: 0">ยอดรวม</span><b class="x-num">' + baht(p.amt) + " บาท</b></div>" +
           '<p class="x-sub" style="margin: 14px 0 6px">การเชื่อมโยง</p><p style="font: var(--type-small)">' + p.link +
-          ' <a class="x-mini" href="#" style="display: inline-block; line-height: 42px; text-decoration: none; margin-left: 6px">เปิดดู</a></p>' +
+          ' <a class="x-mini" href="' + linkFor(p.link) + '" style="display: inline-block; line-height: 42px; text-decoration: none; margin-left: 6px">เปิดดู</a></p>' +
+          (p.reason ? '<p class="x-sub" style="margin: 14px 0 6px">เหตุผลที่ไม่อนุมัติ</p><p style="font: var(--type-small); color: #ff8b90">' + esc(p.reason) + "</p>" : "") +
           (p.st === "รออนุมัติ" ? '<div class="x-foot"><button class="x-ghost" type="button" data-act="ไม่อนุมัติ">ไม่อนุมัติ</button><button class="x-cta" type="button" data-act="อนุมัติ">อนุมัติ</button></div>'
+            : p.st === "อนุมัติแล้ว" ? '<div class="x-foot"><button class="x-ghost" type="button" data-close>ปิด</button><button class="x-cta" type="button" data-mkpo>ออกใบสั่งซื้อ (PO)</button></div>'
             : '<div class="x-foot"><button class="x-ghost" type="button" data-close>ปิด</button></div>');
         veil.setAttribute("data-open", ""); drawer.setAttribute("data-open", ""); drawer.focus();
+        var mk = drawer.querySelector("[data-mkpo]"); if (mk) mk.onclick = function () { newPO(p); };
         drawer.querySelectorAll("[data-act]").forEach(function (b) {
           b.onclick = function () {
+            if (b.dataset.act === "ไม่อนุมัติ") {
+              formModal("ไม่อนุมัติ " + p.no, p.purpose, [{ id: "reason", label: "เหตุผลที่ไม่อนุมัติ *", required: true, ph: "เช่น เกินงบประมาณไตรมาสนี้ / ขอใบเสนอราคาเพิ่ม" }], "ยืนยันไม่อนุมัติ", function (v) {
+                p.st = "ไม่อนุมัติ"; p.reason = v.reason; renderPR(); closeAll(); say(p.no + " ไม่อนุมัติเรียบร้อย");
+              });
+              return;
+            }
             p.st = b.dataset.act === "อนุมัติ" ? "อนุมัติแล้ว" : "ไม่อนุมัติ";
             if (b.dataset.act === "อนุมัติ") p.step = 2;
             renderPR(); closeAll(); say(p.no + " " + b.dataset.act + "เรียบร้อย");
@@ -393,10 +405,10 @@
         if (tr && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); openPR(+tr.dataset.pr); }
       });
       document.getElementById("po-body").addEventListener("click", function (e) {
+        var v = e.target.closest("[data-pov]"); if (v) { openPO(v.dataset.pov); return; }
         var b = e.target.closest("[data-recv]");
         if (!b || b.disabled) return;
-        PO.forEach(function (r) { if (r[0] === b.dataset.recv) r[5] = "รับครบ"; });
-        renderPO(); say("บันทึกรับของ " + b.dataset.recv + " ครบแล้ว · อัปเดตคลังอะไหล่");
+        receivePO(b.dataset.recv);
       });
 
       var LABELS = ["ใบขอซื้อ", "ใบสั่งซื้อ", "สัญญา"], tabs = [].slice.call(document.querySelectorAll(".x-tab"));
@@ -443,7 +455,8 @@
 
       document.getElementById("primary").onclick = function () {
         var i = tabs.findIndex(function (t) { return t.getAttribute("aria-selected") === "true"; });
-        if (i !== 0) { say("ยังไม่เปิดใช้งานในตัวอย่างนี้: " + LABELS[i]); return; }
+        if (i === 1) { newPO(null); return; }
+        if (i === 2) { newCT(); return; }
         clearErrors(modal);
         veil.setAttribute("data-open", ""); modal.setAttribute("data-open", "");
         document.getElementById("m-purpose").focus();
@@ -462,6 +475,9 @@
         clearErrors(modal);
         var first = null, mark = function (el, msgEl, msg) { setErr(el, msgEl, msg); if (!first) first = el; };
         var purpose = document.getElementById("m-purpose"), site = document.getElementById("m-site");
+        var mt0 = document.getElementById("m-type"), mb0 = document.getElementById("m-bud");
+        if (!mt0.value) mark(mt0, document.getElementById("e-type"), "กรุณาเลือกประเภท");
+        if (!mb0.value) mark(mb0, document.getElementById("e-bud"), "กรุณาเลือกงบประมาณ");
         if (!purpose.value.trim()) mark(purpose, document.getElementById("e-purpose"), "กรุณาระบุวัตถุประสงค์");
         if (!site.value) mark(site, document.getElementById("e-site"), "กรุณาเลือกไซต์");
         var rows = [].slice.call(lines.children);
@@ -499,13 +515,126 @@
           by: "admin", amt: sum, st: "รออนุมัติ", items: items, step: 1,
           link: document.getElementById("m-site").value + " · " + document.getElementById("m-cc").value + " · " + document.getElementById("m-bud").value });
         renderPR(); closeAll(); say("สร้าง " + no + " และส่งอนุมัติแล้ว");
-        document.getElementById("m-purpose").value = ""; document.getElementById("m-site").value = "";
+        document.getElementById("m-purpose").value = ""; document.getElementById("m-site").value = ""; document.getElementById("m-type").value = ""; document.getElementById("m-bud").value = ""; document.getElementById("m-cc").value = "";
         lines.innerHTML = ""; document.getElementById("extra").innerHTML = ""; addLine("", 1, "ชิ้น", 0); clearErrors(modal);
       };
 
       document.getElementById("btn-wo").onclick = function () { say("เปิดฟอร์มแจ้งซ่อมใหม่ (ตัวอย่าง)"); };
       document.getElementById("btn-bell").onclick = function () { say("3 แจ้งเตือน: PR รออนุมัติ 2 · FortiCare FW-001 หมดใน 11 วัน"); };
 
+      // ---------- generic small form modal (PO / contract / reject / receive) ----------
+      var modal2 = document.getElementById("modal2");
+      function esc(t) { return String(t == null ? "" : t).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+      function formModal(title, sub, fields, saveLabel, onSave, extraCheck) {
+        modal2.innerHTML = '<div class="x-xrow"><div><h3 id="m2-title">' + esc(title) + '</h3><p class="x-sub">' + esc(sub) + '</p></div><button class="x-x" type="button" data-close aria-label="ปิด">✕</button></div>' +
+          fields.map(function (f) {
+            var ctl = f.type === "select"
+              ? '<select id="f2-' + f.id + '"' + (f.required ? " required" : "") + ' aria-describedby="e2-' + f.id + '"><option value="">— เลือก —</option>' + f.options.map(function (o) { return "<option" + (o === f.value ? " selected" : "") + ">" + esc(o) + "</option>"; }).join("") + "</select>"
+              : '<input id="f2-' + f.id + '" type="' + (f.type || "text") + '"' + (f.min != null ? ' min="' + f.min + '"' : "") + (f.required ? " required" : "") + ' aria-describedby="e2-' + f.id + '" placeholder="' + esc(f.ph || "") + '" value="' + esc(f.value == null ? "" : f.value) + '" />';
+            return '<div class="x-f"><label for="f2-' + f.id + '">' + esc(f.label) + "</label>" + ctl + '<p class="x-err" id="e2-' + f.id + '" role="alert"></p></div>';
+          }).join("") +
+          '<div class="x-foot"><button class="x-ghost" type="button" data-close>ยกเลิก</button><button class="x-cta" type="button" id="m2-save">' + esc(saveLabel) + "</button></div>";
+        veil.setAttribute("data-open", ""); modal2.setAttribute("data-open", "");
+        var firstCtl = modal2.querySelector("input,select"); if (firstCtl) firstCtl.focus();
+        document.getElementById("m2-save").onclick = function () {
+          clearErrors(modal2);
+          var first = null, vals = {};
+          fields.forEach(function (f) {
+            var el = document.getElementById("f2-" + f.id), v = el.value.trim(), msg = "";
+            vals[f.id] = v;
+            if (f.required && !v) msg = f.type === "select" ? "กรุณาเลือก" + f.label.replace(/\s*\*$/, "") : "กรุณากรอก" + f.label.replace(/\s*\*$/, "");
+            else if (f.type === "number" && v !== "" && f.min != null && +v < f.min) msg = "ต้องไม่น้อยกว่า " + f.min;
+            if (msg) { setErr(el, document.getElementById("e2-" + f.id), msg); first = first || el; }
+          });
+          if (!first && extraCheck) { var x = extraCheck(vals); if (x) { var el2 = document.getElementById("f2-" + x[0]); setErr(el2, document.getElementById("e2-" + x[0]), x[1]); first = el2; } }
+          if (first) { first.focus(); return; }
+          onSave(vals);
+        };
+      }
+      modal2.addEventListener("input", onFix); modal2.addEventListener("change", onFix);
+
+      var MTH = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."];
+      var TODAY = new Date(2025, 9, 1);
+      function thDate(iso) { var d = new Date(iso + "T00:00:00"); return d.getDate() + " " + MTH[d.getMonth()] + " " + (d.getFullYear() + 543); }
+      function linkFor(t) { return /IT Asset|ไลเซนส์/i.test(t) ? "../it-asset-license/" : /คลังอะไหล่|SP-/.test(t) ? "../spare-parts/" : /WO-/.test(t) ? "../wo/" : "../cost-budget/"; }
+      function nextNo(prefix, list, get) { var n = 0; list.forEach(function (x) { var m = String(get(x)).match(/(\d+)$/); if (String(get(x)).indexOf(prefix) === 0 && m) n = Math.max(n, +m[1]); }); return prefix + String(n + 1).padStart(4, "0"); }
+
+      function newPO(pr) {
+        var prs = PR.filter(function (p) { return p.st === "อนุมัติแล้ว"; }).map(function (p) { return p.no; });
+        if (pr && prs.indexOf(pr.no) < 0) prs.push(pr.no);
+        if (!prs.length) prs = ["— ไม่มี PR ที่อนุมัติแล้ว —"];
+        formModal("สร้างใบสั่งซื้อ (PO)", "อ้างอิงใบขอซื้อที่อนุมัติแล้ว", [
+          { id: "pr", label: "PR อ้างอิง *", type: "select", options: prs, required: true, value: pr ? pr.no : "" },
+          { id: "vendor", label: "ผู้ขาย *", required: true, ph: "เช่น บจก. ไทยพาร์ท ซัพพลาย" },
+          { id: "amt", label: "ยอดสั่งซื้อ (บาท) *", type: "number", min: 1, required: true, value: pr ? pr.amt : "", ph: "เช่น 58000" },
+          { id: "due", label: "กำหนดส่ง *", type: "date", required: true }
+        ], "สร้าง PO", function (v) {
+          var no = nextNo("PO-2569-", PO, function (r) { return r[0]; });
+          PO.unshift([no, v.vendor, v.pr, +v.amt, thDate(v.due), "รอส่ง"]);
+          PR.forEach(function (p) { if (p.no === v.pr) { p.st = "ออก PO แล้ว"; p.step = 3; } });
+          renderPO(); renderPR(); closeAll(); tabs[1].click(); say("สร้าง " + no + " ถึง " + v.vendor + " แล้ว");
+        }, function (v) { return /ไม่มี PR/.test(v.pr) ? ["pr", "ยังไม่มี PR ที่อนุมัติแล้ว ให้อนุมัติ PR ก่อน"] : null; });
+      }
+      function openPO(no) {
+        var r = PO.filter(function (x) { return x[0] === no; })[0]; if (!r) return;
+        var pr = PR.filter(function (p) { return p.no === r[2]; })[0];
+        drawer.innerHTML = '<div class="x-xrow"><div><h3 id="dr-title">' + r[0] + '</h3><p class="x-sub">' + esc(r[1]) + " · กำหนดส่ง " + r[4] + '</p></div><button class="x-x" type="button" data-close aria-label="ปิด">✕</button></div>' +
+          '<p style="margin-bottom: 10px">' + tagFor(r[5]) + (r[6] ? ' <span class="x-sub" style="display:inline">· ' + esc(r[6]) + "</span>" : "") + "</p>" +
+          '<div class="x-scroll x-card" style="margin-bottom: 14px"><table class="x-t"><thead><tr><th>รายการ</th><th>จำนวน</th><th style="text-align: right">รวม</th></tr></thead><tbody>' +
+          (pr ? pr.items.map(function (it) { return "<tr><td>" + esc(it[0]) + "</td><td>" + it[1] + " " + it[2] + '</td><td class="x-num">' + baht(it[1] * it[3]) + "</td></tr>"; }).join("")
+              : '<tr><td colspan="3" class="x-sub">อ้างอิง ' + r[2] + " (ปีงบก่อนหน้า)</td></tr>") + "</tbody></table></div>" +
+          '<div class="x-total"><span class="x-sub" style="margin: 0">ยอดรวม</span><b class="x-num">' + baht(r[3]) + " บาท</b></div>" +
+          '<div class="x-foot"><button class="x-ghost" type="button" data-close>ปิด</button>' + (r[5] !== "รับครบ" ? '<button class="x-cta" type="button" data-recv2="' + r[0] + '">บันทึกรับของ</button>' : "") + "</div>";
+        veil.setAttribute("data-open", ""); drawer.setAttribute("data-open", ""); drawer.focus();
+        var rb = drawer.querySelector("[data-recv2]"); if (rb) rb.onclick = function () { drawer.removeAttribute("data-open"); receivePO(no); };
+      }
+      function receivePO(no) {
+        var r = PO.filter(function (x) { return x[0] === no; })[0]; if (!r) return;
+        formModal("บันทึกรับของ " + no, r[1] + " · " + baht(r[3]) + " บาท", [
+          { id: "dn", label: "เลขที่ใบส่งของ *", required: true, ph: "เช่น DN-680915" },
+          { id: "date", label: "วันที่รับ *", type: "date", required: true },
+          { id: "how", label: "ผลการรับ *", type: "select", options: ["รับครบ", "รับบางส่วน"], required: true }
+        ], "บันทึกรับของ", function (v) {
+          r[5] = v.how === "รับครบ" ? "รับครบ" : "ส่งบางส่วน"; r[6] = v.dn + " · รับ " + thDate(v.date);
+          renderPO(); closeAll(); say("บันทึกรับของ " + no + " (" + v.how + ") แล้ว · อัปเดตคลังอะไหล่");
+        });
+      }
+      function newCT() {
+        formModal("เพิ่มสัญญา MA / บริการ", "สัญญาจะแจ้งเตือนก่อนหมดอายุ 60 วัน", [
+          { id: "vendor", label: "ผู้ขาย *", required: true, ph: "เช่น บจก. ไซเบอร์ซีเคียว" },
+          { id: "type", label: "ประเภท *", type: "select", options: ["MA", "บริการ", "เช่า"], required: true },
+          { id: "asset", label: "ทรัพย์สินที่ครอบคลุม *", required: true, ph: "เช่น ชิลเลอร์ CH-003" },
+          { id: "start", label: "วันเริ่ม *", type: "date", required: true },
+          { id: "end", label: "วันสิ้นสุด *", type: "date", required: true },
+          { id: "val", label: "มูลค่า/ปี (บาท) *", type: "number", min: 1, required: true, ph: "เช่น 120000" }
+        ], "บันทึกสัญญา", function (v) {
+          var no = nextNo("CT-2569-", CT, function (r) { return r[0]; });
+          CT.unshift([no, v.vendor, v.type, v.asset, thDate(v.start) + " – " + thDate(v.end), Math.round((new Date(v.end) - TODAY) / 864e5), +v.val]);
+          renderCT(); closeAll(); say("เพิ่มสัญญา " + no + " แล้ว");
+        }, function (v) { return v.end <= v.start ? ["end", "วันสิ้นสุดต้องหลังวันเริ่ม"] : null; });
+      }
+      document.getElementById("ct-body").addEventListener("click", function (e) {
+        var b = e.target.closest("[data-renew]"); if (!b) return;
+        var r = CT.filter(function (x) { return x[0] === b.dataset.renew; })[0];
+        formModal("ต่ออายุสัญญา " + r[0], r[1] + " · " + r[3], [
+          { id: "end", label: "วันสิ้นสุดใหม่ *", type: "date", required: true },
+          { id: "val", label: "มูลค่า/ปี (บาท) *", type: "number", min: 1, required: true, value: r[6] }
+        ], "ต่ออายุ", function (v) {
+          var start = r[4].split(" – ")[0];
+          r[4] = start + " – " + thDate(v.end); r[5] = Math.round((new Date(v.end) - TODAY) / 864e5); r[6] = +v.val;
+          renderCT(); closeAll(); say("ต่ออายุ " + r[0] + " ถึง " + thDate(v.end) + " แล้ว");
+        }, function (v) { return new Date(v.end) <= TODAY ? ["end", "วันสิ้นสุดต้องเป็นวันในอนาคต"] : null; });
+      });
+      function renderKPI() {
+        var k = document.querySelectorAll(".x-kpi b");
+        k[0].textContent = PR.filter(function (p) { return p.st === "รออนุมัติ"; }).length;
+        k[1].textContent = PO.filter(function (r) { return r[5] !== "รับครบ"; }).length;
+        k[2].textContent = PO.filter(function (r) { return r[5] === "รอส่ง" || r[5] === "ส่งบางส่วน"; }).length;
+        k[3].textContent = CT.filter(function (r) { return r[5] <= 60; }).length;
+      }
+      var _rp = renderPR; renderPR = function () { _rp(); renderKPI(); };
+      var _ro = renderPO; renderPO = function () { _ro(); renderKPI(); };
+      renderCT();
       renderPR();
     </script>
       <script src="../../assets/site-nav.js"></script>
