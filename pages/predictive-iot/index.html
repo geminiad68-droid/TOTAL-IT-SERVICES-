@@ -120,14 +120,14 @@
           <div class="x-title">
             <div><p>ซ่อมบำรุง › Predictive / IoT</p><h1>Predictive Maintenance / IoT</h1></div>
             <div class="links" style="margin:0">
-              <button class="x-btn x-btn--pri" type="button" data-toast="เพิ่มอุปกรณ์/เซนเซอร์ใหม่: เปิดตัวช่วยเชื่อมต่อ MQTT">+ อุปกรณ์/เซนเซอร์</button>
+              <button class="x-btn x-btn--pri" type="button" id="openDev">+ อุปกรณ์/เซนเซอร์</button>
               <button class="x-btn x-btn--ghost" type="button" id="openRules">กฎแจ้งเตือน</button>
             </div>
           </div>
 
           <section class="x-kpis" aria-label="ตัวชี้วัด">
-            <div class="x-card x-kpi"><span class="x-tile x-g1"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M5 12a7 7 0 0114 0M2 12a10 10 0 0120 0"/></svg></span><div><b>12</b><small>เซนเซอร์ทั้งหมด</small></div></div>
-            <div class="x-card x-kpi"><span class="x-tile x-g2"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg></span><div><b>11</b><small>ออนไลน์</small></div></div>
+            <div class="x-card x-kpi"><span class="x-tile x-g1"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M5 12a7 7 0 0114 0M2 12a10 10 0 0120 0"/></svg></span><div><b id="kSens">12</b><small>เซนเซอร์ทั้งหมด</small></div></div>
+            <div class="x-card x-kpi"><span class="x-tile x-g2"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg></span><div><b id="kOn">11</b><small>ออนไลน์</small></div></div>
             <div class="x-card x-kpi"><span class="x-tile x-g3"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" aria-hidden="true"><path d="M12 3l10 18H2zM12 10v4M12 17v.5"/></svg></span><div><b>1</b><small>เกินเกณฑ์</small></div></div>
             <div class="x-card x-kpi"><span class="x-tile x-g4"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></span><div><b>2</b><small>คาดการณ์เสีย 7 วัน</small></div></div>
             <div class="x-card x-kpi"><span class="x-tile x-g5"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" aria-hidden="true"><path d="M14 3l-2 7h6l-8 11 2-8H6z"/></svg></span><div><b id="woKpi">3</b><small>ใบงานอัตโนมัติ 30 วัน</small></div></div>
@@ -144,10 +144,10 @@
 
           <div class="x-two">
             <section class="x-card">
-              <div class="x-h"><h2>การแจ้งเตือนล่าสุด</h2><p>3 รายการวันนี้</p></div>
+              <div class="x-h"><h2>การแจ้งเตือนล่าสุด</h2><p id="alertCount">3 รายการวันนี้</p></div>
               <div class="table-wrap"><table>
                 <thead><tr><th scope="col">เวลา</th><th scope="col">เซนเซอร์</th><th scope="col">ค่า</th><th scope="col">กฎ</th><th scope="col">การดำเนินการ</th></tr></thead>
-                <tbody>
+                <tbody id="alerts">
                   <tr class="is-highlight"><th scope="row">10:42</th><td>TMP-MTR007</td><td class="num x-red">86.5°C</td><td>≥ 80°C นาน 5 นาที</td><td>สร้าง WO-2406-118 (P1) · LINE</td></tr>
                   <tr><th scope="row">09:15</th><td>VIB-CONV03</td><td class="num x-amber">5.1 mm/s</td><td>เปลี่ยนแปลง ≥ 20% / 1 ชม.</td><td>สร้าง WO-2406-117 (P2) · Email</td></tr>
                   <tr><th scope="row">07:58</th><td>FLW-PMP11</td><td class="num muted">ไม่มีสัญญาณ</td><td>ออฟไลน์ ≥ 10 นาที</td><td>แจ้ง LINE ช่างไฟฟ้า</td></tr>
@@ -164,17 +164,33 @@
     </div>
 
     <div class="x-modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle">
-      <form class="x-card x-dialog" id="ruleForm">
+      <form class="x-card x-dialog" id="ruleForm" novalidate>
         <div class="x-h" style="margin:0"><h2 id="mTitle">สร้างกฎแจ้งเตือน</h2><button class="x-btn x-icon" type="button" id="closeRules" aria-label="ปิด">✕</button></div>
         <div class="x-form">
-          <label class="x-wide">ถ้า เซนเซอร์<select class="x-select" name="sensor" id="fSensor"></select></label>
-          <label>เงื่อนไข<select class="x-select" name="op"><option value=">">&gt; มากกว่า</option><option value="<">&lt; น้อยกว่า</option><option value="Δ%">เปลี่ยนแปลง %</option></select></label>
-          <label>ค่า<input class="x-input" name="val" type="number" step="0.1" value="80" required /></label>
-          <label>นาน (นาที)<input class="x-input" name="dur" type="number" min="1" value="5" required /></label>
-          <label>แจ้งเตือนทาง<select class="x-select" name="ch"><option>LINE</option><option>Email</option><option>LINE + Email</option></select></label>
-          <label>สร้าง WO อัตโนมัติ<select class="x-select" name="wo"><option value="">ไม่สร้าง</option><option>P1</option><option selected>P2</option><option>P3</option><option>P4</option></select></label>
+          <label class="x-wide">ถ้า เซนเซอร์ *<select class="x-select" name="sensor" id="fSensor" required></select></label>
+          <label>เงื่อนไข *<select class="x-select" name="op" required><option value="">— เลือกเงื่อนไข —</option><option value=">">&gt; มากกว่า</option><option value="<">&lt; น้อยกว่า</option><option value="Δ%">เปลี่ยนแปลง %</option></select></label>
+          <label>ค่า *<input class="x-input" name="val" type="number" step="0.1" required placeholder="เช่น 80" /></label>
+          <label>นาน (นาที) *<input class="x-input" name="dur" type="number" min="1" required placeholder="เช่น 5" /></label>
+          <label>แจ้งเตือนทาง *<select class="x-select" name="ch" required><option value="">— เลือกช่องทาง —</option><option>LINE</option><option>Email</option><option>LINE + Email</option></select></label>
+          <label>สร้าง WO อัตโนมัติ<select class="x-select" name="wo"><option value="">ไม่สร้าง</option><option>P1</option><option>P2</option><option>P3</option><option>P4</option></select></label>
         </div>
         <div class="links" style="margin:0;justify-content:flex-end"><button class="x-btn x-btn--ghost" type="button" id="cancelRules">ยกเลิก</button><button class="x-btn x-btn--pri" type="submit">บันทึกกฎ</button></div>
+      </form>
+    </div>
+    <div class="x-modal" id="devModal" role="dialog" aria-modal="true" aria-labelledby="dTitle">
+      <form class="x-card x-dialog" id="devForm" novalidate>
+        <div class="x-h" style="margin:0"><h2 id="dTitle">เพิ่มอุปกรณ์ / เซนเซอร์</h2><button class="x-btn x-icon" type="button" data-dclose aria-label="ปิด">✕</button></div>
+        <div class="x-form">
+          <label class="x-wide">ติดตั้งที่เครื่องจักร *<select class="x-select" name="machine" id="dMachine" required></select></label>
+          <label>รหัสเซนเซอร์ (Tag) *<input class="x-input" name="tag" required placeholder="เช่น VIB-CMP02" /></label>
+          <label>ชนิดการวัด *<select class="x-select" name="kind" id="dKind" required><option value="">— เลือกชนิด —</option><option data-u="°C">อุณหภูมิ</option><option data-u="mm/s">Vibration</option><option data-u="bar">แรงดัน</option><option data-u="m³/h">อัตราไหล</option><option data-u="A">กระแสไฟ</option><option data-u="%RH">ความชื้น</option></select></label>
+          <label>หน่วย *<input class="x-input" name="unit" required placeholder="เช่น mm/s" /></label>
+          <label>เกณฑ์แจ้งเตือน *<input class="x-input" name="thr" type="number" step="0.1" required placeholder="เช่น 4.5" /></label>
+          <label>โปรโตคอล *<select class="x-select" name="proto" required><option value="">— เลือกโปรโตคอล —</option><option>MQTT</option><option>Modbus TCP</option><option>OPC UA</option><option>HTTP API</option></select></label>
+          <label>Topic / Address *<input class="x-input" name="addr" required placeholder="เช่น plant1/cmp02/vib" /></label>
+        </div>
+        <div id="dTest" class="muted" style="font:var(--type-small)"></div>
+        <div class="links" style="margin:0;justify-content:flex-end"><button class="x-btn x-btn--ghost" type="button" data-dclose>ยกเลิก</button><button class="x-btn x-btn--ghost" type="button" id="dTestBtn">ทดสอบการเชื่อมต่อ</button><button class="x-btn x-btn--pri" type="submit">บันทึกอุปกรณ์</button></div>
       </form>
     </div>
     <div class="x-toasts" id="toasts" aria-live="polite"></div>
@@ -237,7 +253,7 @@
               var over = !s.off && s.v >= s.thr;
               return '<span>' + s.label + ' <small>' + s.tag + '</small></span><span class="x-val' + (over ? " x-red" : "") + '" id="v' + i + '-' + si + '">' + (s.off ? "ออฟไลน์" : s.v.toFixed(s.d) + " " + s.unit) + (over ? " ▲" : "") + '</span><span id="s' + i + '-' + si + '">' + spark(s) + '</span>';
             }).join("") + '</div>' +
-            '<footer><span>คาดอายุคงเหลือ <strong>~' + m.rul + ' วัน</strong></span><button class="x-btn" type="button" data-wo="' + i + '">สร้างใบงานอัตโนมัติ</button></footer></article>';
+            '<footer><span>คาดอายุคงเหลือ <strong>~' + m.rul + ' วัน</strong></span><button class="x-btn" type="button" data-wo="' + i + '"' + (m.wo ? " disabled" : "") + ">" + (m.wo ? "สร้างแล้ว " + m.wo : "สร้างใบงานอัตโนมัติ") + '</button></footer></article>';
         }).join("");
       }
       function tick() {
@@ -257,14 +273,16 @@
         });
       }
       var hours = []; for (var h = 0; h < 24; h++) hours.push((h < 10 ? "0" : "") + h + ":00");
-      var chart = new Chart($("trend"), {
+      var chart = null;
+      try { chart = new Chart($("trend"), {
         type: "line",
         data: { labels: hours, datasets: [{ label: "", data: [], fill: true, pointRadius: [], pointBackgroundColor: "var(--chart-bad)", pointBorderColor: "var(--chart-bad)" },
           { label: "", data: [], borderColor: "var(--chart-accent)", borderDash: [3, 4], borderWidth: 1, pointRadius: 0 }] },
         options: { plugins: { legend: { display: false } } }
-      });
+      }); } catch (err) { chart = null; }
       function showChart() {
         var m = M[sel], s = m.sensors[0], an = s.day.filter(function (v) { return v >= s.thr; }).length;
+        if (chart) {
         chart.data.datasets[0].label = s.tag;
         chart.data.datasets[0].data = s.day;
         chart.data.datasets[0].pointRadius = s.day.map(function (v) { return v >= s.thr ? 4 : 0; });
@@ -272,6 +290,7 @@
         chart.data.datasets[1].data = hours.map(function () { return s.thr; });
         chart.options.plugins.tooltip = { callbacks: { label: function (c) { return c.raw + " " + s.unit; } } };
         chart.update();
+        }
         $("chartTitle").textContent = m.id + " · " + s.label + " 24 ชม.";
         $("chartSub").textContent = s.tag + " · หน่วย " + s.unit + " · จุดผิดปกติ (เกินเกณฑ์) " + an + " จุด";
         $("trend").setAttribute("aria-label", m.id + " " + s.label + " 24 ชั่วโมง เกินเกณฑ์ " + an + " ครั้ง");
@@ -281,6 +300,9 @@
         if (b) {
           var m = M[+b.dataset.wo], no = "WO-2406-" + woSeq++;
           $("woKpi").textContent = ++woCount;
+          var pr = m.tone === "red" ? "P1" : m.tone === "amber" ? "P2" : "P3", s0 = m.sensors[0];
+          addAlert(s0.tag, s0.off ? "ไม่มีสัญญาณ" : s0.v.toFixed(s0.d) + " " + s0.unit, "สร้างด้วยตนเอง", '<a href="../wo/?q=' + no + '" style="color:inherit">สร้าง ' + no + " (" + pr + ")</a>");
+          m.wo = no; b.disabled = true; b.textContent = "สร้างแล้ว " + no;
           toast("สร้างใบงานอัตโนมัติ " + no + " สำหรับ " + m.id + " (" + (m.tone === "red" ? "P1" : m.tone === "amber" ? "P2" : "P3") + ") แล้ว");
           return;
         }
@@ -301,22 +323,79 @@
           return "<li>ถ้า <b>" + r.s + "</b> " + r.op + " " + r.val + " นาน " + r.dur + " นาที<small>→ แจ้ง " + r.ch + (r.wo ? " · สร้าง WO ระดับ " + r.wo : "") + "</small></li>";
         }).join("");
       }
-      $("fSensor").innerHTML = M.map(function (m) { return m.sensors.map(function (s) { return "<option>" + s.tag + "</option>"; }).join(""); }).join("");
-      function openM() { $("modal").classList.add("is-open"); $("fSensor").focus(); }
+      function fillSensors() { $("fSensor").innerHTML = '<option value="">— เลือกเซนเซอร์ —</option>' + M.map(function (m) { return m.sensors.map(function (s) { return "<option>" + s.tag + "</option>"; }).join(""); }).join(""); }
+      fillSensors();
+      function clearErr(f) { f.querySelectorAll(".x-err").forEach(function (x) { x.remove(); }); f.querySelectorAll("[aria-invalid]").forEach(function (x) { x.removeAttribute("aria-invalid"); x.style.borderColor = ""; }); }
+      function setErr(el, msg) { el.setAttribute("aria-invalid", "true"); el.style.borderColor = "#ff6b7a"; var m = document.createElement("small"); m.className = "x-err"; m.style.cssText = "color:#ff8b97;font:var(--type-caption)"; m.textContent = msg; el.closest("label").appendChild(m); }
+      function validate(f, extra) {
+        clearErr(f); var first = null;
+        f.querySelectorAll("[required]").forEach(function (el) {
+          var v = el.value.trim(), msg = "";
+          if (!v) msg = el.tagName === "SELECT" ? "กรุณาเลือกรายการ" : "กรุณากรอกข้อมูลช่องนี้";
+          else if (el.type === "number" && el.min !== "" && +v < +el.min) msg = "ต้องไม่น้อยกว่า " + el.min;
+          if (msg) { setErr(el, msg); first = first || el; }
+        });
+        if (!first && extra) { var x = extra(); if (x) { setErr(f.elements[x[0]], x[1]); first = f.elements[x[0]]; } }
+        if (first) first.focus();
+        return !first;
+      }
+      ["ruleForm", "devForm"].forEach(function (id) { ["input", "change"].forEach(function (ev) { $(id).addEventListener(ev, function (e) { var t = e.target; if (t.getAttribute && t.getAttribute("aria-invalid") && String(t.value).trim()) { t.removeAttribute("aria-invalid"); t.style.borderColor = ""; var m = t.closest("label") && t.closest("label").querySelector(".x-err"); if (m) m.remove(); } }); }); });
+      function addAlert(tag, val, rule, act) {
+        var d = new Date(), tr = document.createElement("tr");
+        tr.className = "is-highlight";
+        tr.innerHTML = '<th scope="row">' + String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0") + "</th><td>" + tag + '</td><td class="num">' + val + "</td><td>" + rule + "</td><td>" + act + "</td>";
+        var tb = $("alerts"); tb.querySelectorAll("tr").forEach(function (r) { r.classList.remove("is-highlight"); }); tb.insertBefore(tr, tb.firstChild);
+        $("alertCount").textContent = tb.children.length + " รายการวันนี้";
+      }
+      function counts() {
+        var all = 0, on = 0; M.forEach(function (m) { m.sensors.forEach(function (s) { all++; if (!s.off) on++; }); });
+        $("kSens").textContent = all; $("kOn").textContent = on;
+      }
+      function openM() { $("ruleForm").reset(); clearErr($("ruleForm")); $("modal").classList.add("is-open"); $("fSensor").focus(); }
       function closeM() { $("modal").classList.remove("is-open"); }
-      $("openRules").onclick = openM; $("openRules2").onclick = openM; $("closeRules").onclick = closeM; $("cancelRules").onclick = closeM;
+      $("openRules").onclick = function () { var c = $("rules").closest(".x-card"); c.scrollIntoView({ behavior: "smooth", block: "center" }); c.style.boxShadow = "0 0 0 2px #6d95ff"; setTimeout(function () { c.style.boxShadow = ""; }, 1600); };
+      $("openRules2").onclick = openM; $("closeRules").onclick = closeM; $("cancelRules").onclick = closeM;
       $("modal").addEventListener("click", function (e) { if (e.target === this) closeM(); });
       $("ruleForm").addEventListener("submit", function (e) {
         e.preventDefault();
+        if (!validate(this)) return;
         var f = new FormData(this), op = f.get("op");
         rules.unshift({ s: f.get("sensor"), op: op, val: f.get("val") + (op === "Δ%" ? "%" : ""), dur: f.get("dur"), ch: f.get("ch"), wo: f.get("wo") });
         drawRules(); closeM(); toast("บันทึกกฎแจ้งเตือนสำหรับ " + f.get("sensor") + " แล้ว");
       });
       document.addEventListener("keydown", function (e) {
         if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") { e.preventDefault(); $("q").focus(); }
-        if (e.key === "Escape") closeM();
+        if (e.key === "Escape") { closeM(); closeD(); }
       });
-      document.querySelectorAll("[data-toast]").forEach(function (b) { b.onclick = function () { toast(b.dataset.toast); }; });
+      // ---- add device / sensor ----
+      function closeD() { $("devModal").classList.remove("is-open"); }
+      $("dMachine").innerHTML = '<option value="">— เลือกเครื่องจักร —</option>' + M.map(function (m, i) { return '<option value="' + i + '">' + m.id + " · " + m.name + "</option>"; }).join("");
+      $("openDev").onclick = function () { $("devForm").reset(); clearErr($("devForm")); $("dTest").textContent = ""; $("devModal").classList.add("is-open"); $("dMachine").focus(); };
+      $("devModal").addEventListener("click", function (e) { if (e.target === this || e.target.closest("[data-dclose]")) closeD(); });
+      $("dKind").addEventListener("change", function () { var o = this.selectedOptions[0], u = $("devForm").elements.unit; if (o && o.dataset.u && !u.value) { u.value = o.dataset.u; u.dispatchEvent(new Event("input", { bubbles: true })); } });
+      $("dTestBtn").onclick = function () {
+        var f = $("devForm"), el = f.elements;
+        if (!validate(f)) return;
+        var box = $("dTest"); box.innerHTML = '<span class="x-tag x-amber">⏳ กำลังเชื่อมต่อ ' + el.proto.value + " · " + el.addr.value + "…</span>";
+        setTimeout(function () {
+          var ok = !/fail|x$/i.test(el.addr.value);
+          box.innerHTML = ok ? '<span class="x-tag x-green">✓ เชื่อมต่อสำเร็จ · ได้รับข้อมูล 3 ข้อความใน 1 วินาที · latency 42 ms</span>' : '<span class="x-tag x-red">✕ เชื่อมต่อไม่สำเร็จ · ไม่พบ Topic/Address</span>';
+        }, 1000);
+      };
+      $("devForm").addEventListener("submit", function (e) {
+        e.preventDefault();
+        var f = this, el = f.elements;
+        if (!validate(f, function () {
+          var tag = el.tag.value.trim().toUpperCase(), dup = M.some(function (m) { return m.sensors.some(function (s) { return s.tag === tag; }); });
+          return dup ? ["tag", "รหัสเซนเซอร์นี้มีอยู่แล้ว"] : null;
+        })) return;
+        var m = M[+el.machine.value], thr = +el.thr.value, v = +(thr * 0.7).toFixed(1);
+        var s = { tag: el.tag.value.trim().toUpperCase(), label: el.kind.value, unit: el.unit.value.trim(), v: v, n: Math.max(0.05, thr * 0.01), thr: thr, d: 1, proto: el.proto.value, addr: el.addr.value.trim() };
+        s.spark = []; s.day = []; for (var i = 0; i < 20; i++) s.spark.push(v + (Math.random() - 0.5) * s.n * 4); for (var h = 0; h < 24; h++) s.day.push(+(v + (Math.random() - 0.5) * s.n * 6).toFixed(1)); s.day[23] = v;
+        m.sensors.push(s);
+        render(); fillSensors(); counts(); closeD();
+        toast("เพิ่มเซนเซอร์ " + s.tag + " ที่ " + m.id + " (" + s.proto + ") แล้ว · เริ่มรับข้อมูล");
+      });
       $("bell").onclick = function () { toast("มี 3 การแจ้งเตือนใหม่ · ล่าสุด TMP-MTR007 86.5°C"); };
       render(); drawRules(); showChart(); setInterval(tick, 2000);
     </script>
