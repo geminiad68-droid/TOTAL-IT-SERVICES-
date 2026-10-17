@@ -137,7 +137,7 @@
         <div class="x-main">
           <header class="x-top x-card">
             <button class="x-btn x-iconbtn x-menu" id="menuBtn" aria-label="เปิดเมนู" data-i="menu"></button>
-            <select class="x-sel" aria-label="เลือกไซต์"><option>ทุกไซต์</option><option>อาคารสำนักงาน</option><option>โรงงานสมุทรสาคร</option></select>
+            <select class="x-sel" id="siteSel" aria-label="เลือกไซต์"><option value="">ทุกไซต์</option><option>โรงงานสมุทรสาคร</option><option>โรงงานระยอง</option></select>
             <label class="x-search"><span data-i="search"></span><input id="q" placeholder="ค้นหาทรัพย์สิน / รอบตรวจนับ…" /><span class="x-kbd">Ctrl + K</span></label>
             <button class="x-btn x-btn--blue">+ แจ้งซ่อม</button>
             <button class="x-btn x-iconbtn" aria-label="การแจ้งเตือน 3 รายการ"><span data-i="bell"></span><span class="x-badge">3</span></button>
@@ -179,10 +179,25 @@
           <div class="x-res" id="scRes" aria-live="polite"><span class="x-meta">เล็งกล้องไปที่ QR / แตะปุ่มเพื่ออ่าน RFID</span></div>
           <div class="x-row"><span class="x-meta">นับแล้ว</span><b id="scCount">0/0</b></div>
           <div class="x-bar"><i id="scBar" style="width:0"></i></div>
-          <button class="x-btn x-btn--cta" id="scBtn"><span data-i="scan"></span>สแกน QR/RFID</button>
+          <button class="x-btn x-btn--cta" id="scBtn" disabled><span data-i="scan"></span>สแกน QR/RFID</button>
+          <div id="scList" style="display:grid;gap:4px;max-height:150px;overflow-y:auto;font-size:12px"></div>
           <button class="x-btn" data-close>ปิด</button>
         </div>
       </div>
+    </div>
+
+    <!-- Code entry -->
+    <div class="x-modal" id="mCode" role="dialog" aria-modal="true" aria-labelledby="codeT">
+      <form class="x-card x-dlg" id="fCode" style="width:min(100%,420px)">
+        <div class="x-row"><h2 id="codeT">สแกน QR / RFID</h2><button type="button" class="x-btn x-iconbtn" data-close aria-label="ปิด">✕</button></div>
+        <div class="x-form" style="grid-template-columns:1fr">
+          <label>รหัสที่อ่านได้ (Asset Tag / QR / RFID EPC) <em>*</em><input class="x-in" name="code" id="codeIn" list="codeList" autocomplete="off" placeholder="เช่น NB-0231" /></label>
+          <datalist id="codeList"></datalist>
+          <label>ตำแหน่งที่พบ<select class="x-sel" name="where" id="codeWhere"><option value="">ตรงตามทะเบียน</option><option>ชั้น 1 · ธุรการ</option><option>ชั้น 2 · HR</option><option>ชั้น 3 · ฝ่ายไอที</option><option>ชั้น 4 · ห้องประชุม</option><option>คลังสินค้า</option></select></label>
+        </div>
+        <p class="x-help" id="codeHint">พิมพ์หรือยิงเครื่องอ่าน แล้วกดบันทึก — ระบบจะทำเครื่องหมายว่านับแล้ว</p>
+        <div class="x-end"><button type="button" class="x-btn" data-close>ยกเลิก</button><button type="button" class="x-btn x-btn--cta" id="codeSave" disabled>บันทึกผลสแกน</button></div>
+      </form>
     </div>
 
     <!-- Reconcile -->
@@ -195,7 +210,7 @@
             <tbody id="recBody"></tbody>
           </table>
         </div>
-        <div class="x-end"><button class="x-btn" data-close>บันทึกร่าง</button><button class="x-btn x-btn--cta" id="closeRound">ปิดรอบ</button></div>
+        <p class="x-meta" id="recMsg" style="color:#fbbf24;min-height:1em"></p><div class="x-end"><button class="x-btn" id="recDraft" disabled>บันทึกร่าง</button><button class="x-btn x-btn--cta" id="closeRound" disabled>ปิดรอบ</button></div>
       </div>
     </div>
 
@@ -204,16 +219,16 @@
       <form class="x-card x-dlg" id="fNew">
         <div class="x-row"><h2 id="newT">สร้างรอบตรวจนับ</h2><button type="button" class="x-btn x-iconbtn" data-close aria-label="ปิด">✕</button></div>
         <div class="x-form">
-          <label class="x-full">ชื่อรอบ <em>*</em><input class="x-in" name="name" required placeholder="เช่น ตรวจนับกลางปี 2570" /></label>
-          <label>ไซต์ <em>*</em><select class="x-sel" name="site" required><option value="">เลือกไซต์</option><option>อาคารสำนักงาน</option><option>โรงงานสมุทรสาคร</option></select></label>
+          <label class="x-full">ชื่อรอบ <em>*</em><input class="x-in" name="name" placeholder="เช่น ตรวจนับกลางปี 2570" /></label>
+          <label>ไซต์ <em>*</em><select class="x-sel" name="site"><option value="">เลือกไซต์</option><option>โรงงานสมุทรสาคร</option><option>โรงงานระยอง</option></select></label>
           <label>อาคาร/พื้นที่<input class="x-in" name="area" placeholder="ทุกพื้นที่" /></label>
           <label class="x-full">หมวดทรัพย์สิน<select class="x-sel" name="cat"><option>ทุกหมวด</option><option>อุปกรณ์ไอที</option><option>อุปกรณ์เครือข่าย</option><option>เครื่องจักร</option><option>เฟอร์นิเจอร์</option></select></label>
-          <label>วันเริ่ม <em>*</em><input class="x-in" type="date" name="start" required /></label>
-          <label>วันสิ้นสุด <em>*</em><input class="x-in" type="date" name="end" required /></label>
-          <div class="x-full" style="display:grid;gap:6px"><span class="x-meta">คณะกรรมการตรวจนับ</span><div class="x-pick" id="pick"></div></div>
+          <label>วันเริ่ม <em>*</em><input class="x-in" type="date" name="start" /></label>
+          <label>วันสิ้นสุด <em>*</em><input class="x-in" type="date" name="end" /></label>
+          <div class="x-full" style="display:grid;gap:6px"><span class="x-meta">คณะกรรมการตรวจนับ <em style="color:#fb7185;font-style:normal">*</em></span><div class="x-pick" id="pick"></div></div>
         </div>
         <p class="x-help">ⓘ ระบบดึงทรัพย์สินที่ใช้งานอยู่ตามเงื่อนไขมาเป็นรายการที่ต้องนับ</p>
-        <div class="x-row"><button type="button" class="x-btn" id="addField">+ เพิ่มฟิลด์</button><div class="x-end"><button type="button" class="x-btn" data-close>ยกเลิก</button><button class="x-btn x-btn--cta">สร้างรอบ</button></div></div>
+        <div class="x-row"><button type="button" class="x-btn" id="addField">+ เพิ่มฟิลด์</button><div class="x-end"><button type="button" class="x-btn" data-close>ยกเลิก</button><button type="button" class="x-btn x-btn--cta" id="newSave">สร้างรอบ</button></div></div>
       </form>
     </div>
 
@@ -237,15 +252,15 @@
       const ST = { "ร่าง": "x-mute", "กำลังตรวจนับ": "x-info", "รอกระทบยอด": "x-warn", "ปิดรอบแล้ว": "x-ok" };
       let rounds = [
         { id: "ST-2569-0002", name: "Q4/2026 อุปกรณ์ไอทีและเครือข่าย", site: "โรงงานสมุทรสาคร", date: "9–23 ต.ค. 2569", done: 0, total: 11, mis: 0, miss: 0, status: "กำลังตรวจนับ", team: ["admin", "ณัฐพล", "ศรีพร"], g: "x-g1" },
-        { id: "ST-2569-0001", name: "ตรวจนับประจำปี — อาคารสำนักงาน", site: "อาคารสำนักงาน", date: "28 ก.ย.–12 ต.ค. 2569", done: 7, total: 12, mis: 1, miss: 1, status: "รอกระทบยอด", team: ["admin", "กมลวรรณ", "นภา"], g: "x-g2" }
+        { id: "ST-2569-0001", name: "ตรวจนับประจำปี — อาคารสำนักงาน", site: "โรงงานระยอง · อาคารสำนักงาน", date: "28 ก.ย.–12 ต.ค. 2569", done: 7, total: 12, mis: 1, miss: 1, status: "รอกระทบยอด", team: ["admin", "กมลวรรณ", "นภา"], g: "x-g2" }
       ];
-      let filter = "", cur = null, pending = 3;
+      let filter = "", cur = null, pending = 3, siteF = "", qF = "";
       const $ = (s) => document.querySelector(s);
       const pct = (r) => (r.total ? Math.round((r.done / r.total) * 100) : 0);
 
       function render() {
         const C = 2 * Math.PI * 32;
-        $("#rounds").innerHTML = rounds.filter((r) => !filter || r.status === filter).map((r) => `
+        $("#rounds").innerHTML = rounds.filter((r) => (!filter || r.status === filter) && (!siteF || r.site.startsWith(siteF)) && (!qF || [r.id, r.name, r.site, ...(r.items || []).map((i) => i.tag + " " + i.name)].join(" ").toLowerCase().includes(qF))).map((r) => `
           <article class="x-card x-round">
             <div class="x-row" style="flex-wrap:nowrap;align-items:flex-start">
               <div style="display:grid;gap:6px;min-width:0"><span class="x-mono">${r.id}</span><h3>${r.name}</h3><p class="x-meta">${r.site} · ${r.date}</p><span><span class="x-tag ${ST[r.status]}">${r.status}</span></span></div>
@@ -262,7 +277,9 @@
       const open = (id) => { $(id).classList.add("is-open"); const f = $(id).querySelector("input, button:not([data-close])"); f && f.focus(); };
       const close = () => document.querySelectorAll(".x-modal.is-open").forEach((m) => m.classList.remove("is-open"));
       document.addEventListener("click", (e) => {
-        if (e.target.closest("[data-close]") || e.target.classList.contains("x-modal")) close();
+        const dc = e.target.closest("[data-close]");
+        if (dc) { const m = dc.closest(".x-modal"); m ? m.classList.remove("is-open") : close(); }
+        else if (e.target.classList.contains("x-modal")) e.target.classList.remove("is-open");
         const s = e.target.closest("[data-scan]"), r = e.target.closest("[data-rec]");
         if (s) { cur = rounds.find((x) => x.id === s.dataset.scan); openScan(); }
         if (r) { cur = rounds.find((x) => x.id === r.dataset.rec); openRec(); }
@@ -278,52 +295,104 @@
       let toastT;
       function toast(t) { $("#toastT").textContent = t; $("#toast").classList.add("is-on"); clearTimeout(toastT); toastT = setTimeout(() => $("#toast").classList.remove("is-on"), 2600); }
 
-      // Scan simulation
-      const FEED = [["NB-0231", "โน้ตบุ๊ก Dell Latitude 5440", "พบถูกที่", "x-ok"], ["PC-0118", "คอมพิวเตอร์ HP ProDesk", "ผิดที่", "x-warn"], ["PRN-021", "เครื่องพิมพ์ Brother HL-L5100", "พบถูกที่", "x-ok"], ["AP-011", "Access Point Aruba 515", "ใหม่", "x-new"], ["SW-CORE01", "Core Switch Cisco C9300", "พบถูกที่", "x-ok"], ["UPS-004", "UPS APC 3kVA", "พบถูกที่", "x-ok"], ["CAM-017", "กล้อง IP Hikvision", "ผิดที่", "x-warn"]];
-      function scanState() { $("#scRound").textContent = cur.id; $("#scCount").textContent = `${cur.done}/${cur.total}`; $("#scBar").style.width = pct(cur) + "%"; $("#scSync").textContent = `ออฟไลน์ · รอซิงก์ ${pending}`; }
-      function openScan() { $("#scRes").innerHTML = '<span class="x-meta">เล็งกล้องไปที่ QR / แตะปุ่มเพื่ออ่าน RFID</span>'; scanState(); open("#mScan"); }
+      // Items to count per round (mock register)
+      const POOL = [["NB-0231", "โน้ตบุ๊ก Dell Latitude 5440", "ชั้น 3 · ฝ่ายไอที"], ["PC-0118", "คอมพิวเตอร์ HP ProDesk", "ชั้น 2 · HR"], ["PRN-021", "เครื่องพิมพ์ Brother HL-L5100", "ชั้น 1 · ธุรการ"], ["SW-CORE01", "Core Switch Cisco C9300", "ห้อง Server"], ["UPS-004", "UPS APC 3kVA", "ห้อง Server"], ["CAM-017", "กล้อง IP Hikvision", "ประตูหน้า"], ["AP-004", "Access Point Aruba 305", "ชั้น 2 · โถง"], ["NB-0207", "โน้ตบุ๊ก Lenovo T14", "ชั้น 3 · ฝ่ายบัญชี"], ["PC-0094", "คอมพิวเตอร์ Dell OptiPlex", "ชั้น 2 · HR"], ["PRJ-006", "โปรเจกเตอร์ Epson EB-X51", "ชั้น 4 · ห้องประชุม"], ["PRN-015", "เครื่องพิมพ์ Canon iR", "ชั้น 1 · ธุรการ"], ["FW-001", "ไฟร์วอลล์ FortiGate 100F", "ห้อง Server"], ["SRV-001", "เซิร์ฟเวอร์ HPE DL380", "ห้อง Server"], ["MON-140", "จอ Dell 24 นิ้ว", "ชั้น 3 · ฝ่ายไอที"], ["TAB-009", "แท็บเล็ต Samsung Tab A9", "คลังสินค้า"], ["PHN-031", "IP Phone Yealink T54W", "ชั้น 2 · HR"], ["NB-0245", "โน้ตบุ๊ก ThinkPad T14", "ชั้น 2 · HR"], ["SCN-004", "เครื่องสแกน Zebra DS2208", "คลังสินค้า"], ["NAS-002", "NAS Synology RS1221", "ห้อง Server"], ["AP-011", "Access Point Aruba 515", "ชั้น 4 · ห้องประชุม"]];
+      const mkItems = (n, off = 0) => Array.from({ length: n }, (_, k) => { const [tag, name, loc] = POOL[(k + off) % POOL.length]; return { tag: k + off >= POOL.length ? tag + "-" + (k + off) : tag, name, loc, counted: false, found: "" }; });
+      rounds.forEach((r, k) => { r.items = mkItems(r.total, k * 7); r.extra = []; r.acted = {}; r.items.slice(0, r.done).forEach((it, i) => { it.counted = true; it.found = i < r.mis ? "ชั้น 4 · ห้องประชุม" : it.loc; }); });
+      rounds[1].rec = REC_SEED();
+      function REC_SEED() { return [["NB-0207", "โน้ตบุ๊ก Lenovo T14", "ชั้น 3 · ฝ่ายบัญชี", "ชั้น 3 · ฝ่ายบัญชี", "พบ"], ["PC-0094", "คอมพิวเตอร์ Dell OptiPlex", "ชั้น 2 · HR", "ชั้น 4 · ห้องประชุม", "ผิดที่"], ["PRJ-006", "โปรเจกเตอร์ Epson EB-X51", "ชั้น 4 · ห้องประชุม", "—", "ไม่พบ"], ["MON-152", "จอ LG 27 นิ้ว", "—", "ชั้น 3 · ฝ่ายไอที", "เกินทะเบียน"], ["PRN-015", "เครื่องพิมพ์ Canon iR", "ชั้น 1 · ธุรการ", "ชั้น 1 · ธุรการ", "พบ"], ["AP-004", "Access Point Aruba 305", "ชั้น 2 · โถง", "ชั้น 2 · โถง", "พบ"]]; }
+      const now = () => new Date().toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" });
+
+      // Scan (phone) + code entry
+      function scanState() {
+        if (!cur) return;
+        $("#scRound").textContent = cur.id; $("#scCount").textContent = `${cur.done}/${cur.total}`; $("#scBar").style.width = pct(cur) + "%"; $("#scSync").textContent = `ออฟไลน์ · รอซิงก์ ${pending}`;
+        $("#scList").innerHTML = cur.items.map((it) => `<div class="x-row" style="flex-wrap:nowrap"><span class="x-mono">${it.tag}</span><span class="x-tag ${it.counted ? (it.found !== it.loc ? "x-warn" : "x-ok") : "x-mute"}">${it.counted ? (it.found !== it.loc ? "ผิดที่" : "นับแล้ว") : "รอนับ"}</span></div>`).join("") + cur.extra.map((x) => `<div class="x-row" style="flex-wrap:nowrap"><span class="x-mono">${x.tag}</span><span class="x-tag x-new">เกินทะเบียน</span></div>`).join("");
+        $("#scBtn").disabled = cur.status === "ปิดรอบแล้ว";
+      }
+      function openScan() { if (!cur) return; $("#scRes").innerHTML = '<span class="x-meta">เล็งกล้องไปที่ QR / แตะปุ่มเพื่ออ่าน RFID</span>'; scanState(); open("#mScan"); }
+      const codeErr = (m) => { const f = $("#fCode"); f.querySelectorAll(".x-ferr").forEach((n) => n.remove()); $("#codeIn").style.borderColor = m ? "#fb7185" : ""; if (m) { $("#codeIn").setAttribute("aria-invalid", "true"); $("#codeIn").insertAdjacentHTML("afterend", `<span class="x-ferr" style="color:#fb7185;font-size:12px">${m}</span>`); $("#codeIn").focus(); $("#codeIn").scrollIntoView({ block: "center" }); } else $("#codeIn").removeAttribute("aria-invalid"); return !m; };
       $("#scBtn").onclick = () => {
-        if (cur.done >= cur.total) { $("#scRes").innerHTML = '<b>นับครบทุกรายการแล้ว</b><span class="x-meta">ส่งกระทบยอดได้เลย</span>'; return; }
-        const [tag, name, st, cls] = FEED[(cur.done + cur.mis) % FEED.length];
-        if (st !== "ใหม่") cur.done++;
-        if (st === "ผิดที่") cur.mis++;
+        if (!cur) { toast("กรุณาเลือกรอบตรวจนับก่อน"); return; }
+        $("#fCode").reset(); codeErr("");
+        $("#codeList").innerHTML = cur.items.filter((it) => !it.counted).map((it) => `<option value="${it.tag}">${it.name}</option>`).join("");
+        const left = cur.items.filter((it) => !it.counted).length;
+        $("#codeHint").textContent = left ? `เหลือรอนับ ${left} รายการ · พิมพ์หรือยิงเครื่องอ่าน แล้วกดบันทึก` : "นับครบทุกรายการแล้ว · สแกนเพิ่มได้หากพบทรัพย์สินเกินทะเบียน";
+        $("#codeSave").disabled = false; open("#mCode");
+      };
+      $("#codeSave").onclick = () => $("#fCode").dispatchEvent(new Event("submit", { cancelable: true }));
+      $("#fCode").onsubmit = (e) => {
+        e.preventDefault(); if (!cur) return;
+        const code = $("#codeIn").value.trim().toUpperCase(), where = $("#codeWhere").value;
+        if (!code) return codeErr("กรุณากรอกหรือสแกนรหัส");
+        if (!/^[A-Z0-9][A-Z0-9-]{2,30}$/.test(code)) return codeErr("รูปแบบรหัสไม่ถูกต้อง");
+        const it = cur.items.find((x) => x.tag === code); let st, cls, name;
+        if (it && it.counted) return codeErr(`${code} ถูกนับแล้วในรอบนี้ (สแกนซ้ำ)`);
+        if (cur.extra.some((x) => x.tag === code)) return codeErr(`${code} บันทึกเป็นเกินทะเบียนแล้ว`);
+        if (it) { it.counted = true; it.found = where || it.loc; cur.done++; name = it.name; if (it.found !== it.loc) { cur.mis++; st = "ผิดที่"; cls = "x-warn"; } else { st = "พบถูกที่"; cls = "x-ok"; } }
+        else { cur.extra.push({ tag: code, found: where || "ไม่ระบุ" }); name = "ไม่อยู่ในรายการของรอบนี้"; st = "เกินทะเบียน"; cls = "x-new"; }
         pending++;
         if (cur.status === "ร่าง") cur.status = "กำลังตรวจนับ";
         if (cur.done >= cur.total) cur.status = "รอกระทบยอด";
-        $("#scRes").innerHTML = `<div class="x-row"><span class="x-mono">${tag}</span><span class="x-tag ${cls}">${st}</span></div><b>${name}</b><span class="x-meta">บันทึกในเครื่องแล้ว · ${new Date().toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" })}</span>`;
+        $("#mCode").classList.remove("is-open");
+        $("#scRes").innerHTML = `<div class="x-row"><span class="x-mono">${code}</span><span class="x-tag ${cls}">${st}</span></div><b>${name}</b><span class="x-meta">บันทึกในเครื่องแล้ว · ${now()}</span>`;
         if (navigator.vibrate) navigator.vibrate(40);
-        scanState(); render();
+        scanState(); render(); toast(`สแกน ${code} · ${st}`);
       };
 
       // Reconcile
-      const REC = [["NB-0207", "โน้ตบุ๊ก Lenovo T14", "ชั้น 3 · ฝ่ายบัญชี", "ชั้น 3 · ฝ่ายบัญชี", "พบ"], ["PC-0094", "คอมพิวเตอร์ Dell OptiPlex", "ชั้น 2 · HR", "ชั้น 4 · ห้องประชุม", "ผิดที่"], ["PRJ-006", "โปรเจกเตอร์ Epson EB-X51", "ชั้น 4 · ห้องประชุม", "—", "ไม่พบ"], ["MON-152", "จอ LG 27 นิ้ว", "—", "ชั้น 3 · ฝ่ายไอที", "เกินทะเบียน"], ["PRN-015", "เครื่องพิมพ์ Canon iR", "ชั้น 1 · ธุรการ", "ชั้น 1 · ธุรการ", "พบ"], ["AP-004", "Access Point Aruba 305", "ชั้น 2 · โถง", "ชั้น 2 · โถง", "พบ"]];
       const RC = { "พบ": ["x-ok", "—"], "ผิดที่": ["x-warn", "ปรับที่ตั้ง"], "ไม่พบ": ["x-bad", "แจ้งสูญหาย"], "เกินทะเบียน": ["x-new", "ขึ้นทะเบียนใหม่"] };
+      const recRows = (r) => r.rec || [...r.items.map((it) => [it.tag, it.name, it.loc, it.counted ? it.found : "—", !it.counted ? "ไม่พบ" : it.found !== it.loc ? "ผิดที่" : "พบ"]), ...r.extra.map((x) => [x.tag, "ไม่ทราบ (สแกนพบ)", "—", x.found, "เกินทะเบียน"])];
+      const openActs = (r) => recRows(r).filter((x) => x[4] !== "พบ" && !r.acted[x[0]]).length;
       function openRec() {
+        if (!cur) return;
         $("#recT").textContent = `กระทบยอด · ${cur.id}`;
         $("#recSub").textContent = `${cur.name} · นับแล้ว ${cur.done}/${cur.total}`;
-        $("#recBody").innerHTML = REC.map(([t, n, a, b, r]) => `<tr><th scope="row"><span class="x-mono">${t}</span></th><td data-label="ชื่อ">${n}</td><td data-label="ตามทะเบียน" class="muted">${a}</td><td data-label="ที่พบ">${b}</td><td data-label="ผล"><span class="x-tag ${RC[r][0]}">${r}</span></td><td data-label="การดำเนินการ">${r === "พบ" ? '<span class="x-meta">ไม่ต้องดำเนินการ</span>' : `<button class="x-btn" data-act>${RC[r][1]}</button>`}</td></tr>`).join("");
+        $("#recMsg").textContent = "";
+        $("#recBody").innerHTML = recRows(cur).map(([t, n, a, b, r]) => `<tr><th scope="row"><span class="x-mono">${t}</span></th><td data-label="ชื่อ">${n}</td><td data-label="ตามทะเบียน" class="muted">${a}</td><td data-label="ที่พบ">${b}</td><td data-label="ผล"><span class="x-tag ${RC[r][0]}">${r}</span></td><td data-label="การดำเนินการ">${r === "พบ" ? '<span class="x-meta">ไม่ต้องดำเนินการ</span>' : cur.acted[t] ? `<span class="x-tag x-ok">${cur.acted[t]} แล้ว</span>` : cur.status === "ปิดรอบแล้ว" ? '<span class="x-meta">—</span>' : `<button class="x-btn" data-act="${RC[r][1]}">${RC[r][1]}</button>`}</td></tr>`).join("") || `<tr><td colspan="6" class="x-meta">ยังไม่มีรายการ</td></tr>`;
         $("#closeRound").disabled = cur.status === "ปิดรอบแล้ว";
+        $("#recDraft").disabled = cur.status === "ปิดรอบแล้ว";
         open("#mRec");
       }
-      $("#recBody").onclick = (e) => { const b = e.target.closest("[data-act]"); if (b) { toast(`${b.textContent} · ${b.closest("tr").querySelector(".x-mono").textContent}`); b.outerHTML = '<span class="x-tag x-ok">ดำเนินการแล้ว</span>'; } };
-      $("#closeRound").onclick = () => { cur.status = "ปิดรอบแล้ว"; close(); render(); toast(`ปิดรอบ ${cur.id} และปรับทะเบียนแล้ว`); };
+      $("#recBody").onclick = (e) => { const b = e.target.closest("[data-act]"); if (!b || !cur) return; const t = b.closest("tr").querySelector(".x-mono").textContent; cur.acted[t] = b.dataset.act; toast(`${b.dataset.act} · ${t}`); b.outerHTML = `<span class="x-tag x-ok">${b.dataset.act} แล้ว</span>`; const n = openActs(cur); $("#recMsg").textContent = n ? `เหลือ ${n} รายการที่ต้องดำเนินการก่อนปิดรอบ` : "ดำเนินการครบทุกรายการแล้ว · ปิดรอบได้"; };
+      $("#recDraft").onclick = () => { if (!cur) return; if (cur.status === "ร่าง" || cur.status === "กำลังตรวจนับ") cur.status = "รอกระทบยอด"; $("#mRec").classList.remove("is-open"); render(); toast(`บันทึกร่างกระทบยอด ${cur.id} แล้ว (ดำเนินการแล้ว ${Object.keys(cur.acted).length} รายการ)`); };
+      $("#closeRound").onclick = () => {
+        if (!cur) return;
+        const n = openActs(cur);
+        if (n) { $("#recMsg").textContent = `ยังปิดรอบไม่ได้ · เหลือ ${n} รายการที่ต้องดำเนินการ (ปรับที่ตั้ง / แจ้งสูญหาย / ขึ้นทะเบียนใหม่)`; $("#recMsg").scrollIntoView({ block: "center" }); const b = $("#recBody [data-act]"); b && b.focus(); return; }
+        cur.status = "ปิดรอบแล้ว"; cur.miss = recRows(cur).filter((x) => x[4] === "ไม่พบ").length; close(); render(); toast(`ปิดรอบ ${cur.id} และปรับทะเบียนแล้ว`);
+      };
 
       // Create
-      $("#pick").innerHTML = USERS.map((u, i) => `<button type="button" aria-pressed="${i === 0}" data-u="${u[0]}">${av(u[0])}${u[0]}</button>`).join("");
+      $("#pick").innerHTML = USERS.map((u) => `<button type="button" aria-pressed="false" data-u="${u[0]}">${av(u[0])}${u[0]}</button>`).join("");
       $("#pick").onclick = (e) => { const b = e.target.closest("button"); if (b) b.setAttribute("aria-pressed", b.getAttribute("aria-pressed") !== "true"); };
-      $("#newBtn").onclick = () => open("#mNew");
+      const fErr = (list) => {
+        const f = $("#fNew"); f.querySelectorAll(".x-ferr").forEach((n) => n.remove()); f.querySelectorAll("[aria-invalid]").forEach((n) => { n.removeAttribute("aria-invalid"); n.style.borderColor = ""; });
+        list.forEach(([el, m]) => { el.setAttribute("aria-invalid", "true"); el.style.borderColor = "#fb7185"; el.insertAdjacentHTML("afterend", `<span class="x-ferr" style="color:#fb7185;font-size:12px">${m}</span>`); });
+        if (list.length) { const t = list[0][0].matches("input,select") ? list[0][0] : list[0][0].querySelector("button"); t && t.focus(); list[0][0].scrollIntoView({ block: "center" }); }
+        return !list.length;
+      };
+      $("#newBtn").onclick = () => { $("#fNew").reset(); $("#pick").querySelectorAll("button").forEach((b) => b.setAttribute("aria-pressed", "false")); fErr([]); open("#mNew"); };
       $("#addField").onclick = () => { const l = document.createElement("label"); l.className = "x-full"; l.innerHTML = 'ฟิลด์เพิ่มเติม<input class="x-in" placeholder="ชื่อฟิลด์ เช่น เลขที่สัญญา" />'; $(".x-form").appendChild(l); l.querySelector("input").focus(); };
       const th = (v) => new Date(v).toLocaleDateString("th-TH", { day: "numeric", month: "short", year: "numeric" });
+      $("#newSave").onclick = () => $("#fNew").dispatchEvent(new Event("submit", { cancelable: true }));
       $("#fNew").onsubmit = (e) => {
         e.preventDefault();
-        const f = new FormData(e.target);
-        if (f.get("end") < f.get("start")) { toast("วันสิ้นสุดต้องไม่ก่อนวันเริ่ม"); return; }
+        const fm = e.target, f = new FormData(fm), g = (k) => String(f.get(k) || "").trim(), L = [];
         const team = [...$("#pick").querySelectorAll('[aria-pressed="true"]')].map((b) => b.dataset.u);
-        const id = `ST-2569-${String(rounds.length + 1).padStart(4, "0")}`;
-        rounds.unshift({ id, name: f.get("name"), site: f.get("site") + (f.get("area") ? ` · ${f.get("area")}` : ""), date: `${th(f.get("start"))} – ${th(f.get("end"))}`, done: 0, total: 8 + Math.floor(Math.random() * 12), mis: 0, miss: 0, status: "ร่าง", team: team.length ? team : ["admin"] });
-        e.target.reset(); close(); filter = ""; $("#tabs").querySelectorAll(".x-tab").forEach((t, i) => t.setAttribute("aria-pressed", i === 0)); render();
-        toast(`สร้างรอบ ${id} แล้ว`);
+        if (!g("name")) L.push([fm.elements["name"], "กรุณากรอกชื่อรอบ"]);
+        if (!g("site")) L.push([fm.elements["site"], "กรุณาเลือกไซต์"]);
+        if (!g("start")) L.push([fm.elements["start"], "กรุณาระบุวันเริ่ม"]);
+        if (!g("end")) L.push([fm.elements["end"], "กรุณาระบุวันสิ้นสุด"]); else if (g("start") && g("end") < g("start")) L.push([fm.elements["end"], "วันสิ้นสุดต้องไม่ก่อนวันเริ่ม"]);
+        if (!team.length) L.push([$("#pick"), "เลือกคณะกรรมการอย่างน้อย 1 คน"]);
+        if (!fErr(L)) return;
+        const id = `ST-2569-${String(rounds.length + 1).padStart(4, "0")}`, total = 8 + Math.floor(Math.random() * 8);
+        rounds.unshift({ id, name: g("name"), site: g("site") + (g("area") ? ` · ${g("area")}` : ""), date: `${th(g("start"))} – ${th(g("end"))}`, done: 0, total, mis: 0, miss: 0, status: "ร่าง", team, g: "x-g1", items: mkItems(total, rounds.length * 5), extra: [], acted: {} });
+        fm.reset(); close(); filter = ""; $("#tabs").querySelectorAll(".x-tab").forEach((t, i) => t.setAttribute("aria-pressed", i === 0)); render();
+        toast(`สร้างรอบ ${id} แล้ว · ${total} รายการที่ต้องนับ`);
       };
+      $("#siteSel").onchange = (e) => { siteF = e.target.value; render(); };
+      $("#q").addEventListener("input", (e) => { qF = e.target.value.trim().toLowerCase(); render(); });
       render();
     </script>
       <script src="../../assets/site-nav.js"></script>
