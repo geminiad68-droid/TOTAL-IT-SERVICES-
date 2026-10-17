@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ITMAINT Asset Register</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap"
+    />
+    <link rel="stylesheet" href="../../assets/hark.css" />
+    <link rel="stylesheet" href="../../assets/hark-hero.css" />
+    <style>
+      :root{--x-bg:#0A1024;--x-card:rgba(15,26,58,.82);--x-card2:#0E1834;--x-line:rgba(99,179,255,.18);--x-tx:#E6EEFF;--x-mut:#93A6CC;--x-blue:#3B82F6;--x-pri:linear-gradient(135deg,#D9480F,#C2185B);--x-font:"Geist","Noto Sans Thai",system-ui,sans-serif}
+      html,body{background:var(--x-bg);color:var(--x-tx)}
+      body{font-family:var(--x-font);font-size:14px}
+      .x-app{max-width:none;padding:0;margin:0;display:grid;grid-template-columns:260px 1fr;min-height:100vh;font-family:var(--x-font);color:var(--x-tx);
+        background:radial-gradient(900px 500px at 70% -10%,rgba(59,130,246,.18),transparent 60%),radial-gradient(700px 400px at 0% 100%,rgba(168,85,247,.10),transparent 60%),
+        linear-gradient(rgba(99,179,255,.045) 1px,transparent 1px) 0 0/40px 40px,linear-gradient(90deg,rgba(99,179,255,.045) 1px,transparent 1px) 0 0/40px 40px,var(--x-bg)}
+      .x-app *{box-sizing:border-box}
+      .x-app button,.x-app input,.x-app select,.x-app textarea{font:inherit;color:inherit}
+      /* sidebar */
+      .x-side{position:sticky;top:0;height:100vh;overflow-y:auto;background:rgba(8,14,34,.92);border-right:1px solid var(--x-line);padding:18px 12px 24px}
+      .x-logo{display:flex;gap:10px;align-items:center;padding:4px 8px 18px}
+      .x-logo b{display:block;font-size:20px;letter-spacing:.3px}
+      .x-logo small{color:var(--x-mut);font-size:12px}
+      .x-grp{font-size:12px;color:var(--x-mut);margin:14px 10px 6px;letter-spacing:.4px}
+      .x-nav a{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:10px;color:#C9D6F2;text-decoration:none;font-size:13.5px;min-height:38px}
+      .x-nav a:hover{background:rgba(99,179,255,.08)}
+      .x-nav a.on{background:linear-gradient(90deg,#2563EB,#1E40AF);color:#fff;box-shadow:0 6px 18px rgba(37,99,235,.35)}
+      .x-nav svg{width:18px;height:18px;flex:none;opacity:.9}
+      .x-nav .x-bdg{margin-left:auto;background:#E11D48;color:#fff;border-radius:99px;font-size:12px;padding:1px 7px}
+      /* top */
+      .x-main{min-width:0;display:flex;flex-direction:column}
+      .x-top{position:sticky;top:0;z-index:20;display:flex;gap:12px;align-items:center;padding:12px 24px;background:rgba(10,16,36,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--x-line)}
+      .x-in,.x-sel{background:var(--x-card2);border:1px solid var(--x-line);border-radius:10px;height:40px;padding:0 12px;color:var(--x-tx);outline:none}
+      .x-in:focus,.x-sel:focus{border-color:#3B82F6;box-shadow:0 0 0 3px rgba(59,130,246,.25)}
+      .x-sel option{background:#0E1834}
+      .x-search{flex:1;max-width:520px;position:relative}
+      .x-search .x-in{width:100%;padding-left:38px}
+      .x-search svg{position:absolute;left:12px;top:11px;width:18px;opacity:.7}
+      .x-kbd{position:absolute;right:8px;top:8px;font-size:12px;border:1px solid var(--x-line);border-radius:6px;padding:2px 6px;color:var(--x-mut)}
+      .x-sp{flex:1}
+      .x-btn{display:inline-flex;align-items:center;gap:6px;height:40px;padding:0 14px;border-radius:10px;border:1px solid var(--x-line);background:rgba(99,179,255,.06);cursor:pointer;font-weight:500;white-space:nowrap}
+      .x-btn:hover{background:rgba(99,179,255,.14)}
+      .x-btn.pri{background:var(--x-pri);border-color:transparent;color:#fff;box-shadow:0 6px 18px rgba(217,72,15,.3)}
+      .x-btn.pri:hover{filter:brightness(1.08)}
+      .x-btn svg{width:16px;height:16px}
+      .x-ico{width:40px;height:40px;border-radius:10px;border:1px solid var(--x-line);background:transparent;display:grid;place-items:center;cursor:pointer;position:relative}
+      .x-ico svg{width:20px}
+      .x-ico i{position:absolute;top:4px;right:4px;background:#E11D48;font-style:normal;font-size:12px;border-radius:99px;padding:0 5px;line-height:16px}
+      .x-av{display:flex;align-items:center;gap:8px;font-size:13px}
+      .x-av span{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#6366F1,#06B6D4);display:grid;place-items:center;font-weight:600}
+      /* content */
+      .x-wrap{padding:18px 24px 40px}
+      .x-crumb{font-size:12.5px;color:var(--x-mut)}
+      .x-crumb a{color:var(--x-mut);text-decoration:none}
+      .x-head{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;justify-content:space-between;margin:6px 0 18px}
+      .x-head h1{font-size:26px;margin:0;font-weight:700}
+      .x-head p{margin:4px 0 0;color:var(--x-mut);font-size:13px}
+      .x-acts{display:flex;gap:8px;flex-wrap:wrap}
+      .x-card{background:var(--x-card);border:1px solid var(--x-line);border-radius:16px}
+      .x-kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:16px}
+      .x-kpi{padding:14px;display:flex;gap:12px;align-items:center}
+      .x-tile{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;flex:none;box-shadow:inset 0 1px 0 rgba(255,255,255,.25)}
+      .x-tile svg{width:22px;color:#fff}
+      .x-kpi small{display:block;color:var(--x-mut);font-size:12px}
+      .x-kpi b{font-size:22px;font-weight:700}
+      .x-kpi b em{font-style:normal;font-size:12px;color:var(--x-mut);font-weight:400;margin-left:3px}
+      .x-chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+      .x-cat{height:36px;padding:0 14px;border-radius:99px;border:1px solid var(--x-line);background:rgba(99,179,255,.05);cursor:pointer;font-size:13px}
+      .x-cat.on{background:rgba(59,130,246,.22);border-color:#3B82F6;color:#fff}
+      .x-cat em{font-style:normal;color:var(--x-mut);margin-left:4px;font-size:12px}
+      .x-filters{display:grid;grid-template-columns:2fr repeat(4,1fr) auto;gap:8px;padding:12px;border-bottom:1px solid var(--x-line)}
+      .x-bulk{display:none;align-items:center;gap:10px;padding:10px 14px;background:rgba(59,130,246,.12);border-bottom:1px solid var(--x-line);font-size:13px}
+      .x-bulk.show{display:flex}
+      .x-bulk .x-btn{height:32px;font-size:12.5px}
+      .x-tbl{width:100%;border-collapse:collapse;font-size:13px}
+      .x-tbl th{text-align:left;color:var(--x-mut);font-weight:500;font-size:12px;padding:10px 12px;border-bottom:1px solid var(--x-line);white-space:nowrap}
+      .x-tbl td{padding:10px 12px;border-bottom:1px solid rgba(99,179,255,.08);vertical-align:middle}
+      .x-tbl tbody tr{cursor:pointer}
+      .x-tbl tbody tr:hover{background:rgba(99,179,255,.06)}
+      .x-tbl tbody tr.sel{background:rgba(59,130,246,.12)}
+      .x-tbl .r{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+      .x-tbl input[type=checkbox]{width:16px;height:16px;accent-color:#3B82F6}
+      .x-tag{font-family:"Geist Mono",monospace;font-size:12.5px;color:#7DD3FC}
+      .x-nm{font-weight:600;margin-top:2px}
+      .x-sub{color:var(--x-mut);font-size:12px}
+      .x-b{display:inline-block;font-size:12px;line-height:18px;padding:0 6px;border-radius:6px;margin-left:4px;font-weight:600}
+      .x-b.A{background:rgba(239,68,68,.18);color:#FCA5A5}.x-b.B{background:rgba(245,158,11,.18);color:#FCD34D}.x-b.C{background:rgba(59,130,246,.18);color:#93C5FD}.x-b.D{background:rgba(148,163,184,.18);color:#CBD5E1}
+      .x-b.wo{background:rgba(217,72,15,.2);color:#FDBA74}
+      .x-st{display:inline-flex;align-items:center;gap:6px;font-size:12px;padding:3px 10px;border-radius:99px;white-space:nowrap;border:1px solid}
+      .x-st::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+      .x-rowact{display:flex;gap:4px}
+      .x-rowact button{width:32px;height:32px;border-radius:8px;border:1px solid var(--x-line);background:transparent;cursor:pointer;display:grid;place-items:center}
+      .x-rowact button:hover{background:rgba(99,179,255,.14)}
+      .x-rowact svg{width:16px}
+      .x-tfoot{display:flex;justify-content:space-between;padding:12px 14px;color:var(--x-mut);font-size:12.5px}
+      .x-empty{text-align:center;padding:40px;color:var(--x-mut)}
+      .x-ring{display:inline-flex;align-items:center;gap:6px;font-weight:600;font-size:12.5px}
+      /* drawer + modal */
+      .x-scrim{position:fixed;inset:0;background:rgba(3,6,18,.6);backdrop-filter:blur(3px);z-index:40;opacity:0;pointer-events:none;transition:opacity .2s}
+      .x-scrim.show{opacity:1;pointer-events:auto}
+      .x-drawer{position:fixed;top:0;right:0;height:100vh;width:min(620px,100vw);z-index:50;background:#0B1430;border-left:1px solid var(--x-line);transform:translateX(100%);transition:transform .25s var(--ease-out,ease);display:flex;flex-direction:column}
+      .x-drawer.show{transform:none}
+      .x-dh{padding:18px 20px;border-bottom:1px solid var(--x-line);display:flex;gap:14px;align-items:center}
+      .x-dh h2{margin:2px 0 6px;font-size:19px}
+      .x-qr{background:#fff;border-radius:8px;padding:5px;flex:none}
+      .x-tabs{display:flex;gap:2px;overflow-x:auto;padding:0 12px;border-bottom:1px solid var(--x-line)}
+      .x-tabs button{background:none;border:0;border-bottom:2px solid transparent;padding:12px 10px;cursor:pointer;color:var(--x-mut);white-space:nowrap;font-size:13px}
+      .x-tabs button.on{color:#fff;border-color:#3B82F6}
+      .x-db{padding:18px 20px;overflow-y:auto;flex:1}
+      .x-dl{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+      .x-dl div{background:var(--x-card2);border:1px solid var(--x-line);border-radius:12px;padding:10px 12px}
+      .x-dl dt{font-size:12px;color:var(--x-mut)}.x-dl dd{margin:2px 0 0;font-weight:500}
+      .x-list{list-style:none;margin:0;padding:0}
+      .x-list li{display:flex;justify-content:space-between;gap:10px;padding:12px;border:1px solid var(--x-line);border-radius:12px;margin-bottom:8px;background:var(--x-card2)}
+      .x-modal{position:fixed;z-index:60;left:50%;top:50%;width:min(860px,96vw);max-height:92vh;transform:translate(-50%,-48%) scale(.98);opacity:0;pointer-events:none;transition:.2s;background:#0B1430;border:1px solid var(--x-line);border-radius:16px;display:flex;flex-direction:column;box-shadow:0 30px 80px rgba(0,0,0,.5)}
+      .x-modal.show{opacity:1;pointer-events:auto;transform:translate(-50%,-50%)}
+      .x-mh{padding:16px 20px;border-bottom:1px solid var(--x-line);display:flex;justify-content:space-between;align-items:center}
+      .x-mh h2{margin:0;font-size:18px}
+      .x-stepper{display:flex;gap:8px;padding:14px 20px;border-bottom:1px solid var(--x-line)}
+      .x-step{flex:1;display:flex;align-items:center;gap:8px;font-size:13px;color:var(--x-mut)}
+      .x-step b{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--x-line);flex:none}
+      .x-step.on{color:#fff}.x-step.on b{background:var(--x-pri);border-color:transparent}
+      .x-step.done b{background:#16A34A;border-color:transparent}
+      .x-step::after{content:"";flex:1;height:1px;background:var(--x-line)}
+      .x-step:last-child::after{display:none}
+      .x-mb{padding:18px 20px;overflow-y:auto;flex:1}
+      .x-form{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+      .x-form label{display:flex;flex-direction:column;gap:4px;font-size:12.5px;color:var(--x-mut)}
+      .x-form label.w2{grid-column:span 2}.x-form label.w3{grid-column:1/-1}
+      .x-form .x-in,.x-form .x-sel{width:100%}
+      .x-form textarea.x-in{height:80px;padding:10px}
+      .x-req{color:#FB7185}
+      .x-inrow{display:flex;gap:6px}.x-inrow .x-in{flex:1}
+      .x-inrow .x-btn{height:40px;font-size:12px;padding:0 10px}
+      .x-cf{grid-column:1/-1;border:1px dashed var(--x-line);border-radius:12px;padding:14px}
+      .x-cf h3{margin:0 0 10px;font-size:14px;display:flex;justify-content:space-between;align-items:center}
+      .x-cfrow{display:grid;grid-template-columns:1fr 160px 1fr 40px;gap:8px;margin-bottom:8px}
+      .x-tog{display:flex;align-items:center;gap:10px;color:var(--x-tx)!important;flex-direction:row!important}
+      .x-sw{width:44px;height:24px;border-radius:99px;background:#334155;position:relative;border:0;cursor:pointer;flex:none}
+      .x-sw::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:.2s}
+      .x-sw[aria-checked=true]{background:#2563EB}.x-sw[aria-checked=true]::after{left:23px}
+      .x-label{background:#fff;color:#0A1024;border-radius:12px;padding:14px;display:flex;gap:14px;align-items:center;max-width:380px}
+      .x-label b{font-family:"Geist Mono",monospace;font-size:16px}
+      .x-mf{padding:14px 20px;border-top:1px solid var(--x-line);display:flex;gap:8px;justify-content:flex-end}
+      .x-err{color:#FB7185;font-size:12.5px;margin-right:auto;align-self:center}
+      .x-toast{position:fixed;bottom:24px;left:50%;transform:translate(-50%,20px);opacity:0;z-index:80;background:#0F1A3A;border:1px solid rgba(34,197,94,.5);border-radius:12px;padding:12px 18px;transition:.25s;pointer-events:none;display:flex;gap:8px;align-items:center}
+      .x-toast.show{opacity:1;transform:translate(-50%,0)}
+      /* contrast + tap fixes */
+      .x-app .x-btn{background:#12204A;color:var(--x-tx);min-height:44px;height:44px}
+      .x-app .x-btn:hover{background:#1A2C5C}
+      .x-app .x-btn.pri{background:var(--x-pri);color:#fff}
+      .x-ico{width:44px;height:44px;color:var(--x-tx)}
+      .x-ico i{background:#BE123C;color:#fff}
+      .x-cat{height:44px;background:#0F1A3A;color:var(--x-tx)}
+      .x-cat em{color:#B4C3E0}
+      .x-cat.on{background:#1D4ED8;border-color:#60A5FA}
+      .x-cat.on em{color:#DBEAFE}
+      .x-b.A{background:#4C1D24;color:#FCA5A5}.x-b.B{background:#4A3410;color:#FCD34D}.x-b.C{background:#1E3A6E;color:#DBEAFE}.x-b.D{background:#334155;color:#F1F5F9}.x-b.wo{background:#5A2410;color:#FDBA74}
+      .x-st{background:#0F1A3A!important}
+      .x-rowact button{width:44px;height:44px;color:var(--x-tx)}
+      .x-crumb a{display:inline-flex;align-items:center;min-height:44px;min-width:44px}
+      .x-in,.x-sel{min-width:0;min-height:44px}
+      @media (max-width:1280px){.x-kpis{grid-template-columns:repeat(3,1fr)}.x-filters{grid-template-columns:1fr 1fr 1fr}}
+      @media (max-width:900px){.x-app{grid-template-columns:1fr}.x-side{display:none}.x-tblwrap{overflow-x:auto}.x-form{grid-template-columns:1fr 1fr}.x-top .x-sel,.x-av b{display:none}}
+      @media (max-width:600px){.x-top{padding:10px 12px;gap:8px}.x-kbd,.x-av{display:none}.x-wrap{padding:14px 12px 32px}.x-kpis{grid-template-columns:1fr 1fr}.x-filters{grid-template-columns:1fr}.x-form{grid-template-columns:1fr}.x-form label.w2{grid-column:auto}.x-cfrow{grid-template-columns:1fr 1fr}.x-step span{display:none}.x-dl{grid-template-columns:1fr}.x-dh{flex-wrap:wrap}.x-mf{flex-wrap:wrap}.x-err{flex-basis:100%}}
+    </style>
+  </head>
+  <body>
+    <div class="page x-app" id="top">
+      <aside class="x-side" aria-label="เมนูหลัก">
+        <div class="x-logo">
+          <svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#38BDF8"/><stop offset="1" stop-color="#6366F1"/></linearGradient></defs><path d="M20 2l16 9v18l-16 9-16-9V11z" fill="url(#lg)"/><path d="M14 13h12v4h-4v10h-4V17h-4z" fill="#fff"/></svg>
+          <div><b>IT&amp;MAINT</b><small>Smart Asset · Smart Work</small></div>
+        </div>
+        <nav class="x-nav" id="sidenav"></nav>
+      </aside>
+      <div class="x-main">
+        <header class="x-top">
+          <select class="x-sel" id="siteTop" aria-label="เลือกไซต์"><option value="">ทุกไซต์</option><option>โรงงานสมุทรสาคร</option><option>โรงงานระยอง</option></select>
+          <div class="x-search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input class="x-in" id="q" placeholder="ค้นหา Tag / ชื่อ / S/N / เลขครุภัณฑ์ / RFID / ผู้ถือครอง" aria-label="ค้นหา" /><span class="x-kbd">Ctrl + K</span></div>
+          <div class="x-sp"></div>
+          <button class="x-btn pri" id="btnRepair">+ แจ้งซ่อม</button>
+          <button class="x-ico" aria-label="การแจ้งเตือน" data-toast="มีการแจ้งเตือนใหม่ 5 รายการ: WO ใกล้ครบกำหนด 3, PM ถึงรอบ 2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10 21h4"/></svg><i>5</i></button>
+          <div class="x-av"><span>A</span><b>Admin</b></div>
+        </header>
+        <main class="x-wrap">
+          <nav class="x-crumb" aria-label="breadcrumb"><a href="#">หน้าแรก</a> / <a href="#">ทรัพย์สิน</a> / <span style="color:#E6EEFF">ทะเบียนทรัพย์สินกลาง</span></nav>
+          <div class="x-head">
+            <div><h1>ทะเบียนทรัพย์สินกลาง</h1><p>Central Asset Register · ข้อมูล ณ <span id="today"></span></p></div>
+            <div class="x-acts">
+              <button class="x-btn" data-toast="เริ่มนำเข้าไฟล์ Excel/CSV">นำเข้า</button>
+              <button class="x-btn" data-toast="ส่งออกรายการเป็น Excel แล้ว">ส่งออก</button>
+              <button class="x-btn" data-toast="ส่งป้าย QR/Barcode ไปยังเครื่องพิมพ์">พิมพ์ป้าย</button>
+              <button class="x-btn pri" id="btnAdd">+ เพิ่มทรัพย์สิน</button>
+            </div>
+          </div>
+          <section class="x-kpis" id="kpis"></section>
+          <div class="x-chips" id="cats" role="tablist" aria-label="หมวดทรัพย์สิน"></div>
+          <section class="x-card">
+            <div class="x-filters">
+              <input class="x-in" id="fq" placeholder="ค้นหา Tag / ชื่อ / S/N / เลขครุภัณฑ์ / RFID / ผู้ถือครอง" aria-label="ค้นหาในตาราง" />
+              <select class="x-sel" id="fcat" aria-label="หมวด"></select>
+              <select class="x-sel" id="fsite" aria-label="ไซต์"><option value="">ทุกไซต์</option><option>โรงงานสมุทรสาคร</option><option>โรงงานระยอง</option></select>
+              <select class="x-sel" id="fst" aria-label="สถานะ"></select>
+              <select class="x-sel" id="fcr" aria-label="ความสำคัญ"></select>
+              <button class="x-btn" id="fclear">ล้างตัวกรอง</button>
+            </div>
+            <div class="x-bulk" id="bulk"><b id="bulkN"></b><button class="x-btn" data-toast="ส่งพิมพ์ป้ายรายการที่เลือกแล้ว">พิมพ์ป้าย</button><button class="x-btn" data-toast="สร้างคำขอโอนย้ายแล้ว">โอนย้าย</button><button class="x-btn" data-toast="ส่งออกรายการที่เลือกแล้ว">ส่งออก</button><button class="x-btn" id="bulkClear">ยกเลิกเลือก</button></div>
+            <div class="x-tblwrap">
+              <table class="x-tbl">
+                <thead><tr><th><input type="checkbox" id="chkAll" aria-label="เลือกทั้งหมด" /></th><th>Asset Tag / ชื่อ</th><th>หมวด</th><th>ที่ตั้ง / ผู้รับผิดชอบ</th><th class="r">ราคาทุน (บาท)</th><th class="r">NBV (บาท)</th><th>Health</th><th>สถานะ</th><th></th></tr></thead>
+                <tbody id="rows"></tbody>
+              </table>
+            </div>
+            <div class="x-tfoot"><span id="count"></span><span>ราคาทุนรวม (ที่แสดง) <b id="sumCost" style="color:#E6EEFF"></b> · NBV <b id="sumNbv" style="color:#E6EEFF"></b></span></div>
+          </section>
+        </main>
+      </div>
+
+      <div class="x-scrim" id="scrim"></div>
+      <aside class="x-drawer" id="drawer" aria-label="Asset 360" aria-hidden="true">
+        <div class="x-dh" id="dHead"></div>
+        <div class="x-tabs" id="dTabs" role="tablist"></div>
+        <div class="x-db" id="dBody"></div>
+      </aside>
+
+      <section class="x-modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+        <div class="x-mh"><h2 id="mTitle">เพิ่มทรัพย์สินใหม่</h2><button class="x-ico" id="mClose" aria-label="ปิด">✕</button></div>
+        <div class="x-stepper" id="stepper"></div>
+        <div class="x-mb" id="mBody"></div>
+        <div class="x-mf"><span class="x-err" id="mErr"></span><button class="x-btn" id="mBack">ย้อนกลับ</button><button class="x-btn" id="mNext">ถัดไป</button><button class="x-btn pri" id="mSave">บันทึก</button></div>
+      </section>
+      <div class="x-toast" id="toast" role="status"></div>
+    </div>
+    <script src="../../assets/hark.js"></script>
+    <script>
+const $=s=>document.querySelector(s);
+const I={grid:'<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',tv:'<rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8"/>',cal:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',box:'<path d="M21 8l-9-5-9 5v8l9 5 9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/>',qr:'<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3h-3zM20 14v7h-6"/>',coin:'<circle cx="12" cy="12" r="9"/><path d="M15 9h-4a2 2 0 0 0 0 4h2a2 2 0 0 1 0 4H9M12 6v2M12 16v2"/>',swap:'<path d="M7 7h13l-4-4M17 17H4l4 4"/>',lap:'<rect x="4" y="5" width="16" height="11" rx="1.5"/><path d="M2 19h20"/>',tree:'<rect x="9" y="2" width="6" height="5" rx="1"/><rect x="2" y="17" width="6" height="5" rx="1"/><rect x="16" y="17" width="6" height="5" rx="1"/><path d="M12 7v5M5 17v-5h14v5"/>',pin:'<path d="M12 22s7-7 7-12a7 7 0 1 0-14 0c0 5 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/>',check:'<path d="M9 11l3 3 8-8"/><path d="M20 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>',img:'<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-9 9"/>',wrench:'<path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.4-.6-.6-2.4z"/>',doc:'<path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/>',list:'<path d="M9 6h12M9 12h12M9 18h12M4 6h.01M4 12h.01M4 18h.01"/>',wave:'<path d="M3 12h4l3-8 4 16 3-8h4"/>',gauge:'<path d="M12 14l4-4"/><path d="M3.3 17a9 9 0 1 1 17.4 0"/>',stack:'<path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/>',cart:'<circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M2 3h3l2.5 12h12L22 7H6"/>',chart:'<path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/>',search:'<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>',user:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',shield:'<path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6z"/>',db:'<ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/>',cog:'<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/>',bell:'<path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10 21h4"/>',code:'<path d="M8 6l-6 6 6 6M16 6l6 6-6 6"/>',log:'<path d="M12 8v4l3 2"/><circle cx="12" cy="12" r="9"/>',eye:'<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',edit:'<path d="M4 20h4L19 9l-4-4L4 16z"/>',ok:'<path d="M20 6L9 17l-5-5"/>',stop:'<circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16h.01"/>'};
+const ic=(k,w)=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"${w?` width="${w}"`:''}>${I[k]}</svg>`;
+const NAV=[['ภาพรวม',[['grid','Command Center'],['tv','จอแสดงผล TV'],['cal','ปฏิทินรวม']]],['ทรัพย์สิน',[['box','ทะเบียนทรัพย์สินกลาง',0,1],['qr','พิมพ์ป้าย QR/Barcode'],['coin','สินทรัพย์ถาวร & ค่าเสื่อม'],['swap','โอนย้าย/ยืม-คืน/จำหน่าย'],['lap','IT Asset & License'],['tree','EAM ลำดับชั้น/Lifecycle'],['pin','ติดตามตำแหน่ง'],['check','ตรวจนับทรัพย์สิน'],['img','คลังดิจิทัล (DAM)']]],['ซ่อมบำรุง',[['wrench','ใบสั่งงาน (WO)',18],['doc','ใบแจ้งซ่อม'],['list','แผน PM & เช็คลิสต์',6],['wave','Predictive/IoT'],['gauge','สอบเทียบเครื่องมือ']]],['คลัง & จัดซื้อ',[['stack','คลังอะไหล่',3],['cart','จัดซื้อ PR/PO & สัญญา'],['coin','ต้นทุน & งบประมาณ']]],['วิเคราะห์',[['search','RCA/FMEA'],['chart','รายงาน & KPI']]],['ระบบ',[['user','ผู้ใช้งาน'],['shield','บทบาท & สิทธิ์ (RBAC)'],['db','ข้อมูลหลัก'],['cog','ตั้งค่าระบบ'],['bell','การแจ้งเตือน & Cron'],['code','REST API & Token'],['log','Audit Log']]]];
+$('#sidenav').innerHTML=NAV.map(([g,items])=>`<div class="x-grp">${g}</div>`+items.map(([k,t,b,on])=>`<a href="#"${on?' class="on" aria-current="page"':''}>${ic(k)}<span>${t}</span>${b?`<span class="x-bdg">${b}</span>`:''}</a>`).join('')).join('');
+
+const TH_M=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+const thd=s=>{if(!s)return '-';const [y,m,d]=s.split('-').map(Number);return `${d} ${TH_M[m-1]} ${y+543}`;};
+$('#today').textContent='18 พ.ค. 2569';
+const CATS=['เครื่องจักร','IT & เครือข่าย','ยานพาหนะ','อาคาร/สาธารณูปโภค','เครื่องมือวัด','สำนักงาน','ซอฟต์แวร์'];
+const STS={'วางแผน':'#94A3B8','รับเข้า/รอติดตั้ง':'#38BDF8','ใช้งาน':'#22C55E','ซ่อม/ปรับปรุง':'#F59E0B','ว่าง/สำรอง':'#A78BFA','รอจำหน่าย':'#FB923C','จำหน่ายแล้ว':'#A3B1C6','สูญหาย':'#FB7185','ถูกขโมย':'#F472B6'};
+const CR={A:'A วิกฤต',B:'B สำคัญ',C:'C ทั่วไป',D:'D สนับสนุน'};
+const SAK='โรงงานสมุทรสาคร',RAY='โรงงานระยอง';
+// tag,name,mfr,model,cat,site,loc,owner,cost,nbv,health,status,crit,wo,sn,fa,rfid,buy,life
+let A=[
+['CNC-001','เครื่อง CNC Mazak','Mazak','VCN-530C','เครื่องจักร',SAK,'อาคาร A · ไลน์ 1','สมชาย ใจดี',6850000,3920000,88,'ใช้งาน','A',0,'MZ530-88211','FA-2563-0012','E28011700000020A1B2C0001','2563-03-15',120],
+['CONV-03','สายพานลำเลียง','Interroll','RollerDrive EC5000','เครื่องจักร',SAK,'อาคาร A · ไลน์ 2','วิชัย ทองดี',1250000,540000,55,'ซ่อม/ปรับปรุง','A',1,'IR-EC5-4410','FA-2562-0031','E28011700000020A1B2C0002','2562-06-01',120],
+['MTR-007','มอเตอร์ ABB 15kW','ABB','M3BP 160MLA','เครื่องจักร',RAY,'อาคาร C · ปั๊มหลัก','ประเสริฐ มั่นคง',185000,92000,61,'ใช้งาน','B',1,'ABB-3GBP-77120','FA-2564-0107','E28011700000020A1B2C0003','2564-01-20',120],
+['PMP-11','ปั๊มน้ำ Grundfos','Grundfos','CR 32-4','อาคาร/สาธารณูปโภค',RAY,'ห้องปั๊ม B1','ประเสริฐ มั่นคง',420000,265000,79,'ใช้งาน','B',0,'GF-CR32-90311','FA-2565-0044','E28011700000020A1B2C0004','2565-02-10',120],
+['AHU-05','เครื่องส่งลมเย็น Daikin','Daikin','AHU-DX 20RT','อาคาร/สาธารณูปโภค',SAK,'อาคาร B · ชั้น 3','อนุชา แสงทอง',980000,610000,84,'ใช้งาน','B',0,'DK-AHU-55102','FA-2565-0061','E28011700000020A1B2C0005','2565-07-01',180],
+['CMP-02','ปั๊มลม Atlas Copco','Atlas Copco','GA 37 VSD+','เครื่องจักร',SAK,'ห้องคอมเพรสเซอร์','วิชัย ทองดี',1650000,880000,72,'ซ่อม/ปรับปรุง','A',1,'AC-GA37-12077','FA-2564-0019','E28011700000020A1B2C0006','2564-04-05',120],
+['FL-02','รถโฟล์คลิฟท์ Toyota','Toyota','8FBE20','ยานพาหนะ',RAY,'คลังสินค้า R2','ธนพล ศรีสุข',890000,410000,76,'ใช้งาน','B',0,'TY-8FBE-30219','FA-2563-0088','E28011700000020A1B2C0007','2563-09-12',96],
+['VH-001','รถกระบะ Isuzu D-Max','Isuzu','D-Max Spark 1.9','ยานพาหนะ',SAK,'ลานจอดรถ','กิตติ พรหมมา',720000,380000,90,'ใช้งาน','C',0,'MP1TFR85JPT0012','FA-2565-0102','E28011700000020A1B2C0008','2565-11-01',60],
+['SRV-001','เซิร์ฟเวอร์ HPE ProLiant DL380','HPE','ProLiant DL380 Gen10','IT & เครือข่าย',SAK,'ห้อง Data Center','ณัฐพงษ์ ไอที',650000,210000,67,'ใช้งาน','A',1,'CZJ2210ABC','FA-2564-0201','E28011700000020A1B2C0009','2564-02-01',60],
+['FW-001','ไฟร์วอลล์ FortiGate 100F','Fortinet','FortiGate 100F','IT & เครือข่าย',SAK,'ห้อง Data Center','ณัฐพงษ์ ไอที',185000,96000,93,'ใช้งาน','A',0,'FG100FTK22001','FA-2566-0011','E28011700000020A1B2C0010','2566-01-15',60],
+['GAU-011','เกจวัดแรงดัน WIKA','WIKA','232.50 0-16 bar','เครื่องมือวัด',RAY,'ไลน์ไอน้ำ R1','สุดา วัดผล',8500,4200,81,'ใช้งาน','C',0,'WK-23250-0111','FA-2566-0310','E28011700000020A1B2C0011','2566-05-20',60],
+['NB-0231','Notebook Dell Latitude 5440','Dell','Latitude 5440','สำนักงาน',SAK,'ฝ่ายบัญชี · ชั้น 2','มาลี บัญชี',38900,25900,95,'ว่าง/สำรอง','D',0,'DL5440-7HX2Q3','FA-2567-0231','E28011700000020A1B2C0012','2567-08-01',48]
+].map(r=>({tag:r[0],name:r[1],mfr:r[2],model:r[3],cat:r[4],site:r[5],loc:r[6],owner:r[7],cost:r[8],nbv:r[9],health:r[10],status:r[11],crit:r[12],wo:r[13],sn:r[14],fa:r[15],rfid:r[16],buy:r[17],life:r[18],backup:'ทีมซ่อมบำรุงกะ B',warr:'WR-'+r[0]+'-2569',method:'เส้นตรง',salvage:Math.round(r[8]*.05),custom:[]}));
+const KPI={total:32,active:26,down:3,cost:24.84,nbv:12.99};
+
+const fmt=n=>Number(n).toLocaleString('th-TH');
+const hcol=h=>h>=80?'#22C55E':h>=65?'#F59E0B':'#F43F5E';
+const ring=(h,s=30,w=3.5)=>{const r=(s-w)/2,c=2*Math.PI*r;return `<svg width="${s}" height="${s}" viewBox="0 0 ${s} ${s}" aria-hidden="true"><circle cx="${s/2}" cy="${s/2}" r="${r}" fill="none" stroke="rgba(99,179,255,.15)" stroke-width="${w}"/><circle cx="${s/2}" cy="${s/2}" r="${r}" fill="none" stroke="${hcol(h)}" stroke-width="${w}" stroke-linecap="round" stroke-dasharray="${c*h/100} ${c}" transform="rotate(-90 ${s/2} ${s/2})"/>${s>40?`<text x="50%" y="54%" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="${s/4}" font-weight="700">${h}</text>`:''}</svg>`;};
+const chip=s=>`<span class="x-st" style="color:${STS[s]};border-color:${STS[s]}55;background:${STS[s]}1f">${s}</span>`;
+function qr(text,size=96){let h=2166136261;for(const ch of text){h^=ch.charCodeAt(0);h=Math.imul(h,16777619);}const n=25,c=size/n;let out='';const rnd=()=>{h^=h<<13;h^=h>>>17;h^=h<<5;return (h>>>0)%100;};const fin=(x,y)=>x<7&&y<7||x>=n-7&&y<7||x<7&&y>=n-7;for(let y=0;y<n;y++)for(let x=0;x<n;x++){if(fin(x,y))continue;if(rnd()<48)out+=`M${x*c} ${y*c}h${c}v${c}h-${c}z`;}const f=(x,y)=>`<rect x="${x*c}" y="${y*c}" width="${7*c}" height="${7*c}" fill="#0A1024"/><rect x="${(x+1)*c}" y="${(y+1)*c}" width="${5*c}" height="${5*c}" fill="#fff"/><rect x="${(x+2)*c}" y="${(y+2)*c}" width="${3*c}" height="${3*c}" fill="#0A1024"/>`;return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" role="img" aria-label="QR ${text}"><rect width="${size}" height="${size}" fill="#fff"/><path d="${out}" fill="#0A1024"/>${f(0,0)}${f(n-7,0)}${f(0,n-7)}</svg>`;}
+
+// KPIs
+function renderKpi(){const k=[['ทรัพย์สินทั้งหมด',KPI.total,'รายการ','box','#3B82F6,#06B6D4'],['ใช้งาน',KPI.active,'รายการ','ok','#16A34A,#22C55E'],['ซ่อม/หยุด',KPI.down,'รายการ','stop','#EA580C,#E11D48'],['ราคาทุนรวม',KPI.cost.toFixed(2),'ลบ.','coin','#7C3AED,#C026D3'],['NBV',KPI.nbv.toFixed(2),'ลบ.','chart','#0891B2,#2563EB'],['Health เฉลี่ย',82,'/100','wave','#D97706,#F59E0B']];
+$('#kpis').innerHTML=k.map(([l,v,u,i,g])=>`<div class="x-card x-kpi"><div class="x-tile" style="background:linear-gradient(135deg,${g})">${ic(i)}</div><div><small>${l}</small><b>${v}<em>${u}</em></b></div></div>`).join('');}
+renderKpi();
+
+// filters
+const F={q:'',cat:'',site:'',st:'',cr:''};
+$('#fcat').innerHTML='<option value="">ทุกหมวด</option>'+CATS.map(c=>`<option>${c}</option>`).join('');
+$('#fst').innerHTML='<option value="">ทุกสถานะ</option>'+Object.keys(STS).map(c=>`<option>${c}</option>`).join('');
+$('#fcr').innerHTML='<option value="">ทุกความสำคัญ</option>'+Object.entries(CR).map(([k,v])=>`<option value="${k}">${v}</option>`).join('');
+function renderCats(){$('#cats').innerHTML=['',...CATS].map(c=>`<button class="x-cat${F.cat===c?' on':''}" data-c="${c}" role="tab" aria-selected="${F.cat===c}">${c||'ทั้งหมด'}<em>${c?A.filter(a=>a.cat===c).length:A.length}</em></button>`).join('');}
+$('#cats').onclick=e=>{const b=e.target.closest('.x-cat');if(!b)return;F.cat=b.dataset.c;$('#fcat').value=F.cat;render();};
+const sel=new Set();
+function render(){renderCats();const q=F.q.toLowerCase();
+const list=A.filter(a=>(!F.cat||a.cat===F.cat)&&(!F.site||a.site===F.site)&&(!F.st||a.status===F.st)&&(!F.cr||a.crit===F.cr)&&(!q||[a.tag,a.name,a.sn,a.fa,a.rfid,a.owner,a.mfr,a.model].join(' ').toLowerCase().includes(q)));
+$('#rows').innerHTML=list.length?list.map(a=>`<tr data-t="${a.tag}" class="${sel.has(a.tag)?'sel':''}"><td><input type="checkbox" class="rc" ${sel.has(a.tag)?'checked':''} aria-label="เลือก ${a.tag}"></td>
+<td><span class="x-tag">${a.tag}</span><span class="x-b ${a.crit}">${a.crit}</span>${a.wo?'<span class="x-b wo">มี WO</span>':''}<div class="x-nm">${a.name}</div><div class="x-sub">${a.mfr} · ${a.model}</div></td>
+<td>${a.cat}</td><td>${a.loc}<div class="x-sub">${a.site} · ${a.owner}</div></td><td class="r">${fmt(a.cost)}</td><td class="r">${fmt(a.nbv)}</td>
+<td><span class="x-ring">${ring(a.health)}${a.health}</span></td><td>${chip(a.status)}</td>
+<td><div class="x-rowact"><button class="v" aria-label="ดู Asset 360" title="ดู Asset 360">${ic('eye')}</button><button class="e" aria-label="แก้ไข" title="แก้ไข">${ic('edit')}</button></div></td></tr>`).join(''):`<tr><td colspan="9" class="x-empty">ไม่พบทรัพย์สินตามตัวกรอง</td></tr>`;
+$('#count').textContent=`แสดง ${list.length} จาก ${A.length} รายการในหน้านี้ (ทะเบียนทั้งหมด ${KPI.total} รายการ)`;
+$('#sumCost').textContent=fmt(list.reduce((s,a)=>s+a.cost,0));$('#sumNbv').textContent=fmt(list.reduce((s,a)=>s+a.nbv,0));
+$('#chkAll').checked=list.length&&list.every(a=>sel.has(a.tag));
+$('#bulk').classList.toggle('show',sel.size>0);$('#bulkN').textContent=`เลือก ${sel.size} รายการ`;}
+const bindF=(id,k,ev='change')=>$(id).addEventListener(ev,e=>{F[k]=e.target.value;render();});
+bindF('#fq','q','input');bindF('#fcat','cat');bindF('#fst','st');bindF('#fcr','cr');
+$('#fsite').onchange=e=>{F.site=e.target.value;$('#siteTop').value=F.site;render();};
+$('#siteTop').onchange=e=>{F.site=e.target.value;$('#fsite').value=F.site;render();};
+$('#q').addEventListener('input',e=>{F.q=e.target.value;$('#fq').value=F.q;render();});
+$('#fclear').onclick=()=>{Object.keys(F).forEach(k=>F[k]='');['#fq','#q','#fcat','#fsite','#fst','#fcr','#siteTop'].forEach(s=>$(s).value='');render();};
+document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();$('#q').focus();}if(e.key==='Escape')closeAll();});
+$('#chkAll').onchange=e=>{document.querySelectorAll('#rows tr[data-t]').forEach(tr=>e.target.checked?sel.add(tr.dataset.t):sel.delete(tr.dataset.t));render();};
+$('#bulkClear').onclick=()=>{sel.clear();render();};
+$('#rows').onclick=e=>{const tr=e.target.closest('tr[data-t]');if(!tr)return;const t=tr.dataset.t;
+if(e.target.classList.contains('rc')){e.target.checked?sel.add(t):sel.delete(t);render();return;}
+if(e.target.closest('.e')){toast(`เปิดแก้ไข ${t}`);return;}openDrawer(t);};
+
+// toast
+let tt;function toast(m){const el=$('#toast');el.innerHTML=`<span style="color:#22C55E">${ic('ok',18)}</span>${m}`;el.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>el.classList.remove('show'),2600);}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-toast]');if(b)toast(b.dataset.toast);});
+$('#btnRepair').onclick=()=>toast('เปิดฟอร์มแจ้งซ่อมใหม่');
+
+// drawer
+const TABS=['ข้อมูลทั่วไป','บัญชี-ค่าเสื่อม','ประวัติซ่อม','PM','การเคลื่อนไหว','เอกสาร','ฟิลด์เพิ่มเติม'];let cur=null,tab=0;
+function openDrawer(t){cur=A.find(a=>a.tag===t);tab=0;
+$('#dHead').innerHTML=`<div class="x-qr">${qr(cur.tag,84)}</div><div style="flex:1;min-width:0"><span class="x-tag">${cur.tag}</span><span class="x-b ${cur.crit}">${CR[cur.crit]}</span><h2>${cur.name}</h2>${chip(cur.status)} <span class="x-sub">${cur.site}</span></div><div style="text-align:center">${ring(cur.health,72,7)}<div class="x-sub">Health</div></div><button class="x-ico" onclick="closeAll()" aria-label="ปิด">✕</button>`;
+drawTab();$('#drawer').classList.add('show');$('#drawer').setAttribute('aria-hidden','false');$('#scrim').classList.add('show');}
+function dl(p){return `<dl class="x-dl">${p.map(([k,v])=>`<div><dt>${k}</dt><dd>${v}</dd></div>`).join('')}</dl>`;}
+function li(items){return `<ul class="x-list">${items.map(([a,b,c])=>`<li><div><b>${a}</b><div class="x-sub">${b}</div></div><div>${c}</div></li>`).join('')}</ul>`;}
+function nbvLine(a){const y0=+a.buy.slice(0,4),yrs=a.life/12,pts=[];for(let i=0;i<=yrs;i++){pts.push([y0+i,Math.max(a.salvage,a.cost-(a.cost-a.salvage)*i/yrs)]);}
+const W=540,H=150,px=i=>20+i*(W-40)/(pts.length-1),py=v=>H-20-(v/a.cost)*(H-40);const d=pts.map((p,i)=>`${i?'L':'M'}${px(i)} ${py(p[1])}`).join('');const ny=2569-y0,nx=20+ny*(W-40)/(pts.length-1);
+return `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="NBV ลดลงแบบเส้นตรงจาก ${fmt(a.cost)} ถึงมูลค่าซาก ${fmt(a.salvage)} บาท"><path d="${d}L${px(pts.length-1)} ${H-20}L20 ${H-20}z" fill="rgba(59,130,246,.15)"/><path d="${d}" fill="none" stroke="#60A5FA" stroke-width="2"/><line x1="${nx}" x2="${nx}" y1="10" y2="${H-20}" stroke="#F59E0B" stroke-dasharray="3 4"/><text x="${nx+4}" y="18" fill="#FCD34D" font-size="12">ปัจจุบัน 2569</text>${pts.filter((_,i)=>i%2===0).map(p=>`<text x="${px(pts.indexOf(p))}" y="${H-4}" fill="#93A6CC" font-size="12" text-anchor="middle">${p[0]}</text>`).join('')}</svg>`;}
+function drawTab(){const a=cur;$('#dTabs').innerHTML=TABS.map((t,i)=>`<button role="tab" aria-selected="${i===tab}" class="${i===tab?'on':''}" data-i="${i}">${t}</button>`).join('');let h='';
+if(tab===0)h=dl([['หมวด',a.cat],['ผู้ผลิต / รุ่น',`${a.mfr} · ${a.model}`],['Serial No.',a.sn],['เลขครุภัณฑ์',a.fa],['ไซต์',a.site],['ที่ตั้ง',a.loc],['ผู้รับผิดชอบ',a.owner],['RFID EPC',`<span class="x-tag" style="font-size:12px">${a.rfid}</span>`]]);
+if(tab===1)h=dl([['ราคาทุน',fmt(a.cost)+' บาท'],['NBV ปัจจุบัน',fmt(a.nbv)+' บาท'],['วิธีคิด',a.method],['อายุการใช้งาน',a.life+' เดือน'],['มูลค่าซาก',fmt(a.salvage)+' บาท'],['วันที่ซื้อ',thd((+a.buy.slice(0,4)-543)+a.buy.slice(4))]])+`<div class="x-card" style="padding:12px;margin-top:12px"><div class="x-sub" style="margin-bottom:6px">แนวโน้ม NBV (พ.ศ.)</div>${nbvLine(a)}</div>`;
+if(tab===2)h=li(a.wo?[[`WO-2569-0${a.tag.length}41`,'ตรวจพบความผิดปกติ · กำลังดำเนินการ · 12 พ.ค. 2569',chip('ซ่อม/ปรับปรุง')],['WO-2568-0912','เปลี่ยนแบริ่ง · 3 ธ.ค. 2568','<span class="x-sub">4.5 ชม.</span>']]:[['WO-2568-0855','ตรวจสภาพประจำปี · 20 พ.ย. 2568','<span class="x-sub">2 ชม.</span>']]);
+if(tab===3)h=li([['PM รายเดือน','เช็คลิสต์ 12 ข้อ · ครั้งถัดไป 1 มิ.ย. 2569','<span class="x-sub">ทุก 30 วัน</span>'],['PM รายปี','ครั้งถัดไป 15 ม.ค. 2570','<span class="x-sub">ทุก 365 วัน</span>']]);
+if(tab===4)h=li([['รับเข้า',`${thd((+a.buy.slice(0,4)-543)+a.buy.slice(4))} · ${a.site}`,''],['โอนย้ายที่ตั้ง',`10 ก.พ. 2568 · ไป ${a.loc}`,''],['ตรวจนับ','5 เม.ย. 2569 · พบตรงตำแหน่ง','<span class="x-sub">RFID</span>']]);
+if(tab===5)h=li([['ใบรับประกัน.pdf','1.2 MB · อัปโหลด 2 ม.ค. 2568',''],['คู่มือการใช้งาน.pdf','8.4 MB',''],['รูปถ่ายป้าย.jpg','640 KB','']]);
+if(tab===6)h=dl([['เลขสัญญาประกัน',a.warr],['ผู้รับผิดชอบสำรอง',a.backup],...a.custom.map(c=>[c.label,c.value||'-'])]);
+$('#dBody').innerHTML=h;}
+$('#dTabs').onclick=e=>{const b=e.target.closest('button');if(b){tab=+b.dataset.i;drawTab();}};
+function closeAll(){$('#drawer').classList.remove('show');$('#drawer').setAttribute('aria-hidden','true');$('#modal').classList.remove('show');$('#scrim').classList.remove('show');}
+$('#scrim').onclick=closeAll;$('#mClose').onclick=closeAll;
+
+// wizard
+const STEPS=['ข้อมูลหลัก','บัญชี/ค่าเสื่อม','สเปก/ข้อมูลเพิ่มเติม','ป้าย & ติดตาม'];let step=0,W={},cf=[];
+const PFX={'เครื่องจักร':'MCH','IT & เครือข่าย':'IT','ยานพาหนะ':'VH','อาคาร/สาธารณูปโภค':'FAC','เครื่องมือวัด':'GAU','สำนักงาน':'OFF','ซอฟต์แวร์':'SW'};
+const nextTag=c=>{const p=PFX[c]||'AST';const n=A.filter(a=>a.tag.startsWith(p+'-')).length+1;return `${p}-${String(n).padStart(3,'0')}`;};
+const opt=(arr,v)=>arr.map(o=>`<option${o===v?' selected':''}>${o}</option>`).join('');
+const fi=(k,l,o={})=>`<label class="${o.w||''}">${l}${o.req?' <span class="x-req">*</span>':''}${o.sel?`<select class="x-sel" data-k="${k}">${o.blank?'<option value="">— เลือก —</option>':''}${opt(o.sel,W[k])}</select>`:o.ta?`<textarea class="x-in" data-k="${k}">${W[k]||''}</textarea>`:`<input class="x-in" data-k="${k}" type="${o.t||'text'}" value="${W[k]??''}" ${o.ph?`placeholder="${o.ph}"`:''}>`}</label>`;
+function drawStep(){$('#stepper').innerHTML=STEPS.map((s,i)=>`<div class="x-step ${i===step?'on':i<step?'done':''}"><b>${i<step?'✓':i+1}</b><span>${s}</span></div>`).join('');let h='<div class="x-form">';
+if(step===0)h+=fi('cat','หมวดทรัพย์สิน',{req:1,sel:CATS,blank:1})+`<label>Asset Tag<div class="x-inrow"><input class="x-in" data-k="tag" value="${W.tag||''}"><button type="button" class="x-btn" id="genTag">สร้างเลขถัดไป</button></div></label>`+fi('name','ชื่อทรัพย์สิน',{req:1})+fi('mfr','ผู้ผลิต')+fi('brand','ยี่ห้อ')+fi('model','รุ่น')+fi('sn','Serial No.')+fi('site','ไซต์',{req:1,sel:[SAK,RAY],blank:1})+fi('loc','ที่ตั้ง')+fi('dept','แผนก')+fi('cc','ศูนย์ต้นทุน',{ph:'CC-1001'})+fi('owner','ผู้รับผิดชอบ')+fi('parent','เครื่องแม่ (ลำดับชั้น EAM)',{sel:['— ไม่มี —',...A.map(a=>a.tag+' '+a.name)]})+fi('crit','ระดับความสำคัญ',{sel:Object.values(CR)})+fi('life','สถานะวงจรชีวิต',{sel:Object.keys(STS)})+fi('op','สถานะการทำงาน',{sel:['ทำงานปกติ','หยุดชั่วคราว','เสีย','ไม่ได้ใช้งาน']});
+if(step===1)h+=fi('fa','เลขครุภัณฑ์',{ph:'FA-2569-0001'})+fi('vendor','ผู้ขาย')+fi('buy','วันที่ซื้อ',{t:'date'})+fi('start','วันที่เริ่มใช้งาน',{t:'date'})+fi('cost','ราคาทุน (บาท)',{t:'number'})+fi('repl','มูลค่าทดแทน (บาท)',{t:'number'})+fi('warr','วันหมดประกัน',{t:'date'})+fi('method','วิธีคิด',{sel:['เส้นตรง','ยอดลดลง','SYD','หน่วยผลิต']})+fi('lifeM','อายุการใช้งาน (เดือน)',{t:'number'})+fi('salvage','มูลค่าซาก (บาท)',{t:'number'});
+if(step===2)h+=fi('note','หมายเหตุ / สเปก',{w:'w3',ta:1})+`<div class="x-cf"><h3>ฟิลด์ที่กำหนดเอง<button type="button" class="x-btn" id="addCf">+ เพิ่มฟิลด์</button></h3><div id="cfList">${cf.length?cf.map((c,i)=>`<div class="x-cfrow"><input class="x-in" data-cf="${i}" data-p="label" placeholder="ชื่อฟิลด์" value="${c.label}"><select class="x-sel" data-cf="${i}" data-p="type">${opt(['ข้อความ','ตัวเลข','วันที่','ใช่/ไม่ใช่'],c.type)}</select><input class="x-in" data-cf="${i}" data-p="value" placeholder="ค่า" type="${{'ตัวเลข':'number','วันที่':'date'}[c.type]||'text'}" value="${c.value}"><button type="button" class="x-ico" data-del="${i}" aria-label="ลบฟิลด์">✕</button></div>`).join(''):'<p class="x-sub" style="margin:0">ยังไม่มีฟิลด์ กด “+ เพิ่มฟิลด์” เพื่อเพิ่ม</p>'}</div></div>`;
+if(step===3)h+=fi('rfid','RFID EPC',{w:'w2',ph:'E280117000000...'})+fi('barcode','Barcode',{ph:'Code128'})+`<label class="x-tog w3"><button type="button" class="x-sw" id="geo" role="switch" aria-checked="${!!W.geo}" aria-label="Geofence"></button>เปิด Geofence (แจ้งเตือนเมื่อออกนอกพื้นที่)</label><div class="w3" style="grid-column:1/-1"><div class="x-sub" style="margin-bottom:6px">ตัวอย่างป้าย QR</div><div class="x-label" id="lbl"></div></div>`;
+$('#mBody').innerHTML=h+'</div>';$('#mBack').disabled=step===0;$('#mBack').style.opacity=step?1:.4;$('#mNext').style.display=step<3?'':'none';$('#mErr').textContent='';if(step===3)drawLabel();}
+function drawLabel(){const t=W.tag||'NEW-001';$('#lbl').innerHTML=`${qr(t,92)}<div><b>${t}</b><div style="font-weight:600;margin:2px 0">${W.name||'ชื่อทรัพย์สิน'}</div><div style="font-size:12px;color:#475569">${W.site||'-'} · ${W.loc||'-'}</div><div style="font-size:12px;color:#475569">${W.barcode?'BC '+W.barcode:''}${W.geo?' · Geofence':''}</div><div style="font-size:12px;color:#475569;margin-top:4px">IT&amp;MAINT · Smart Asset</div></div>`;}
+$('#mBody').addEventListener('input',e=>{const k=e.target.dataset.k;if(k){W[k]=e.target.value;if(k==='cat'&&!W.tagManual){W.tag=nextTag(W.cat);const t=$('[data-k=tag]');if(t)t.value=W.tag;}if(k==='tag')W.tagManual=1;if(step===3)drawLabel();}
+if(e.target.dataset.cf!=null){cf[+e.target.dataset.cf][e.target.dataset.p]=e.target.value;if(e.target.dataset.p==='type')drawStep();}});
+$('#mBody').addEventListener('change',e=>{if(e.target.dataset.p==='type'){cf[+e.target.dataset.cf].type=e.target.value;drawStep();}});
+$('#mBody').addEventListener('click',e=>{if(e.target.id==='genTag'){W.tag=nextTag(W.cat);W.tagManual=0;$('[data-k=tag]').value=W.tag;}
+if(e.target.id==='addCf'){cf.push({label:'',type:'ข้อความ',value:''});drawStep();const ins=document.querySelectorAll('[data-p=label]');ins[ins.length-1].focus();}
+const d=e.target.closest('[data-del]');if(d){cf.splice(+d.dataset.del,1);drawStep();}
+if(e.target.id==='geo'){W.geo=!W.geo;e.target.setAttribute('aria-checked',W.geo);drawLabel();}});
+const valid=()=>{if(step===0&&(!W.cat||!W.name||!W.site)){$('#mErr').textContent='กรุณากรอก หมวด, ชื่อทรัพย์สิน และไซต์';return false;}return true;};
+$('#mNext').onclick=()=>{if(valid()){step++;drawStep();}};
+$('#mBack').onclick=()=>{if(step){step--;drawStep();}};
+$('#mSave').onclick=()=>{if(!W.cat||!W.name||!W.site){step=0;drawStep();valid();return;}
+const cost=+W.cost||0,crit=(W.crit||'C ทั่วไป')[0],st=W.life||'วางแผน';
+A.unshift({tag:W.tag||nextTag(W.cat),name:W.name,mfr:W.mfr||W.brand||'-',model:W.model||'-',cat:W.cat,site:W.site,loc:W.loc||'-',owner:W.owner||'-',cost,nbv:cost,health:100,status:st,crit,wo:0,sn:W.sn||'-',fa:W.fa||'-',rfid:W.rfid||'-',buy:W.buy?(+W.buy.slice(0,4)+543)+W.buy.slice(4):'2569-05-18',life:+W.lifeM||60,method:W.method||'เส้นตรง',salvage:+W.salvage||0,warr:'-',backup:'-',custom:cf.filter(c=>c.label)});
+KPI.total++;if(st==='ใช้งาน')KPI.active++;if(st==='ซ่อม/ปรับปรุง')KPI.down++;KPI.cost+=cost/1e6;KPI.nbv+=cost/1e6;renderKpi();render();closeAll();toast(`บันทึก ${A[0].tag} ${A[0].name} เข้าทะเบียนแล้ว`);};
+$('#btnAdd').onclick=()=>{step=0;W={crit:'C ทั่วไป',life:'รับเข้า/รอติดตั้ง',method:'เส้นตรง',lifeM:60};cf=[];drawStep();$('#modal').classList.add('show');$('#scrim').classList.add('show');};
+render();
+    </script>
+  </body>
+</html>
