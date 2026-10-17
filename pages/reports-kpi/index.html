@@ -57,6 +57,11 @@
       .x-kpi .v { font:var(--type-heading); font-family:var(--x-font); color:#fff; display:block; }
       .x-kpi .l { font:var(--type-caption); font-family:var(--x-font); color:var(--x-mute); }
       .x-cap { font:var(--type-caption); color:var(--x-mute); margin:6px 0 0; }
+      .x-err { color:#fb7185; font:var(--type-caption); font-family:var(--x-font); font-weight:500; }
+      .x-in.bad, .x-sel.bad { border-color:#fb7185 !important; box-shadow:0 0 0 3px rgba(251,113,133,.18); }
+      .x-req { color:#fb7185; }
+      .x-loading { opacity:.45; pointer-events:none; transition:opacity .15s; }
+      .x-empty { padding:22px; text-align:center; color:var(--x-mute); }
       .x-chartbox { position:relative; height:280px; width:100%; min-width:0; overflow:hidden; }
       .x-chartbox { display:flex; flex-direction:column; gap:6px; }
       .x-chartbox svg { display:block; width:100%; flex:1; min-height:0; font-family:var(--x-font); }
@@ -123,14 +128,14 @@
               <nav class="x-card x-rail" id="rail" aria-label="รายการรายงาน"></nav>
               <div class="x-stack">
                 <div class="x-card x-filters">
-                  <label>ตั้งแต่<input class="x-in" type="text" value="1 พ.ย. 2568" /></label>
-                  <label>ถึง<input class="x-in" type="text" value="11 ต.ค. 2569" /></label>
-                  <label>ไซต์<select class="x-sel"><option>ทุกไซต์</option><option>โรงงานสมุทรสาคร</option><option>โรงงานระยอง</option></select></label>
+                  <label>ตั้งแต่<input class="x-in" id="dFrom" type="date" value="2025-11-01" min="2025-01-01" max="2026-12-31" /></label>
+                  <label>ถึง<input class="x-in" id="dTo" type="date" value="2026-10-11" min="2025-01-01" max="2026-12-31" /></label>
+                  <label>ไซต์<select class="x-sel" id="fSite"><option>ทุกไซต์</option><option>โรงงานสมุทรสาคร</option><option>โรงงานระยอง</option></select></label>
                   <label>ช่วงลัด<div class="x-chips" id="quick"><button class="x-btn">เดือนนี้</button><button class="x-btn">3 เดือน</button><button class="x-btn on">12 เดือน</button><button class="x-btn">ปีงบประมาณนี้</button></div></label>
                   <div class="x-chips"><button class="x-btn x-pri" id="show">แสดง</button><button class="x-btn" data-t="ส่งออก Excel แล้ว">Excel</button><button class="x-btn" data-t="ส่งออก CSV แล้ว">CSV</button><button class="x-btn" id="printbtn">พิมพ์</button></div>
                 </div>
                 <section class="x-card x-stack" style="gap:14px">
-                  <div><h2 class="x-h1" id="rtitle" style="font:var(--type-heading);font-family:var(--x-font)"></h2><p class="x-cap">ช่วง 1 พ.ย. 2568 – 11 ต.ค. 2569 · สร้างเมื่อ 11 ต.ค. 2569 00:42 น.</p></div>
+                  <div><h2 class="x-h1" id="rtitle" style="font:var(--type-heading);font-family:var(--x-font)"></h2><p class="x-cap" id="rcap">ช่วง 1 พ.ย. 2568 – 11 ต.ค. 2569 · สร้างเมื่อ 11 ต.ค. 2569 00:42 น.</p></div>
                   <div class="x-kpis" id="kpis"></div>
                   <div class="x-chartbox" id="chart" role="img" aria-label="กราฟรายงาน"></div>
                   <div class="x-tbl" id="tbl"></div>
@@ -141,17 +146,17 @@
         </div>
       </div>
       <div class="x-modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mtitle">
-        <form class="x-card x-dlg" id="cform">
+        <form class="x-card x-dlg" id="cform" novalidate>
           <div class="x-row"><h2 id="mtitle" style="font:var(--type-heading);font-family:var(--x-font);margin:0">สร้างรายงานกำหนดเอง</h2><button type="button" class="x-btn x-ico" id="mclose" aria-label="ปิด">✕</button></div>
-          <label>ชื่อรายงาน<input class="x-in" id="cname" required placeholder="เช่น ค่าซ่อมตามแผนก" /></label>
-          <label>แหล่งข้อมูล<select class="x-sel" id="csrc"><option>ใบสั่งงาน</option><option>ทรัพย์สิน</option><option>แผน PM</option><option>การจ่ายอะไหล่</option><option>การตรวจนับ</option></select></label>
-          <div><p class="x-cap" style="margin:0 0 4px">เลือกคอลัมน์</p><div class="x-checks">
-            <label><input type="checkbox" checked />เลขที่ใบงาน</label><label><input type="checkbox" checked />ทรัพย์สิน</label><label><input type="checkbox" checked />ประเภทงาน</label><label><input type="checkbox" />ช่างผู้รับผิดชอบ</label><label><input type="checkbox" />Downtime (ชม.)</label><label><input type="checkbox" checked />ค่าใช้จ่าย</label><label><input type="checkbox" />ฟิลด์กำหนดเอง: แผนก</label><label><input type="checkbox" />ฟิลด์กำหนดเอง: Cost center</label>
+          <label>ชื่อรายงาน <span class="x-req">*</span><input class="x-in" id="cname" required placeholder="เช่น ค่าซ่อมตามแผนก" /></label>
+          <label>แหล่งข้อมูล <span class="x-req">*</span><select class="x-sel" id="csrc" required><option value="">— เลือกแหล่งข้อมูล —</option><option>ใบสั่งงาน</option><option>ทรัพย์สิน</option><option>แผน PM</option><option>การจ่ายอะไหล่</option><option>การตรวจนับ</option></select></label>
+          <div><p class="x-cap" style="margin:0 0 4px">เลือกคอลัมน์ <span class="x-req">*</span></p><div class="x-checks" id="ccols">
+            <label><input type="checkbox" />เลขที่ใบงาน</label><label><input type="checkbox" />ทรัพย์สิน</label><label><input type="checkbox" />ประเภทงาน</label><label><input type="checkbox" />ช่างผู้รับผิดชอบ</label><label><input type="checkbox" />Downtime (ชม.)</label><label><input type="checkbox" />ค่าใช้จ่าย</label><label><input type="checkbox" />ฟิลด์กำหนดเอง: แผนก</label><label><input type="checkbox" />ฟิลด์กำหนดเอง: Cost center</label>
           </div></div>
           <label>จัดกลุ่มตาม<select class="x-sel"><option>เดือน</option><option>ทรัพย์สิน</option><option>หมวด</option><option>ช่าง</option><option>ไซต์</option></select></label>
           <label>กราฟ<select class="x-sel"><option>แท่ง</option><option>เส้น</option><option>แท่ง + เส้น</option><option>ไม่มีกราฟ</option></select></label>
           <label>ตั้งเวลาส่งอีเมล<select class="x-sel"><option>ไม่ส่ง</option><option>ทุกวันจันทร์ 08:00</option><option>วันที่ 1 ของทุกเดือน</option><option>ทุกสิ้นไตรมาส</option></select></label>
-          <div class="x-chips" style="justify-content:flex-end"><button type="button" class="x-btn" id="mcancel">ยกเลิก</button><button class="x-btn x-pri">บันทึกรายงาน</button></div>
+          <div class="x-chips" style="justify-content:flex-end"><button type="button" class="x-btn" id="mcancel">ยกเลิก</button><button type="button" class="x-btn x-pri" id="csave">บันทึกรายงาน</button></div>
         </form>
       </div>
       <div class="x-toast" id="toast" role="status"></div>
@@ -176,21 +181,21 @@
           foot:["รวม",sum(1),sum(2),sum(3),sum(4),"2.9 (เฉลี่ย)",f(sum(6),1),"86%",f(sum(8))],
           combo:{ labels:M.map((r) => r[0].split(" ")[0]), bars:M.map((r) => r[1]), line:M.map((r) => r[5]) } },
         sla: { g:"ซ่อมบำรุง", t:"สรุปใบสั่งงานตามประเภท & SLA", d:"จำนวนใบงานแยกประเภท และสัดส่วนที่ผ่าน SLA",
-          head:["ประเภท","ใบงาน","ผ่าน SLA","ผ่าน SLA %"], rows:[["Breakdown",12,10,"83%"],["PM",36,33,"92%"],["Corrective",11,9,"82%"],["Request",6,6,"100%"]], bar:[["Breakdown","PM","Corrective","Request"],[12,36,11,6],"ใบงาน"] },
+          sc:[1,2], head:["ประเภท","ใบงาน","ผ่าน SLA","ผ่าน SLA %"], rows:[["Breakdown",12,10,"83%"],["PM",36,33,"92%"],["Corrective",11,9,"82%"],["Request",6,6,"100%"]], bar:[["Breakdown","PM","Corrective","Request"],[12,36,11,6],"ใบงาน"] },
         pmc: { g:"ซ่อมบำรุง", t:"PM Compliance ตามแผน", d:"งาน PM ที่ทำตามกำหนดเทียบกับแผน",
-          head:["หมวด","ตามแผน","ทำตามกำหนด","Compliance %"], rows:[["เครื่องจักรการผลิต",18,16,"89%"],["ระบบปรับอากาศ",8,7,"88%"],["ระบบไฟฟ้า",6,5,"83%"],["IT & เครือข่าย",10,8,"80%"]], bar:[["การผลิต","ปรับอากาศ","ไฟฟ้า","IT"],[89,88,83,80],"Compliance %"] },
+          sc:[1,2], pctBar:true, head:["หมวด","ตามแผน","ทำตามกำหนด","Compliance %"], rows:[["เครื่องจักรการผลิต",18,16,"89%"],["ระบบปรับอากาศ",8,7,"88%"],["ระบบไฟฟ้า",6,5,"83%"],["IT & เครือข่าย",10,8,"80%"]], bar:[["การผลิต","ปรับอากาศ","ไฟฟ้า","IT"],[89,88,83,80],"Compliance %"] },
         cost: { g:"ต้นทุน", t:"ค่าซ่อมบำรุงตามทรัพย์สิน", d:"ค่าแรง ค่าอะไหล่ และค่าจ้างภายนอกต่อทรัพย์สิน",
-          head:["ทรัพย์สิน","ค่าแรง","อะไหล่","ภายนอก","รวม (บาท)"], rows:[["CONV-03","4,200","12,850","3,000","20,050"],["MTR-007","2,600","9,400","0","12,000"],["CMP-02","3,100","6,725","2,500","12,325"],["AHU-05","1,900","5,220","0","7,120"],["อื่น ๆ","3,400","6,800","0","10,200"]], bar:[["CONV-03","MTR-007","CMP-02","AHU-05","อื่น ๆ"],[20050,12000,12325,7120,10200],"บาท"] },
+          sc:[1,2,3,4], head:["ทรัพย์สิน","ค่าแรง","อะไหล่","ภายนอก","รวม (บาท)"], rows:[["CONV-03","4,200","12,850","3,000","20,050"],["MTR-007","2,600","9,400","0","12,000"],["CMP-02","3,100","6,725","2,500","12,325"],["AHU-05","1,900","5,220","0","7,120"],["อื่น ๆ","3,400","6,800","0","10,200"]], bar:[["CONV-03","MTR-007","CMP-02","AHU-05","อื่น ๆ"],[20050,12000,12325,7120,10200],"บาท"] },
         bad: { g:"ความน่าเชื่อถือ", t:"Bad Actors — เครื่องที่หยุดบ่อย", d:"ทรัพย์สินที่ Downtime สูงสุดในช่วงที่เลือก",
-          head:["ทรัพย์สิน","ครั้งที่หยุด","Downtime (ชม.)"], rows:[["CONV-03",4,"212.6"],["MTR-007",3,"28.4"],["CMP-02",2,"14.5"],["AHU-05",2,"7.5"]], bar:[["CONV-03","MTR-007","CMP-02","AHU-05"],[212.6,28.4,14.5,7.5],"Downtime ชม."], h:true },
+          sc:[1,2], head:["ทรัพย์สิน","ครั้งที่หยุด","Downtime (ชม.)"], rows:[["CONV-03",4,"212.6"],["MTR-007",3,"28.4"],["CMP-02",2,"14.5"],["AHU-05",2,"7.5"]], bar:[["CONV-03","MTR-007","CMP-02","AHU-05"],[212.6,28.4,14.5,7.5],"Downtime ชม."], h:true },
         tech: { g:"บุคลากร", t:"ผลงานช่าง", d:"ใบงานที่ปิด เวลาเฉลี่ย และอัตราผ่าน SLA ต่อช่าง",
-          head:["ช่าง","ใบงานที่ปิด","เวลาเฉลี่ย (ชม.)","ผ่าน SLA %"], rows:[["สมชัย",14,"2.4","93%"],["วิชัย",11,"3.1","91%"],["ธนพล",9,"2.8","89%"],["อนุชา",7,"3.6","86%"],["ปรีชา",5,"4.2","80%"]], bar:[["สมชัย","วิชัย","ธนพล","อนุชา","ปรีชา"],[14,11,9,7,5],"ใบงานที่ปิด"] },
+          sc:[1], head:["ช่าง","ใบงานที่ปิด","เวลาเฉลี่ย (ชม.)","ผ่าน SLA %"], rows:[["สมชัย",14,"2.4","93%"],["วิชัย",11,"3.1","91%"],["ธนพล",9,"2.8","89%"],["อนุชา",7,"3.6","86%"],["ปรีชา",5,"4.2","80%"]], bar:[["สมชัย","วิชัย","ธนพล","อนุชา","ปรีชา"],[14,11,9,7,5],"ใบงานที่ปิด"] },
         reg: { g:"ทรัพย์สิน", t:"สรุปทะเบียนทรัพย์สินตามหมวด", d:"จำนวนและมูลค่าทรัพย์สินแยกตามหมวด",
-          head:["หมวด","จำนวน","มูลค่า (บาท)"], rows:[["เครื่องจักร",42,"8,450,000"],["IT & เครือข่าย",128,"3,210,000"],["ปรับอากาศ",24,"1,180,000"],["ยานพาหนะ",6,"2,900,000"]], bar:[["เครื่องจักร","IT","ปรับอากาศ","ยานพาหนะ"],[42,128,24,6],"จำนวน"] },
+          sc:[1,2], snap:true, head:["หมวด","จำนวน","มูลค่า (บาท)"], rows:[["เครื่องจักร",42,"8,450,000"],["IT & เครือข่าย",128,"3,210,000"],["ปรับอากาศ",24,"1,180,000"],["ยานพาหนะ",6,"2,900,000"]], bar:[["เครื่องจักร","IT","ปรับอากาศ","ยานพาหนะ"],[42,128,24,6],"จำนวน"] },
         audit: { g:"ทรัพย์สิน", t:"ผลการตรวจนับทรัพย์สิน", d:"พบ ไม่พบ และย้ายตำแหน่ง จากรอบตรวจนับล่าสุด",
-          head:["สถานะ","จำนวน","สัดส่วน"], rows:[["พบตามทะเบียน",182,"91%"],["ย้ายตำแหน่ง",11,"5.5%"],["ไม่พบ",5,"2.5%"],["ชำรุด",2,"1%"]], bar:[["พบ","ย้าย","ไม่พบ","ชำรุด"],[182,11,5,2],"รายการ"] },
+          sc:[1], snap:true, head:["สถานะ","จำนวน","สัดส่วน"], rows:[["พบตามทะเบียน",182,"91%"],["ย้ายตำแหน่ง",11,"5.5%"],["ไม่พบ",5,"2.5%"],["ชำรุด",2,"1%"]], bar:[["พบ","ย้าย","ไม่พบ","ชำรุด"],[182,11,5,2],"รายการ"] },
         parts: { g:"คลัง", t:"การจ่ายอะไหล่", d:"อะไหล่ที่จ่ายออกมากที่สุดและมูลค่า",
-          head:["อะไหล่","จำนวนจ่าย","มูลค่า (บาท)"], rows:[["สายพาน B-52",8,"9,600"],["ลูกปืน 6205",24,"4,320"],["ฟิลเตอร์อากาศ",30,"5,400"],["คอนแทคเตอร์ 32A",6,"7,800"]], bar:[["สายพาน","ลูกปืน","ฟิลเตอร์","คอนแทคเตอร์"],[8,24,30,6],"จำนวนจ่าย"] },
+          sc:[1,2], head:["อะไหล่","จำนวนจ่าย","มูลค่า (บาท)"], rows:[["สายพาน B-52",8,"9,600"],["ลูกปืน 6205",24,"4,320"],["ฟิลเตอร์อากาศ",30,"5,400"],["คอนแทคเตอร์ 32A",6,"7,800"]], bar:[["สายพาน","ลูกปืน","ฟิลเตอร์","คอนแทคเตอร์"],[8,24,30,6],"จำนวนจ่าย"] },
       };
       let cur = "kpi";
       const W = 720, H = 280;
@@ -241,20 +246,65 @@
         $("#rail").innerHTML = groups.map((g) => `<h3>${g}</h3>` + Object.entries(R).filter(([, r]) => r.g === g).map(([k, r]) => `<button class="x-rep ${k === cur ? "on" : ""}" data-k="${k}" ${k === cur ? 'aria-current="true"' : ""}><b>${r.t}</b><small>${r.d}</small></button>`).join("")).join("");
       }
       function render() {
-        const r = R[cur];
+        const r = view(R[cur]);
         $("#rtitle").textContent = r.t;
         $("#kpis").innerHTML = (r.kpis || []).map(([l, v, ic, c]) => `<div class="x-card x-kpi"><span class="x-tile ${c}">${svg(ic, 18)}</span><div><span class="v">${v}</span><span class="l">${l}</span></div></div>`).join("");
         $("#kpis").hidden = !r.kpis;
-        $("#tbl").innerHTML = `<table><thead><tr>${r.head.map((h) => `<th scope="col">${h}</th>`).join("")}</tr></thead><tbody>${r.rows.map((row) => `<tr>${row.map((c, i) => (i ? `<td>${f(c)}</td>` : `<th scope="row" style="text-align:left;font-weight:500">${c}</th>`)).join("")}</tr>`).join("")}</tbody>${r.foot ? `<tfoot><tr>${r.foot.map((c) => `<td>${c}</td>`).join("")}</tr></tfoot>` : ""}</table>`;
+        $("#tbl").innerHTML = `<table><thead><tr>${r.head.map((h) => `<th scope="col">${h}</th>`).join("")}</tr></thead><tbody>${r.rows.length ? "" : `<tr><td class="x-empty" colspan="${r.head.length}">ไม่มีข้อมูลในช่วงที่เลือก</td></tr>`}${r.rows.map((row) => `<tr>${row.map((c, i) => (i ? `<td>${f(c)}</td>` : `<th scope="row" style="text-align:left;font-weight:500">${c}</th>`)).join("")}</tr>`).join("")}</tbody>${r.foot ? `<tfoot><tr>${r.foot.map((c) => `<td>${c}</td>`).join("")}</tr></tfoot>` : ""}</table>`;
         const cv = $("#chart");
         cv.setAttribute("aria-label", r.t + (r.bar ? ": " + r.bar[0].map((l, i) => l + " " + r.bar[1][i]).join(", ") : ": ใบงานรายเดือนและ MTTR"));
         cv.innerHTML = chartSVG(r);
       }
       $("#rail").addEventListener("click", (e) => { const b = e.target.closest(".x-rep"); if (!b) return; cur = b.dataset.k; rail(); render(); });
       const toast = (m) => { const t = $("#toast"); t.textContent = m; t.classList.add("show"); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove("show"), 2400); };
-      $("#quick").addEventListener("click", (e) => { const b = e.target.closest("button"); if (!b) return; [...$("#quick").children].forEach((x) => x.classList.toggle("on", x === b)); e.preventDefault(); });
-      document.querySelectorAll("[data-t]").forEach((b) => b.addEventListener("click", () => toast(b.dataset.t)));
-      $("#show").onclick = () => { render(); toast("อัปเดตรายงานแล้ว"); };
+      /* ===== filters: date range + site actually re-compute the report ===== */
+      const TODAY = new Date(2026, 9, 11), M0 = new Date(2025, 10, 1);
+      const iso = (d) => d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+      const thd = (d) => d.toLocaleDateString("th-TH", { day: "numeric", month: "short", year: "numeric" });
+      const SITEF = { "ทุกไซต์": 1, "โรงงานสมุทรสาคร": 0.62, "โรงงานระยอง": 0.38 };
+      let F = { from: new Date(2025, 10, 1), to: TODAY, site: "ทุกไซต์", at: null };
+      const monthIdx = () => M.map((_, i) => i).filter((i) => { const s0 = new Date(M0.getFullYear(), M0.getMonth() + i, 1), e0 = new Date(M0.getFullYear(), M0.getMonth() + i + 1, 0); return s0 <= F.to && e0 >= F.from; });
+      const num = (c) => (typeof c === "number" ? c : /^[\d,]+(\.\d+)?$/.test(String(c)) ? parseFloat(String(c).replace(/,/g, "")) : null);
+      function scaleCell(c, k) { const n = num(c); if (n === null || k === 1) return c; const dec = (String(c).split(".")[1] || "").length; const v = dec ? Math.round(n * k * Math.pow(10, dec)) / Math.pow(10, dec) : Math.round(n * k);
+        return typeof c === "number" ? v : v.toLocaleString("en-US", { minimumFractionDigits: dec, maximumFractionDigits: dec }); }
+      function view(r) {
+        const sf = SITEF[F.site] || 1, idx = monthIdx();
+        if (r === R.kpi) {
+          const Mf = idx.map((i) => M[i].map((v, j) => (j >= 1 && j <= 4) || j === 6 || j === 8 ? (v === null ? null : j === 6 ? Math.round(v * sf * 10) / 10 : Math.round(v * sf)) : v));
+          const s = (i) => Mf.reduce((a, x) => a + (x[i] || 0), 0), mt = Mf.map((x) => x[5]).filter((v) => v !== null), pm = Mf.map((x) => x[7]).filter((v) => v !== null);
+          const avg = (a) => (a.length ? a.reduce((x, y) => x + y, 0) / a.length : null);
+          return Object.assign({}, r, {
+            kpis: [["Breakdown ทั้งช่วง", f(s(2)), "bolt", "g3"], ["MTBF เครื่องสำคัญ A/B", F.site === "โรงงานระยอง" ? "9,870 ชม." : "15,136 ชม.", "clock", ""], ["Availability เครื่องสำคัญ", F.site === "โรงงานระยอง" ? "99.42%" : "99.71%", "chart", "g4"], ["Backlog ปัจจุบัน", f(Math.round(18 * sf)), "list", "g2"], ["ค่าใช้จ่ายรวม", f(s(8)) + " บาท", "coin", "g3"]],
+            rows: Mf.map((x) => [x[0], x[1], x[2], x[3], x[4], f(x[5], 1), f(x[6], 1), x[7] === null ? "—" : x[7] + "%", f(x[8])]),
+            foot: Mf.length ? ["รวม", s(1), s(2), s(3), s(4), avg(mt) === null ? "—" : f(avg(mt), 1) + " (เฉลี่ย)", f(s(6), 1), avg(pm) === null ? "—" : Math.round(avg(pm)) + "%", f(s(8))] : null,
+            combo: { labels: Mf.map((x) => x[0].split(" ")[0]), bars: Mf.map((x) => x[1]), line: Mf.map((x) => x[5]) } });
+        }
+        if (!r.sc) return r;
+        const k = (r.snap ? 1 : idx.length / 12) * sf;
+        const rows = idx.length || r.snap ? r.rows.map((row) => row.map((c, j) => (r.sc.includes(j) ? scaleCell(c, k) : c))) : [];
+        return Object.assign({}, r, { rows, bar: r.bar && [r.bar[0], r.pctBar ? r.bar[1] : r.bar[1].map((v) => scaleCell(v, k)), r.bar[2]] });
+      }
+      function caption() { $("#rcap").textContent = `ช่วง ${thd(F.from)} – ${thd(F.to)} · ${F.site} · ${monthIdx().length} เดือน · สร้างเมื่อ ${thd(F.at || new Date())} ${(F.at || new Date()).toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" })} น.`; }
+      function fErr(el, msg) { el.classList.add("bad"); const m = document.createElement("small"); m.className = "x-err"; m.textContent = msg; el.insertAdjacentElement("afterend", m); }
+      function applyFilters(silent) {
+        document.querySelectorAll(".x-filters .x-err").forEach((n) => n.remove()); document.querySelectorAll(".x-filters .bad").forEach((n) => n.classList.remove("bad"));
+        const a = $("#dFrom").value, b = $("#dTo").value;
+        if (!a) { fErr($("#dFrom"), "กรุณาเลือกวันที่เริ่ม"); $("#dFrom").focus(); return; }
+        if (!b) { fErr($("#dTo"), "กรุณาเลือกวันที่สิ้นสุด"); $("#dTo").focus(); return; }
+        const from = new Date(a + "T00:00:00"), to = new Date(b + "T00:00:00");
+        if (from > to) { fErr($("#dTo"), "วันที่สิ้นสุดต้องไม่ก่อนวันที่เริ่ม"); $("#dTo").focus(); return; }
+        F = { from, to, site: $("#fSite").value, at: new Date() };
+        const sec = $("#rtitle").closest("section"), btn = $("#show");
+        sec.setAttribute("aria-busy", "true"); sec.classList.add("x-loading"); btn.disabled = true; btn.textContent = "กำลังโหลด…";
+        setTimeout(() => { render(); caption(); sec.removeAttribute("aria-busy"); sec.classList.remove("x-loading"); btn.disabled = false; btn.textContent = "แสดง";
+          if (!silent) toast(`แสดง “${R[cur].t}” · ${thd(from)} – ${thd(to)} · ${F.site}`); }, 350);
+      }
+      const QUICK = { "เดือนนี้": new Date(2026, 9, 1), "3 เดือน": new Date(2026, 7, 1), "12 เดือน": new Date(2025, 10, 1), "ปีงบประมาณนี้": new Date(2026, 9, 1) };
+      $("#quick").addEventListener("click", (e) => { const b = e.target.closest("button"); if (!b) return; e.preventDefault(); [...$("#quick").children].forEach((x) => x.classList.toggle("on", x === b));
+        $("#dFrom").value = iso(QUICK[b.textContent.trim()]); $("#dTo").value = iso(TODAY); applyFilters(); });
+      ["#dFrom", "#dTo"].forEach((id) => $(id).addEventListener("change", () => [...$("#quick").children].forEach((x) => x.classList.remove("on"))));
+      $("#show").onclick = () => applyFilters();
+
       $("#printbtn").onclick = () => { if (navigator.webdriver || /Headless/i.test(navigator.userAgent)) { toast("พิมพ์รายงาน"); return; } window.print(); };
       $("#newwo").onclick = () => toast("เปิดฟอร์มแจ้งซ่อม");
       $("#burger").onclick = () => $("#side").classList.toggle("open");
@@ -263,13 +313,27 @@
       const closeM = () => $("#modal").classList.remove("open");
       $("#opencustom").onclick = openM; $("#mclose").onclick = closeM; $("#mcancel").onclick = closeM;
       $("#modal").addEventListener("click", (e) => { if (e.target.id === "modal") closeM(); });
-      $("#cform").addEventListener("submit", (e) => {
-        e.preventDefault();
-        const name = $("#cname").value.trim(), cols = [...document.querySelectorAll(".x-checks input:checked")].map((c) => c.parentElement.textContent);
+      const openCustom = () => { const fm = $("#cform"); fm.reset(); fm.querySelectorAll(".x-err").forEach((n) => n.remove()); fm.querySelectorAll(".bad").forEach((n) => n.classList.remove("bad")); openM(); };
+      $("#opencustom").onclick = openCustom;
+      function saveCustom() {
+        const fm = $("#cform"); fm.querySelectorAll(".x-err").forEach((n) => n.remove()); fm.querySelectorAll(".bad").forEach((n) => n.classList.remove("bad"));
+        const name = $("#cname").value.trim(), src = $("#csrc").value, cols = [...document.querySelectorAll("#ccols input:checked")].map((c) => c.parentElement.textContent.trim()), bad = [];
+        if (!name) { fErr($("#cname"), "กรุณากรอกชื่อรายงาน"); bad.push($("#cname")); }
+        if (!src) { fErr($("#csrc"), "กรุณาเลือกแหล่งข้อมูล"); bad.push($("#csrc")); }
+        if (!cols.length) { const m = document.createElement("small"); m.className = "x-err"; m.textContent = "เลือกอย่างน้อย 1 คอลัมน์"; $("#ccols").insertAdjacentElement("afterend", m); bad.push($("#ccols input")); }
+        if (bad.length) { bad[0].focus(); return; }
+        const sels = fm.querySelectorAll("select"), grp = sels[1].value, sched = sels[3].value;
+        const SAMPLE = { "เลขที่ใบงาน": ["WO-2569-0141", "WO-2569-0138", "WO-2569-0127"], "ทรัพย์สิน": ["CONV-03", "CMP-02", "MTR-007"], "ประเภทงาน": ["Breakdown", "PM", "Corrective"], "ช่างผู้รับผิดชอบ": ["สมชัย", "วิชัย", "ธนพล"], "Downtime (ชม.)": ["4.5", "1.0", "2.2"], "ค่าใช้จ่าย": ["4,960", "1,250", "3,400"], "ฟิลด์กำหนดเอง: แผนก": ["ผลิต", "ซ่อมบำรุง", "ผลิต"], "ฟิลด์กำหนดเอง: Cost center": ["CC-110", "CC-210", "CC-110"] };
         const k = "c" + Date.now();
-        R[k] = { g:"กำหนดเอง", t:name, d:`จาก ${$("#csrc").value} · ${cols.length} คอลัมน์`, head:cols.length ? cols : ["คอลัมน์"], rows:[cols.map((c, i) => (i ? "—" : "ตัวอย่าง"))], bar:[["ม.ค.","ก.พ.","มี.ค."],[3,5,4],name] };
-        cur = k; rail(); render(); closeM(); e.target.reset(); toast(`บันทึกรายงาน “${name}” แล้ว`);
-      });
+        R[k] = { g: "กำหนดเอง", t: name, d: `จาก ${src} · ${cols.length} คอลัมน์ · จัดกลุ่มตาม${grp}${sched !== "ไม่ส่ง" ? " · ส่งอีเมล " + sched : ""}`, head: cols, rows: [0, 1, 2].map((i) => cols.map((c) => (SAMPLE[c] || ["—", "—", "—"])[i])), bar: [["ส.ค.", "ก.ย.", "ต.ค."], [3, 5, 4], name] };
+        try { const saved = JSON.parse(localStorage.getItem("rk-custom") || "{}"); saved[k] = R[k]; localStorage.setItem("rk-custom", JSON.stringify(saved)); } catch (e) {}
+        cur = k; rail(); render(); closeM(); fm.reset(); toast(`บันทึกรายงาน “${name}” แล้ว`);
+      }
+      $("#csave").onclick = saveCustom;
+      $("#cform").addEventListener("submit", (e) => { e.preventDefault(); saveCustom(); });
+      $("#cform").addEventListener("input", (e) => { const t = e.target; if (t.classList.contains("bad")) { t.classList.remove("bad"); const n = t.nextElementSibling; if (n && n.classList.contains("x-err")) n.remove(); } });
+      try { Object.assign(R, JSON.parse(localStorage.getItem("rk-custom") || "{}")); } catch (e) {}
+      caption();
       rail();
       try { render(); } catch (err) { console.error(err); }
     </script>
