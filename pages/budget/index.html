@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="th" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ITMAINT Budget</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400&display=swap" />
+    <link rel="stylesheet" href="../../assets/hark.css" />
+    <link rel="stylesheet" href="../../assets/hark-hero.css" />
+    <link rel="stylesheet" href="../../assets/hark-charts.css" />
+    <style>
+      :root { color-scheme: dark; --x-bg: #0A1024; --x-card: #111a38; --x-card2: #0e1630; --x-line: rgb(80 130 255 / 0.28); --x-glow: 0 0 0 1px rgb(80 130 255 / 0.12), 0 0 18px rgb(60 110 255 / 0.12); --x-blue: #3d7bff; --x-muted: #9aa6c8; --x-grad: linear-gradient(135deg, #d9480f, #c2255c); }
+      body { background: var(--x-bg); color: #eef1fa; }
+      .page.x-app { max-width: none; padding: 0; display: grid; grid-template-columns: 248px minmax(0, 1fr); gap: 0; min-height: 100vh; }
+      .x-side { background: #0b132b; border-right: 1px solid var(--x-line); padding: 18px 12px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+      .x-logo { display: flex; gap: 10px; align-items: center; padding: 0 8px 18px; }
+      .x-logo b { font: var(--weight-bold) var(--size-heading)/1.1 var(--sans); display: block; }
+      .x-logo small { font: var(--type-caption); color: var(--x-muted); }
+      .x-grp { font: var(--type-tag); color: var(--x-muted); margin: 14px 10px 4px; }
+      .x-nav a { display: flex; align-items: center; gap: 10px; min-height: var(--tap); padding: 0 12px; border-radius: var(--r-s); color: #d5dbef; text-decoration: none; font: var(--type-small); }
+      .x-nav a:hover { background: rgb(80 130 255 / 0.1); }
+      .x-nav a.is-on { background: linear-gradient(90deg, #2a5bff, #1d3fb8); color: #fff; font: var(--type-label); box-shadow: 0 0 16px rgb(60 110 255 / 0.4); }
+      .x-main { min-width: 0; display: flex; flex-direction: column; }
+      .x-top { display: flex; align-items: center; gap: 10px; padding: 12px var(--gutter); border-bottom: 1px solid var(--x-line); background: rgb(10 16 36 / 0.85); backdrop-filter: var(--hark-blur); position: sticky; top: 0; z-index: 5; }
+      .x-search { flex: 1; min-width: 0; display: flex; align-items: center; gap: 8px; min-height: var(--tap); padding: 0 12px; border: 1px solid var(--x-line); border-radius: var(--r-s); background: var(--x-card2); color: var(--x-muted); font: var(--type-small); }
+      .x-search input { flex: 1; min-width: 0; background: none; border: 0; color: #eef1fa; font: inherit; outline: none; }
+      .x-kbd { border: 1px solid var(--x-line); border-radius: 6px; padding: 2px 6px; font: var(--type-caption); white-space: nowrap; }
+      .x-btn, .x-sel, .x-ibtn { min-height: var(--tap); border-radius: var(--r-s); border: 1px solid var(--x-line); background: var(--x-card2); color: #eef1fa; font: var(--type-label); padding: 0 14px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; }
+      .x-ibtn { width: var(--tap); padding: 0; justify-content: center; position: relative; }
+      .x-btn--pri { background: var(--x-grad); border-color: transparent; color: #fff; box-shadow: 0 4px 16px rgb(194 37 92 / 0.35); }
+      .x-btn:focus-visible, .x-sel:focus-visible, .x-ibtn:focus-visible, .x-tab:focus-visible { outline: 2px solid var(--x-blue); outline-offset: 2px; }
+      .x-badge { position: absolute; top: 6px; right: 6px; background: #e03131; color: #fff; font: var(--type-tag); border-radius: 99px; min-width: 18px; height: 18px; display: grid; place-items: center; }
+      .x-user { display: flex; align-items: center; gap: 8px; font: var(--type-label); }
+      .x-user small { display: block; font: var(--type-caption); color: var(--x-muted); }
+      .x-av { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, #3d7bff, #8b5cf6); display: grid; place-items: center; font: var(--type-tag); }
+      .x-body { padding: 20px var(--gutter) 40px; display: grid; gap: 16px; }
+      .x-head { display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; align-items: end; }
+      .x-head h1 { font: var(--type-title); margin: 0 0 4px; }
+      .x-head p { margin: 0; font: var(--type-small); color: var(--x-muted); }
+      .x-ctrl { display: flex; flex-wrap: wrap; gap: 8px; }
+      .x-card { background: linear-gradient(180deg, var(--x-card), var(--x-card2)); border: 1px solid var(--x-line); border-radius: var(--r-m); box-shadow: var(--x-glow); padding: 16px; min-width: 0; }
+      .x-card h2 { font: var(--type-body-strong); margin: 0 0 4px; }
+      .x-card .x-sub { font: var(--type-caption); color: var(--x-muted); margin: 0 0 10px; }
+      .x-tabs { display: flex; gap: 6px; border-bottom: 1px solid var(--x-line); overflow-x: auto; }
+      .x-tab { min-height: var(--tap); padding: 0 16px; background: none; border: 0; border-bottom: 2px solid transparent; color: var(--x-muted); font: var(--type-label); cursor: pointer; white-space: nowrap; }
+      .x-tab[aria-selected="true"] { color: #fff; border-bottom-color: var(--x-blue); }
+      .x-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+      .x-kpi { display: grid; gap: 6px; }
+      .x-tile { width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; color: #fff; }
+      .x-kpi .x-l { font: var(--type-caption); color: var(--x-muted); }
+      .x-kpi .x-v { font: var(--weight-medium) var(--size-heading)/1.2 var(--sans); font-variant-numeric: tabular-nums; }
+      .x-kpi .x-n { font: var(--type-caption); color: #6fd3a0; }
+      .x-g1 { background: linear-gradient(135deg, #3d7bff, #1d3fb8); } .x-g2 { background: linear-gradient(135deg, #f76707, #d6336c); } .x-g3 { background: linear-gradient(135deg, #12b886, #087f5b); } .x-g4 { background: linear-gradient(135deg, #8b5cf6, #5b21b6); }
+      .x-grid2 { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 16px; }
+      .x-chip { display: inline-block; padding: 3px 10px; border-radius: 99px; font: var(--type-tag); white-space: nowrap; }
+      .x-chip--opex { background: #16285a; color: #a9c4ff; } .x-chip--capex { background: #2a1f5c; color: #d2c3ff; }
+      .x-chip--wait { background: #3a2216; color: #ffbf8f; } .x-chip--ok { background: #0f3530; color: #7fe0b0; } .x-chip--draft { background: #232c47; color: #c3cbe2; }
+      #repBtn { min-width: var(--tap); justify-content: center; }
+      .x-tbl { width: 100%; border-collapse: collapse; font: var(--type-small); }
+      .x-tbl th { text-align: left; font: var(--type-tag); color: var(--x-muted); padding: 10px 8px; border-bottom: 1px solid var(--x-line); }
+      .x-tbl td { padding: 12px 8px; border-bottom: 1px solid rgb(80 130 255 / 0.1); vertical-align: middle; }
+      .x-tbl td small { display: block; color: var(--x-muted); font: var(--type-caption); }
+      .x-num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+      .x-bar { height: 6px; border-radius: 99px; background: rgb(80 130 255 / 0.14); overflow: hidden; min-width: 80px; }
+      .x-bar i { display: block; height: 100%; background: linear-gradient(90deg, #3d7bff, #8b5cf6); border-radius: inherit; }
+      .x-row-h { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+      .x-plans { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+      .x-plan { display: grid; gap: 10px; align-content: start; }
+      .x-plan h3 { margin: 0; font: var(--type-body-strong); }
+      .x-plan .x-amt { font: var(--type-figure); font-variant-numeric: tabular-nums; }
+      .x-plan dl { display: grid; grid-template-columns: auto 1fr; gap: 6px 12px; margin: 0; font: var(--type-small); }
+      .x-plan dt { color: var(--x-muted); } .x-plan dd { margin: 0; text-align: right; }
+      .x-modal { border: 1px solid var(--x-line); border-radius: var(--r-m); background: #0f1834; color: #eef1fa; padding: 20px; width: min(460px, calc(100vw - 32px)); box-shadow: var(--x-glow), 0 20px 60px rgb(0 0 0 / 0.6); }
+      .x-modal::backdrop { background: rgb(5 8 20 / 0.7); }
+      .x-modal h2 { margin: 0 0 14px; font: var(--type-heading); }
+      .x-f { display: grid; gap: 4px; margin-bottom: 12px; font: var(--type-caption); color: var(--x-muted); }
+      .x-f input, .x-f select { min-height: var(--tap); border-radius: var(--r-s); border: 1px solid var(--x-line); background: var(--x-card2); color: #eef1fa; font: var(--type-small); padding: 0 12px; width: 100%; }
+      .x-toast { position: fixed; bottom: 20px; left: 50%; transform: translate(-50%, 20px); opacity: 0; background: #13204a; border: 1px solid var(--x-line); color: #eef1fa; padding: 12px 18px; border-radius: var(--r-s); font: var(--type-label); box-shadow: var(--x-glow); transition: all var(--dur-quick) var(--ease-out); z-index: 50; pointer-events: none; max-width: calc(100vw - 32px); }
+      .x-toast.is-on { opacity: 1; transform: translate(-50%, 0); }
+      .x-closed { display: none; padding: 10px 14px; border-radius: var(--r-s); background: rgb(247 103 7 / 0.12); border: 1px solid rgb(247 103 7 / 0.35); color: #ffb37a; font: var(--type-small); }
+      .x-menu { display: none; }
+      .x-donut { display: grid; gap: 8px; }
+      .x-donut .chart__canvas { height: 220px; }
+      @media (max-width: 1000px) { .x-grid2 { grid-template-columns: 1fr; } }
+      @media (max-width: 860px) {
+        .page.x-app { grid-template-columns: 1fr; }
+        .x-side { position: fixed; inset: 0 auto 0 0; width: 260px; z-index: 20; transform: translateX(-100%); transition: transform var(--dur-quick) var(--ease-out); }
+        .x-side.is-open { transform: none; box-shadow: 0 0 40px rgb(0 0 0 / 0.6); }
+        .x-menu { display: inline-flex; }
+        .x-hide-sm { display: none !important; }
+        .x-tbl thead { display: none; }
+        .x-tbl tr { display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; padding: 12px 0; border-bottom: 1px solid rgb(80 130 255 / 0.14); }
+        .x-tbl td { border: 0; padding: 2px 0; }
+        .x-tbl td[data-l]::before { content: attr(data-l) " "; color: var(--x-muted); font: var(--type-caption); }
+        .x-tbl td.x-wide { grid-column: 1 / -1; }
+        .x-num { text-align: left; }
+      }
+    </style>
+  </head>
+  <body>
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+      <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+      <symbol id="i-box" viewBox="0 0 24 24"><path d="M3 7l9-4 9 4v10l-9 4-9-4zM3 7l9 4 9-4M12 11v10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+      <symbol id="i-wrench" viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.2L3 17.8 6.2 21l6.3-6.3a4 4 0 0 0 5.2-5.4l-2.6 2.6-2.4-.6-.6-2.4z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+      <symbol id="i-cart" viewBox="0 0 24 24"><path d="M3 4h2l2.4 11h11l2-8H6.3M9 20a1 1 0 1 0 0-.1M18 20a1 1 0 1 0 0-.1" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+      <symbol id="i-coin" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M15 9.5c-.5-1-1.6-1.5-3-1.5-1.7 0-3 .8-3 2s1.3 1.7 3 2 3 .8 3 2-1.3 2-3 2c-1.4 0-2.5-.5-3-1.5M12 6v2M12 16v2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+      <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+      <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+      <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4zM10 21h4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+      <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M20 20l-4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+      <symbol id="i-dl" viewBox="0 0 24 24"><path d="M12 4v11M7 10l5 5 5-5M4 20h16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+      <symbol id="i-wallet" viewBox="0 0 24 24"><path d="M3 7h16a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM3 7l12-3v3M17 13h1" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/></symbol>
+      <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    </svg>
+    <div class="page x-app" id="top">
+      <aside class="x-side" id="side" aria-label="เมนูหลัก">
+        <div class="x-logo">
+          <svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5aa0ff"/><stop offset="1" stop-color="#2a3fd0"/></linearGradient></defs><path d="M20 3l15 8.5v17L20 37 5 28.5v-17z" fill="url(#lg)"/><path d="M14 14h12M20 14v13" stroke="#fff" stroke-width="3" stroke-linecap="round"/></svg>
+          <div><b>IT&amp;MAINT</b><small>Smart Asset · Smart Work</small></div>
+        </div>
+        <nav class="x-nav">
+          <p class="x-grp">ภาพรวม</p>
+          <a href="#"><svg width="20" height="20"><use href="#i-home"/></svg>หน้าหลัก</a>
+          <p class="x-grp">ทรัพย์สิน</p>
+          <a href="#"><svg width="20" height="20"><use href="#i-box"/></svg>ทะเบียนทรัพย์สิน</a>
+          <p class="x-grp">ซ่อมบำรุง</p>
+          <a href="#"><svg width="20" height="20"><use href="#i-wrench"/></svg>ใบสั่งงาน / CMMS</a>
+          <p class="x-grp">คลัง &amp; จัดซื้อ</p>
+          <a href="#"><svg width="20" height="20"><use href="#i-cart"/></svg>PR / PO / คลัง</a>
+          <a href="#" class="is-on" aria-current="page"><svg width="20" height="20"><use href="#i-coin"/></svg>ต้นทุน &amp; งบประมาณ</a>
+          <p class="x-grp">วิเคราะห์</p>
+          <a href="#"><svg width="20" height="20"><use href="#i-chart"/></svg>รายงาน / Dashboard</a>
+          <p class="x-grp">ระบบ</p>
+          <a href="#"><svg width="20" height="20"><use href="#i-gear"/></svg>ตั้งค่า</a>
+        </nav>
+      </aside>
+      <div class="x-main">
+        <header class="x-top">
+          <button class="x-ibtn x-menu" id="menuBtn" aria-label="เปิดเมนู"><svg width="20" height="20"><use href="#i-menu"/></svg></button>
+          <select class="x-sel x-hide-sm" aria-label="เลือกไซต์" id="topSite"><option>ทุกไซต์</option><option>โรงงานสมุทรสาคร</option><option>โรงงานระยอง</option></select>
+          <label class="x-search"><svg width="18" height="18"><use href="#i-search"/></svg><input id="q" placeholder="ค้นหา ทรัพย์สิน / ใบสั่งงาน / งบ…" aria-label="ค้นหา" /><span class="x-kbd x-hide-sm">Ctrl + K</span></label>
+          <button class="x-btn x-btn--pri" id="repBtn">+ <span class="x-hide-sm">แจ้งซ่อม</span></button>
+          <button class="x-ibtn" id="bellBtn" aria-label="การแจ้งเตือน 3 รายการ"><svg width="20" height="20"><use href="#i-bell"/></svg><span class="x-badge">3</span></button>
+          <div class="x-user"><span class="x-av">AD</span><span class="x-hide-sm">Admin<small>ผู้ดูแลระบบ</small></span></div>
+        </header>
+        <main class="x-body">
+          <div class="x-head">
+            <div>
+              <h1>ต้นทุน &amp; งบประมาณ</h1>
+              <p>ปีงบประมาณ ต.ค.–ก.ย. · OPEX จากใบสั่งงานจริง · CAPEX จากทรัพย์สินที่ซื้อ + แผนลงทุนที่อนุมัติ</p>
+            </div>
+            <div class="x-ctrl">
+              <select class="x-sel" id="fy" aria-label="ปีงบประมาณ"><option value="2568">ปีงบ 2568 (ปิดแล้ว)</option><option value="2569" selected>ปีงบ 2569</option><option value="2570">ปีงบ 2570</option></select>
+              <select class="x-sel" id="site" aria-label="ไซต์"><option value="">ทุกไซต์</option><option>โรงงานสมุทรสาคร</option><option>โรงงานระยอง</option></select>
+              <button class="x-btn" id="xls"><svg width="18" height="18"><use href="#i-dl"/></svg>Excel</button>
+            </div>
+          </div>
+          <p class="x-closed" id="closedNote">ปีงบ 2568 ปิดแล้ว · ดูได้อย่างเดียว แก้ไขงบไม่ได้</p>
+          <div class="x-tabs" role="tablist">
+            <button class="x-tab" role="tab" aria-selected="true" aria-controls="p-ov" id="t-ov">ภาพรวมงบ</button>
+            <button class="x-tab" role="tab" aria-selected="false" aria-controls="p-cap" id="t-cap" tabindex="-1">แผนลงทุน (Capital plan)</button>
+          </div>
+
+          <section id="p-ov" role="tabpanel" aria-labelledby="t-ov" style="display:grid;gap:16px">
+            <div class="x-kpis">
+              <div class="x-card x-kpi"><span class="x-tile x-g1"><svg width="20" height="20"><use href="#i-wallet"/></svg></span><span class="x-l">งบ OPEX</span><span class="x-v">4,800,000</span></div>
+              <div class="x-card x-kpi"><span class="x-tile x-g2"><svg width="20" height="20"><use href="#i-wrench"/></svg></span><span class="x-l">OPEX จริง</span><span class="x-v">4,860</span><span class="x-n">ใช้แล้ว 0.1%</span></div>
+              <div class="x-card x-kpi"><span class="x-tile x-g3"><svg width="20" height="20"><use href="#i-coin"/></svg></span><span class="x-l">OPEX คงเหลือ</span><span class="x-v">4,795,140</span></div>
+              <div class="x-card x-kpi"><span class="x-tile x-g4"><svg width="20" height="20"><use href="#i-box"/></svg></span><span class="x-l">งบ CAPEX</span><span class="x-v">6,000,000</span></div>
+              <div class="x-card x-kpi"><span class="x-tile x-g2"><svg width="20" height="20"><use href="#i-cart"/></svg></span><span class="x-l">CAPEX จริง+ผูกพัน</span><span class="x-v">380,000</span></div>
+              <div class="x-card x-kpi"><span class="x-tile x-g3"><svg width="20" height="20"><use href="#i-coin"/></svg></span><span class="x-l">CAPEX คงเหลือ</span><span class="x-v">5,620,000</span><span class="x-n">ใช้แล้ว 6.3%</span></div>
+            </div>
+            <div class="x-grid2">
+              <figure class="x-card chart" style="margin:0">
+                <figcaption class="chart__cap">OPEX รายเดือน &amp; สะสมเทียบงบ<small>บาท · แท่ง = รายเดือน, เส้น = สะสม (แกนซ้าย) · งบสะสมตามแผน (แกนขวา)</small></figcaption>
+                <div class="chart__canvas"><canvas id="opex" role="img" aria-label="OPEX สะสม 4,860 บาท จากงบ 4,800,000 บาท ใช้ไป 0.1%"></canvas></div>
+              </figure>
+              <figure class="x-card chart x-donut" style="margin:0">
+                <figcaption class="chart__cap">การใช้งบ CAPEX<small>บาท · จาก 6,000,000</small></figcaption>
+                <div class="chart__canvas"><canvas id="capex" role="img" aria-label="CAPEX ผูกพัน 380,000 บาท คงเหลือ 5,620,000 บาท"></canvas></div>
+              </figure>
+            </div>
+            <div class="x-card">
+              <div class="x-row-h"><div><h2>บรรทัดงบประมาณ</h2><p class="x-sub" id="rowCount">6 รายการ</p></div><button class="x-btn x-btn--pri" id="addBtn">+ เพิ่มงบ</button></div>
+              <table class="x-tbl">
+                <thead><tr><th>ประเภท</th><th>ไซต์ / ศูนย์ต้นทุน</th><th>หมวด</th><th class="x-num">งบ</th><th class="x-num">จริง</th><th>การใช้</th></tr></thead>
+                <tbody id="rows"></tbody>
+              </table>
+            </div>
+          </section>
+
+          <section id="p-cap" role="tabpanel" aria-labelledby="t-cap" hidden>
+            <div class="x-plans" id="plans"></div>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <dialog class="x-modal" id="dlg">
+      <form method="dialog" id="frm">
+        <h2>เพิ่มบรรทัดงบ</h2>
+        <label class="x-f">ประเภท<select name="type"><option>OPEX</option><option>CAPEX</option></select></label>
+        <label class="x-f">ไซต์<select name="site"><option>โรงงานสมุทรสาคร</option><option>โรงงานระยอง</option></select></label>
+        <label class="x-f">ศูนย์ต้นทุน<input name="cc" required placeholder="เช่น MT-03" /></label>
+        <label class="x-f">หมวด<input name="cat" required placeholder="เช่น อะไหล่" /></label>
+        <label class="x-f">จำนวนเงิน (บาท)<input name="amt" type="number" min="1" required inputmode="numeric" /></label>
+        <div id="extra"></div>
+        <button type="button" class="x-btn" id="addField" style="margin-bottom:16px">+ เพิ่มฟิลด์</button>
+        <div class="x-ctrl" style="justify-content:flex-end">
+          <button type="button" class="x-btn" id="cancel">ยกเลิก</button>
+          <button type="submit" class="x-btn x-btn--pri" value="ok">บันทึก</button>
+        </div>
+      </form>
+    </dialog>
+    <div class="x-toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script type="application/json" id="opex-data">
+      {"months":["ต.ค.","พ.ย.","ธ.ค.","ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย."],"actual":[1200,2100,1560,null,null,null,null,null,null,null,null,null],"budget":4800000}
+    </script>
+    <script src="../../assets/hark.js"></script>
+    <script src="../../assets/chart.js"></script>
+    <script src="../../assets/datalabels.js"></script>
+    <script src="../../assets/hark-charts.js"></script>
+    <script>
+      document.documentElement.setAttribute("data-theme", "dark");
+      const $ = (s) => document.querySelector(s), fmt = (n) => n.toLocaleString("en-US");
+      const rows = [
+        { type: "OPEX", site: "โรงงานสมุทรสาคร", cc: "IT-01", cat: "ไอที / ซอฟต์แวร์", budget: 1500000, actual: 2860 },
+        { type: "OPEX", site: "โรงงานสมุทรสาคร", cc: "MT-01", cat: "ซ่อมบำรุงเครื่องจักร", budget: 2400000, actual: 2000 },
+        { type: "OPEX", site: "โรงงานระยอง", cc: "MT-02", cat: "อะไหล่", budget: 900000, actual: 0 },
+        { type: "CAPEX", site: "โรงงานสมุทรสาคร", cc: "MT-01", cat: "เครื่องจักร", budget: 3500000, actual: 0 },
+        { type: "CAPEX", site: "โรงงานสมุทรสาคร", cc: "IT-01", cat: "เซิร์ฟเวอร์ / เครือข่าย", budget: 1500000, actual: 380000 },
+        { type: "CAPEX", site: "โรงงานระยอง", cc: "EN-01", cat: "IoT / เซนเซอร์", budget: 1000000, actual: 0 },
+      ];
+      const plans = [
+        { name: "เปลี่ยนเครื่อง CNC เก่า", site: "โรงงานสมุทรสาคร · MT-01", amt: 2500000, payback: "3.2 ปี", status: "wait" },
+        { name: "อัปเกรดเซิร์ฟเวอร์", site: "โรงงานสมุทรสาคร · IT-01", amt: 380000, payback: "2.5 ปี", status: "ok" },
+        { name: "ระบบ IoT เฟส 2", site: "โรงงานระยอง · EN-01", amt: 900000, payback: "1.8 ปี", status: "draft" },
+      ];
+      const ST = { wait: ["x-chip--wait", "รออนุมัติ"], ok: ["x-chip--ok", "อนุมัติ / ผูกพัน"], draft: ["x-chip--draft", "ร่าง"] };
+      function toast(msg) { const t = $("#toast"); t.textContent = msg; t.classList.add("is-on"); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove("is-on"), 2600); }
+      function renderRows() {
+        const site = $("#site").value, q = $("#q").value.trim().toLowerCase();
+        const list = rows.filter((r) => (!site || r.site === site) && (!q || (r.site + r.cc + r.cat + r.type).toLowerCase().includes(q)));
+        $("#rows").innerHTML = list.map((r) => {
+          const p = r.budget ? (r.actual / r.budget) * 100 : 0;
+          return `<tr><td><span class="x-chip x-chip--${r.type.toLowerCase()}">${r.type}</span></td><td>${r.site}<small>${r.cc}</small></td><td>${r.cat}</td><td class="x-num" data-l="งบ">${fmt(r.budget)}</td><td class="x-num" data-l="จริง">${fmt(r.actual)}</td><td class="x-wide"><div class="x-bar" role="progressbar" aria-valuenow="${p.toFixed(1)}" aria-valuemin="0" aria-valuemax="100" aria-label="การใช้งบ"><i style="width:${Math.max(p, 1)}%"></i></div><small>${p.toFixed(1)}%</small></td></tr>`;
+        }).join("") || `<tr><td colspan="6" style="color:var(--x-muted)">ไม่พบรายการ</td></tr>`;
+        $("#rowCount").textContent = list.length + " รายการ";
+      }
+      function renderPlans() {
+        $("#plans").innerHTML = plans.map((p, i) => `<article class="x-card x-plan"><div class="x-row-h" style="margin:0"><span class="x-tile ${["x-g2", "x-g1", "x-g3"][i % 3]}"><svg width="20" height="20"><use href="#${["i-wrench", "i-box", "i-chart"][i % 3]}"/></svg></span><span class="x-chip ${ST[p.status][0]}">${ST[p.status][1]}</span></div><h3>${p.name}</h3><p class="x-sub" style="margin:0">${p.site}</p><span class="x-amt">฿${fmt(p.amt)}</span><dl><dt>ระยะคืนทุน</dt><dd>${p.payback}</dd><dt>สถานะ</dt><dd>${ST[p.status][1]}</dd></dl>${p.status === "ok" ? `<button class="x-btn" disabled style="opacity:.6">อนุมัติแล้ว</button>` : `<button class="x-btn x-btn--pri" data-ap="${i}">อนุมัติ</button>`}</article>`).join("");
+      }
+      $("#plans").addEventListener("click", (e) => {
+        const b = e.target.closest("[data-ap]"); if (!b) return;
+        if ($("#fy").value === "2568") return toast("ปีงบ 2568 ปิดแล้ว อนุมัติไม่ได้");
+        const p = plans[b.dataset.ap]; p.status = "ok"; renderPlans(); toast("อนุมัติ " + p.name + " แล้ว");
+      });
+      document.querySelectorAll(".x-tab").forEach((t) => t.addEventListener("click", () => {
+        document.querySelectorAll(".x-tab").forEach((x) => { const on = x === t; x.setAttribute("aria-selected", on); x.tabIndex = on ? 0 : -1; $("#" + x.getAttribute("aria-controls")).hidden = !on; });
+      }));
+      $("#site").addEventListener("change", renderRows);
+      $("#q").addEventListener("input", renderRows);
+      $("#fy").addEventListener("change", (e) => { $("#closedNote").style.display = e.target.value === "2568" ? "block" : "none"; toast("เปลี่ยนเป็นปีงบ " + e.target.value); });
+      document.addEventListener("keydown", (e) => { if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") { e.preventDefault(); $("#q").focus(); } });
+      $("#menuBtn").addEventListener("click", () => $("#side").classList.toggle("is-open"));
+      $("#repBtn").addEventListener("click", () => toast("เปิดฟอร์มแจ้งซ่อม"));
+      $("#bellBtn").addEventListener("click", (e) => { const b = e.currentTarget.querySelector(".x-badge"); if (b) { b.remove(); e.currentTarget.setAttribute("aria-label", "การแจ้งเตือน"); toast("แจ้งเตือนใหม่ 3 รายการ: รออนุมัติแผน CNC · งบ OPEX อัปเดต · ใบสั่งงานใหม่"); } else toast("ไม่มีการแจ้งเตือนใหม่"); });
+      $("#addBtn").addEventListener("click", () => { if ($("#fy").value === "2568") return toast("ปีงบ 2568 ปิดแล้ว เพิ่มงบไม่ได้"); $("#frm").reset(); $("#extra").innerHTML = ""; $("#dlg").showModal(); });
+      $("#cancel").addEventListener("click", () => $("#dlg").close());
+      let nx = 0;
+      $("#addField").addEventListener("click", () => { nx++; const l = document.createElement("label"); l.className = "x-f"; l.innerHTML = `ฟิลด์เพิ่มเติม ${nx}<input name="x${nx}" placeholder="ชื่อ : ค่า" />`; $("#extra").appendChild(l); });
+      $("#frm").addEventListener("submit", (e) => {
+        const f = new FormData(e.target);
+        rows.push({ type: f.get("type"), site: f.get("site"), cc: f.get("cc"), cat: f.get("cat"), budget: +f.get("amt"), actual: 0 });
+        renderRows(); toast("เพิ่มงบ " + f.get("cat") + " ฿" + fmt(+f.get("amt")) + " แล้ว");
+      });
+      $("#xls").addEventListener("click", () => {
+        const csv = "\ufeffประเภท,ไซต์,ศูนย์ต้นทุน,หมวด,งบ,จริง\n" + rows.map((r) => [r.type, r.site, r.cc, r.cat, r.budget, r.actual].join(",")).join("\n");
+        const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv" })); a.download = "budget-" + $("#fy").value + ".csv"; a.click(); toast("ส่งออก Excel แล้ว");
+      });
+      renderRows(); renderPlans();
+
+      const d = Hark.data("opex-data"); let s = 0;
+      const cum = d.actual.map((v) => (v == null ? null : (s += v)));
+      const plan = d.months.map((_, i) => Math.round((d.budget / 12) * (i + 1)));
+      const baht = (ctx) => `${ctx.dataset.label}: ฿${fmt(ctx.raw)}`;
+      new Chart($("#opex"), {
+        data: { labels: d.months, datasets: [
+          { type: "bar", label: "รายเดือน", data: d.actual, backgroundColor: "var(--chart-2)", order: 2 },
+          { type: "line", label: "สะสม", data: cum, borderColor: "var(--chart-1)", pointRadius: 3, order: 1 },
+          { type: "line", label: "งบสะสม", data: plan, yAxisID: "y1", borderColor: "var(--chart-reference)", borderDash: [3, 4], borderWidth: 1, pointRadius: 0 },
+        ] },
+        options: { scales: { y: { beginAtZero: true, ticks: { callback: (v) => fmt(v) } }, y1: { position: "right", beginAtZero: true, grid: { display: false }, ticks: { callback: (v) => (v / 1e6) + "M" } } }, plugins: { tooltip: { callbacks: { label: baht } } } },
+      });
+      new Chart($("#capex"), {
+        type: "doughnut",
+        data: { labels: ["จริง", "ผูกพัน", "คงเหลือ"], datasets: [{ data: [0, 380000, 5620000], backgroundColor: ["var(--chart-1)", "var(--chart-2)", "var(--chart-muted)"] }] },
+        options: { cutout: "68%", plugins: { legend: { position: "bottom" }, tooltip: { callbacks: { label: (ctx) => `${ctx.label}: ฿${fmt(ctx.raw)}` } } } },
+      });
+    </script>
+  </body>
+</html>
