@@ -1,0 +1,407 @@
+<!doctype html>
+<html lang="th" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ITMAINT Tracking · ติดตามตำแหน่ง</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400&family=Noto+Sans+Thai:wght@400;500;600&display=swap" />
+    <link rel="stylesheet" href="../../assets/hark.css" />
+    <link rel="stylesheet" href="../../assets/hark-hero.css" />
+    <link rel="stylesheet" href="../../assets/hark-charts.css" />
+    <style>
+      :root, :root[data-theme] { color-scheme: dark; --fill-primary-on: #0A1024; --fill-tertiary: #0F1833; --page-max: 1680px; --gutter: 0px;
+        --sans: "Geist", "Noto Sans Thai", -apple-system, sans-serif; --x-card: #0F1833; --x-line: rgb(76 130 255 / 0.32); --x-glow: 0 0 22px rgb(56 120 255 / 0.12); --x-muted: #9AA7C7; }
+      body { background: radial-gradient(1200px 600px at 70% -10%, #13224a 0%, transparent 60%), #0A1024; }
+      .page { padding-block: 0; }
+      .x-app { display: grid; grid-template-columns: 248px minmax(0, 1fr); min-height: 100vh; }
+      .x-side { background: #0B1330; border-right: 1px solid var(--x-line); padding: 18px 12px; display: flex; flex-direction: column; gap: 4px; overflow-y: auto; }
+      .x-logo { display: flex; gap: 10px; align-items: center; padding: 4px 8px 14px; }
+      .x-logo b { font: var(--weight-bold) var(--size-heading)/1.1 var(--sans); display: block; }
+      .x-logo small { color: var(--x-muted); font-size: var(--size-caption); }
+      .x-grp { font: var(--type-tag); color: var(--x-muted); padding: 12px 10px 4px; letter-spacing: .02em; }
+      .x-nav { display: flex; align-items: center; gap: 10px; min-height: var(--tap); padding: 0 10px; border-radius: var(--r-s); color: #C9D3EE; text-decoration: none; font: var(--type-small); }
+      .x-nav:hover { background: rgb(76 130 255 / 0.1); }
+      .x-nav[aria-current] { background: linear-gradient(90deg, #2F6BFF, #1F4FD1); color: #fff; font-weight: var(--weight-medium); box-shadow: var(--x-glow); }
+      .x-nav svg, .x-ico { width: 20px; height: 20px; flex: none; }
+      .x-main { min-width: 0; display: flex; flex-direction: column; }
+      .x-top { display: flex; align-items: center; gap: 10px; padding: 12px clamp(12px, 2.5vw, 28px); border-bottom: 1px solid var(--x-line); background: rgb(10 16 36 / 0.85); position: sticky; top: 0; z-index: 5; backdrop-filter: var(--hark-blur); }
+      .x-search { flex: 1; min-width: 0; display: flex; align-items: center; gap: 8px; min-height: var(--tap); padding: 0 12px; border: 1px solid var(--x-line); border-radius: var(--r-s); background: var(--x-card); }
+      .x-search input { flex: 1; min-width: 0; background: none; border: 0; color: inherit; font: var(--type-small); outline: none; }
+      .x-kbd { font: var(--type-caption); color: var(--x-muted); border: 1px solid var(--x-line); border-radius: 6px; padding: 2px 6px; white-space: nowrap; }
+      .x-btn, .x-sel, .x-iconbtn { min-height: var(--tap); border-radius: var(--r-s); border: 1px solid var(--x-line); background: var(--x-card); color: #E6ECFF; font: var(--type-label); padding: 0 14px; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; white-space: nowrap; }
+      .x-iconbtn { width: var(--tap); padding: 0; justify-content: center; position: relative; }
+      .x-btn--pri { background: linear-gradient(90deg, #D9480F, #C2185B); border-color: transparent; color: #fff; box-shadow: 0 6px 20px rgb(194 24 91 / 0.3); }
+      .x-btn:disabled { opacity: .55; cursor: default; }
+      .x-sel { appearance: none; padding-right: 30px; background: var(--x-card) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239AA7C7' stroke-width='2.5'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 10px center; }
+      .x-dotbadge { position: absolute; top: 6px; right: 6px; min-width: 18px; height: 18px; border-radius: 9px; background: #C62A30; color: #fff; font: var(--type-tag); display: grid; place-items: center; }
+      .x-avatar { display: flex; align-items: center; gap: 8px; font: var(--type-label); }
+      .x-avatar i { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, #2F6BFF, #7C3AED); display: grid; place-items: center; font-style: normal; }
+      .x-menu { display: none; }
+      .x-body { padding: clamp(14px, 2.5vw, 28px); display: grid; gap: 18px; }
+      .x-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 14px; align-items: flex-end; }
+      .x-head h1 { font: var(--type-title); font-weight: var(--weight-bold); }
+      .x-head h1 span { color: var(--x-muted); font-weight: var(--weight-regular); font-size: var(--size-heading); }
+      .x-head p { color: var(--x-muted); font: var(--type-small); margin-top: 6px; max-width: 70ch; }
+      .x-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+      .x-card { background: var(--x-card); border: 1px solid var(--x-line); border-radius: var(--r-m); box-shadow: var(--x-glow); padding: 16px; min-width: 0; }
+      .x-card h2 { font: var(--type-body-strong); margin-bottom: 12px; display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+      .x-card h2 small { color: var(--x-muted); font-weight: var(--weight-regular); }
+      .x-tabs { display: flex; gap: 6px; overflow-x: auto; border-bottom: 1px solid var(--x-line); scrollbar-width: none; }
+      .x-tabs button { min-height: var(--tap); background: none; border: 0; border-bottom: 2px solid transparent; color: var(--x-muted); font: var(--type-label); padding: 0 14px; cursor: pointer; white-space: nowrap; display: flex; align-items: center; gap: 6px; }
+      .x-tabs button[aria-selected="true"] { color: #fff; border-color: #FF5A3C; }
+      .x-tabs .x-dotbadge { position: static; }
+      .x-dotbadge[hidden] { display: none; }
+      .x-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+      .x-kpi { display: flex; gap: 12px; align-items: center; }
+      .x-kpi b { font: var(--type-figure); font-weight: var(--weight-bold); display: block; }
+      .x-kpi span { font: var(--type-caption); color: var(--x-muted); }
+      .x-tile { width: 44px; height: 44px; border-radius: var(--r-s); display: grid; place-items: center; color: #fff; flex: none; }
+      .x-t1 { background: linear-gradient(135deg, #2F6BFF, #22B5FF); } .x-t2 { background: linear-gradient(135deg, #FF4D6D, #C2185B); }
+      .x-t3 { background: linear-gradient(135deg, #16A34A, #2DD4BF); } .x-t4 { background: linear-gradient(135deg, #7C3AED, #C084FC); }
+      .x-t5 { background: linear-gradient(135deg, #F97316, #F59E0B); }
+      .x-grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr)); gap: 16px; }
+      .x-map { width: 100%; height: auto; display: block; border-radius: var(--r-s); }
+      .x-map text { font-family: var(--sans); font-size: 12px; fill: #C9D3EE; }
+      .x-asset { cursor: pointer; outline: none; }
+      .x-asset:focus-visible circle:last-of-type { stroke: #FFD166; }
+      .x-ring { transform-box: fill-box; transform-origin: center; animation: x-pulse 1.8s var(--ease-out) infinite; }
+      @keyframes x-pulse { from { transform: scale(1); opacity: .7; } to { transform: scale(3.2); opacity: 0; } }
+      @media (prefers-reduced-motion: reduce) { .x-ring { animation: none; opacity: .3; } }
+      .x-legend { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 10px; font: var(--type-caption); color: var(--x-muted); }
+      .x-legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; }
+      .x-tip { position: fixed; z-index: 50; background: #050A1A; border: 1px solid var(--x-line); border-radius: 10px; padding: 8px 10px; font: var(--type-caption); white-space: pre-line; pointer-events: none; box-shadow: var(--hark-shadow); }
+      .x-table { width: 100%; border-collapse: collapse; font: var(--type-small); }
+      .x-table th, .x-table td { text-align: left; padding: 12px 10px; border-bottom: 1px solid rgb(76 130 255 / 0.14); vertical-align: middle; }
+      .x-table thead th { color: var(--x-muted); font: var(--type-tag); }
+      .x-table td small { display: block; color: var(--x-muted); font-size: var(--size-caption); }
+      .x-src { display: inline-block; padding: 3px 10px; border-radius: var(--r-pill); font: var(--type-tag); color: #fff; }
+      .x-src--rfid { background: #1F4FD1; } .x-src--gps { background: #6D28D9; } .x-src--qr { background: #0F766E; }
+      .x-flag { display: inline-block; margin-left: 6px; padding: 2px 8px; border-radius: var(--r-pill); font: var(--type-tag); background: rgb(229 72 77 / 0.18); color: #FF8A8E; }
+      .x-flag--ok { background: rgb(22 163 74 / 0.18); color: #6EE7A0; } .x-flag--off { background: #222C4A; color: #B8C3E0; }
+      .x-list { list-style: none; margin: 0; padding: 0; display: grid; }
+      .x-list li { display: flex; gap: 12px; align-items: center; padding: 12px 0; border-bottom: 1px solid rgb(76 130 255 / 0.14); font: var(--type-small); }
+      .x-list li:last-child { border: 0; }
+      .x-list .x-tile { width: 36px; height: 36px; }
+      .x-list time { margin-left: auto; color: var(--x-muted); font: var(--type-caption); white-space: nowrap; }
+      .x-list small { display: block; color: var(--x-muted); font-size: var(--size-caption); }
+      .x-alert { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; border-color: rgb(229 72 77 / 0.5); }
+      .x-alert.is-ack { border-color: var(--x-line); }
+      .x-alert > div:nth-child(2) { flex: 1; min-width: 200px; }
+      .x-alert h3, .x-reader h3 { font: var(--type-body-strong); }
+      .x-alert p, .x-reader p { color: var(--x-muted); font: var(--type-small); margin-top: 4px; }
+      .x-readers { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+      .x-reader { display: grid; gap: 10px; }
+      .x-reader dl { display: grid; grid-template-columns: 1fr auto; gap: 6px; margin: 0; font: var(--type-small); }
+      .x-reader dt { color: var(--x-muted); } .x-reader dd { margin: 0; text-align: right; }
+      .x-panel { display: grid; gap: 16px; }
+      .x-panel[hidden] { display: none; }
+      dialog { background: #0F1833; color: #E6ECFF; border: 1px solid var(--x-line); border-radius: var(--r-m); padding: 20px; width: min(420px, calc(100vw - 32px)); box-shadow: 0 20px 60px rgb(0 0 0 / 0.6); }
+      dialog::backdrop { background: rgb(3 6 18 / 0.7); backdrop-filter: blur(4px); }
+      dialog h2 { font: var(--type-heading); margin-bottom: 14px; }
+      dialog form { display: grid; gap: 12px; }
+      dialog label { display: grid; gap: 6px; font: var(--type-label); color: #C9D3EE; }
+      dialog input, dialog select { min-height: var(--tap); border-radius: var(--r-s); border: 1px solid var(--x-line); background: #0A1024; color: #fff; padding: 0 12px; font: var(--type-body); width: 100%; }
+      .x-row { display: flex; justify-content: flex-end; gap: 10px; flex-wrap: wrap; margin-top: 4px; }
+      .x-toast { position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 20px); opacity: 0; z-index: 60; background: #111C3D; border: 1px solid var(--x-line); color: #fff; padding: 12px 16px; border-radius: var(--r-s); font: var(--type-label); box-shadow: var(--x-glow), 0 10px 30px rgb(0 0 0 / .5); transition: all var(--dur-quick) var(--ease-out); max-width: calc(100vw - 32px); }
+      .x-toast.on { opacity: 1; transform: translate(-50%, 0); }
+      .x-scrim { display: none; }
+      @media (max-width: 960px) {
+        .x-app { grid-template-columns: minmax(0, 1fr); }
+        .x-side { position: fixed; inset: 0 auto 0 0; width: 272px; z-index: 40; transform: translateX(-100%); transition: transform var(--dur-quick) var(--ease-out); }
+        .x-side.open { transform: none; }
+        .x-scrim.open { display: block; position: fixed; inset: 0; z-index: 30; background: rgb(3 6 18 / .6); }
+        .x-menu { display: inline-flex; }
+        .x-avatar span, .x-kbd { display: none; }
+      }
+      @media (max-width: 640px) {
+        .x-top { flex-wrap: wrap; } .x-search { order: 9; flex-basis: 100%; }
+        .x-top .x-btn--pri span { display: none; }
+        .x-table thead { display: none; }
+        .x-table tr { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 12px; padding: 12px 0; border-bottom: 1px solid rgb(76 130 255 / 0.14); }
+        .x-table th, .x-table td { padding: 0; border: 0; }
+        .x-table tbody th { grid-column: 1 / -1; font: var(--type-body-strong); }
+        .x-table td::before { content: attr(data-label); display: block; color: var(--x-muted); font: var(--type-caption); margin-bottom: 2px; }
+      }
+    </style>
+  </head>
+  <body>
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+      <defs>
+        <symbol id="i-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11 12 4l9 7v9h-6v-6H9v6H3z"/></symbol>
+        <symbol id="i-grid" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></symbol>
+        <symbol id="i-box" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 3 3 7.5v9L12 21l9-4.5v-9z M3 7.5 12 12l9-4.5 M12 12v9"/></symbol>
+        <symbol id="i-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></symbol>
+        <symbol id="i-swap" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 8h14l-4-4M20 16H6l4 4"/></symbol>
+        <symbol id="i-coin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9 9.5h4.5a1.75 1.75 0 0 1 0 3.5h-3a1.75 1.75 0 0 0 0 3.5H15M12 7v2M12 16.5v1.5"/></symbol>
+        <symbol id="i-wrench" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M14.5 6.5a4 4 0 0 0 5 5L12 19a2.1 2.1 0 0 1-3-3l7.5-7.5a4 4 0 0 1-2-2z"/></symbol>
+        <symbol id="i-cal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></symbol>
+        <symbol id="i-store" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 9 5 4h14l2 5v11H3zM3 9h18M9 20v-6h6v6"/></symbol>
+        <symbol id="i-cart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 4h2l2.5 11h11L21 7H6.5"/><circle cx="9" cy="19" r="1.5"/><circle cx="17" cy="19" r="1.5"/></symbol>
+        <symbol id="i-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></symbol>
+        <symbol id="i-bolt" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></symbol>
+        <symbol id="i-cog" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9 7 7M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/></symbol>
+        <symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3.5"/><path d="M2 20c0-3.5 3-6 7-6s7 2.5 7 6M16 4.5a3.5 3.5 0 0 1 0 7M22 20c0-3-2-5-4.5-5.7"/></symbol>
+        <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></symbol>
+        <symbol id="i-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4zM10 21h4"/></symbol>
+        <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></symbol>
+        <symbol id="i-scan" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3M7 12h10"/></symbol>
+        <symbol id="i-tag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 12V4h8l10 10-8 8z"/><circle cx="7.5" cy="8.5" r="1.5"/></symbol>
+        <symbol id="i-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 3 2 20h20zM12 10v4M12 17h.01"/></symbol>
+        <symbol id="i-signal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12a7 7 0 0 1 14 0M8.5 12a3.5 3.5 0 0 1 7 0"/><circle cx="12" cy="16" r="1.5"/><path d="M12 17.5V21"/></symbol>
+        <symbol id="i-truck" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M2 6h11v10H2zM13 10h5l3 3v3h-8"/><circle cx="6" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></symbol>
+        <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+        <symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+      </defs>
+    </svg>
+    <div class="page" id="top">
+      <div class="x-app">
+        <aside class="x-side" id="side" aria-label="เมนูหลัก">
+          <div class="x-logo"><span class="x-tile x-t1"><svg class="x-ico"><use href="#i-box"/></svg></span><div><b>IT&amp;MAINT</b><small>Smart Asset · Smart Work</small></div></div>
+          <p class="x-grp">ภาพรวม</p>
+          <a class="x-nav" href="#"><svg><use href="#i-home"/></svg>หน้าหลัก</a>
+          <a class="x-nav" href="#"><svg><use href="#i-grid"/></svg>Command Center</a>
+          <p class="x-grp">ทรัพย์สิน</p>
+          <a class="x-nav" href="#"><svg><use href="#i-box"/></svg>ทะเบียนทรัพย์สิน</a>
+          <a class="x-nav" href="#"><svg><use href="#i-swap"/></svg>ยืม · โอน · ย้าย</a>
+          <a class="x-nav" href="#"><svg><use href="#i-coin"/></svg>ค่าเสื่อม</a>
+          <a class="x-nav" href="#" aria-current="page"><svg><use href="#i-pin"/></svg>ติดตามตำแหน่ง</a>
+          <p class="x-grp">ซ่อมบำรุง</p>
+          <a class="x-nav" href="#"><svg><use href="#i-wrench"/></svg>แจ้งซ่อม / Service Desk</a>
+          <a class="x-nav" href="#"><svg><use href="#i-cal"/></svg>แผน PM / CMMS</a>
+          <p class="x-grp">คลัง &amp; จัดซื้อ</p>
+          <a class="x-nav" href="#"><svg><use href="#i-store"/></svg>คลังอะไหล่</a>
+          <a class="x-nav" href="#"><svg><use href="#i-cart"/></svg>PR / PO</a>
+          <p class="x-grp">วิเคราะห์</p>
+          <a class="x-nav" href="#"><svg><use href="#i-chart"/></svg>รายงาน / Dashboard</a>
+          <a class="x-nav" href="#"><svg><use href="#i-bolt"/></svg>EAM &amp; Predictive</a>
+          <p class="x-grp">ระบบ</p>
+          <a class="x-nav" href="#"><svg><use href="#i-users"/></svg>ผู้ใช้งาน</a>
+          <a class="x-nav" href="#"><svg><use href="#i-cog"/></svg>ตั้งค่า</a>
+        </aside>
+        <div class="x-scrim" id="scrim"></div>
+        <div class="x-main">
+          <header class="x-top">
+            <button class="x-iconbtn x-menu" id="menu" aria-label="เปิดเมนู"><svg class="x-ico"><use href="#i-menu"/></svg></button>
+            <select class="x-sel" id="site" aria-label="เลือกไซต์"><option>โรงงานสมุทรสาคร</option><option>โรงงานระยอง</option></select>
+            <label class="x-search"><svg class="x-ico"><use href="#i-search"/></svg><input id="q" type="search" placeholder="ค้นหา Ticket / ทรัพย์สิน / อุปกรณ์ / ผู้ใช้งาน" aria-label="ค้นหา" /><span class="x-kbd">Ctrl + K</span></label>
+            <button class="x-btn x-btn--pri" id="repair" aria-label="แจ้งซ่อม"><svg class="x-ico"><use href="#i-plus"/></svg><span>แจ้งซ่อม</span></button>
+            <button class="x-iconbtn" id="bell" aria-label="การแจ้งเตือน"><svg class="x-ico"><use href="#i-bell"/></svg><span class="x-dotbadge" data-open>2</span></button>
+            <div class="x-avatar"><i>A</i><span>Admin</span></div>
+          </header>
+          <main class="x-body">
+            <div class="x-head">
+              <div>
+                <h1>ติดตามตำแหน่ง <span>QR · RFID · GPS</span></h1>
+                <p>ตำแหน่งล่าสุดจากเครื่องอ่าน/การสแกน · Geofence แจ้งเตือนเมื่อออกนอกเขต · ตรวจพบผิดที่เทียบกับทะเบียน</p>
+              </div>
+              <div class="x-actions">
+                <button class="x-btn x-btn--pri" data-open-dlg="dlg-scan"><svg class="x-ico"><use href="#i-scan"/></svg>สแกน</button>
+              </div>
+            </div>
+
+            <section class="x-kpis" aria-label="สรุป">
+              <div class="x-card x-kpi"><span class="x-tile x-t1"><svg class="x-ico"><use href="#i-tag"/></svg></span><div><b>11</b><span>ติดแท็ก / Geofence</span></div></div>
+              <div class="x-card x-kpi"><span class="x-tile x-t3"><svg class="x-ico"><use href="#i-signal"/></svg></span><div><b>0</b><span>พบใน 24 ชม.</span></div></div>
+              <div class="x-card x-kpi"><span class="x-tile x-t2"><svg class="x-ico"><use href="#i-alert"/></svg></span><div><b id="kpi-out">2</b><span>นอกเขต (ยังไม่รับทราบ)</span></div></div>
+              <div class="x-card x-kpi"><span class="x-tile x-t5"><svg class="x-ico"><use href="#i-pin"/></svg></span><div><b>1</b><span>พบผิดที่</span></div></div>
+              <div class="x-card x-kpi"><span class="x-tile x-t4"><svg class="x-ico"><use href="#i-clock"/></svg></span><div><b>4</b><span>ไม่พบนาน</span></div></div>
+            </section>
+
+            <div class="x-tabs" role="tablist" aria-label="มุมมอง">
+              <button role="tab" aria-selected="true" data-tab="p-over">ภาพรวม</button>
+              <button role="tab" aria-selected="false" data-tab="p-events">เหตุการณ์</button>
+              <button role="tab" aria-selected="false" data-tab="p-alerts">แจ้งเตือนนอกเขต <span class="x-dotbadge" data-open>2</span></button>
+              <button role="tab" aria-selected="false" data-tab="p-zones">โซน &amp; เครื่องอ่าน</button>
+            </div>
+
+            <section class="x-panel" id="p-over" role="tabpanel">
+              <div class="x-grid2">
+                <div class="x-card">
+                  <h2>ผังอาคาร <small id="site-name">โรงงานสมุทรสาคร</small></h2>
+                  <svg class="x-map" viewBox="0 0 420 280" role="img" aria-label="ผังอาคารแสดงโซนและตำแหน่งทรัพย์สิน MTR-007 อยู่ผิดที่ในคลังอะไหล่">
+                    <rect x="6" y="6" width="408" height="268" rx="14" fill="#0B1330" stroke="#2A4A8A" stroke-width="1.5"/>
+                    <rect x="20" y="20" width="184" height="134" rx="10" fill="rgb(47 107 255 / .12)" stroke="#3B6FE0"/><text x="32" y="42">โซน A · Line 1</text>
+                    <rect x="216" y="20" width="184" height="134" rx="10" fill="rgb(124 58 237 / .12)" stroke="#7C5BE0"/><text x="228" y="42">โซน B · Line 2</text>
+                    <rect x="20" y="166" width="184" height="94" rx="10" fill="rgb(45 212 191 / .10)" stroke="#2AA597"/><text x="32" y="188">คลังอะไหล่</text>
+                    <rect x="216" y="166" width="184" height="94" rx="10" fill="rgb(154 167 199 / .06)" stroke="#33406A" stroke-dasharray="4 4"/><text x="228" y="188" style="fill:#7E8BAE">สำนักงาน / ท่ารับส่ง</text>
+                    <g fill="#16224A" stroke="#2A3B6E"><rect x="36" y="60" width="150" height="14" rx="4"/><rect x="36" y="120" width="150" height="14" rx="4"/><rect x="232" y="60" width="150" height="14" rx="4"/><rect x="232" y="120" width="150" height="14" rx="4"/><rect x="36" y="200" width="60" height="44" rx="4"/><rect x="106" y="200" width="60" height="44" rx="4"/></g>
+                    <g fill="#FFB547"><path d="M204 98l6 6-6 6-6-6z"/><path d="M220 98l6 6-6 6-6-6z"/><path d="M110 160l6 6-6 6-6-6z"/></g>
+                    <text x="176" y="94" style="font-size:12px;fill:#FFB547">G-01</text><text x="226" y="94" style="font-size:12px;fill:#FFB547">G-02</text><text x="122" y="170" style="font-size:12px;fill:#FFB547">G-03</text>
+                    <g class="x-asset" tabindex="0" data-tip="CNC-001 · เครื่อง CNC&#10;RFID · สายการผลิต A · 08:30"><circle class="x-ring" cx="80" cy="100" r="6" fill="#3B82F6"/><circle cx="80" cy="100" r="6" fill="#3B82F6" stroke="#fff" stroke-width="2"/><text x="90" y="104">CNC-001</text></g>
+                    <g class="x-asset" tabindex="0" data-tip="CMP-02 · ปั๊มลม&#10;QR · สายการผลิต A · 06:48"><circle class="x-ring" cx="150" cy="100" r="6" fill="#22C55E"/><circle cx="150" cy="100" r="6" fill="#22C55E" stroke="#fff" stroke-width="2"/><text x="132" y="152" dy="-36">CMP-02</text></g>
+                    <g class="x-asset" tabindex="0" data-tip="CONV-03 · สายพานลำเลียง&#10;RFID · สายการผลิต B · 08:33"><circle class="x-ring" cx="300" cy="100" r="6" fill="#3B82F6"/><circle cx="300" cy="100" r="6" fill="#3B82F6" stroke="#fff" stroke-width="2"/><text x="310" y="104">CONV-03</text></g>
+                    <g class="x-asset" tabindex="0" data-tip="MTR-007 · ผิดที่&#10;พบ: คลังอะไหล่ · ทะเบียน: สายการผลิต B&#10;RFID · 08:39"><circle class="x-ring" cx="186" cy="222" r="7" fill="#F1555B"/><circle cx="186" cy="222" r="7" fill="#F1555B" stroke="#fff" stroke-width="2"/><text x="120" y="268" dy="-6" style="fill:#FF8A8E">MTR-007</text></g>
+                  </svg>
+                  <div class="x-legend"><span><i style="background:#3B82F6"></i>RFID</span><span><i style="background:#22C55E"></i>QR</span><span><i style="background:#F1555B"></i>ผิดที่</span><span><i style="background:#FFB547;border-radius:2px"></i>เครื่องอ่าน</span></div>
+                </div>
+                <div class="x-card">
+                  <h2>Geofence <small>GPS</small></h2>
+                  <svg class="x-map" viewBox="0 0 420 280" role="img" aria-label="แผนที่ Geofence: VH-001 อยู่นอกเขต FL-02 อยู่ใกล้ขอบเขต">
+                    <rect width="420" height="280" rx="14" fill="#0B1330"/>
+                    <g stroke="#17244A" stroke-width="10" fill="none" stroke-linecap="round"><path d="M0 70 C120 60 260 90 420 60"/><path d="M60 280 C90 180 120 120 140 0"/><path d="M0 220 H420"/><path d="M330 280 V0"/></g>
+                    <path d="M0 250 C100 235 200 270 420 245" stroke="#12305A" stroke-width="16" fill="none"/>
+                    <circle cx="210" cy="140" r="100" fill="rgb(241 85 91 / .07)" stroke="#F1555B" stroke-width="2" stroke-dasharray="7 6"/>
+                    <rect x="170" y="108" width="80" height="64" rx="8" fill="#1A2A58" stroke="#3B6FE0"/><text x="210" y="145" text-anchor="middle">โรงงาน</text>
+                    <path d="M240 120 Q300 70 352 46" stroke="#F1555B" stroke-width="1.5" stroke-dasharray="2 5" fill="none"/>
+                    <g class="x-asset" tabindex="0" data-tip="VH-001 · รถกระบะ Isuzu D-Max&#10;นอกเขต · 13.5859, 100.3102 · 08:36"><circle class="x-ring" cx="356" cy="44" r="7" fill="#F1555B"/><circle cx="356" cy="44" r="7" fill="#F1555B" stroke="#fff" stroke-width="2"/><text x="350" y="72" text-anchor="end">VH-001</text><text x="350" y="88" text-anchor="end" style="fill:#FF8A8E">13.5859, 100.3102</text></g>
+                    <g class="x-asset" tabindex="0" data-tip="FL-02 · รถโฟล์คลิฟท์ Toyota 2.5T&#10;ใกล้ขอบเขต · 07:48"><circle class="x-ring" cx="286" cy="200" r="7" fill="#F59E0B"/><circle cx="286" cy="200" r="7" fill="#F59E0B" stroke="#fff" stroke-width="2"/><text x="298" y="204">FL-02</text></g>
+                    <text x="24" y="36" style="fill:#7E8BAE">N ↑</text>
+                  </svg>
+                  <div class="x-legend"><span><i style="background:transparent;border:2px dashed #F1555B"></i>ขอบเขต Geofence</span><span><i style="background:#F1555B"></i>นอกเขต</span><span><i style="background:#F59E0B"></i>ใกล้ขอบ</span></div>
+                </div>
+              </div>
+              <div class="x-card">
+                <h2>ตำแหน่งล่าสุด <small>1 ต.ค. 2569</small></h2>
+                <table class="x-table">
+                  <thead><tr><th scope="col">ทรัพย์สิน</th><th scope="col">แหล่ง</th><th scope="col">ตำแหน่งที่พบ</th><th scope="col">ตามทะเบียน</th><th scope="col">เวลา</th></tr></thead>
+                  <tbody id="rows">
+                    <tr><th scope="row">MTR-007</th><td data-label="แหล่ง"><span class="x-src x-src--rfid">RFID</span></td><td data-label="ตำแหน่งที่พบ">คลังสินค้า/คลังอะไหล่<span class="x-flag">ผิดที่</span></td><td data-label="ตามทะเบียน">สายการผลิต B</td><td data-label="เวลา">1 ต.ค. 2569 08:39</td></tr>
+                    <tr><th scope="row">VH-001</th><td data-label="แหล่ง"><span class="x-src x-src--gps">GPS</span></td><td data-label="ตำแหน่งที่พบ">นอกเขต<small>13.5859, 100.3102</small></td><td data-label="ตามทะเบียน" class="sub">—</td><td data-label="เวลา">1 ต.ค. 2569 08:36</td></tr>
+                    <tr><th scope="row">CONV-03</th><td data-label="แหล่ง"><span class="x-src x-src--rfid">RFID</span></td><td data-label="ตำแหน่งที่พบ">สายการผลิต B</td><td data-label="ตามทะเบียน">สายการผลิต B</td><td data-label="เวลา">1 ต.ค. 2569 08:33</td></tr>
+                    <tr><th scope="row">CNC-001</th><td data-label="แหล่ง"><span class="x-src x-src--rfid">RFID</span></td><td data-label="ตำแหน่งที่พบ">สายการผลิต A</td><td data-label="ตามทะเบียน">สายการผลิต A</td><td data-label="เวลา">1 ต.ค. 2569 08:30</td></tr>
+                    <tr><th scope="row">CMP-02</th><td data-label="แหล่ง"><span class="x-src x-src--qr">QR</span></td><td data-label="ตำแหน่งที่พบ">สายการผลิต A</td><td data-label="ตามทะเบียน">สายการผลิต A</td><td data-label="เวลา">1 ต.ค. 2569 06:48</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </section>
+
+            <section class="x-panel" id="p-events" role="tabpanel" hidden>
+              <div class="x-grid2">
+                <figure class="chart x-card">
+                  <figcaption class="chart__cap">เหตุการณ์ตรวจพบ 7 วัน แยกตามแหล่ง<small>25 ก.ย. – 1 ต.ค. 2569 · จำนวนครั้ง</small></figcaption>
+                  <div class="chart__canvas"><canvas id="ev-chart" role="img" aria-label="แท่งซ้อนจำนวนเหตุการณ์รายวันจาก RFID GPS และ QR ในรอบ 7 วัน"></canvas></div>
+                </figure>
+                <div class="x-card">
+                  <h2>เหตุการณ์ล่าสุด <small>วันนี้</small></h2>
+                  <ul class="x-list">
+                    <li><span class="x-tile x-t2"><svg class="x-ico"><use href="#i-pin"/></svg></span><div>MTR-007 ตรวจพบผิดที่<small>RFID G-03 · คลังอะไหล่ (ทะเบียน: สายการผลิต B)</small></div><time>08:39</time></li>
+                    <li><span class="x-tile x-t2"><svg class="x-ico"><use href="#i-truck"/></svg></span><div>VH-001 ออกนอกเขต<small>GPS · 13.5859, 100.3102</small></div><time>08:36</time></li>
+                    <li><span class="x-tile x-t1"><svg class="x-ico"><use href="#i-signal"/></svg></span><div>CONV-03 ผ่านเครื่องอ่าน<small>RFID G-02 · สายการผลิต B</small></div><time>08:33</time></li>
+                    <li><span class="x-tile x-t1"><svg class="x-ico"><use href="#i-signal"/></svg></span><div>CNC-001 ผ่านเครื่องอ่าน<small>RFID G-01 · สายการผลิต A</small></div><time>08:30</time></li>
+                    <li><span class="x-tile x-t5"><svg class="x-ico"><use href="#i-truck"/></svg></span><div>FL-02 ออกนอกเขต<small>GPS-FL02 · ใกล้ขอบ Geofence</small></div><time>07:48</time></li>
+                    <li><span class="x-tile x-t3"><svg class="x-ico"><use href="#i-scan"/></svg></span><div>CMP-02 สแกน QR<small>สายการผลิต A</small></div><time>06:48</time></li>
+                  </ul>
+                </div>
+              </div>
+              <script type="text/csv" id="ev-data">
+day,RFID,GPS,QR
+25 ก.ย.,18,6,4
+26 ก.ย.,22,7,3
+27 ก.ย.,15,5,6
+28 ก.ย.,9,4,2
+29 ก.ย.,20,8,5
+30 ก.ย.,17,6,3
+1 ต.ค.,3,2,1
+              </script>
+            </section>
+
+            <section class="x-panel" id="p-alerts" role="tabpanel" hidden>
+              <div class="x-card x-alert">
+                <span class="x-tile x-t2"><svg class="x-ico"><use href="#i-truck"/></svg></span>
+                <div><h3>VH-001 · รถกระบะ Isuzu D-Max 1กข-1234</h3><p>GPS ออกนอกเขต · 13.5859, 100.3102 · 08:36 · <span class="x-flag x-status">ยังไม่รับทราบ</span></p></div>
+                <button class="x-btn x-btn--pri x-ack" data-id="VH-001">รับทราบ</button>
+              </div>
+              <div class="x-card x-alert">
+                <span class="x-tile x-t5"><svg class="x-ico"><use href="#i-truck"/></svg></span>
+                <div><h3>FL-02 · รถโฟล์คลิฟท์ Toyota 2.5T</h3><p>GPS ออกนอกเขต · 07:48 · <span class="x-flag x-status">ยังไม่รับทราบ</span></p></div>
+                <button class="x-btn x-btn--pri x-ack" data-id="FL-02">รับทราบ</button>
+              </div>
+            </section>
+
+            <section class="x-panel" id="p-zones" role="tabpanel" hidden>
+              <div class="x-head"><p>เครื่องอ่านและโซนที่ใช้ตรวจตำแหน่งในไซต์นี้</p><button class="x-btn" data-open-dlg="dlg-zone"><svg class="x-ico"><use href="#i-plus"/></svg>โซน</button></div>
+              <div class="x-readers" id="readers">
+                <div class="x-card x-reader"><span class="x-tile x-t1"><svg class="x-ico"><use href="#i-signal"/></svg></span><div><h3>G-01</h3><p>RFID Gate · โซน A</p></div><dl><dt>สถานะ</dt><dd><span class="x-flag x-flag--off">ออฟไลน์</span></dd><dt>อ่าน 24 ชม.</dt><dd>0</dd></dl></div>
+                <div class="x-card x-reader"><span class="x-tile x-t4"><svg class="x-ico"><use href="#i-signal"/></svg></span><div><h3>G-02</h3><p>RFID Gate · โซน B</p></div><dl><dt>สถานะ</dt><dd><span class="x-flag x-flag--off">ออฟไลน์</span></dd><dt>อ่าน 24 ชม.</dt><dd>0</dd></dl></div>
+                <div class="x-card x-reader"><span class="x-tile x-t3"><svg class="x-ico"><use href="#i-signal"/></svg></span><div><h3>G-03</h3><p>RFID Gate · คลังอะไหล่</p></div><dl><dt>สถานะ</dt><dd><span class="x-flag x-flag--off">ออฟไลน์</span></dd><dt>อ่าน 24 ชม.</dt><dd>0</dd></dl></div>
+                <div class="x-card x-reader"><span class="x-tile x-t5"><svg class="x-ico"><use href="#i-pin"/></svg></span><div><h3>GPS-FL02</h3><p>GPS Tracker · FL-02</p></div><dl><dt>สถานะ</dt><dd><span class="x-flag x-flag--off">ออฟไลน์</span></dd><dt>อ่าน 24 ชม.</dt><dd>0</dd></dl></div>
+              </div>
+            </section>
+          </main>
+        </div>
+      </div>
+    </div>
+    <dialog id="dlg-scan" aria-labelledby="scan-t">
+      <h2 id="scan-t">สแกนทรัพย์สิน</h2>
+      <form id="f-scan">
+        <label>Asset Tag<input name="tag" required placeholder="เช่น MTR-007" autocomplete="off" /></label>
+        <label>โซน<select name="zone"><option>โซน A · Line 1</option><option>โซน B · Line 2</option><option>คลังอะไหล่</option></select></label>
+        <div class="x-row"><button type="button" class="x-btn" data-close>ยกเลิก</button><button class="x-btn x-btn--pri">บันทึกการสแกน</button></div>
+      </form>
+    </dialog>
+    <dialog id="dlg-zone" aria-labelledby="zone-t">
+      <h2 id="zone-t">เพิ่มโซน</h2>
+      <form id="f-zone">
+        <label>ชื่อโซน<input name="name" required placeholder="เช่น โซน C · Line 3" /></label>
+        <label>ประเภท<select name="type"><option>RFID</option><option>BLE</option><option>Geofence</option></select></label>
+        <label>รัศมี (เมตร)<input name="r" type="number" min="1" value="50" inputmode="numeric" /></label>
+        <div id="extra" style="display:grid;gap:12px"></div>
+        <button type="button" class="x-btn" id="add-field"><svg class="x-ico"><use href="#i-plus"/></svg>เพิ่มฟิลด์</button>
+        <div class="x-row"><button type="button" class="x-btn" data-close>ยกเลิก</button><button class="x-btn x-btn--pri">บันทึกโซน</button></div>
+      </form>
+    </dialog>
+    <div class="x-tip" id="tip" hidden></div>
+    <div class="x-toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="../../assets/hark.js"></script>
+    <script src="../../assets/chart.js"></script>
+    <script src="../../assets/datalabels.js"></script>
+    <script src="../../assets/hark-charts.js"></script>
+    <script>
+      document.documentElement.setAttribute("data-theme", "dark");
+      const $ = (s) => document.querySelector(s), $$ = (s) => [...document.querySelectorAll(s)];
+      const toast = (m) => { const t = $("#toast"); t.textContent = m; t.classList.add("on"); clearTimeout(t._t); t._t = setTimeout(() => t.classList.remove("on"), 2800); };
+      let chart;
+      function show(id) {
+        $$("[role=tab]").forEach((b) => b.setAttribute("aria-selected", b.dataset.tab === id));
+        $$(".x-panel").forEach((p) => (p.hidden = p.id !== id));
+        if (id === "p-events" && !chart) {
+          const d = Hark.data("ev-data");
+          chart = new Chart($("#ev-chart"), { type: "bar", data: { labels: d.map((r) => r.day), datasets: ["RFID", "GPS", "QR"].map((n, i) => ({ label: n, data: d.map((r) => r[n]), backgroundColor: `var(--chart-${i + 1})` })) }, options: { scales: { x: { stacked: true }, y: { stacked: true } } } });
+        }
+      }
+      $$("[role=tab]").forEach((b) => (b.onclick = () => show(b.dataset.tab)));
+      const tip = $("#tip");
+      $$("[data-tip]").forEach((g) => {
+        const on = () => { tip.textContent = g.dataset.tip; tip.hidden = false; const r = g.getBoundingClientRect(), w = tip.offsetWidth;
+          tip.style.left = Math.min(innerWidth - w - 8, Math.max(8, r.left + r.width / 2 - w / 2)) + "px"; tip.style.top = Math.max(8, r.top - tip.offsetHeight - 8) + "px"; };
+        const off = () => (tip.hidden = true);
+        ["mouseenter", "focus", "click"].forEach((e) => g.addEventListener(e, on));
+        ["mouseleave", "blur"].forEach((e) => g.addEventListener(e, off));
+      });
+      addEventListener("scroll", () => (tip.hidden = true), { passive: true });
+      let open = 2;
+      $$(".x-ack").forEach((b) => (b.onclick = () => {
+        const c = b.closest(".x-alert"), s = c.querySelector(".x-status");
+        c.classList.add("is-ack"); s.textContent = "รับทราบแล้ว"; s.classList.add("x-flag--ok");
+        b.disabled = true; b.textContent = "รับทราบแล้ว"; b.classList.remove("x-btn--pri"); open--;
+        $("#kpi-out").textContent = open; $$("[data-open]").forEach((n) => { n.textContent = open; n.hidden = !open; });
+        toast("รับทราบการแจ้งเตือน " + b.dataset.id + " แล้ว");
+      }));
+      $$("[data-open-dlg]").forEach((b) => (b.onclick = () => $("#" + b.dataset.openDlg).showModal()));
+      $$("[data-close]").forEach((b) => (b.onclick = () => b.closest("dialog").close()));
+      const now = () => new Date().toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" });
+      $("#f-scan").onsubmit = (e) => {
+        e.preventDefault(); const f = e.target, tag = f.tag.value.trim().toUpperCase(), zone = f.zone.value;
+        $("#rows").insertAdjacentHTML("afterbegin", `<tr><th scope="row"></th><td data-label="แหล่ง"><span class="x-src x-src--qr">QR</span></td><td data-label="ตำแหน่งที่พบ"></td><td data-label="ตามทะเบียน" class="sub">—</td><td data-label="เวลา">วันนี้ ${now()}</td></tr>`);
+        const r = $("#rows").firstElementChild; r.children[0].textContent = tag; r.children[2].textContent = zone;
+        f.closest("dialog").close(); f.reset(); show("p-over"); toast(`บันทึกการสแกน ${tag} · ${zone} แล้ว`);
+      };
+      $("#add-field").onclick = () => { const l = document.createElement("label"); l.innerHTML = 'ฟิลด์เพิ่มเติม<input placeholder="ชื่อฟิลด์ เช่น ชั้น / ห้อง" />'; $("#extra").append(l); l.querySelector("input").focus(); };
+      $("#f-zone").onsubmit = (e) => {
+        e.preventDefault(); const f = e.target, c = document.createElement("div");
+        c.className = "x-card x-reader";
+        c.innerHTML = '<span class="x-tile x-t1"><svg class="x-ico"><use href="#i-pin"/></svg></span><div><h3></h3><p></p></div><dl><dt>สถานะ</dt><dd><span class="x-flag x-flag--off">รอติดตั้ง</span></dd><dt>รัศมี</dt><dd></dd></dl>';
+        c.querySelector("h3").textContent = f.name.value; c.querySelector("p").textContent = "โซนใหม่ · " + f.type.value; c.querySelector("dl dd:last-child").textContent = f.r.value + " ม.";
+        $("#readers").append(c); toast(`เพิ่มโซน ${f.name.value} แล้ว`); f.closest("dialog").close(); f.reset(); $("#extra").innerHTML = "";
+      };
+      $("#site").onchange = (e) => { $("#site-name").textContent = e.target.value; toast("เปลี่ยนไซต์เป็น " + e.target.value); };
+      $("#repair").onclick = () => toast("เปิดฟอร์มแจ้งซ่อมใหม่");
+      $("#bell").onclick = () => { show("p-alerts"); toast(open ? `มีแจ้งเตือนนอกเขต ${open} รายการ` : "ไม่มีแจ้งเตือนใหม่"); };
+      addEventListener("keydown", (e) => { if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") { e.preventDefault(); $("#q").focus(); } });
+      const side = $("#side"), scrim = $("#scrim"), drawer = (o) => { side.classList.toggle("open", o); scrim.classList.toggle("open", o); };
+      $("#menu").onclick = () => drawer(true); scrim.onclick = () => drawer(false);
+    </script>
+  </body>
+</html>
