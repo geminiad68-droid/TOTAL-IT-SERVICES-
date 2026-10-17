@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ITMAINT IT Asset License</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400&family=Noto+Sans+Thai:wght@400;500;600&display=swap"
+    />
+    <link rel="stylesheet" href="../../assets/hark.css" />
+    <link rel="stylesheet" href="../../assets/hark-hero.css" />
+    <style>
+      .x-app{--bg:#0A1024;--card:#0f1834;--card2:#131f42;--line:rgb(86 140 255/.28);--glow:0 0 0 1px rgb(86 140 255/.12),0 0 18px rgb(59 130 246/.12);--mut:#a3b3d9;--blue:#4c8dff;--red:#ff6b6b;--amber:#ffb547;--green:#34d399;
+        color-scheme:dark;position:fixed;inset:0;display:grid;grid-template-columns:248px minmax(0,1fr);background:var(--bg);color:#eef2ff;font:var(--type-small);font-family:"Geist","Noto Sans Thai",var(--sans);z-index:1}
+      .x-app svg.i{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+      .x-side{border-right:1px solid var(--line);padding:18px 12px;overflow-y:auto;background:#0b1229}
+      .x-logo{display:flex;gap:10px;align-items:center;padding:0 8px 18px}
+      .x-logo b{font:var(--weight-bold) 20px/1 var(--sans);display:block;letter-spacing:.3px}.x-logo small{color:var(--mut);font:var(--type-caption)}
+      .x-grp{font:var(--type-tag);color:var(--mut);padding:14px 10px 6px;text-transform:uppercase;letter-spacing:.4px}
+      .x-nav a{display:flex;align-items:center;gap:10px;min-height:var(--tap);padding:0 12px;border-radius:var(--r-s);color:#d6def5;text-decoration:none}
+      .x-nav a:hover{background:rgb(76 141 255/.1)}
+      .x-nav a.on{background:linear-gradient(90deg,#2563eb,#1d4ed8);color:#fff;font-weight:500;box-shadow:0 0 16px rgb(37 99 235/.45)}
+      .x-col{display:flex;flex-direction:column;min-width:0;overflow-y:auto}
+      .x-top{position:sticky;top:0;z-index:5;display:flex;gap:10px;align-items:center;padding:12px 24px;background:rgb(10 16 36/.88);backdrop-filter:var(--hark-blur);border-bottom:1px solid var(--line)}
+      .x-in,.x-sel{min-height:var(--tap);background:var(--card);border:1px solid var(--line);border-radius:var(--r-s);color:inherit;font:inherit;padding:0 12px}
+      .x-search{flex:1;display:flex;align-items:center;gap:8px;max-width:520px;background:var(--card);border:1px solid var(--line);border-radius:var(--r-s);padding:0 10px;color:var(--mut)}
+      .x-search input{flex:1;min-height:42px;background:none;border:0;color:#eef2ff;font:inherit;outline:none;min-width:0}
+      .x-kbd{border:1px solid var(--line);border-radius:6px;padding:2px 6px;font:var(--type-caption)}
+      .x-sp{flex:1}
+      .x-ib{position:relative;flex:none;width:var(--tap);min-width:var(--tap);height:var(--tap);display:grid;place-items:center;border-radius:var(--r-s);background:var(--card);border:1px solid var(--line);color:#eef2ff;cursor:pointer}
+      .x-ib em{position:absolute;top:4px;right:4px;min-width:18px;height:18px;border-radius:9px;background:#be123c;color:#fff;font:var(--type-caption);font-style:normal;display:grid;place-items:center}
+      .x-btn{display:inline-flex;align-items:center;gap:8px;min-height:var(--tap);padding:0 16px;border-radius:var(--r-s);font:var(--type-label);font-family:inherit;cursor:pointer;color:#fff;border:1px solid var(--line);background:var(--card);white-space:nowrap}
+      .x-btn:hover{border-color:var(--blue)}
+      .x-pri{border:0;background:linear-gradient(90deg,#c2410c,#be185d);box-shadow:0 4px 18px rgb(190 24 93/.35)}
+      .x-pri:hover{filter:brightness(1.1)}
+      .x-av{display:flex;align-items:center;gap:8px}.x-av i{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-weight:600;background:linear-gradient(135deg,#6366f1,#ec4899)}
+      .x-av small{display:block;color:var(--mut);font:var(--type-caption)}
+      .x-pop{position:absolute;right:0;top:52px;width:300px;background:var(--card2);border:1px solid var(--line);border-radius:var(--r-m);box-shadow:var(--glow),0 20px 40px #0008;padding:8px;display:none;text-align:left;cursor:default}
+      .x-pop.open{display:block}.x-pop p{margin:0;padding:10px;border-bottom:1px solid var(--line);font:var(--type-small)}.x-pop p:last-child{border:0}
+      .x-body{padding:22px 24px 40px;display:grid;gap:18px}
+      .x-h{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;justify-content:space-between}
+      .x-h h1{margin:0;font:var(--type-title);font-weight:600}.x-h p{margin:6px 0 0;color:var(--mut);font:var(--type-small)}
+      .x-tabs{display:flex;gap:4px;overflow-x:auto;border-bottom:1px solid var(--line)}
+      .x-tabs button{min-height:var(--tap);padding:0 14px;background:none;border:0;border-bottom:2px solid transparent;color:var(--mut);font:var(--type-label);font-family:inherit;cursor:pointer;white-space:nowrap;display:flex;gap:6px;align-items:center}
+      .x-tabs button[aria-selected=true]{color:#fff;border-color:#f97316}
+      .x-tabs b{background:#be185d;color:#fff;border-radius:9px;padding:0 7px;font:var(--type-tag)}
+      .x-card{background:linear-gradient(180deg,var(--card2),var(--card));border:1px solid var(--line);border-radius:16px;box-shadow:var(--glow);padding:18px}
+      .x-card h3{margin:0 0 14px;font:var(--type-body-strong);display:flex;justify-content:space-between;gap:8px}
+      .x-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px}
+      .x-kpi{display:flex;gap:12px;align-items:center;padding:14px}
+      .x-tile{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;color:#fff;flex:none;box-shadow:0 4px 14px #0006}
+      .x-g1{background:linear-gradient(135deg,#3b82f6,#1e40af)}.x-g2{background:linear-gradient(135deg,#f43f5e,#9f1239)}.x-g3{background:linear-gradient(135deg,#f59e0b,#c2410c)}.x-g4{background:linear-gradient(135deg,#a855f7,#6d28d9)}.x-g5{background:linear-gradient(135deg,#10b981,#047857)}.x-g6{background:linear-gradient(135deg,#06b6d4,#0e7490)}
+      .x-kpi small{display:block;color:var(--mut);font:var(--type-caption)}.x-kpi strong{font:var(--weight-bold) 24px/1.2 var(--sans)}
+      .x-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px}
+      .x-donut{display:flex;gap:18px;align-items:center;flex-wrap:wrap}.x-donut svg{width:170px;height:170px}
+      .x-leg{display:grid;grid-template-columns:1fr 1fr;gap:6px 16px;flex:1;min-width:200px;margin:0;padding:0;list-style:none}
+      .x-leg li{display:flex;align-items:center;gap:8px}.x-leg i{width:10px;height:10px;border-radius:3px}.x-leg b{margin-left:auto}
+      .x-wrap{overflow-x:auto}
+      .x-tbl{width:100%;border-collapse:collapse;font:var(--type-small)}
+      .x-tbl th{color:var(--mut);font:var(--type-tag);text-align:left;padding:10px;border-bottom:1px solid var(--line);white-space:nowrap}
+      .x-tbl td{padding:10px;border-bottom:1px solid rgb(86 140 255/.12);vertical-align:middle}
+      .x-tbl tr:hover td{background:#141f40}
+      .x-tbl small{display:block;color:var(--mut);font:var(--type-caption)}
+      .x-tag{display:inline-flex;align-items:center;gap:6px;border-radius:var(--r-pill);padding:3px 10px;font:var(--type-tag);border:1px solid currentColor;white-space:nowrap}
+      .x-red{color:var(--red)}.x-amb{color:var(--amber)}.x-grn{color:var(--green)}.x-blu{color:#8db4ff}.x-mut{color:var(--mut)}
+      .x-bar{width:110px;height:6px;border-radius:3px;background:rgb(255 255 255/.08);overflow:hidden;margin-top:6px}.x-bar i{display:block;height:100%;border-radius:3px}
+      .x-key{display:flex;align-items:center;gap:4px;font-family:"Geist Mono",monospace;font-size:12px}
+      .x-key button{width:var(--tap);height:var(--tap);background:none;border:0;color:var(--mut);cursor:pointer;display:grid;place-items:center}
+      .x-devs{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+      .x-dev header{display:flex;gap:12px;align-items:center;margin-bottom:12px}.x-dev header b{display:block}.x-dev header small{color:var(--mut)}
+      .x-dev dl{display:grid;grid-template-columns:auto 1fr;gap:8px 12px;margin:0}.x-dev dt{color:var(--mut)}.x-dev dd{margin:0;text-align:right}
+      .x-issue{display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap}.x-issue>div{flex:1;min-width:220px}.x-issue p{margin:4px 0 0;color:var(--mut)}
+      .x-acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+      [hidden]{display:none!important}
+      .x-dlg{background:var(--card2);color:#eef2ff;border:1px solid var(--line);border-radius:16px;box-shadow:var(--glow),0 30px 60px #000a;padding:0;width:min(640px,94vw);font-family:"Geist","Noto Sans Thai",var(--sans);color-scheme:dark}
+      .x-dlg::backdrop{background:rgb(5 8 20/.7);backdrop-filter:blur(4px)}
+      .x-dlg form{padding:22px;display:grid;gap:14px}.x-dlg h2{margin:0;font:var(--type-heading);font-weight:600;display:flex;justify-content:space-between;align-items:center}
+      .x-fg{display:grid;grid-template-columns:1fr 1fr;gap:12px}.x-fg label{display:grid;gap:6px;font:var(--type-caption);color:var(--mut)}.x-fg .x-full{grid-column:1/-1}
+      .x-fg .x-in,.x-fg .x-sel{width:100%;box-sizing:border-box;font:var(--type-small);font-family:inherit;color:#eef2ff}
+      .x-toast{position:fixed;bottom:24px;left:50%;transform:translate(-50%,20px);opacity:0;background:var(--card2);border:1px solid var(--green);border-radius:var(--r-s);padding:12px 18px;z-index:9;transition:all var(--dur-quick) var(--ease-out);box-shadow:var(--glow);pointer-events:none}
+      .x-toast.show{opacity:1;transform:translate(-50%,0)}
+      .x-menu{display:none}
+      @media (max-width:900px){.x-app{grid-template-columns:1fr}.x-side{position:fixed;inset:0 auto 0 0;width:260px;z-index:8;transform:translateX(-100%);transition:transform var(--dur-quick) var(--ease-out)}.x-side.open{transform:none;box-shadow:0 0 60px #000}.x-menu{display:grid}.x-top{padding:10px 14px}.x-body{padding:16px 14px 40px}.x-av span,.x-kbd,.x-hide{display:none}.x-fg{grid-template-columns:1fr}}
+    </style>
+  </head>
+  <body>
+    <div class="page" id="top">
+      <div class="x-app">
+        <aside class="x-side" id="side" aria-label="เมนูหลัก">
+          <div class="x-logo">
+            <span class="x-tile x-g1" data-i="shield"></span>
+            <div><b>IT&amp;MAINT</b><small>Smart Asset · Smart Work</small></div>
+          </div>
+          <nav class="x-nav" id="nav"></nav>
+        </aside>
+        <div class="x-col">
+          <header class="x-top">
+            <button class="x-ib x-menu" id="menuBtn" aria-label="เปิดเมนู" data-i="menu"></button>
+            <select class="x-sel x-hide" aria-label="เลือกไซต์"><option>ทุกไซต์</option><option>โรงงานสมุทรสาคร</option><option>โรงงานระยอง</option></select>
+            <label class="x-search"><span data-i="search"></span><input id="q" placeholder="ค้นหา ทรัพย์สิน / ไลเซนส์ / อุปกรณ์…" aria-label="ค้นหา" /><span class="x-kbd">Ctrl + K</span></label>
+            <span class="x-sp"></span>
+            <button class="x-btn x-pri x-hide" id="repairBtn"><span data-i="plus"></span>แจ้งซ่อม</button>
+            <div class="x-ib" id="bell" role="button" tabindex="0" aria-label="การแจ้งเตือน 3 รายการ"><span data-i="bell"></span><em>3</em>
+              <div class="x-pop" id="pop">
+                <p><span class="x-red">●</span> Microsoft 365 E3 หมดอายุใน 2 วัน</p>
+                <p><span class="x-red">●</span> AutoCAD ติดตั้งเกินสิทธิ์ +2</p>
+                <p><span class="x-amb">●</span> NB-0231 ไม่รายงานตัวเกิน 30 วัน</p>
+              </div>
+            </div>
+            <div class="x-av"><i>A</i><span>Admin<small>ผู้ดูแลระบบ IT</small></span></div>
+          </header>
+          <main class="x-body">
+            <div class="x-h">
+              <div>
+                <h1>IT Asset &amp; License Management</h1>
+                <p>ทะเบียนฮาร์ดแวร์ · ไลเซนส์ vs การติดตั้งจริง · Discovery Agent/API · OS End-of-Support · ISO/IEC 19770 &amp; ISO 27001 A.5.9</p>
+              </div>
+              <div class="x-acts" style="margin:0">
+                <button class="x-btn" id="csvBtn"><span data-i="download"></span>รายงาน Compliance</button>
+                <button class="x-btn x-pri" id="addBtn"><span data-i="plus"></span>ไลเซนส์</button>
+              </div>
+            </div>
+            <div class="x-tabs" role="tablist" id="tabs">
+              <button role="tab" aria-selected="true" data-t="ov">ภาพรวม</button>
+              <button role="tab" aria-selected="false" data-t="hw">ฮาร์ดแวร์ IT</button>
+              <button role="tab" aria-selected="false" data-t="lic">ไลเซนส์ <b>3</b></button>
+              <button role="tab" aria-selected="false" data-t="cmp">Compliance <b>2</b></button>
+              <button role="tab" aria-selected="false" data-t="sw">ซอฟต์แวร์ที่พบ</button>
+              <button role="tab" aria-selected="false" data-t="api">Discovery &amp; API</button>
+            </div>
+
+            <section data-p="ov" class="x-body" style="padding:0">
+              <div class="x-kpis" id="kpis"></div>
+              <div class="x-2">
+                <div class="x-card"><h3>อุปกรณ์ตามประเภท <span class="x-mut">11 เครื่อง</span></h3><div class="x-donut" id="donut"></div></div>
+                <div class="x-card"><h3>อัตราใช้สิทธิ์ไลเซนส์ <span><span class="x-red">■ เกิน</span> &nbsp;<span class="x-blu">■ ภายในสิทธิ์</span></span></h3><div id="bars"></div></div>
+              </div>
+              <div class="x-card"><h3>OS Inventory <span class="x-mut">End-of-Support</span></h3><div class="x-wrap"><table class="x-tbl" id="osT"></table></div></div>
+            </section>
+
+            <section data-p="hw" hidden><div class="x-devs" id="devs"></div></section>
+            <section data-p="lic" hidden><div class="x-card"><div class="x-wrap"><table class="x-tbl" id="licT"></table></div></div></section>
+            <section data-p="cmp" hidden class="x-body" style="padding:0" id="issues"></section>
+            <section data-p="sw" hidden><div class="x-card"><h3>ซอฟต์แวร์ที่ Discovery Agent พบ</h3><div class="x-wrap"><table class="x-tbl" id="swT"></table></div></div></section>
+            <section data-p="api" hidden class="x-2">
+              <div class="x-card"><h3>Discovery Agent</h3><div class="x-wrap"><table class="x-tbl" id="agT"></table></div></div>
+              <div class="x-card"><h3>API Token</h3><div class="x-wrap"><table class="x-tbl" id="apiT"></table></div></div>
+            </section>
+          </main>
+        </div>
+      </div>
+
+      <dialog class="x-dlg" id="dlg" aria-labelledby="dlgT">
+        <form method="dialog" id="licForm">
+          <h2 id="dlgT">เพิ่มไลเซนส์ <button type="button" class="x-ib" id="dlgX" aria-label="ปิด" data-i="x"></button></h2>
+          <div class="x-fg" id="fields">
+            <label class="x-full">ชื่อซอฟต์แวร์ *<input class="x-in" name="name" required placeholder="เช่น Microsoft Visio Plan 2" /></label>
+            <label>ผู้ผลิต<input class="x-in" name="vendor" placeholder="Microsoft" /></label>
+            <label>ประเภท<select class="x-sel" name="type"><option>Subscription</option><option>Perpetual</option></select></label>
+            <label>จำนวนสิทธิ์<input class="x-in" name="seats" type="number" min="1" value="1" required /></label>
+            <label>ค่าใช้จ่าย/ปี (บาท)<input class="x-in" name="cost" type="number" min="0" value="0" /></label>
+            <label>วันเริ่ม<input class="x-in" name="start" type="date" /></label>
+            <label>วันหมดอายุ<input class="x-in" name="end" type="date" /></label>
+            <label class="x-full">License Key<input class="x-in" name="key" placeholder="XXXXX-XXXXX-XXXXX-XXXXX" /></label>
+            <label class="x-full">ผูกกับอุปกรณ์/ผู้ใช้<select class="x-sel" name="bind"><option>ไม่ระบุ</option><option>SRV-001 · HPE ProLiant</option><option>NB-0231 · Dell Latitude</option><option>ฝ่ายวิศวกรรม (15 ผู้ใช้)</option><option>ทุกผู้ใช้ในองค์กร</option></select></label>
+          </div>
+          <div class="x-acts" style="margin:0;justify-content:space-between">
+            <button type="button" class="x-btn" id="addField"><span data-i="plus"></span>เพิ่มฟิลด์</button>
+            <span class="x-acts" style="margin:0"><button type="button" class="x-btn" id="dlgCancel">ยกเลิก</button><button class="x-btn x-pri" value="save">บันทึก</button></span>
+          </div>
+        </form>
+      </dialog>
+      <div class="x-toast" id="toast" role="status" aria-live="polite"></div>
+    </div>
+    <script src="../../assets/hark.js"></script>
+    <script>
+      const $ = (s) => document.querySelector(s);
+      const P = {
+        home: "M3 11l9-8 9 8v10h-6v-6H9v6H3z", grid: "M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z", chart: "M4 20V10M10 20V4M16 20v-7M22 20H2",
+        box: "M3 7l9-4 9 4-9 4-9-4zM3 7v10l9 4 9-4V7M12 11v10", laptop: "M4 5h16v11H4zM2 19h20", key: "M15 3a5 5 0 1 1 0 10a5 5 0 1 1 0-10M11.5 12.5L3 21M7 17l2.5 2.5M5 19l2 2",
+        wrench: "M14 6a4 4 0 0 1 5.5 5.5l-9 9a2.1 2.1 0 0 1-3-3l9-9", cart: "M3 4h2l2 11h11l2-8H6M9 20h.01M17 20h.01",
+        gear: "M12 9a3 3 0 1 1 0 6a3 3 0 1 1 0-6M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9L7 7M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1",
+        bell: "M6 16v-5a6 6 0 0 1 12 0v5l2 2H4zM10 21h4", search: "M11 4a7 7 0 1 1 0 14a7 7 0 1 1 0-14M20 20l-4-4",
+        eye: "M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12zM12 9a3 3 0 1 1 0 6a3 3 0 1 1 0-6", shield: "M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6zM9 12l2 2 4-4",
+        alert: "M12 3l10 18H2zM12 10v5M12 18h.01", server: "M4 4h16v6H4zM4 14h16v6H4zM8 7h.01M8 17h.01", net: "M2 9a15 15 0 0 1 20 0M5 13a10 10 0 0 1 14 0M8.5 16.5a5 5 0 0 1 7 0M12 20h.01",
+        printer: "M6 9V3h12v6M6 18H4v-7h16v7h-2M7 14h10v7H7z", api: "M9 2v6M15 2v6M6 8h12v4a6 6 0 0 1-12 0zM12 18v4", radar: "M12 12l7-7M12 3a9 9 0 1 0 9 9M12 7a5 5 0 1 0 5 5",
+        download: "M12 3v12M7 10l5 5 5-5M4 21h16", plus: "M12 5v14M5 12h14", menu: "M4 6h16M4 12h16M4 18h16", x: "M6 6l12 12M18 6L6 18",
+        coin: "M12 2v20M17 6H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6", clock: "M12 3a9 9 0 1 1 0 18a9 9 0 1 1 0-18M12 7v5l3 2", tag: "M3 12V3h9l9 9-9 9zM7.5 7.5h.01",
+        pin: "M12 21s-7-6-7-12a7 7 0 0 1 14 0c0 6-7 12-7 12zM12 7a2 2 0 1 1 0 4a2 2 0 1 1 0-4", folder: "M3 6h6l2 2h10v11H3z", users: "M9 11a4 4 0 1 0 0-8a4 4 0 1 0 0 8M2 21a7 7 0 0 1 14 0M17 3a4 4 0 0 1 0 8M22 21a6 6 0 0 0-4-5.6",
+        cam: "M3 7h13l5 4-5 4H3zM6 15v5",
+      };
+      const ic = (n) => `<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="${P[n]}"/></svg>`;
+      const paint = (root = document) => root.querySelectorAll("[data-i]").forEach((e) => { e.insertAdjacentHTML("afterbegin", ic(e.dataset.i)); e.removeAttribute("data-i"); });
+      const fmt = (n) => n.toLocaleString("th-TH");
+      const toast = (m) => { const t = $("#toast"); t.textContent = m; t.classList.add("show"); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove("show"), 2600); };
+
+      const NAV = [
+        ["ภาพรวม", [["home", "หน้าหลัก"], ["grid", "Command Center"], ["chart", "Dashboard"]]],
+        ["ทรัพย์สิน", [["box", "ทะเบียนทรัพย์สิน"], ["laptop", "IT Asset & License", 1], ["tag", "ค่าเสื่อม / Depreciation"], ["pin", "Tracking & ตรวจนับ"]]],
+        ["ซ่อมบำรุง", [["wrench", "แจ้งซ่อม / Service Desk"], ["gear", "CMMS"], ["radar", "EAM & Predictive / IoT"]]],
+        ["คลัง & จัดซื้อ", [["box", "สินค้าคงคลัง"], ["cart", "PR / PO / จัดซื้อ"]]],
+        ["วิเคราะห์", [["chart", "รายงาน"], ["folder", "คลังดิจิทัล (DAM)"]]],
+        ["ระบบ", [["users", "ผู้ใช้ & สิทธิ์"], ["gear", "ตั้งค่า / จัดการระบบ"]]],
+      ];
+      $("#nav").innerHTML = NAV.map(([g, items]) => `<div class="x-grp">${g}</div>` + items.map(([i, t, on]) => `<a href="#top"${on ? ' class="on" aria-current="page"' : ""}>${ic(i)}${t}</a>`).join("")).join("");
+
+      const LIC = [
+        { n: "Microsoft 365 E3", v: "Microsoft", t: "Subscription", u: 42, s: 45, d: 2, c: 410000, k: "M3E3K-7QH2P-XW9TR-44VBN-K2D8J" },
+        { n: "Adobe Acrobat Pro", v: "Adobe", t: "Subscription", u: 8, s: 10, d: 15, c: 72000, k: "1118-4402-9921-7735-0612-3390" },
+        { n: "Veeam Backup & Replication", v: "Veeam", t: "Subscription", u: 10, s: 10, d: 25, c: 95000, k: "VBR-12-ENT-88C1-44F0-9A2E" },
+        { n: "ESET Endpoint Protection", v: "ESET", t: "Subscription", u: 48, s: 60, d: 210, c: 68000, k: "EAV-0039-1187-55XK" },
+        { n: "AutoCAD", v: "Autodesk", t: "Subscription", u: 15, s: 15, inst: 17, d: 140, c: 210000, k: "001P1-559-82044710" },
+        { n: "FortiCare (FortiGate 100F)", v: "Fortinet", t: "Subscription", u: 1, s: 1, d: 11, c: 75000, k: "FGT100FTK21009431" },
+        { n: "Windows Server 2022 Standard", v: "Microsoft", t: "Perpetual", u: 2, s: 2, d: null, c: 0, k: "VDYBN-27WPP-V4HQT-9VMD4-VMK7H" },
+        { n: "Microsoft Office LTSC 2021", v: "Microsoft", t: "Perpetual", u: 4, s: 5, d: null, c: 0, k: "FXYTK-NJJ8C-GB6DW-3DYQT-6F7TH" },
+        { n: "Hikvision iVMS-4200 Pro", v: "Hikvision", t: "Perpetual", u: 1, s: 1, d: null, c: 0, k: "HIK-IVMS-4200-77310" },
+      ];
+      const used = (l) => l.inst || l.u;
+      const kpis = () => {
+        const subs = LIC.filter((l) => l.t === "Subscription").reduce((a, l) => a + l.c, 0);
+        const K = [
+          ["laptop", "x-g1", "อุปกรณ์ IT", 11, "ในทะเบียน"], ["radar", "x-g3", "ไม่รายงานตัว 30 วัน", 1, "NB-0231"],
+          ["alert", "x-g2", "OS หมดการสนับสนุน", 1, "Windows 10 22H2"], ["shield", "x-g4", "หมดประกัน", 2, "NAS-01 · NB-0231"],
+          ["key", "x-g6", "ไลเซนส์", LIC.length, "รายการ"], ["clock", "x-g3", "ใกล้หมดอายุ", 3, "ภายใน 15 วัน"],
+          ["alert", "x-g2", "เกินสิทธิ์", 2, "AutoCAD · WinRAR"], ["coin", "x-g5", "ค่า Subscription/ปี", (subs / 1e6).toFixed(2) + "M", "฿" + fmt(subs)],
+        ];
+        $("#kpis").innerHTML = K.map(([i, g, l, v, s]) => `<div class="x-card x-kpi"><span class="x-tile ${g}">${ic(i)}</span><div><small>${l}</small><strong>${v}</strong><small>${s}</small></div></div>`).join("");
+      };
+
+      const TYPES = [["Notebook/PC", 4, "#3b82f6"], ["Server", 1, "#8b5cf6"], ["Network", 1, "#06b6d4"], ["Firewall", 1, "#f97316"], ["NAS", 1, "#22c55e"], ["Printer", 1, "#ec4899"], ["CCTV", 1, "#eab308"], ["UPS", 1, "#94a3b8"]];
+      (() => {
+        const C = 2 * Math.PI * 60; let off = 0;
+        const segs = TYPES.map(([, n, c]) => { const len = (n / 11) * C; const s = `<circle r="60" cx="85" cy="85" fill="none" stroke="${c}" stroke-width="22" stroke-dasharray="${len - 2} ${C}" stroke-dashoffset="${-off}" transform="rotate(-90 85 85)"/>`; off += len; return s; }).join("");
+        $("#donut").innerHTML = `<svg viewBox="0 0 170 170" role="img" aria-label="อุปกรณ์ 11 เครื่อง: Notebook/PC 4, ประเภทอื่นอย่างละ 1">${segs}<text x="85" y="86" text-anchor="middle" fill="#fff" font-size="30" font-weight="600">11</text><text x="85" y="106" text-anchor="middle" fill="#a3b3d9" font-size="12">เครื่อง</text></svg>` +
+          `<ul class="x-leg">${TYPES.map(([n, v, c]) => `<li><i style="background:${c}"></i>${n}<b>${v}</b></li>`).join("")}</ul>`;
+      })();
+      const bars = () => {
+        const L = LIC, h = 28;
+        const rows = L.map((l, i) => { const p = used(l) / l.s, w = Math.min(p, 1.2) / 1.2 * 200, y = i * h, over = p > 1;
+          return `<text x="0" y="${y + 17}" fill="#d6def5" font-size="12">${l.n.length > 22 ? l.n.slice(0, 21) + "…" : l.n}</text><rect x="150" y="${y + 7}" width="200" height="12" rx="6" fill="rgb(255 255 255/.07)"/><rect x="150" y="${y + 7}" width="${w}" height="12" rx="6" fill="${over ? "#ff5a5a" : "#4c8dff"}"/><text x="400" y="${y + 17}" text-anchor="end" fill="${over ? "#ff8a8a" : "#a3b3d9"}" font-size="12">${Math.round(p * 100)}%</text>`; }).join("");
+        $("#bars").innerHTML = `<svg viewBox="0 0 400 ${L.length * h}" width="100%" role="img" aria-label="AutoCAD ใช้เกินสิทธิ์ 113% ส่วนไลเซนส์อื่นอยู่ภายในสิทธิ์"><line x1="${150 + 200 / 1.2}" x2="${150 + 200 / 1.2}" y1="0" y2="${L.length * h}" stroke="#a3b3d9" stroke-dasharray="3 4"/>${rows}</svg>`;
+      };
+
+      const OS = [["Windows 11 Pro 23H2", "Notebook/PC", 2, 0], ["Windows 10 Pro 22H2", "Notebook/PC", 1, 1], ["VMware ESXi 8.0U2", "Server", 1, 0], ["FortiOS 7.2.8", "Firewall", 1, 0], ["DSM 7.2.1", "NAS", 1, 0], ["RGOS 12.5", "Network", 1, 0], ["Hikvision NVR 4.62", "CCTV", 1, 0], ["FutureSmart 5.6", "Printer", 1, 0]];
+      $("#osT").innerHTML = `<thead><tr><th>ระบบปฏิบัติการ</th><th>ประเภท</th><th>จำนวน</th><th>สถานะ</th></tr></thead><tbody>` +
+        OS.map(([o, t, n, e]) => `<tr><td>${o}</td><td class="x-mut">${t}</td><td><b>${n}</b></td><td>${e ? '<span class="x-tag x-red">EOS แล้ว</span>' : '<span class="x-tag x-grn">รองรับ</span>'}</td></tr>`).join("") + "</tbody>";
+
+      const DEV = [
+        ["SRV-001", "HPE ProLiant DL380 Gen10", "server", "x-g4", "2 นาทีที่แล้ว", "VMware ESXi 8.0U2", "ถึง 12/2026", 92],
+        ["FW-001", "FortiGate 100F", "shield", "x-g3", "1 นาทีที่แล้ว", "FortiOS 7.2.8", "FortiCare หมดใน 11 วัน", 88],
+        ["NAS-01", "Synology DS1621+", "folder", "x-g5", "5 นาทีที่แล้ว", "DSM 7.2.1", "หมดประกันแล้ว", 74],
+        ["NB-0231", "Dell Latitude 5420", "laptop", "x-g1", "34 วันที่แล้ว", "Windows 10 Pro 22H2", "หมดประกันแล้ว", 58],
+        ["SW-01", "Ruijie RG-S5750", "net", "x-g6", "3 นาทีที่แล้ว", "RGOS 12.5", "ถึง 08/2027", 95],
+        ["PRN-03", "HP LaserJet M507", "printer", "x-g2", "1 ชั่วโมงที่แล้ว", "FutureSmart 5.6", "ถึง 03/2026", 81],
+      ];
+      $("#devs").innerHTML = DEV.map(([id, m, i, g, seen, os, w, h]) => {
+        const stale = seen.includes("วัน"), eos = os.includes("Windows 10"), wx = w.includes("หมด"), hc = h >= 85 ? "#34d399" : h >= 70 ? "#ffb547" : "#ff6b6b";
+        return `<article class="x-card x-dev"><header><span class="x-tile ${g}">${ic(i)}</span><div><b>${id}</b><small>${m}</small></div></header><dl>
+          <dt>เห็นล่าสุด</dt><dd class="${stale ? "x-red" : ""}">${seen}</dd><dt>OS</dt><dd>${os}${eos ? ' <span class="x-tag x-red">EOS</span>' : ""}</dd>
+          <dt>ประกัน</dt><dd class="${wx ? "x-amb" : ""}">${w}</dd><dt>Health</dt><dd>${h}%<div class="x-bar" style="margin-left:auto"><i style="width:${h}%;background:${hc}"></i></div></dd></dl></article>`;
+      }).join("");
+
+      const exp = (d) => d == null ? '<span class="x-mut">ไม่มีวันหมดอายุ</span>' : `<span class="x-tag ${d <= 7 ? "x-red" : d <= 30 ? "x-amb" : "x-grn"}">${d <= 30 ? "⏱ " : ""}หมดใน ${fmt(d)} วัน</span>`;
+      const lic = () => {
+        $("#licT").innerHTML = `<thead><tr><th>ไลเซนส์</th><th>ประเภท</th><th>ใช้/สิทธิ์</th><th>หมดอายุ</th><th>ค่าใช้จ่าย/ปี</th><th>License Key</th></tr></thead><tbody>` +
+          LIC.map((l, i) => { const p = used(l) / l.s, over = p > 1;
+            return `<tr><td><b>${l.n}</b><small>${l.v}${l.bind ? " · " + l.bind : ""}</small></td><td><span class="x-tag ${l.t === "Perpetual" ? "x-mut" : "x-blu"}">${l.t}</span></td>
+            <td>${l.u}/${l.s}${l.inst ? ` <small class="x-red">ติดตั้งจริง ${l.inst} (+${l.inst - l.s})</small>` : ""}<div class="x-bar"><i style="width:${Math.min(p, 1) * 100}%;background:${over ? "#ff5a5a" : "#4c8dff"}"></i></div></td>
+            <td>${exp(l.d)}</td><td>${l.c ? "฿" + fmt(l.c) : '<span class="x-mut">ซื้อขาด</span>'}</td>
+            <td><span class="x-key"><span data-k="${i}">••••-••••-${l.k.slice(-4)}</span><button aria-label="แสดง License Key" data-eye="${i}">${ic("eye")}</button></span></td></tr>`; }).join("") + "</tbody>";
+      };
+      $("#licT").addEventListener("click", (e) => { const b = e.target.closest("[data-eye]"); if (!b) return; const i = b.dataset.eye, s = $(`[data-k="${i}"]`), show = !b._on; b._on = show;
+        s.textContent = show ? LIC[i].k : "••••-••••-" + LIC[i].k.slice(-4); b.setAttribute("aria-label", show ? "ซ่อน License Key" : "แสดง License Key"); });
+
+      const ISS = [
+        ["x-g2", "alert", "เกินสิทธิ์ · AutoCAD +2", "ติดตั้งจริง 17 เครื่อง แต่มีสิทธิ์ 15 · ความเสี่ยง Audit จาก Autodesk", ["ซื้อสิทธิ์เพิ่ม 2", "ถอนการติดตั้ง 2 เครื่อง"]],
+        ["x-g3", "key", "ติดตั้งไม่มีไลเซนส์ · WinRAR", "พบใน 3 เครื่อง (NB-0231, NB-0187, PC-0412) · ไม่มีใบอนุญาตในทะเบียน", ["ถอนติดตั้ง / แทนด้วย 7-Zip", "ขอใบเสนอราคา"]],
+      ];
+      $("#issues").innerHTML = ISS.map(([g, i, t, d, a]) => `<article class="x-card"><div class="x-issue"><span class="x-tile ${g}">${ic(i)}</span><div><b>${t}</b><p>${d}</p></div><span class="x-tag x-red">ต้องแก้ไข</span></div>
+        <div class="x-acts">${a.map((x, k) => `<button class="x-btn ${k ? "" : "x-pri"}" data-act="${x}">${x}</button>`).join("")}<button class="x-btn" data-act="สร้าง Ticket">สร้าง Ticket</button></div></article>`).join("") +
+        '<p class="x-mut" style="margin:0">อ้างอิง ISO/IEC 19770-1 (SAM) และ ISO 27001 A.5.9 Inventory of information and other associated assets</p>';
+      $("#issues").addEventListener("click", (e) => { const b = e.target.closest("[data-act]"); if (b) toast("บันทึกคำสั่ง: " + b.dataset.act); });
+
+      const tbl = (id, head, rows) => ($(id).innerHTML = `<thead><tr>${head.map((h) => `<th>${h}</th>`).join("")}</tr></thead><tbody>${rows.map((r) => `<tr>${r.map((c) => `<td>${c}</td>`).join("")}</tr>`).join("")}</tbody>`);
+      const T = (c, t) => `<span class="x-tag ${c}">${t}</span>`;
+      tbl("#swT", ["ซอฟต์แวร์", "เวอร์ชัน", "ติดตั้ง", "สถานะไลเซนส์"], [
+        ["Microsoft 365 Apps", "2405", 42, T("x-grn", "มีไลเซนส์")], ["AutoCAD", "2024.1", 17, T("x-red", "เกินสิทธิ์ +2")], ["WinRAR", "6.24", 3, T("x-red", "ไม่มีไลเซนส์")],
+        ["Adobe Acrobat Pro", "24.002", 8, T("x-grn", "มีไลเซนส์")], ["ESET Endpoint Security", "11.0", 48, T("x-grn", "มีไลเซนส์")], ["Google Chrome", "126", 9, T("x-mut", "ฟรีแวร์")], ["7-Zip", "23.01", 6, T("x-mut", "ฟรีแวร์")],
+      ]);
+      tbl("#agT", ["เครื่อง", "Agent", "รายงานล่าสุด", "สถานะ"], [
+        ["SRV-001", "v3.4.1", "2 นาที", T("x-grn", "ออนไลน์")], ["NAS-01", "SNMP", "5 นาที", T("x-grn", "ออนไลน์")], ["PRN-03", "SNMP", "1 ชม.", T("x-grn", "ออนไลน์")], ["NB-0231", "v3.2.0", "34 วัน", T("x-red", "ขาดการติดต่อ")],
+      ]);
+      tbl("#apiT", ["Token", "ขอบเขต", "หมดอายุ", "สถานะ"], [
+        ["FortiGate REST", "read:inventory", "31/12/2025", T("x-grn", "ใช้งาน")], ["VMware vCenter", "read:hosts", "30/09/2025", T("x-grn", "ใช้งาน")], ["Microsoft Graph", "license.read", "หมดใน 9 วัน", T("x-amb", "ต่ออายุ")], ["Hikvision ISAPI", "read:device", "—", T("x-mut", "ปิดใช้งาน")],
+      ]);
+
+      const renderAll = () => { kpis(); bars(); lic(); };
+      renderAll();
+      paint();
+
+      const tabs = [...document.querySelectorAll("#tabs [role=tab]")];
+      const go = (t) => { tabs.forEach((b) => b.setAttribute("aria-selected", b.dataset.t === t)); document.querySelectorAll("[data-p]").forEach((p) => (p.hidden = p.dataset.p !== t)); };
+      tabs.forEach((b) => b.addEventListener("click", () => go(b.dataset.t)));
+
+      $("#menuBtn").onclick = () => $("#side").classList.toggle("open");
+      $("#nav").addEventListener("click", () => $("#side").classList.remove("open"));
+      $("#bell").onclick = (e) => { if (!e.target.closest(".x-pop")) $("#pop").classList.toggle("open"); };
+      $("#bell").onkeydown = (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); $("#pop").classList.toggle("open"); } };
+      document.addEventListener("click", (e) => { if (!e.target.closest("#bell")) $("#pop").classList.remove("open"); });
+      document.addEventListener("keydown", (e) => { if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") { e.preventDefault(); $("#q").focus(); } });
+      $("#q").addEventListener("keydown", (e) => { if (e.key === "Enter" && e.target.value.trim()) { go("lic"); toast("ค้นหา: " + e.target.value); } });
+      $("#repairBtn").onclick = () => toast("เปิดฟอร์มแจ้งซ่อมใหม่");
+
+      $("#csvBtn").onclick = () => {
+        const rows = [["License", "Type", "Used", "Seats", "Installed", "Expires(days)", "Cost/yr"]].concat(LIC.map((l) => [l.n, l.t, l.u, l.s, used(l), l.d ?? "", l.c]), [[], ["Issue", "Detail"], ["AutoCAD over-deployed", "+2"], ["WinRAR unlicensed", "3 devices"]]);
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(new Blob(["\ufeff" + rows.map((r) => r.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(",")).join("\n")], { type: "text/csv" }));
+        a.download = "compliance-report.csv"; a.click(); toast("ดาวน์โหลดรายงาน Compliance (CSV) แล้ว");
+      };
+
+      const dlg = $("#dlg"), form = $("#licForm");
+      $("#addBtn").onclick = () => { form.reset(); form.querySelectorAll(".x-extra").forEach((e) => e.remove()); dlg.showModal(); };
+      $("#dlgX").onclick = $("#dlgCancel").onclick = () => dlg.close();
+      $("#addField").onclick = () => { $("#fields").insertAdjacentHTML("beforeend", '<label class="x-extra">ชื่อฟิลด์<input class="x-in" placeholder="เช่น เลข PO" /></label><label class="x-extra">ค่า<input class="x-in" placeholder="PO-2025-0142" /></label>'); $("#fields .x-extra:nth-last-child(2) input").focus(); };
+      form.addEventListener("submit", (e) => {
+        e.preventDefault(); const f = new FormData(form), end = f.get("end");
+        const d = end ? Math.max(0, Math.ceil((new Date(end) - new Date()) / 864e5)) : null, bind = f.get("bind");
+        LIC.push({ n: f.get("name"), v: f.get("vendor") || "—", t: f.get("type"), u: 0, s: +f.get("seats") || 1, d, c: +f.get("cost") || 0, k: f.get("key") || "ยังไม่ระบุ", bind: bind === "ไม่ระบุ" ? "" : bind });
+        renderAll(); dlg.close(); go("lic"); toast(`เพิ่มไลเซนส์ “${f.get("name")}” แล้ว`);
+      });
+    </script>
+  </body>
+</html>
