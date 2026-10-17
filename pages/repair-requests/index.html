@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ITMAINT Repair Requests</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400&family=Noto+Sans+Thai:wght@400;500;600&display=swap"
+    />
+    <link rel="stylesheet" href="../../assets/hark.css" />
+    <link rel="stylesheet" href="../../assets/hark-hero.css" />
+    <style>
+      body { background: #0A1024; color: #E6ECFF; }
+      .x-app { --bd: rgba(80,140,255,.28); --card: #111A36; --mut: #93A3C8; --r: 16px;
+        font-family: var(--sans), "Noto Sans Thai", sans-serif; font-size: var(--size-body, 14px);
+        width: min(1440px, calc(100vw - 24px)); margin-inline: calc(50% - min(720px, 50vw - 12px));
+        display: grid; grid-template-columns: 248px minmax(0,1fr); min-height: calc(100vh - 52px);
+        background: #0A1024; border: 1px solid var(--bd); border-radius: 20px; overflow: hidden;
+        box-shadow: 0 0 40px rgba(40,100,255,.15); }
+      .x-app button, .x-app input, .x-app select { font: inherit; color: inherit; }
+      .x-side { background: #0C1430; border-right: 1px solid var(--bd); padding: 18px 12px; display: flex; flex-direction: column; gap: 4px; }
+      .x-logo { display: flex; gap: 10px; align-items: center; padding: 4px 8px 16px; }
+      .x-logo b { font-size: 18px; letter-spacing: .02em; display: block; }
+      .x-logo small { color: var(--mut); font-size: 12px; }
+      .x-grp { color: #6F80A8; font-size: 12px; font-weight: 600; padding: 12px 10px 4px; }
+      .x-nav { display: flex; align-items: center; gap: 10px; padding: 0 10px; min-height: 40px; border-radius: 10px; color: #C3CEEA; text-decoration: none; font-size: 14px; }
+      .x-nav:hover { background: rgba(80,140,255,.1); }
+      .x-nav.on { background: linear-gradient(90deg,#1D4ED8,#2563EB); color: #fff; box-shadow: 0 0 16px rgba(37,99,235,.45); }
+      .x-nav svg { width: 18px; height: 18px; flex: none; }
+      .x-badge { margin-left: auto; background: #DC2626; color: #fff; border-radius: var(--r-pill); font-size: 12px; padding: 0 7px; line-height: 20px; }
+      .x-main { display: flex; flex-direction: column; min-width: 0; }
+      .x-top { display: flex; align-items: center; gap: 12px; padding: 12px 20px; border-bottom: 1px solid var(--bd); flex-wrap: wrap; }
+      .x-field { background: #0E1733; border: 1px solid var(--bd); border-radius: 12px; min-height: 44px; padding: 0 12px; display: flex; align-items: center; gap: 8px; }
+      .x-field input, .x-field select { background: none; border: 0; outline: 0; min-width: 0; flex: 1; }
+      .x-field select option { background: #111A36; }
+      .x-field:focus-within { border-color: #4F8BFF; box-shadow: 0 0 0 3px rgba(79,139,255,.2); }
+      .x-search { flex: 1; max-width: 520px; color: var(--mut); }
+      .x-kbd { font: 12px var(--mono, monospace); border: 1px solid var(--bd); border-radius: 6px; padding: 2px 6px; color: var(--mut); }
+      .x-btn { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 16px; border-radius: 12px; border: 1px solid var(--bd); background: #15203F; cursor: pointer; font-weight: 500; white-space: nowrap; }
+      .x-btn:hover { border-color: #4F8BFF; }
+      .x-btn--pri { background: linear-gradient(90deg,#C2410C,#BE185D); border: 0; color: #fff; box-shadow: 0 4px 18px rgba(190,24,93,.35); }
+      .x-btn--sm { min-height: 36px; padding: 0 12px; font-size: 13px; }
+      .x-btn[disabled] { opacity: .4; cursor: not-allowed; }
+      .x-icon { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; border: 1px solid var(--bd); background: #0E1733; cursor: pointer; position: relative; }
+      .x-dotn { position: absolute; top: 6px; right: 6px; width: 16px; height: 16px; border-radius: 50%; background: #DC2626; font-size: 12px; line-height: 16px; color: #fff; }
+      .x-user { display: flex; align-items: center; gap: 8px; }
+      .x-ava { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg,#3B82F6,#8B5CF6); display: grid; place-items: center; font-weight: 600; }
+      .x-body { padding: 20px; display: grid; grid-template-columns: minmax(0,1fr) 290px; gap: 16px; align-items: start; }
+      .x-h1 { font-size: 24px; font-weight: 600; margin: 0; }
+      .x-sub { color: var(--mut); margin: 4px 0 0; }
+      .x-card { background: linear-gradient(180deg,#131D3D,#0F1834); border: 1px solid var(--bd); border-radius: var(--r); box-shadow: inset 0 0 0 1px rgba(255,255,255,.02), 0 0 18px rgba(40,100,255,.08); padding: 16px; }
+      .x-kpis { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 12px; }
+      .x-kpi { display: flex; gap: 12px; align-items: center; }
+      .x-kpi b { font-size: 26px; font-weight: 600; display: block; line-height: 1.1; }
+      .x-kpi span { color: var(--mut); font-size: 13px; }
+      .x-tile { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; flex: none; color: #fff; }
+      .x-tile svg { width: 22px; height: 22px; }
+      .g1 { background: linear-gradient(135deg,#F97316,#DB2777); } .g2 { background: linear-gradient(135deg,#EF4444,#B91C1C); }
+      .g3 { background: linear-gradient(135deg,#3B82F6,#1D4ED8); } .g4 { background: linear-gradient(135deg,#10B981,#047857); }
+      .g5 { background: linear-gradient(135deg,#8B5CF6,#6D28D9); } .g6 { background: linear-gradient(135deg,#06B6D4,#0E7490); }
+      .x-filters { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+      .x-filters .x-field:first-child { flex: 1; min-width: 200px; }
+      .x-check { display: flex; align-items: center; gap: 8px; min-height: 44px; cursor: pointer; color: #C3CEEA; }
+      .x-check input { width: 18px; height: 18px; accent-color: #3B82F6; }
+      .x-tbl { width: 100%; border-collapse: collapse; }
+      .x-tbl th { text-align: left; color: var(--mut); font-weight: 500; font-size: 13px; padding: 10px; border-bottom: 1px solid var(--bd); }
+      .x-tbl td { padding: 12px 10px; border-bottom: 1px solid rgba(80,140,255,.12); vertical-align: middle; }
+      .x-tbl tr.new td { animation: x-flash 1.6s var(--ease-out); }
+      @keyframes x-flash { from { background: rgba(249,115,22,.18); } }
+      .x-no { font: 13px var(--mono, monospace); }
+      .x-meta { color: var(--mut); font-size: 12px; display: flex; gap: 6px; align-items: center; margin-top: 4px; }
+      .x-tag { display: inline-flex; align-items: center; gap: 6px; border-radius: var(--r-pill); padding: 2px 10px; font-size: 12px; font-weight: 500; white-space: nowrap; border: 1px solid transparent; }
+      .ch-web { background: #1E3A8A; color: #DBEAFE; } .ch-line { background: #065F46; color: #D1FAE5; } .ch-qr { background: #4C1D95; color: #EDE9FE; }
+      .u-hi { color: #FCA5A5; border-color: rgba(239,68,68,.4); } .u-md { color: #FCD34D; border-color: rgba(245,158,11,.4); } .u-lo { color: #93C5FD; border-color: rgba(59,130,246,.4); } .u-st { background: #B91C1C; color: #fff; }
+      .s-wait { background: #C2410C; color: #fff; } .s-new { background: #1D4ED8; color: #fff; } .s-tri { background: #6D28D9; color: #fff; }
+      .s-wo { background: #047857; color: #fff; } .s-rej { background: #374151; color: #E5E7EB; } .s-can { background: #1F2937; color: #9CA3AF; }
+      .x-acts { display: flex; gap: 6px; justify-content: flex-end; }
+      .x-empty { text-align: center; color: var(--mut); padding: 28px; }
+      .x-chan { display: grid; gap: 12px; }
+      .x-chan h3 { margin: 0; font-size: 16px; }
+      .x-qr { background: #fff; border-radius: 12px; padding: 10px; width: 150px; margin: 4px auto; }
+      .x-row { display: flex; gap: 12px; align-items: center; padding: 10px; border: 1px solid var(--bd); border-radius: 12px; }
+      .x-row small { color: var(--mut); display: block; font-size: 12px; }
+      .x-modal, .x-toast { --bd: rgba(80,140,255,.28); --mut: #93A3C8; --r: 16px; color: #E6ECFF; font-family: var(--sans), "Noto Sans Thai", sans-serif; }
+      .x-modal button, .x-modal input, .x-modal select { font: inherit; color: #E6ECFF; }
+      .x-modal { position: fixed; inset: 0; background: rgba(4,8,22,.7); backdrop-filter: blur(6px); display: none; place-items: center; z-index: 50; padding: 16px; }
+      .x-modal.open { display: grid; }
+      .x-dlg { width: min(560px,100%); max-height: 90vh; overflow: auto; background: #111A36; border: 1px solid rgba(80,140,255,.45); border-radius: var(--r); box-shadow: 0 0 40px rgba(40,100,255,.25); padding: 20px; display: grid; gap: 14px; }
+      .x-dlg--sm { width: min(420px,100%); }
+      .x-dlg h2 { margin: 0; font-size: 18px; }
+      .x-dlg label, .x-dlg .x-lb { display: grid; gap: 6px; font-size: 13px; color: var(--mut); }
+      .x-foot { display: flex; justify-content: flex-end; gap: 8px; }
+      .x-stepper { display: flex; gap: 8px; }
+      .x-stepper span { flex: 1; height: 4px; border-radius: 4px; background: #24305A; }
+      .x-stepper span.on { background: linear-gradient(90deg,#F97316,#DB2777); }
+      .x-cats { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; }
+      .x-cat { display: grid; justify-items: center; gap: 10px; padding: 16px 8px; border-radius: 14px; border: 1px solid var(--bd); background: #0E1733; cursor: pointer; }
+      .x-cat .x-tile { width: 56px; height: 56px; border-radius: 16px; } .x-cat .x-tile svg { width: 28px; height: 28px; }
+      .x-cat.on { border-color: #F97316; box-shadow: 0 0 0 2px rgba(249,115,22,.35); }
+      .x-two { display: flex; gap: 8px; } .x-two .x-field { flex: 1; }
+      .x-seg { display: flex; gap: 6px; flex-wrap: wrap; }
+      .x-seg button { min-height: 40px; padding: 0 14px; border-radius: var(--r-pill); border: 1px solid var(--bd); background: #0E1733; cursor: pointer; }
+      .x-seg button.on { background: #1D4ED8; border-color: #4F8BFF; }
+      .x-drop { border: 1px dashed var(--bd); border-radius: 12px; padding: 14px; text-align: center; color: var(--mut); cursor: pointer; min-height: 44px; }
+      .x-sum { display: grid; grid-template-columns: 110px 1fr; gap: 8px 12px; font-size: 14px; } .x-sum dt { color: var(--mut); } .x-sum dd { margin: 0; }
+      .x-ok { text-align: center; display: grid; gap: 10px; justify-items: center; padding: 10px 0; }
+      .x-toast { position: fixed; bottom: 24px; left: 50%; transform: translate(-50%,20px); opacity: 0; background: #064E3B; border: 1px solid #10B981; color: #ECFDF5; padding: 12px 18px; border-radius: 12px; transition: all var(--dur-quick, .2s) var(--ease-out); z-index: 60; display: flex; gap: 8px; align-items: center; }
+      .x-toast.show { opacity: 1; transform: translate(-50%,0); }
+      @media (max-width: 1180px) { .x-body { grid-template-columns: 1fr; } .x-kpis { grid-template-columns: repeat(2,1fr); } }
+      @media (max-width: 860px) {
+        .x-app { grid-template-columns: 1fr; } .x-side { display: none; }
+        .x-tbl thead { display: none; } .x-tbl tr { display: grid; gap: 6px; padding: 12px 0; border-bottom: 1px solid var(--bd); }
+        .x-tbl td { border: 0; padding: 0; } .x-acts { justify-content: flex-start; } .x-acts .x-btn--sm { min-height: 44px; } .x-cats { grid-template-columns: repeat(2,1fr); }
+        .x-user span { display: none; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page" id="top">
+      <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+        <defs>
+          <symbol id="i-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></symbol>
+          <symbol id="i-box" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-9-5-9 5 9 5 9-5zM3 8v8l9 5 9-5V8M12 13v8"/></symbol>
+          <symbol id="i-wrench" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0 5 5L22 14l-8 8-2.3-2.3a4 4 0 0 0-5-5L3 11l8-8z" transform="scale(.9) translate(1 1)"/></symbol>
+          <symbol id="i-doc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8zM14 3v5h5M9 13h6M9 17h6"/></symbol>
+          <symbol id="i-inbox" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-6l-2 3h-4l-2-3H2M5.5 5h13L22 12v7a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-7z"/></symbol>
+          <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3 8-8M20 12v7a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h11"/></symbol>
+          <symbol id="i-wave" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-8 4 16 3-8h4"/></symbol>
+          <symbol id="i-gauge" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 14l4-4M3.3 17a10 10 0 1 1 17.4 0"/></symbol>
+          <symbol id="i-cart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M2 3h3l2.7 12.4a1 1 0 0 0 1 .8h9.6a1 1 0 0 0 1-.8L21 7H6"/></symbol>
+          <symbol id="i-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18M7 15l4-4 3 3 6-7"/></symbol>
+          <symbol id="i-gear" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-2.9 1.2V21a2 2 0 1 1-4 0v-.1A1.7 1.7 0 0 0 7 19.4l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1A1.7 1.7 0 0 0 3 13.6H3a2 2 0 1 1 0-4h.1A1.7 1.7 0 0 0 4.6 7l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1A1.7 1.7 0 0 0 10.4 3V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 2.9 1.2l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0 1.3 2.9H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></symbol>
+          <symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0M16 4a4 4 0 0 1 0 8M22 21a7 7 0 0 0-4-6.3"/></symbol>
+          <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-5-5"/></symbol>
+          <symbol id="i-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0"/></symbol>
+          <symbol id="i-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-6.5 7-12a7 7 0 0 0-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></symbol>
+          <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></symbol>
+          <symbol id="i-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0zM12 9v4M12 17h.01"/></symbol>
+          <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+          <symbol id="i-qr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h3v3h-3zM20 14v1M14 20h1M18 18h3v3"/></symbol>
+          <symbol id="i-chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 3C6.5 3 2 6.6 2 11c0 4 3.6 7.3 8.4 7.9L10 22l4.5-3.2C19 17.9 22 14.8 22 11c0-4.4-4.5-8-10-8z"/></symbol>
+          <symbol id="i-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></symbol>
+          <symbol id="i-pc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></symbol>
+          <symbol id="i-bolt" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></symbol>
+          <symbol id="i-drop" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 2.7S5 10 5 15a7 7 0 0 0 14 0c0-5-7-12.3-7-12.3z"/></symbol>
+          <symbol id="i-snow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2v20M4.9 7l14.2 10M4.9 17L19.1 7M9 4l3 2 3-2M9 20l3-2 3 2"/></symbol>
+          <symbol id="i-cog" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></symbol>
+          <symbol id="i-bldg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 21V3h11v18M15 9h5v12M2 21h20M8 7h3M8 11h3M8 15h3"/></symbol>
+          <symbol id="i-cam" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 7h3l2-3h6l2 3h3a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.5"/></symbol>
+        </defs>
+      </svg>
+
+      <div class="x-app">
+        <aside class="x-side" aria-label="เมนูหลัก">
+          <div class="x-logo">
+            <span class="x-tile g3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M12 2l9 5v10l-9 5-9-5V7z"/><path d="M8 12l3 3 5-6"/></svg></span>
+            <div><b>IT&amp;MAINT</b><small>Smart Asset · Smart Work</small></div>
+          </div>
+          <p class="x-grp">ภาพรวม</p>
+          <a class="x-nav" href="#"><svg><use href="#i-home"/></svg>แดชบอร์ด</a>
+          <a class="x-nav" href="#"><svg><use href="#i-pin"/></svg>Command Center</a>
+          <p class="x-grp">ทรัพย์สิน</p>
+          <a class="x-nav" href="#"><svg><use href="#i-box"/></svg>ทะเบียนทรัพย์สิน</a>
+          <a class="x-nav" href="#"><svg><use href="#i-pc"/></svg>IT Asset &amp; License</a>
+          <p class="x-grp">ซ่อมบำรุง</p>
+          <a class="x-nav" href="#"><svg><use href="#i-doc"/></svg>ใบสั่งงาน (WO)<span class="x-badge" id="woBadge">18</span></a>
+          <a class="x-nav on" href="#" aria-current="page"><svg><use href="#i-inbox"/></svg>ใบแจ้งซ่อม</a>
+          <a class="x-nav" href="#"><svg><use href="#i-check"/></svg>แผน PM &amp; เช็คลิสต์<span class="x-badge">6</span></a>
+          <a class="x-nav" href="#"><svg><use href="#i-wave"/></svg>Predictive/IoT</a>
+          <a class="x-nav" href="#"><svg><use href="#i-gauge"/></svg>สอบเทียบเครื่องมือ</a>
+          <p class="x-grp">คลัง &amp; จัดซื้อ</p>
+          <a class="x-nav" href="#"><svg><use href="#i-box"/></svg>คลังอะไหล่</a>
+          <a class="x-nav" href="#"><svg><use href="#i-cart"/></svg>PR / PO</a>
+          <p class="x-grp">วิเคราะห์</p>
+          <a class="x-nav" href="#"><svg><use href="#i-chart"/></svg>รายงาน &amp; KPI</a>
+          <p class="x-grp">ระบบ</p>
+          <a class="x-nav" href="#"><svg><use href="#i-users"/></svg>ผู้ใช้ &amp; สิทธิ์</a>
+          <a class="x-nav" href="#"><svg><use href="#i-gear"/></svg>ตั้งค่า</a>
+        </aside>
+
+        <div class="x-main">
+          <header class="x-top">
+            <label class="x-field" style="min-width:190px"><svg width="18" height="18"><use href="#i-pin"/></svg>
+              <select aria-label="เลือกไซต์"><option>ทุกไซต์</option><option>โรงงานสมุทรสาคร</option><option>โรงงานระยอง</option></select></label>
+            <label class="x-field x-search"><svg width="18" height="18"><use href="#i-search"/></svg>
+              <input id="gsearch" placeholder="ค้นหา ใบแจ้งซ่อม / ทรัพย์สิน / ผู้ใช้งาน…" aria-label="ค้นหา" /><span class="x-kbd">Ctrl+K</span></label>
+            <button class="x-btn x-btn--pri" id="newBtn"><svg width="18" height="18"><use href="#i-plus"/></svg>แจ้งซ่อม</button>
+            <button class="x-icon" id="bell" aria-label="การแจ้งเตือน"><svg width="20" height="20"><use href="#i-bell"/></svg><span class="x-dotn">3</span></button>
+            <div class="x-user"><span class="x-ava">A</span><span>Admin</span></div>
+          </header>
+
+          <main class="x-body">
+            <div style="display:grid;gap:16px;min-width:0">
+              <div>
+                <h1 class="x-h1">ใบแจ้งซ่อม</h1>
+                <p class="x-sub">คัดกรองเรื่องที่แจ้งเข้ามา แล้วเปิดใบสั่งงาน/มอบหมายช่างในขั้นตอนเดียว</p>
+              </div>
+              <section class="x-kpis">
+                <div class="x-card x-kpi"><span class="x-tile g1"><svg><use href="#i-inbox"/></svg></span><div><b id="kWait">1</b><span>รอคัดกรอง</span></div></div>
+                <div class="x-card x-kpi"><span class="x-tile g2"><svg><use href="#i-alert"/></svg></span><div><b>0</b><span>ด่วน/เครื่องหยุด</span></div></div>
+                <div class="x-card x-kpi"><span class="x-tile g4"><svg><use href="#i-doc"/></svg></span><div><b id="kWo">9</b><span>เปิดใบสั่งงาน 30 วัน</span></div></div>
+                <div class="x-card x-kpi"><span class="x-tile g5"><svg><use href="#i-clock"/></svg></span><div><b>25 <small style="font-size:14px">นาที</small></b><span>เวลาคัดกรองเฉลี่ย</span></div></div>
+              </section>
+              <section class="x-card" style="display:grid;gap:12px">
+                <div class="x-filters">
+                  <label class="x-field"><svg width="18" height="18"><use href="#i-search"/></svg><input id="q" placeholder="ค้นหาเลขที่ อาการ ทรัพย์สิน หรือผู้แจ้ง" aria-label="ค้นหาใบแจ้งซ่อม" /></label>
+                  <label class="x-field"><span style="color:var(--mut)">สถานะ</span>
+                    <select id="fs" aria-label="สถานะ"><option>ทุกสถานะ</option><option>รอคัดกรอง</option><option>ใหม่</option><option>กำลังคัดกรอง</option><option>เปิดใบสั่งงานแล้ว</option><option>ไม่รับเรื่อง</option><option>ยกเลิก</option></select></label>
+                  <label class="x-check"><input type="checkbox" id="mine" />เฉพาะที่ฉันแจ้ง</label>
+                </div>
+                <div style="overflow-x:auto">
+                  <table class="x-tbl">
+                    <thead><tr><th>เลขที่</th><th>อาการ/ทรัพย์สิน</th><th>ความเร่งด่วน</th><th>ผู้แจ้ง</th><th>สถานะ</th><th style="text-align:right">การดำเนินการ</th></tr></thead>
+                    <tbody id="rows"></tbody>
+                  </table>
+                </div>
+              </section>
+            </div>
+
+            <aside class="x-card x-chan" aria-label="ช่องทางแจ้งซ่อม">
+              <h3>ช่องทางแจ้งซ่อม</h3>
+              <p class="x-sub" style="margin:0;font-size:13px">ติด QR ที่ทรัพย์สิน ให้ผู้ใช้สแกนแจ้งได้ทันที</p>
+              <div class="x-qr"><svg id="qr" viewBox="0 0 25 25" shape-rendering="crispEdges" role="img" aria-label="QR แจ้งซ่อม"></svg></div>
+              <div class="x-row"><span class="x-tile g4"><svg><use href="#i-chat"/></svg></span><div><b>LINE OA</b><small>@itmaint-helpdesk</small></div></div>
+              <div class="x-row"><span class="x-tile g3"><svg><use href="#i-globe"/></svg></span><div><b>เว็บ</b><small>itmaint.app/request</small></div></div>
+              <div class="x-row"><span class="x-tile g5"><svg><use href="#i-qr"/></svg></span><div><b>QR ทรัพย์สิน</b><small>สแกนแล้วระบุเครื่องให้อัตโนมัติ</small></div></div>
+            </aside>
+          </main>
+        </div>
+      </div>
+
+      <div class="x-modal" id="woModal" role="dialog" aria-modal="true" aria-labelledby="woT">
+        <div class="x-dlg x-dlg--sm">
+          <h2 id="woT">เปิดใบสั่งงาน</h2>
+          <p class="x-sub" id="woFor" style="margin:0"></p>
+          <label>ประเภทงาน<span class="x-field"><select id="woType"><option>ซ่อมแก้ไข (CM)</option><option>ซ่อมฉุกเฉิน</option><option>ตรวจเช็ค</option></select></span></label>
+          <label>ระดับ<span class="x-field"><select id="woPri"><option>ปกติ</option><option>สูง</option><option>ด่วน/เครื่องหยุด</option></select></span></label>
+          <label>มอบหมายช่าง<span class="x-field"><select id="woTech"><option>สมชาย ใจดี (ไฟฟ้า/แอร์)</option><option>วิทยา ทองมา (IT)</option><option>ประเสริฐ แก้วใส (เครื่องจักร)</option><option>ทีมอาคาร</option></select></span></label>
+          <div class="x-foot"><button class="x-btn" data-close>ยกเลิก</button><button class="x-btn x-btn--pri" id="woOk">สร้างใบสั่งงาน</button></div>
+        </div>
+      </div>
+
+      <div class="x-modal" id="rqModal" role="dialog" aria-modal="true" aria-labelledby="rqT">
+        <div class="x-dlg" id="rqDlg"></div>
+      </div>
+
+      <div class="x-toast" id="toast" role="status"><svg width="18" height="18"><use href="#i-check"/></svg><span></span></div>
+    </div>
+    <script src="../../assets/hark.js"></script>
+    <script>
+      const $ = (s) => document.querySelector(s);
+      const ME = "Admin";
+      const CH = { "เว็บ": "ch-web", LINE: "ch-line", QR: "ch-qr" };
+      const UR = { "เครื่องหยุด": "u-st", "สูง": "u-hi", "ปานกลาง": "u-md", "ต่ำ": "u-lo" };
+      const ST = { "รอคัดกรอง": "s-wait", "ใหม่": "s-new", "กำลังคัดกรอง": "s-tri", "เปิดใบสั่งงานแล้ว": "s-wo", "ไม่รับเรื่อง": "s-rej", "ยกเลิก": "s-can" };
+      const rows = [
+        { no: "RQ-2569-0046", date: "22 พ.ค. 69 · 09:12", ch: "เว็บ", sym: "แอร์ไม่เย็น ห้องประชุม 3", asset: "AC-MR3-01 · อาคาร A ชั้น 3", ur: "สูง", by: "Admin", st: "รอคัดกรอง" },
+        { no: "RQ-2569-0045", date: "22 พ.ค. 69 · 08:40", ch: "LINE", sym: "คอมพิวเตอร์เปิดไม่ติด", asset: "PC-ACC-014 · ฝ่ายบัญชี", ur: "ปานกลาง", by: "สุดา พรมมา", st: "ใหม่" },
+        { no: "RQ-2569-0044", date: "21 พ.ค. 69 · 16:25", ch: "QR", sym: "ปั๊มน้ำ PMP-11 เสียงดัง", asset: "PMP-11 · ห้องปั๊ม อาคาร B", ur: "สูง", by: "ธนา ศรีสุข", st: "กำลังคัดกรอง" },
+        { no: "RQ-2569-0043", date: "21 พ.ค. 69 · 14:02", ch: "LINE", sym: "ไฟทางเดินดับ", asset: "LGT-B2 · อาคาร B ชั้น 2", ur: "ต่ำ", by: "Admin", st: "เปิดใบสั่งงานแล้ว", wo: "WO-2569-0018" },
+        { no: "RQ-2569-0042", date: "21 พ.ค. 69 · 10:47", ch: "เว็บ", sym: "เครื่องพิมพ์กระดาษติด", asset: "PRN-HR-02 · ฝ่ายบุคคล", ur: "ต่ำ", by: "มาลี ใจงาม", st: "ไม่รับเรื่อง" },
+        { no: "RQ-2569-0041", date: "20 พ.ค. 69 · 18:30", ch: "QR", sym: "สายพาน CONV-03 หยุด", asset: "CONV-03 · ไลน์ผลิต 1", ur: "สูง", by: "ประเสริฐ แก้วใส", st: "ใหม่" },
+      ];
+      let woSeq = 19, rqSeq = 47, woTarget = null, woCount = 9;
+      const open = (st) => ["รอคัดกรอง", "ใหม่", "กำลังคัดกรอง"].includes(st);
+
+      function render() {
+        const q = $("#q").value.trim().toLowerCase(), fs = $("#fs").value, mine = $("#mine").checked;
+        const list = rows.filter((r) => (fs === "ทุกสถานะ" || r.st === fs) && (!mine || r.by === ME) &&
+          (!q || [r.no, r.sym, r.asset, r.by].join(" ").toLowerCase().includes(q)));
+        $("#rows").innerHTML = list.length ? list.map((r) => `
+          <tr class="${r.fresh ? "new" : ""}">
+            <td><div class="x-no">${r.no}</div><div class="x-meta">${r.date} <span class="x-tag ${CH[r.ch]}">${r.ch}</span></div></td>
+            <td><div>${r.sym}</div><div class="x-meta">${r.asset}</div></td>
+            <td><span class="x-tag ${UR[r.ur]}">${r.ur}</span></td>
+            <td>${r.by === ME ? "Admin (ฉัน)" : r.by}</td>
+            <td><span class="x-tag ${ST[r.st]}">${r.st}</span>${r.wo ? `<div class="x-meta">${r.wo}</div>` : ""}</td>
+            <td><div class="x-acts">
+              <button class="x-btn x-btn--sm x-btn--pri" data-wo="${r.no}" ${open(r.st) ? "" : "disabled"}>เปิดใบสั่งงาน</button>
+              <button class="x-btn x-btn--sm" data-rej="${r.no}" ${open(r.st) ? "" : "disabled"}>ไม่รับ</button>
+            </div></td>
+          </tr>`).join("") : `<tr><td colspan="6" class="x-empty">ไม่พบใบแจ้งซ่อมตามเงื่อนไข</td></tr>`;
+        rows.forEach((r) => (r.fresh = false));
+        $("#kWait").textContent = rows.filter((r) => r.st === "รอคัดกรอง").length;
+        $("#kWo").textContent = woCount;
+      }
+      ["#q", "#fs", "#mine"].forEach((s) => $(s).addEventListener("input", render));
+
+      function toast(msg) {
+        const t = $("#toast"); t.querySelector("span").textContent = msg; t.classList.add("show");
+        clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove("show"), 2800);
+      }
+      const show = (m) => { $(m).classList.add("open"); setTimeout(() => $(m).querySelector("select,button:not([data-close])")?.focus(), 30); };
+      const hide = () => document.querySelectorAll(".x-modal").forEach((m) => m.classList.remove("open"));
+      document.addEventListener("click", (e) => {
+        const b = e.target.closest("button");
+        if (e.target.classList.contains("x-modal") || (b && b.hasAttribute("data-close"))) return hide();
+        if (!b) return;
+        if (b.dataset.wo) {
+          woTarget = rows.find((r) => r.no === b.dataset.wo);
+          $("#woFor").textContent = `${woTarget.no} · ${woTarget.sym}`;
+          $("#woPri").value = woTarget.ur === "สูง" ? "สูง" : "ปกติ";
+          show("#woModal");
+        }
+        if (b.dataset.rej) { const r = rows.find((x) => x.no === b.dataset.rej); r.st = "ไม่รับเรื่อง"; render(); toast(`ไม่รับเรื่อง ${r.no}`); }
+      });
+      $("#woOk").addEventListener("click", () => {
+        const no = "WO-2569-" + String(woSeq++).padStart(4, "0");
+        Object.assign(woTarget, { st: "เปิดใบสั่งงานแล้ว", wo: no + " · " + $("#woTech").value.split(" (")[0], fresh: true });
+        woCount++; $("#woBadge").textContent = +$("#woBadge").textContent + 1;
+        hide(); render(); toast(`สร้าง ${no} แล้ว`);
+      });
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") hide();
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") { e.preventDefault(); $("#gsearch").focus(); }
+      });
+      $("#bell").addEventListener("click", () => {
+        const n = rows.filter((r) => open(r.st)).length;
+        toast(`มีใบแจ้งซ่อมรอดำเนินการ ${n} เรื่อง`);
+        $("#fs").value = "ทุกสถานะ"; $("#q").value = ""; render();
+        $(".x-dotn")?.remove();
+      });
+      $("#gsearch").addEventListener("input", (e) => { $("#q").value = e.target.value; render(); });
+
+      /* new request wizard */
+      const CATS = [["IT", "i-pc", "g5"], ["ไฟฟ้า", "i-bolt", "g1"], ["ประปา", "i-drop", "g3"], ["แอร์", "i-snow", "g6"], ["เครื่องจักร", "i-cog", "g2"], ["อาคาร", "i-bldg", "g4"]];
+      const ASSETS = ["AC-MR3-01 · แอร์ห้องประชุม 3", "PC-ACC-014 · คอมพิวเตอร์ฝ่ายบัญชี", "PMP-11 · ปั๊มน้ำ อาคาร B", "CONV-03 · สายพานไลน์ผลิต 1", "PRN-HR-02 · เครื่องพิมพ์ฝ่ายบุคคล", "ไม่ระบุทรัพย์สิน"];
+      let W;
+      const bar = (n) => `<div class="x-stepper">${[1, 2, 3].map((i) => `<span class="${i <= n ? "on" : ""}"></span>`).join("")}</div>`;
+      function wiz() {
+        const d = $("#rqDlg");
+        if (W.step === 1) d.innerHTML = `<h2 id="rqT">แจ้งซ่อม · 1/3 เลือกหมวด</h2>${bar(1)}
+          <div class="x-cats">${CATS.map(([n, i, g]) => `<button class="x-cat ${W.cat === n ? "on" : ""}" data-cat="${n}"><span class="x-tile ${g}"><svg><use href="#${i}"/></svg></span>${n}</button>`).join("")}</div>
+          <div class="x-foot"><button class="x-btn" data-close>ยกเลิก</button><button class="x-btn x-btn--pri" data-go="2" ${W.cat ? "" : "disabled"}>ถัดไป</button></div>`;
+        if (W.step === 2) d.innerHTML = `<h2 id="rqT">แจ้งซ่อม · 2/3 รายละเอียด (${W.cat})</h2>${bar(2)}
+          <label>ทรัพย์สิน<div class="x-two"><span class="x-field"><select id="wAsset">${ASSETS.map((a) => `<option ${a === W.asset ? "selected" : ""}>${a}</option>`).join("")}</select></span>
+            <button class="x-btn" id="wScan"><svg width="18" height="18"><use href="#i-qr"/></svg>สแกน QR</button></div></label>
+          <label>อาการ<span class="x-field"><input id="wSym" value="${W.sym}" placeholder="เช่น แอร์ไม่เย็น มีน้ำหยด" /></span></label>
+          <div class="x-lb">ความเร่งด่วน<div class="x-seg">${["ต่ำ", "ปานกลาง", "สูง", "เครื่องหยุด"].map((u) => `<button data-ur="${u}" class="${W.ur === u ? "on" : ""}">${u}</button>`).join("")}</div></div>
+          <label>แนบรูป<div class="x-drop" id="wPhoto" role="button" tabindex="0"><svg width="20" height="20"><use href="#i-cam"/></svg><br>${W.photos ? `แนบแล้ว ${W.photos} รูป · แตะเพื่อเพิ่ม` : "แตะเพื่อถ่ายหรือเลือกรูป"}</div></label>
+          ${W.extra.map((x, i) => `<label>ฟิลด์เพิ่มเติม<div class="x-two"><span class="x-field"><input data-xk="${i}" value="${x.k}" placeholder="ชื่อฟิลด์" /></span><span class="x-field"><input data-xv="${i}" value="${x.v}" placeholder="ค่า" /></span></div></label>`).join("")}
+          <button class="x-btn x-btn--sm" id="wAdd" style="justify-self:start"><svg width="16" height="16"><use href="#i-plus"/></svg>เพิ่มฟิลด์</button>
+          <div class="x-foot"><button class="x-btn" data-go="1">ย้อนกลับ</button><button class="x-btn x-btn--pri" data-go="3">ถัดไป</button></div>`;
+        if (W.step === 3) d.innerHTML = `<h2 id="rqT">แจ้งซ่อม · 3/3 ยืนยัน</h2>${bar(3)}
+          <dl class="x-sum"><dt>หมวด</dt><dd>${W.cat}</dd><dt>ทรัพย์สิน</dt><dd>${W.asset}</dd><dt>อาการ</dt><dd>${W.sym || "-"}</dd>
+            <dt>ความเร่งด่วน</dt><dd><span class="x-tag ${UR[W.ur]}">${W.ur}</span></dd><dt>รูปแนบ</dt><dd>${W.photos} รูป</dd>
+            ${W.extra.filter((x) => x.k).map((x) => `<dt>${x.k}</dt><dd>${x.v}</dd>`).join("")}</dl>
+          <div class="x-foot"><button class="x-btn" data-go="2">ย้อนกลับ</button><button class="x-btn x-btn--pri" id="wOk">ยืนยันแจ้งซ่อม</button></div>`;
+        if (W.step === 4) d.innerHTML = `<div class="x-ok"><span class="x-tile g4" style="width:64px;height:64px;border-radius:20px"><svg style="width:32px;height:32px"><use href="#i-check"/></svg></span>
+          <h2 id="rqT">แจ้งซ่อมสำเร็จ</h2><p class="x-no" style="font-size:18px;margin:0">${W.no}</p><p class="x-sub" style="margin:0">ทีมช่างจะคัดกรองและแจ้งผลผ่าน LINE OA</p>
+          <button class="x-btn x-btn--pri" data-close>เสร็จสิ้น</button></div>`;
+      }
+      function sync() {
+        if ($("#wAsset")) W.asset = $("#wAsset").value;
+        if ($("#wSym")) W.sym = $("#wSym").value.replace(/[<>"]/g, "");
+        document.querySelectorAll("[data-xk]").forEach((el) => (W.extra[el.dataset.xk].k = el.value.replace(/[<>"]/g, "")));
+        document.querySelectorAll("[data-xv]").forEach((el) => (W.extra[el.dataset.xv].v = el.value.replace(/[<>"]/g, "")));
+      }
+      $("#newBtn").addEventListener("click", () => { W = { step: 1, cat: "", asset: ASSETS[0], sym: "", ur: "ปานกลาง", photos: 0, extra: [] }; wiz(); show("#rqModal"); });
+      $("#rqDlg").addEventListener("click", (e) => {
+        const b = e.target.closest("button, #wPhoto"); if (!b) return;
+        sync();
+        if (b.dataset.cat) W.cat = b.dataset.cat;
+        if (b.dataset.go) W.step = +b.dataset.go;
+        if (b.dataset.ur) W.ur = b.dataset.ur;
+        if (b.id === "wScan") { W.asset = ASSETS[3]; toast("สแกนสำเร็จ: CONV-03"); }
+        if (b.id === "wPhoto") W.photos++;
+        if (b.id === "wAdd") W.extra.push({ k: "", v: "" });
+        if (b.id === "wOk") {
+          W.no = "RQ-2569-" + String(rqSeq++).padStart(4, "0"); W.step = 4;
+          const now = new Date();
+          rows.unshift({ no: W.no, date: `วันนี้ · ${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`, ch: "เว็บ",
+            sym: W.sym || `แจ้งซ่อมหมวด${W.cat}`, asset: W.asset, ur: W.ur, by: ME, st: "รอคัดกรอง", fresh: true });
+          render();
+        }
+        if (!b.hasAttribute("data-close")) wiz();
+      });
+
+      /* decorative QR */
+      (function () {
+        let s = 7, out = "";
+        const fin = (x, y) => { out += `<path d="M${x} ${y}h7v7h-7zM${x + 1} ${y + 1}v5h5v-5z" fill-rule="evenodd"/><rect x="${x + 2}" y="${y + 2}" width="3" height="3"/>`; };
+        const inF = (x, y) => (x < 8 && y < 8) || (x > 16 && y < 8) || (x < 8 && y > 16);
+        for (let y = 0; y < 25; y++) for (let x = 0; x < 25; x++) { s = (s * 9301 + 49297) % 233280; if (!inF(x, y) && s / 233280 > 0.52) out += `<rect x="${x}" y="${y}" width="1" height="1"/>`; }
+        fin(0, 0); fin(18, 0); fin(0, 18);
+        $("#qr").innerHTML = `<g fill="#0A1024">${out}</g>`;
+      })();
+      render();
+    </script>
+  </body>
+</html>
