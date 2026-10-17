@@ -1,0 +1,467 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>IT&amp;MAINT — สินทรัพย์ถาวร &amp; ค่าเสื่อมราคา</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap"
+    />
+    <link rel="stylesheet" href="../../assets/hark.css" />
+    <style>
+      :root {
+        --x-bg: #0a1024;
+        --x-panel: #0e1630;
+        --x-card: #101a36;
+        --x-line: rgba(90, 140, 255, 0.22);
+        --x-glow: 0 0 0 1px rgba(90, 140, 255, 0.18), 0 10px 30px rgba(0, 0, 0, 0.35);
+        --x-ink: #e8edfb;
+        --x-ink-2: #93a1c6;
+        --x-ink-3: #8b9ac2;
+        --x-accent: #4aa8ff;
+        --x-hot: linear-gradient(90deg, #c2410c, #be185d);
+        --x-r: 16px;
+        --x-font: "Noto Sans Thai", "Geist", system-ui, sans-serif;
+      }
+      html, body { background: var(--x-bg); }
+      body { font-family: var(--x-font); color: var(--x-ink); font-size: 14px; }
+      .x-app { display: grid; grid-template-columns: 252px minmax(0, 1fr); min-height: 100vh; }
+      .x-side {
+        background: linear-gradient(180deg, #0b1228, #0a1024);
+        border-right: 1px solid var(--x-line);
+        padding: 14px 12px 28px;
+        position: sticky; top: 0; align-self: start; max-height: 100vh; overflow: auto;
+      }
+      .x-logo { display: flex; gap: 10px; align-items: center; padding: 8px 8px 16px; }
+      .x-logo__mark {
+        width: 38px; height: 38px; border-radius: 11px; display: grid; place-items: center;
+        background: linear-gradient(140deg, #2d6bff, #22d3ee); color: #fff; flex: none;
+      }
+      .x-logo__t { font-weight: 700; letter-spacing: .02em; line-height: 1.1; }
+      .x-logo__s { font-size: 12px; color: var(--x-ink-3); }
+      .x-group { font-size: 12px; color: var(--x-ink-3); letter-spacing: .08em;
+        text-transform: uppercase; margin: 14px 10px 6px; }
+      .x-nav a {
+        display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 6px 10px;
+        border-radius: 10px; color: var(--x-ink-2); text-decoration: none; font-size: 13px;
+      }
+      .x-nav a:hover { background: rgba(90, 140, 255, 0.1); color: var(--x-ink); }
+      .x-nav a.is-active {
+        color: #fff; background: linear-gradient(90deg, rgba(45, 107, 255, .35), rgba(45, 107, 255, .06));
+        box-shadow: inset 0 0 0 1px var(--x-line);
+      }
+      .x-nav svg { flex: none; opacity: .85; }
+      .x-main { min-width: 0; display: flex; flex-direction: column; }
+      .x-top {
+        display: flex; align-items: center; gap: 12px; padding: 12px 20px;
+        border-bottom: 1px solid var(--x-line); background: rgba(10, 16, 36, .85);
+        backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 20;
+      }
+      .x-sel, .x-search, .x-icbtn {
+        background: var(--x-panel); border: 1px solid var(--x-line); border-radius: 10px;
+        color: var(--x-ink); font: inherit; font-size: 13px; min-height: 44px; padding: 0 12px;
+      }
+      .x-search { flex: 1; display: flex; align-items: center; gap: 8px; max-width: 520px; color: var(--x-ink-3); }
+      .x-search input { flex: 1; background: none; border: 0; color: var(--x-ink); font: inherit; outline: none; }
+      .x-kbd { font-size: 12px; border: 1px solid var(--x-line); border-radius: 6px; padding: 3px 6px; color: var(--x-ink-2); }
+      .x-icbtn { width: 44px; display: grid; place-items: center; position: relative; cursor: pointer; }
+      .x-badge { position: absolute; top: 0; right: 0; background: #be185d; color: #fff;
+        font-size: 12px; border-radius: 9px; padding: 0 5px; line-height: 16px; }
+      .x-btn {
+        min-height: 44px; padding: 0 16px; border-radius: 10px; border: 1px solid var(--x-line);
+        background: var(--x-panel); color: var(--x-ink); font: inherit; font-size: 13px; cursor: pointer;
+        display: inline-flex; align-items: center; gap: 8px;
+      }
+      .x-btn:hover { border-color: rgba(90, 140, 255, .5); }
+      .x-btn--hot { background: var(--x-hot); border: 0; color: #fff; font-weight: 600; }
+      .x-btn--hot:hover { filter: brightness(1.08); }
+      .x-avatar { display: flex; align-items: center; gap: 8px; }
+      .x-avatar span { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center;
+        background: linear-gradient(140deg, #2d6bff, #ff2f87); font-size: 12px; font-weight: 600; }
+      .x-body { padding: 20px; display: grid; gap: 16px; }
+      .x-head { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; }
+      .x-head h1 { font-size: 22px; font-weight: 700; }
+      .x-head p { color: var(--x-ink-2); font-size: 12.5px; margin-top: 4px; }
+      .x-card {
+        background: linear-gradient(180deg, rgba(23, 35, 72, .9), rgba(14, 22, 48, .9));
+        border: 1px solid var(--x-line); border-radius: var(--x-r); box-shadow: var(--x-glow); padding: 16px;
+      }
+      .x-card h2, .x-card h3 { font-size: 14px; font-weight: 600; }
+      .x-tabs { display: flex; gap: 8px; flex-wrap: wrap; }
+      .x-tab { min-height: 44px; padding: 0 16px; border-radius: 10px; border: 1px solid var(--x-line);
+        background: var(--x-panel); color: var(--x-ink-2); font: inherit; font-size: 13px; cursor: pointer; }
+      .x-tab[aria-selected="true"] { color: #fff; background: linear-gradient(90deg, #2d6bff, #22a6ee); border-color: transparent; }
+      .x-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+      .x-kpi__ic { width: 38px; height: 38px; border-radius: 11px; display: grid; place-items: center; margin-bottom: 10px; }
+      .g1 { background: linear-gradient(140deg, #2d6bff, #22d3ee); }
+      .g2 { background: linear-gradient(140deg, #7c3aed, #d946ef); }
+      .g3 { background: linear-gradient(140deg, #ff6a2b, #ff2f87); }
+      .g4 { background: linear-gradient(140deg, #0ea97a, #22d3ee); }
+      .g5 { background: linear-gradient(140deg, #f59e0b, #ef4444); }
+      .x-kpi__fig { font-size: 23px; font-weight: 700; letter-spacing: -.01em; }
+      .x-kpi__lb { font-size: 12px; color: var(--x-ink-2); margin-top: 2px; }
+      .x-kpi__note { font-size: 12px; color: var(--x-ink-3); margin-top: 6px; }
+      .x-two { display: grid; grid-template-columns: minmax(0, 1.9fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+      .x-charts { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+      .x-cap { font-size: 12px; color: var(--x-ink-3); margin-top: 4px; }
+      table.x-t { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+      table.x-t th, table.x-t td { text-align: left; padding: 10px 10px; border-bottom: 1px solid rgba(90, 140, 255, .14); white-space: nowrap; }
+      table.x-t thead th { font-size: 12px; color: var(--x-ink-3); font-weight: 600; letter-spacing: .04em; }
+      table.x-t tbody tr:hover { background: rgba(90, 140, 255, .07); }
+      .x-num { font-family: "Geist Mono", ui-monospace, monospace; text-align: right; }
+      .x-scroll { overflow-x: auto; }
+      .x-bar { width: 86px; height: 7px; border-radius: 99px; background: rgba(90, 140, 255, .18); overflow: hidden; display: inline-block; vertical-align: middle; }
+      .x-bar i { display: block; height: 100%; border-radius: 99px; background: linear-gradient(90deg, #2d6bff, #22d3ee); }
+      .x-tag { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; border-radius: 99px; padding: 4px 10px; border: 1px solid var(--x-line); color: var(--x-ink-2); }
+      .x-tag--ok { color: #6ee7b7; border-color: rgba(110, 231, 183, .35); background: #0c3a2c; }
+      .x-tag--wait { color: #fdba74; border-color: rgba(253, 186, 116, .35); background: #3d2410; }
+      .x-field { display: grid; gap: 6px; margin-bottom: 12px; }
+      .x-field label { font-size: 12px; color: var(--x-ink-2); }
+      .x-field input, .x-field select {
+        background: #0b1330; border: 1px solid var(--x-line); border-radius: 10px; color: var(--x-ink);
+        font: inherit; font-size: 13px; min-height: 44px; padding: 0 12px; width: 100%; box-sizing: border-box;
+      }
+      .x-hide { display: none; }
+      .x-modal { position: fixed; inset: 0; background: rgba(4, 8, 20, .72); backdrop-filter: blur(4px);
+        display: grid; place-items: center; z-index: 60; padding: 20px; }
+      .x-modal__box { max-width: 460px; width: 100%; }
+      .x-toast { position: fixed; right: 20px; bottom: 20px; z-index: 70; display: flex; align-items: center; gap: 10px;
+        border-left: 3px solid #10b981; font-size: 13px; }
+      @media (max-width: 1040px) {
+        .x-app { grid-template-columns: minmax(0, 1fr); }
+        .x-top { flex-wrap: wrap; position: static; }
+        .x-search { order: 9; flex-basis: 100%; max-width: none; }
+        .x-sel { flex: 1; min-width: 0; }
+        .x-side { position: static; max-height: none; }
+        .x-two { grid-template-columns: minmax(0, 1fr); }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="x-app">
+      <aside class="x-side">
+        <div class="x-logo">
+          <span class="x-logo__mark" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 3 7v10l9 5 9-5V7z"/><path d="M12 22V12M3 7l9 5 9-5"/></svg>
+          </span>
+          <span>
+            <span class="x-logo__t">IT&amp;MAINT</span><br />
+            <span class="x-logo__s">Smart Asset · Smart Work</span>
+          </span>
+        </div>
+        <nav class="x-nav" aria-label="เมนูหลัก">
+          <p class="x-group">ภาพรวม</p>
+          <a href="#"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11 12 3l9 8v10H3z"/></svg>หน้าหลัก</a>
+          <a href="#"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Command Center</a>
+          <p class="x-group">ทรัพย์สิน</p>
+          <a href="#"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/></svg>ทะเบียนทรัพย์สินกลาง</a>
+          <a href="#"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><path d="M14 14h3v3h-3zM20 20h1"/></svg>พิมพ์ป้าย QR/Barcode</a>
+          <a href="#" class="is-active" aria-current="page"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19h16M6 16l4-5 3 3 5-7"/></svg>สินทรัพย์ถาวร &amp; ค่าเสื่อม</a>
+          <a href="#"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h12l-3-3M20 17H8l3 3"/></svg>โอนย้าย/ยืม-คืน/จำหน่าย</a>
+          <a href="#"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8"/></svg>IT Asset &amp; License</a>
+          <a href="#"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></svg>EAM &amp; Predictive</a>
+          <a href="#"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>ติดตามตำแหน่ง</a>
+          <a href="#"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l2 2 4-4"/><rect x="4" y="3" width="16" height="18" rx="2"/></svg>ตรวจนับทรัพย์สิน</a>
+          <a href="#"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m5 16 4-4 3 3 3-3 4 4"/></svg>คลังดิจิทัล (DAM)</a>
+          <p class="x-group">ซ่อมบำรุง</p>
+          <a href="#"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 7a4 4 0 0 1-5 5l-5 5 2 2 5-5a4 4 0 0 0 5-5z"/></svg>แจ้งซ่อม / Service Desk</a>
+          <a href="#"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4M16 2v4M3 10h18"/></svg>แผน PM / CMMS</a>
+          <p class="x-group">คลัง &amp; จัดซื้อ</p>
+          <a href="#"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 7 9-4 9 4-9 4z"/><path d="M3 7v10l9 4 9-4V7"/></svg>คลังอะไหล่</a>
+          <a href="#"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M2 3h3l2.6 11h11"/></svg>PR / PO จัดซื้อ</a>
+          <p class="x-group">วิเคราะห์</p>
+          <a href="#"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 20V9M12 20V4M19 20v-7"/></svg>รายงาน / Dashboard</a>
+          <a href="#"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 18 9 9l4 5 7-10"/></svg>ต้นทุน &amp; TCO</a>
+          <p class="x-group">ระบบ</p>
+          <a href="#"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="3.5"/><path d="M5 20a7 7 0 0 1 14 0"/></svg>ผู้ใช้งาน &amp; สิทธิ์</a>
+          <a href="#"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="m19.4 15-.6 1a8 8 0 0 1-2 2l-1 .6-1-.6a8 8 0 0 1-2-2"/></svg>ตั้งค่าระบบ</a>
+        </nav>
+      </aside>
+
+      <div class="x-main">
+        <header class="x-top">
+          <select class="x-sel" aria-label="เลือกไซต์">
+            <option>ทุกไซต์</option>
+            <option>โรงงานสมุทรสาคร</option>
+            <option>โรงงานระยอง</option>
+          </select>
+          <div class="x-search">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            <input id="q" placeholder="ค้นหาเลขครุภัณฑ์ / ทรัพย์สิน / งวดบัญชี…" />
+            <span class="x-kbd">Ctrl + K</span>
+          </div>
+          <button class="x-btn x-btn--hot" type="button" id="repairBtn">+ แจ้งซ่อม</button>
+          <button class="x-icbtn" type="button" aria-label="การแจ้งเตือน" id="bellBtn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 16V11a6 6 0 1 0-12 0v5l-2 3h16z"/><path d="M10 22h4"/></svg>
+            <span class="x-badge">3</span>
+          </button>
+          <div class="x-avatar"><span>AD</span><small style="color:var(--x-ink-2)">Admin</small></div>
+        </header>
+
+        <div class="x-body">
+          <div class="x-head">
+            <div>
+              <h1>สินทรัพย์ถาวร &amp; ค่าเสื่อมราคา</h1>
+              <p>ค่าเสื่อม 4 วิธี · ปิดงวดรายเดือน · ลงบัญชีอัตโนมัติ · รายงานสำหรับผู้สอบบัญชี</p>
+            </div>
+            <button class="x-btn x-btn--hot" id="closeBtn" type="button">ปิดงวด ก.ย. 2569</button>
+          </div>
+
+          <div class="x-tabs" role="tablist">
+            <button class="x-tab" role="tab" aria-selected="true" data-tab="ov">ภาพรวม</button>
+            <button class="x-tab" role="tab" aria-selected="false" data-tab="bk">สมุดค่าเสื่อม</button>
+            <button class="x-tab" role="tab" aria-selected="false" data-tab="pd">งวดค่าเสื่อม</button>
+            <button class="x-tab" role="tab" aria-selected="false" data-tab="jv">สมุดรายวัน</button>
+          </div>
+
+          <div class="x-two">
+            <div>
+              <section class="x-panel" id="p-ov">
+                <div class="x-kpis">
+                  <div class="x-card">
+                    <div class="x-kpi__ic g1"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/></svg></div>
+                    <p class="x-kpi__fig">32</p><p class="x-kpi__lb">สินทรัพย์ในสมุด</p>
+                    <p class="x-kpi__note">ครบอายุการใช้งานแล้ว 2 รายการ</p>
+                  </div>
+                  <div class="x-card">
+                    <div class="x-kpi__ic g2"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9.5 9.5h4a2 2 0 1 1 0 4h-3a2 2 0 1 0 0 4h4"/></svg></div>
+                    <p class="x-kpi__fig">24.84M</p><p class="x-kpi__lb">ราคาทุนรวม (บาท)</p>
+                    <p class="x-kpi__note">รวมส่วนปรับปรุงสินทรัพย์</p>
+                  </div>
+                  <div class="x-card">
+                    <div class="x-kpi__ic g3"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M5 5v14h14"/><path d="m19 9-5 6-3-3-3 4"/></svg></div>
+                    <p class="x-kpi__fig">11.84M</p><p class="x-kpi__lb">ค่าเสื่อมสะสม (บาท)</p>
+                    <p class="x-kpi__note">คิดเป็น 47.7% ของราคาทุน</p>
+                  </div>
+                  <div class="x-card">
+                    <div class="x-kpi__ic g4"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M4 19h16M7 16V9M12 16V5M17 16v-4"/></svg></div>
+                    <p class="x-kpi__fig">12.99M</p><p class="x-kpi__lb">มูลค่าสุทธิ NBV (บาท)</p>
+                    <p class="x-kpi__note">ณ สิ้นงวด ส.ค. 2569</p>
+                  </div>
+                  <div class="x-card">
+                    <div class="x-kpi__ic g5"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4M16 2v4M3 10h18"/></svg></div>
+                    <p class="x-kpi__fig">ส.ค. 2569</p><p class="x-kpi__lb">งวดล่าสุดที่ปิด</p>
+                    <p class="x-kpi__note"><span class="x-tag x-tag--wait">ก.ย. 2569 รอปิด</span></p>
+                  </div>
+                </div>
+                <div class="x-charts" style="margin-top:16px">
+                  <figure class="x-card" style="margin:0">
+                    <h3>ค่าเสื่อมรายงวด 12 งวดล่าสุด</h3>
+                    <p class="x-cap">หน่วย: พันบาท · ต.ค. 2568 – ก.ย. 2569 (ก.ย. เป็นยอดประมาณการ)</p>
+                    <div id="chartLine" role="img" aria-label="ค่าเสื่อมรายงวดเคลื่อนไหวระหว่าง 201 ถึง 219 พันบาท"></div>
+                  </figure>
+                  <figure class="x-card" style="margin:0">
+                    <h3>ราคาทุน vs NBV ตามหมวดสินทรัพย์</h3>
+                    <p class="x-cap">หน่วย: ล้านบาท · 5 หมวดหลัก</p>
+                    <div id="chartBar" role="img" aria-label="เครื่องจักรมีราคาทุนสูงสุด 10.2 ล้านบาท และ NBV 5.1 ล้านบาท"></div>
+                  </figure>
+                </div>
+              </section>
+
+              <section class="x-panel x-hide" id="p-bk">
+                <div class="x-card">
+                  <h2>สมุดค่าเสื่อม (Depreciation Book)</h2>
+                  <p class="x-cap">ข้อมูล ณ สิ้นงวด ส.ค. 2569 · แสดง 6 จาก 32 รายการ</p>
+                  <div class="x-scroll" style="margin-top:10px">
+                    <table class="x-t">
+                      <thead><tr><th>เลขครุภัณฑ์</th><th>ทรัพย์สิน</th><th>วิธี</th><th class="x-num">ราคาทุน</th><th class="x-num">ค่าเสื่อมสะสม</th><th class="x-num">NBV</th><th>% ตัดแล้ว</th></tr></thead>
+                      <tbody id="bookRows"></tbody>
+                    </table>
+                  </div>
+                </div>
+              </section>
+
+              <section class="x-panel x-hide" id="p-pd">
+                <div class="x-card">
+                  <h2>งวดค่าเสื่อม (ปีบัญชี 2569)</h2>
+                  <p class="x-cap">ปิดงวดเรียงลำดับ · ปิดแล้วลงบัญชีอัตโนมัติทันที</p>
+                  <div class="x-scroll" style="margin-top:10px">
+                    <table class="x-t">
+                      <thead><tr><th>งวด</th><th class="x-num">จำนวนสินทรัพย์</th><th class="x-num">ค่าเสื่อมงวด (บาท)</th><th>เลขที่ JV</th><th>สถานะ</th></tr></thead>
+                      <tbody id="periodRows"></tbody>
+                    </table>
+                  </div>
+                </div>
+              </section>
+
+              <section class="x-panel x-hide" id="p-jv">
+                <div class="x-card">
+                  <h2>สมุดรายวันทั่วไป (JV ค่าเสื่อมราคา)</h2>
+                  <p class="x-cap">ผังบัญชี: Dr 5310 ค่าเสื่อมราคา / Cr 1690 ค่าเสื่อมราคาสะสม</p>
+                  <div class="x-scroll" style="margin-top:10px">
+                    <table class="x-t">
+                      <thead><tr><th>เลขที่ JV</th><th>วันที่</th><th>คำอธิบาย</th><th class="x-num">เดบิต</th><th class="x-num">เครดิต</th><th>สถานะ</th></tr></thead>
+                      <tbody>
+                        <tr><td>JV-69-0811</td><td>31 ส.ค. 2569</td><td>ค่าเสื่อมราคาประจำงวด ส.ค. 2569</td><td class="x-num">216,420.00</td><td class="x-num">216,420.00</td><td><span class="x-tag x-tag--ok">ผ่านรายการ</span></td></tr>
+                        <tr><td>JV-69-0710</td><td>31 ก.ค. 2569</td><td>ค่าเสื่อมราคาประจำงวด ก.ค. 2569</td><td class="x-num">214,880.00</td><td class="x-num">214,880.00</td><td><span class="x-tag x-tag--ok">ผ่านรายการ</span></td></tr>
+                        <tr><td>JV-69-0709</td><td>18 ก.ค. 2569</td><td>ตัดจำหน่ายทรัพย์สิน FL-02 (ขายซาก)</td><td class="x-num">48,000.00</td><td class="x-num">48,000.00</td><td><span class="x-tag x-tag--ok">ผ่านรายการ</span></td></tr>
+                        <tr><td>JV-69-0609</td><td>30 มิ.ย. 2569</td><td>ค่าเสื่อมราคาประจำงวด มิ.ย. 2569 + ปรับปรุง AHU-05</td><td class="x-num">213,150.00</td><td class="x-num">213,150.00</td><td><span class="x-tag x-tag--ok">ผ่านรายการ</span></td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </section>
+            </div>
+
+            <aside class="x-card" id="calc">
+              <h2>เครื่องคิดค่าเสื่อม</h2>
+              <p class="x-cap" style="margin-bottom:12px">คำนวณทันทีเพื่อเทียบวิธี ก่อนบันทึกเข้าสมุด</p>
+              <div class="x-field"><label for="cCost">ราคาทุน (บาท)</label><input id="cCost" type="number" value="1200000" min="0" step="1000" /></div>
+              <div class="x-field"><label for="cSalv">มูลค่าซาก (บาท)</label><input id="cSalv" type="number" value="120000" min="0" step="1000" /></div>
+              <div class="x-field"><label for="cLife">อายุการใช้งาน (ปี)</label><input id="cLife" type="number" value="8" min="1" max="30" /></div>
+              <div class="x-field"><label for="cMeth">วิธีคิดค่าเสื่อม</label>
+                <select id="cMeth"><option value="sl">เส้นตรง (Straight-line)</option><option value="db">ยอดลดลงทวีคูณ (Declining)</option></select>
+              </div>
+              <div id="calcChart" role="img" aria-label="กราฟมูลค่าสุทธิตามปีของวิธีที่เลือก"></div>
+              <div class="x-scroll" style="margin-top:8px">
+                <table class="x-t"><thead><tr><th>ปี</th><th class="x-num">ค่าเสื่อม</th><th class="x-num">สะสม</th><th class="x-num">NBV</th></tr></thead><tbody id="calcRows"></tbody></table>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="x-modal x-hide" id="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+      <div class="x-card x-modal__box">
+        <h2 id="mTitle" style="font-size:17px">ยืนยันปิดงวด ก.ย. 2569</h2>
+        <p class="x-cap">ระบบจะคำนวณค่าเสื่อม ลงบัญชีอัตโนมัติ และล็อกงวดไม่ให้แก้ไขย้อนหลัง</p>
+        <div style="margin-top:14px;display:grid;gap:8px;font-size:13px">
+          <div style="display:flex;justify-content:space-between"><span style="color:var(--x-ink-2)">สินทรัพย์ที่คิดค่าเสื่อม</span><b>32 รายการ</b></div>
+          <div style="display:flex;justify-content:space-between"><span style="color:var(--x-ink-2)">ค่าเสื่อมงวดนี้</span><b>216,600.00 บาท</b></div>
+          <div style="display:flex;justify-content:space-between"><span style="color:var(--x-ink-2)">Dr ค่าเสื่อมราคา (5310)</span><b>216,600.00</b></div>
+          <div style="display:flex;justify-content:space-between"><span style="color:var(--x-ink-2)">Cr ค่าเสื่อมราคาสะสม (1690)</span><b>216,600.00</b></div>
+        </div>
+        <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:18px">
+          <button class="x-btn" type="button" id="mCancel">ยกเลิก</button>
+          <button class="x-btn x-btn--hot" type="button" id="mOk">ยืนยันปิดงวด</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="x-card x-toast x-hide" id="toast" role="status"></div>
+
+    <script>
+      const $ = (s) => document.querySelector(s);
+      const money = (n) => n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+      /* tabs */
+      document.querySelectorAll(".x-tab").forEach((t) => {
+        t.addEventListener("click", () => {
+          document.querySelectorAll(".x-tab").forEach((o) => o.setAttribute("aria-selected", String(o === t)));
+          document.querySelectorAll(".x-panel").forEach((p) => p.classList.add("x-hide"));
+          $("#p-" + t.dataset.tab).classList.remove("x-hide");
+        });
+      });
+
+      /* modal + toast */
+      const toast = (msg) => {
+        const el = $("#toast");
+        el.textContent = msg;
+        el.classList.remove("x-hide");
+        clearTimeout(el._t);
+        el._t = setTimeout(() => el.classList.add("x-hide"), 4000);
+      };
+      $("#repairBtn").addEventListener("click", () => toast("เปิดใบแจ้งซ่อมใหม่ SR-69-0915 แล้ว · กรอกรายละเอียดได้ที่ Service Desk"));
+      $("#bellBtn").addEventListener("click", () => toast("แจ้งเตือน 3 รายการ: งวด ก.ย. 2569 รอปิด · FL-02 ครบอายุ · AHU-05 ใกล้ครบอายุ"));
+      $("#closeBtn").addEventListener("click", () => $("#modal").classList.remove("x-hide"));
+      $("#mCancel").addEventListener("click", () => $("#modal").classList.add("x-hide"));
+      $("#mOk").addEventListener("click", () => {
+        $("#modal").classList.add("x-hide");
+        toast("✓ ปิดงวด ก.ย. 2569 แล้ว · สร้าง JV-69-0912 จำนวน 216,600.00 บาท");
+        const tb = $("#periodRows");
+        if (tb) tb.rows[tb.rows.length - 1].innerHTML =
+          '<td>ก.ย. 2569</td><td class="x-num">32</td><td class="x-num">216,600.00</td><td>JV-69-0912</td><td><span class="x-tag x-tag--ok">ปิดแล้ว</span></td>';
+        $("#closeBtn").textContent = "ปิดงวด ต.ค. 2569";
+      });
+      /* depreciation book */
+      const book = [
+        ["CNC-001", "เครื่อง CNC Mazak VCN-530C", "เส้นตรง", 4850000, 2425000],
+        ["CONV-03", "สายพานลำเลียง Line 3", "ยอดลดลง", 1680000, 1092000],
+        ["MTR-007", "มอเตอร์ไฟฟ้า 75 kW", "จำนวนผลผลิต", 420000, 168000],
+        ["SRV-001", "เซิร์ฟเวอร์ Dell R750", "ผลรวมจำนวนปี", 690000, 552000],
+        ["FL-02", "รถโฟล์คลิฟท์ Toyota 2.5T", "เส้นตรง", 960000, 912000],
+        ["AHU-05", "เครื่องส่งลมเย็น AHU-05", "เส้นตรง", 1250000, 375000],
+      ];
+      $("#bookRows").innerHTML = book.map(([id, n, m, c, a]) => {
+        const p = Math.round((a / c) * 100);
+        return `<tr><td><b>${id}</b></td><td>${n}</td><td><span class="x-tag">${m}</span></td><td class="x-num">${money(c)}</td><td class="x-num">${money(a)}</td><td class="x-num">${money(c - a)}</td><td><span class="x-bar"><i style="width:${p}%"></i></span> <small style="color:var(--x-ink-2)">${p}%</small></td></tr>`;
+      }).join("");
+
+      /* periods */
+      const months = ["ต.ค. 2568", "พ.ย. 2568", "ธ.ค. 2568", "ม.ค. 2569", "ก.พ. 2569", "มี.ค. 2569", "เม.ย. 2569", "พ.ค. 2569", "มิ.ย. 2569", "ก.ค. 2569", "ส.ค. 2569", "ก.ย. 2569"];
+      const dep = [201.4, 203.2, 204.9, 206.1, 207.8, 208.6, 210.3, 211.7, 213.15, 214.88, 216.42, 216.6];
+      const counts = [29, 29, 30, 30, 30, 31, 31, 31, 32, 32, 32, 32];
+      const jvNo = ["0110", "0209", "0312", "0408", "0510", "0611", "0709", "0812", "0609", "0710", "0811"];
+      $("#periodRows").innerHTML = months.map((m, i) => i < 11
+        ? `<tr><td>${m}</td><td class="x-num">${counts[i]}</td><td class="x-num">${money(dep[i] * 1000)}</td><td>JV-${i < 3 ? 68 : 69}-${jvNo[i]}</td><td><span class="x-tag x-tag--ok">ปิดแล้ว</span></td></tr>`
+        : `<tr><td>${m}</td><td class="x-num">32</td><td class="x-num">216,600.00</td><td style="color:var(--x-ink-3)">—</td><td><span class="x-tag x-tag--wait">รอปิด</span></td></tr>`).join("");
+
+      /* SVG helpers */
+      const svg = (w, h, inner) => `<svg viewBox="0 0 ${w} ${h}" width="100%" style="display:block;margin-top:10px">${inner}</svg>`;
+      const T = (x, y, s, a = "middle", c = "#93a1c6") => `<text x="${x}" y="${y}" fill="${c}" font-size="11" text-anchor="${a}" font-family="Noto Sans Thai, sans-serif">${s}</text>`;
+      const grad = (id, a, b, v = true) => `<linearGradient id="${id}" x1="0" y1="0" x2="${v ? 0 : 1}" y2="${v ? 1 : 0}"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient>`;
+
+      /* line chart */
+      (() => {
+        const W = 520, H = 220, L = 40, R = 12, Tp = 16, B = 30, lo = 195, hi = 225;
+        const x = (i) => L + (i * (W - L - R)) / 11, y = (v) => Tp + ((hi - v) * (H - Tp - B)) / (hi - lo);
+        let g = "";
+        [195, 205, 215, 225].forEach((v) => { g += `<line x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}" stroke="rgba(90,140,255,.14)"/>` + T(L - 6, y(v) + 4, v, "end"); });
+        const pts = dep.map((v, i) => `${x(i)},${y(v)}`);
+        const area = `M${x(0)},${y(lo)} L${pts.join(" L")} L${x(11)},${y(lo)} Z`;
+        g += `<path d="${area}" fill="url(#la)"/><polyline points="${pts.slice(0, 11).join(" ")}" fill="none" stroke="url(#ll)" stroke-width="2.5" stroke-linecap="round"/>`;
+        g += `<polyline points="${pts.slice(10).join(" ")}" fill="none" stroke="#ff6a2b" stroke-width="2" stroke-dasharray="4 4"/>`;
+        dep.forEach((v, i) => { if (i % 2 === 0 || i === 11) g += T(x(i), H - 10, months[i].split(" ")[0]); });
+        g += `<circle cx="${x(10)}" cy="${y(dep[10])}" r="4" fill="#22d3ee"/>` + T(x(10) - 4, y(dep[10]) - 10, "216.4", "end", "#e8edfb");
+        g += `<circle cx="${x(11)}" cy="${y(dep[11])}" r="4" fill="#ff6a2b"/>`;
+        $("#chartLine").innerHTML = svg(W, H, `<defs>${grad("la", "rgba(45,107,255,.45)", "rgba(45,107,255,0)")}${grad("ll", "#2d6bff", "#22d3ee", false)}</defs>${g}`);
+      })();
+
+      /* bar chart */
+      (() => {
+        const cats = [["เครื่องจักร", 10.2, 5.1], ["อาคาร/ระบบ", 6.1, 3.9], ["ยานพาหนะ", 3.4, 1.2], ["IT", 2.9, 1.1], ["สำนักงาน", 2.24, 1.69]];
+        const W = 520, H = 220, L = 34, B = 30, Tp = 22, max = 12;
+        const y = (v) => Tp + ((max - v) * (H - Tp - B)) / max, gw = (W - L - 10) / cats.length;
+        let g = "";
+        [0, 4, 8, 12].forEach((v) => { g += `<line x1="${L}" x2="${W - 10}" y1="${y(v)}" y2="${y(v)}" stroke="rgba(90,140,255,.14)"/>` + T(L - 6, y(v) + 4, v, "end"); });
+        cats.forEach(([n, c, b], i) => {
+          const x0 = L + i * gw + gw / 2 - 26;
+          g += `<rect x="${x0}" y="${y(c)}" width="24" height="${y(0) - y(c)}" rx="5" fill="url(#bc)"/><rect x="${x0 + 28}" y="${y(b)}" width="24" height="${y(0) - y(b)}" rx="5" fill="url(#bn)"/>`;
+          g += T(x0 + 12, y(c) - 5, c, "middle", "#e8edfb") + T(x0 + 40, y(b) - 5, b, "middle", "#e8edfb") + T(x0 + 26, H - 10, n);
+        });
+        g += `<rect x="${W - 170}" y="2" width="10" height="10" rx="3" fill="url(#bc)"/>` + T(W - 155, 11, "ราคาทุน", "start") + `<rect x="${W - 95}" y="2" width="10" height="10" rx="3" fill="url(#bn)"/>` + T(W - 80, 11, "NBV", "start");
+        $("#chartBar").innerHTML = svg(W, H, `<defs>${grad("bc", "#5b8cff", "#2d4bd6")}${grad("bn", "#ff6a2b", "#ff2f87")}</defs>${g}`);
+      })();
+
+      /* calculator */
+      const calc = () => {
+        const c = Math.max(0, +$("#cCost").value || 0), s = Math.min(c, Math.max(0, +$("#cSalv").value || 0));
+        const n = Math.min(30, Math.max(1, Math.round(+$("#cLife").value || 1))), m = $("#cMeth").value;
+        const rows = []; let nbv = c, acc = 0;
+        for (let i = 1; i <= n; i++) {
+          let d = m === "sl" ? (c - s) / n : i === n ? nbv - s : Math.min(nbv * (2 / n), nbv - s);
+          d = Math.max(0, d); acc += d; nbv -= d; rows.push([i, d, acc, nbv]);
+        }
+        $("#calcRows").innerHTML = rows.map((r) => `<tr><td>${r[0]}</td><td class="x-num">${money(r[1])}</td><td class="x-num">${money(r[2])}</td><td class="x-num">${money(r[3])}</td></tr>`).join("");
+        const W = 320, H = 150, L = 8, R = 8, Tp = 12, B = 22;
+        const x = (i) => L + (i * (W - L - R)) / n, y = (v) => Tp + (c ? ((c - v) * (H - Tp - B)) / c : 0);
+        const pts = [[0, c], ...rows.map((r) => [r[0], r[3]])].map(([i, v]) => `${x(i).toFixed(1)},${y(v).toFixed(1)}`);
+        let g = `<line x1="${L}" x2="${W - R}" y1="${y(s)}" y2="${y(s)}" stroke="#93a1c6" stroke-dasharray="3 4"/>` + T(W - R, y(s) - 5, "มูลค่าซาก", "end");
+        g += `<path d="M${x(0)},${y(0)} L${pts.join(" L")} L${x(n)},${y(0)} Z" fill="url(#ca)"/><polyline points="${pts.join(" ")}" fill="none" stroke="url(#cl)" stroke-width="2.5" stroke-linejoin="round"/>`;
+        g += T(L, H - 6, "ปี 0", "start") + T(W - R, H - 6, "ปี " + n, "end");
+        $("#calcChart").innerHTML = svg(W, H, `<defs>${grad("ca", "rgba(255,47,135,.35)", "rgba(255,47,135,0)")}${grad("cl", "#ff6a2b", "#ff2f87", false)}</defs>${g}`);
+      };
+      ["#cCost", "#cSalv", "#cLife", "#cMeth"].forEach((s) => $(s).addEventListener("input", calc));
+      calc();
+
+      document.addEventListener("keydown", (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") { e.preventDefault(); $("#q").focus(); }
+        if (e.key === "Escape") $("#modal").classList.add("x-hide");
+      });
+    </script>
+  </body>
+</html>
