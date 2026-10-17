@@ -189,11 +189,11 @@
           <div class="x-av"><span>A</span><b>Admin</b></div>
         </header>
         <main class="x-wrap">
-          <nav class="x-crumb" aria-label="breadcrumb"><a href="#">หน้าแรก</a> / <a href="#">ทรัพย์สิน</a> / <span style="color:#E6EEFF">ทะเบียนทรัพย์สินกลาง</span></nav>
+          <nav class="x-crumb" aria-label="breadcrumb"><a href="../../">หน้าแรก</a> / <a href="./">ทรัพย์สิน</a> / <span style="color:#E6EEFF">ทะเบียนทรัพย์สินกลาง</span></nav>
           <div class="x-head">
             <div><h1>ทะเบียนทรัพย์สินกลาง</h1><p>Central Asset Register · ข้อมูล ณ <span id="today"></span></p></div>
             <div class="x-acts">
-              <button class="x-btn" data-toast="เริ่มนำเข้าไฟล์ Excel/CSV">นำเข้า</button>
+              <button class="x-btn" id="btnImport">นำเข้า</button>
               <button class="x-btn" data-toast="ส่งออกรายการเป็น Excel แล้ว">ส่งออก</button>
               <button class="x-btn" data-toast="ส่งป้าย QR/Barcode ไปยังเครื่องพิมพ์">พิมพ์ป้าย</button>
               <button class="x-btn pri" id="btnAdd">+ เพิ่มทรัพย์สิน</button>
@@ -210,7 +210,7 @@
               <select class="x-sel" id="fcr" aria-label="ความสำคัญ"></select>
               <button class="x-btn" id="fclear">ล้างตัวกรอง</button>
             </div>
-            <div class="x-bulk" id="bulk"><b id="bulkN"></b><button class="x-btn" data-toast="ส่งพิมพ์ป้ายรายการที่เลือกแล้ว">พิมพ์ป้าย</button><button class="x-btn" data-toast="สร้างคำขอโอนย้ายแล้ว">โอนย้าย</button><button class="x-btn" data-toast="ส่งออกรายการที่เลือกแล้ว">ส่งออก</button><button class="x-btn" id="bulkClear">ยกเลิกเลือก</button></div>
+            <div class="x-bulk" id="bulk"><b id="bulkN"></b><button class="x-btn" data-toast="ส่งพิมพ์ป้ายรายการที่เลือกแล้ว">พิมพ์ป้าย</button><button class="x-btn" id="bulkMove">โอนย้าย</button><button class="x-btn" data-toast="ส่งออกรายการที่เลือกแล้ว">ส่งออก</button><button class="x-btn" id="bulkClear">ยกเลิกเลือก</button></div>
             <div class="x-tblwrap">
               <table class="x-tbl">
                 <thead><tr><th><input type="checkbox" id="chkAll" aria-label="เลือกทั้งหมด" /></th><th>Asset Tag / ชื่อ</th><th>หมวด</th><th>ที่ตั้ง / ผู้รับผิดชอบ</th><th class="r">ราคาทุน (บาท)</th><th class="r">NBV (บาท)</th><th>Health</th><th>สถานะ</th><th></th></tr></thead>
@@ -234,6 +234,33 @@
         <div class="x-stepper" id="stepper"></div>
         <div class="x-mb" id="mBody"></div>
         <div class="x-mf"><span class="x-err" id="mErr"></span><button class="x-btn" id="mBack">ย้อนกลับ</button><button class="x-btn" id="mNext">ถัดไป</button><button class="x-btn pri" id="mSave">บันทึก</button></div>
+      </section>
+      <section class="x-modal" id="impModal" role="dialog" aria-modal="true" aria-labelledby="impTitle">
+        <div class="x-mh"><h2 id="impTitle">นำเข้าทรัพย์สินจาก CSV</h2><button class="x-ico" data-close aria-label="ปิด">✕</button></div>
+        <div class="x-mb">
+          <div class="x-form">
+            <label class="w2">ไฟล์ CSV (UTF-8) <span class="x-req">*</span><input class="x-in" id="impFile" type="file" accept=".csv,text/csv" style="padding-top:8px"></label>
+            <label>แม่แบบ<button type="button" class="x-btn" id="impTpl">ดาวน์โหลดแม่แบบ CSV</button></label>
+            <div class="w3" style="grid-column:1/-1;display:flex;gap:8px;align-items:center;flex-wrap:wrap"><button type="button" class="x-btn" id="impSample">ใช้ข้อมูลตัวอย่าง</button><span class="x-sub" style="color:var(--x-mut);font-size:12.5px">คอลัมน์: tag, name, cat, site, loc, owner, cost, mfr, model, sn, status, crit — จำเป็น: name, cat, site</span></div>
+          </div>
+          <div id="impPrev" style="margin-top:14px"><p class="x-sub" style="margin:0;color:var(--x-mut)">ยังไม่ได้เลือกไฟล์ — เลือกไฟล์ CSV เพื่อดูตัวอย่างก่อนนำเข้า</p></div>
+        </div>
+        <div class="x-mf"><span class="x-err" id="impErr"></span><button class="x-btn" data-close>ยกเลิก</button><button class="x-btn pri" id="impGo" disabled>นำเข้า</button></div>
+      </section>
+      <section class="x-modal" id="mvModal" role="dialog" aria-modal="true" aria-labelledby="mvTitle" style="width:min(620px,96vw)">
+        <div class="x-mh"><h2 id="mvTitle">โอนย้ายทรัพย์สิน</h2><button class="x-ico" data-close aria-label="ปิด">✕</button></div>
+        <div class="x-mb">
+          <p class="x-sub" id="mvList" style="margin:0 0 12px;color:var(--x-mut)"></p>
+          <div class="x-form" id="mvForm">
+            <label class="w3">ทรัพย์สิน <span class="x-req">*</span><select class="x-sel" id="mvAsset"></select></label>
+            <label>ไซต์ปลายทาง <span class="x-req">*</span><select class="x-sel" id="mvSite"><option value="">— เลือก —</option><option>โรงงานสมุทรสาคร</option><option>โรงงานระยอง</option></select></label>
+            <label>ที่ตั้งใหม่ <span class="x-req">*</span><input class="x-in" id="mvLoc" placeholder="เช่น อาคาร B · ชั้น 2"></label>
+            <label>ผู้รับผิดชอบใหม่<input class="x-in" id="mvOwner" placeholder="ชื่อ-นามสกุล"></label>
+            <label class="w3">เหตุผลการโอนย้าย <span class="x-req">*</span><textarea class="x-in" id="mvWhy"></textarea></label>
+          </div>
+          <p style="margin:12px 0 0"><a href="../asset-movements/" style="color:#60A5FA">ดูประวัติโอนย้าย/ยืม-คืนทั้งหมด →</a></p>
+        </div>
+        <div class="x-mf"><span class="x-err"></span><button class="x-btn" data-close>ยกเลิก</button><button class="x-btn pri" id="mvSave">บันทึก</button></div>
       </section>
       <div class="x-toast" id="toast" role="status"></div>
     </div>
@@ -347,8 +374,8 @@ const nextTag=c=>{const p=PFX[c]||'AST';const n=A.filter(a=>a.tag.startsWith(p+'
 const opt=(arr,v)=>arr.map(o=>`<option${o===v?' selected':''}>${o}</option>`).join('');
 const fi=(k,l,o={})=>`<label class="${o.w||''}">${l}${o.req?' <span class="x-req">*</span>':''}${o.sel?`<select class="x-sel" data-k="${k}">${o.blank?'<option value="">— เลือก —</option>':''}${opt(o.sel,W[k])}</select>`:o.ta?`<textarea class="x-in" data-k="${k}">${W[k]||''}</textarea>`:`<input class="x-in" data-k="${k}" type="${o.t||'text'}" value="${W[k]??''}" ${o.ph?`placeholder="${o.ph}"`:''}>`}</label>`;
 function drawStep(){$('#stepper').innerHTML=STEPS.map((s,i)=>`<div class="x-step ${i===step?'on':i<step?'done':''}"><b>${i<step?'✓':i+1}</b><span>${s}</span></div>`).join('');let h='<div class="x-form">';
-if(step===0)h+=fi('cat','หมวดทรัพย์สิน',{req:1,sel:CATS,blank:1})+`<label>Asset Tag<div class="x-inrow"><input class="x-in" data-k="tag" value="${W.tag||''}"><button type="button" class="x-btn" id="genTag">สร้างเลขถัดไป</button></div></label>`+fi('name','ชื่อทรัพย์สิน',{req:1})+fi('mfr','ผู้ผลิต')+fi('brand','ยี่ห้อ')+fi('model','รุ่น')+fi('sn','Serial No.')+fi('site','ไซต์',{req:1,sel:[SAK,RAY],blank:1})+fi('loc','ที่ตั้ง')+fi('dept','แผนก')+fi('cc','ศูนย์ต้นทุน',{ph:'CC-1001'})+fi('owner','ผู้รับผิดชอบ')+fi('parent','เครื่องแม่ (ลำดับชั้น EAM)',{sel:['— ไม่มี —',...A.map(a=>a.tag+' '+a.name)]})+fi('crit','ระดับความสำคัญ',{sel:Object.values(CR)})+fi('life','สถานะวงจรชีวิต',{sel:Object.keys(STS)})+fi('op','สถานะการทำงาน',{sel:['ทำงานปกติ','หยุดชั่วคราว','เสีย','ไม่ได้ใช้งาน']});
-if(step===1)h+=fi('fa','เลขครุภัณฑ์',{ph:'FA-2569-0001'})+fi('vendor','ผู้ขาย')+fi('buy','วันที่ซื้อ',{t:'date'})+fi('start','วันที่เริ่มใช้งาน',{t:'date'})+fi('cost','ราคาทุน (บาท)',{t:'number'})+fi('repl','มูลค่าทดแทน (บาท)',{t:'number'})+fi('warr','วันหมดประกัน',{t:'date'})+fi('method','วิธีคิด',{sel:['เส้นตรง','ยอดลดลง','SYD','หน่วยผลิต']})+fi('lifeM','อายุการใช้งาน (เดือน)',{t:'number'})+fi('salvage','มูลค่าซาก (บาท)',{t:'number'});
+if(step===0)h+=fi('cat','หมวดทรัพย์สิน',{req:1,sel:CATS,blank:1})+`<label>Asset Tag<div class="x-inrow"><input class="x-in" data-k="tag" value="${W.tag||''}"><button type="button" class="x-btn" id="genTag">สร้างเลขถัดไป</button></div></label>`+fi('name','ชื่อทรัพย์สิน',{req:1})+fi('mfr','ผู้ผลิต')+fi('brand','ยี่ห้อ')+fi('model','รุ่น')+fi('sn','Serial No.')+fi('site','ไซต์',{req:1,sel:[SAK,RAY],blank:1})+fi('loc','ที่ตั้ง')+fi('dept','แผนก')+fi('cc','ศูนย์ต้นทุน',{ph:'CC-1001'})+fi('owner','ผู้รับผิดชอบ')+fi('parent','เครื่องแม่ (ลำดับชั้น EAM)',{sel:['— ไม่มี —',...A.map(a=>a.tag+' '+a.name)]})+fi('crit','ระดับความสำคัญ',{sel:Object.values(CR),blank:1})+fi('life','สถานะวงจรชีวิต',{sel:Object.keys(STS),blank:1})+fi('op','สถานะการทำงาน',{sel:['ทำงานปกติ','หยุดชั่วคราว','เสีย','ไม่ได้ใช้งาน']});
+if(step===1)h+=fi('fa','เลขครุภัณฑ์',{ph:'FA-2569-0001'})+fi('vendor','ผู้ขาย')+fi('buy','วันที่ซื้อ',{t:'date'})+fi('start','วันที่เริ่มใช้งาน',{t:'date'})+fi('cost','ราคาทุน (บาท)',{t:'number'})+fi('repl','มูลค่าทดแทน (บาท)',{t:'number'})+fi('warr','วันหมดประกัน',{t:'date'})+fi('method','วิธีคิด',{sel:['เส้นตรง','ยอดลดลง','SYD','หน่วยผลิต'],blank:1})+fi('lifeM','อายุการใช้งาน (เดือน)',{t:'number'})+fi('salvage','มูลค่าซาก (บาท)',{t:'number'});
 if(step===2)h+=fi('note','หมายเหตุ / สเปก',{w:'w3',ta:1})+`<div class="x-cf"><h3>ฟิลด์ที่กำหนดเอง<button type="button" class="x-btn" id="addCf">+ เพิ่มฟิลด์</button></h3><div id="cfList">${cf.length?cf.map((c,i)=>`<div class="x-cfrow"><input class="x-in" data-cf="${i}" data-p="label" placeholder="ชื่อฟิลด์" value="${c.label}"><select class="x-sel" data-cf="${i}" data-p="type">${opt(['ข้อความ','ตัวเลข','วันที่','ใช่/ไม่ใช่'],c.type)}</select><input class="x-in" data-cf="${i}" data-p="value" placeholder="ค่า" type="${{'ตัวเลข':'number','วันที่':'date'}[c.type]||'text'}" value="${c.value}"><button type="button" class="x-ico" data-del="${i}" aria-label="ลบฟิลด์">✕</button></div>`).join(''):'<p class="x-sub" style="margin:0">ยังไม่มีฟิลด์ กด “+ เพิ่มฟิลด์” เพื่อเพิ่ม</p>'}</div></div>`;
 if(step===3)h+=fi('rfid','RFID EPC',{w:'w2',ph:'E280117000000...'})+fi('barcode','Barcode',{ph:'Code128'})+`<label class="x-tog w3"><button type="button" class="x-sw" id="geo" role="switch" aria-checked="${!!W.geo}" aria-label="Geofence"></button>เปิด Geofence (แจ้งเตือนเมื่อออกนอกพื้นที่)</label><div class="w3" style="grid-column:1/-1"><div class="x-sub" style="margin-bottom:6px">ตัวอย่างป้าย QR</div><div class="x-label" id="lbl"></div></div>`;
 $('#mBody').innerHTML=h+'</div>';$('#mBack').disabled=step===0;$('#mBack').style.opacity=step?1:.4;$('#mNext').style.display=step<3?'':'none';$('#mErr').textContent='';if(step===3)drawLabel();}
@@ -368,6 +395,74 @@ const cost=+W.cost||0,crit=(W.crit||'C ทั่วไป')[0],st=W.life||'ว�
 A.unshift({tag:W.tag||nextTag(W.cat),name:W.name,mfr:W.mfr||W.brand||'-',model:W.model||'-',cat:W.cat,site:W.site,loc:W.loc||'-',owner:W.owner||'-',cost,nbv:cost,health:100,status:st,crit,wo:0,sn:W.sn||'-',fa:W.fa||'-',rfid:W.rfid||'-',buy:W.buy?(+W.buy.slice(0,4)+543)+W.buy.slice(4):'2569-05-18',life:+W.lifeM||60,method:W.method||'เส้นตรง',salvage:+W.salvage||0,warr:'-',backup:'-',custom:cf.filter(c=>c.label)});
 KPI.total++;if(st==='ใช้งาน')KPI.active++;if(st==='ซ่อม/ปรับปรุง')KPI.down++;KPI.cost+=cost/1e6;KPI.nbv+=cost/1e6;renderKpi();render();closeAll();toast(`บันทึก ${A[0].tag} ${A[0].name} เข้าทะเบียนแล้ว`);};
 $('#btnAdd').onclick=()=>{step=0;W={crit:'C ทั่วไป',life:'รับเข้า/รอติดตั้ง',method:'เส้นตรง',lifeM:60};cf=[];drawStep();$('#modal').classList.add('show');$('#scrim').classList.add('show');};
+render();
+    </script>
+    <script>
+/* ---- real behaviours: import CSV, transfer, edit, field validation ---- */
+const esc=v=>String(v??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const LS='itm-asset-register-v1';
+try{const sv=JSON.parse(localStorage.getItem(LS)||'null');if(sv&&Array.isArray(sv.A)&&sv.A.length){A.length=0;sv.A.forEach(a=>A.push(a));Object.assign(KPI,sv.KPI||{});renderKpi();}}catch(e){}
+const persist=()=>{try{localStorage.setItem(LS,JSON.stringify({A,KPI}));}catch(e){}};
+const openM=id=>{$(id).classList.add('show');$('#scrim').classList.add('show');};
+closeAll=function(){$('#drawer').classList.remove('show');$('#drawer').setAttribute('aria-hidden','true');document.querySelectorAll('.x-modal').forEach(m=>m.classList.remove('show'));$('#scrim').classList.remove('show');};
+$('#scrim').onclick=closeAll;$('#mClose').onclick=closeAll;
+document.querySelectorAll('[data-close]').forEach(b=>b.onclick=closeAll);
+/* clear filter: only active when a filter is set */
+const _render=render;render=function(){_render();$('#fclear').disabled=!Object.values(F).some(Boolean);$('#fclear').style.opacity=$('#fclear').disabled?.5:1;$('#bulkClear').disabled=!sel.size;};
+$('#fclear').onclick=()=>{Object.keys(F).forEach(k=>F[k]='');['#fq','#q','#fcat','#fsite','#fst','#fcr','#siteTop'].forEach(s=>$(s).value='');render();toast('ล้างตัวกรองแล้ว');};
+/* field-level validation for the add/edit wizard */
+function fieldErr(errs){document.querySelectorAll('#mBody .x-ferr').forEach(n=>n.remove());document.querySelectorAll('#mBody [data-k]').forEach(n=>{n.style.borderColor='';n.removeAttribute('aria-invalid');});
+let first=null;errs.forEach(([k,m])=>{const el=$(`#mBody [data-k="${k}"]`);if(!el)return;el.style.borderColor='#FB7185';el.setAttribute('aria-invalid','true');const d=document.createElement('span');d.className='x-ferr';d.style.cssText='color:#FB7185;font-size:12px';d.textContent=m;(el.closest('.x-inrow')||el).after(d);if(!first)first=el;});
+if(first){first.focus();first.scrollIntoView({block:'center'});}$('#mErr').textContent=errs.length?`กรุณาแก้ไข ${errs.length} ช่องที่ทำเครื่องหมาย`:'';return !errs.length;}
+function stepErrs(){const e=[];if(step===0){if(!W.cat)e.push(['cat','กรุณาเลือกหมวดทรัพย์สิน']);if(!(W.name||'').trim())e.push(['name','กรุณากรอกชื่อทรัพย์สิน']);if(!W.site)e.push(['site','กรุณาเลือกไซต์']);
+const t=(W.tag||'').trim();if(t&&A.some(a=>a.tag===t&&a.tag!==editTag))e.push(['tag','Asset Tag นี้มีอยู่แล้ว']);}
+if(step===1){if(W.cost!==undefined&&W.cost!==''&&+W.cost<0)e.push(['cost','ราคาทุนต้องไม่ติดลบ']);if(W.salvage&&W.cost&&+W.salvage>+W.cost)e.push(['salvage','มูลค่าซากต้องไม่เกินราคาทุน']);}return e;}
+let editTag=null;
+$('#mNext').onclick=()=>{if(fieldErr(stepErrs())){step++;drawStep();}};
+$('#btnAdd').onclick=()=>{editTag=null;step=0;W={};cf=[];$('#mTitle').textContent='เพิ่มทรัพย์สินใหม่';drawStep();openM('#modal');};
+function openEdit(t){const a=A.find(x=>x.tag===t);if(!a)return;editTag=t;step=0;cf=(a.custom||[]).map(c=>({...c}));
+W={cat:a.cat,tag:a.tag,tagManual:1,name:a.name,mfr:a.mfr,model:a.model,sn:a.sn,site:a.site,loc:a.loc,owner:a.owner,crit:CR[a.crit],life:a.status,fa:a.fa,cost:a.cost,method:a.method,lifeM:a.life,salvage:a.salvage,rfid:a.rfid,buy:a.buy&&/^\d{4}-/.test(a.buy)?(+a.buy.slice(0,4)-543)+a.buy.slice(4):''};
+$('#mTitle').textContent=`แก้ไขทรัพย์สิน ${t}`;drawStep();openM('#modal');}
+$('#rows').onclick=e=>{const tr=e.target.closest('tr[data-t]');if(!tr)return;const t=tr.dataset.t;
+if(e.target.classList.contains('rc')){e.target.checked?sel.add(t):sel.delete(t);render();return;}
+if(e.target.closest('.e')){openEdit(t);return;}openDrawer(t);};
+$('#mSave').onclick=()=>{step=0;drawStep();if(!fieldErr(stepErrs()))return;
+const cost=+W.cost||0,crit=(W.crit||'C ทั่วไป')[0],st=W.life||'วางแผน',buy=W.buy?(+W.buy.slice(0,4)+543)+W.buy.slice(4):'2569-05-18';
+if(editTag){const a=A.find(x=>x.tag===editTag);const oldSt=a.status,oldCost=a.cost;
+Object.assign(a,{tag:(W.tag||'').trim()||a.tag,name:W.name.trim(),mfr:W.mfr||'-',model:W.model||'-',cat:W.cat,site:W.site,loc:W.loc||'-',owner:W.owner||'-',cost,nbv:Math.min(a.nbv,cost)||cost,status:st,crit,sn:W.sn||'-',fa:W.fa||'-',rfid:W.rfid||'-',buy,life:+W.lifeM||a.life,method:W.method||'เส้นตรง',salvage:+W.salvage||0,custom:cf.filter(c=>c.label)});
+if(oldSt!==st){if(oldSt==='ใช้งาน')KPI.active--;if(st==='ใช้งาน')KPI.active++;if(oldSt==='ซ่อม/ปรับปรุง')KPI.down--;if(st==='ซ่อม/ปรับปรุง')KPI.down++;}KPI.cost+=(cost-oldCost)/1e6;
+renderKpi();render();closeAll();persist();toast(`บันทึกการแก้ไข ${a.tag} แล้ว`);editTag=null;return;}
+A.unshift({tag:(W.tag||'').trim()||nextTag(W.cat),name:W.name.trim(),mfr:W.mfr||W.brand||'-',model:W.model||'-',cat:W.cat,site:W.site,loc:W.loc||'-',owner:W.owner||'-',cost,nbv:cost,health:100,status:st,crit,wo:0,sn:W.sn||'-',fa:W.fa||'-',rfid:W.rfid||'-',buy,life:+W.lifeM||60,method:W.method||'เส้นตรง',salvage:+W.salvage||0,warr:'-',backup:'-',custom:cf.filter(c=>c.label)});
+KPI.total++;if(st==='ใช้งาน')KPI.active++;if(st==='ซ่อม/ปรับปรุง')KPI.down++;KPI.cost+=cost/1e6;KPI.nbv+=cost/1e6;renderKpi();render();closeAll();persist();toast(`บันทึก ${A[0].tag} ${A[0].name} เข้าทะเบียนแล้ว`);};
+/* CSV import */
+const COLS=['tag','name','cat','site','loc','owner','cost','mfr','model','sn','status','crit'];
+function parseCSV(t){t=t.replace(/^\uFEFF/,'');const rows=[];let row=[],f='',q=false;for(let i=0;i<t.length;i++){const c=t[i];if(q){if(c==='"'){if(t[i+1]==='"'){f+='"';i++;}else q=false;}else f+=c;}else if(c==='"')q=true;else if(c===','){row.push(f);f='';}else if(c==='\n'||c==='\r'){if(c==='\r'&&t[i+1]==='\n')i++;row.push(f);f='';if(row.some(x=>x.trim()))rows.push(row);row=[];}else f+=c;}row.push(f);if(row.some(x=>x.trim()))rows.push(row);return rows;}
+const csvCell=v=>/[",\n]/.test(String(v))?'"'+String(v).replace(/"/g,'""')+'"':String(v);
+const SAMPLE=[COLS,['PMP-21','ปั๊มน้ำหอยโข่ง Ebara','อาคาร/สาธารณูปโภค',RAY,'ห้องปั๊ม B2','ประเสริฐ มั่นคง','265000','Ebara','3M 40-200','EB-3M40-0021','ใช้งาน','B'],['NB-0245','Notebook Lenovo ThinkPad T14','สำนักงาน',SAK,'ฝ่ายบุคคล · ชั้น 2','วรรณา ใจงาม','42900','Lenovo','ThinkPad T14 Gen 4','PF4ABC12','ใช้งาน','D'],['','กล้องวงจรปิด Hikvision','IT & เครือข่าย',SAK,'ประตูหน้า','ณัฐพงษ์ ไอที','12500','Hikvision','DS-2CD2143','HK-2143-889','รับเข้า/รอติดตั้ง','C']];
+let imp=[];
+function previewCSV(text,src){const rows=parseCSV(text);$('#impErr').textContent='';if(rows.length<2){imp=[];$('#impPrev').innerHTML='<p class="x-sub" style="margin:0;color:#FB7185">ไฟล์ไม่มีข้อมูล (ต้องมีแถวหัวคอลัมน์และข้อมูลอย่างน้อย 1 แถว)</p>';$('#impGo').disabled=true;return;}
+const hd=rows[0].map(h=>h.trim().toLowerCase());const miss=['name','cat','site'].filter(c=>!hd.includes(c));if(miss.length){imp=[];$('#impPrev').innerHTML=`<p style="margin:0;color:#FB7185">ไม่พบคอลัมน์ที่จำเป็น: ${miss.join(', ')}</p>`;$('#impGo').disabled=true;return;}
+const seen=new Set(A.map(a=>a.tag));imp=rows.slice(1).map(r=>{const o={};hd.forEach((h,i)=>o[h]=(r[i]||'').trim());const er=[];if(!o.name)er.push('ไม่มีชื่อ');if(!CATS.includes(o.cat))er.push('หมวดไม่ถูกต้อง');if(![SAK,RAY].includes(o.site))er.push('ไซต์ไม่ถูกต้อง');if(o.cost&&isNaN(+o.cost))er.push('ราคาทุนไม่ใช่ตัวเลข');if(o.status&&!STS[o.status])er.push('สถานะไม่ถูกต้อง');if(o.tag&&seen.has(o.tag))er.push('Tag ซ้ำ');if(o.tag)seen.add(o.tag);o._err=er;return o;});
+const ok=imp.filter(o=>!o._err.length).length;
+$('#impPrev').innerHTML=`<div class="x-sub" style="margin-bottom:8px;color:var(--x-mut)">${esc(src)} · ${imp.length} แถว · พร้อมนำเข้า <b style="color:#22C55E">${ok}</b>${imp.length-ok?` · มีปัญหา <b style="color:#FB7185">${imp.length-ok}</b> (จะข้าม)`:''}</div><div class="x-tblwrap" style="max-height:260px;overflow:auto"><table class="x-tbl"><thead><tr><th>Tag</th><th>ชื่อ</th><th>หมวด</th><th>ไซต์</th><th class="r">ราคาทุน</th><th>ตรวจสอบ</th></tr></thead><tbody>${imp.map(o=>`<tr><td>${esc(o.tag||'(สร้างอัตโนมัติ)')}</td><td>${esc(o.name)}</td><td>${esc(o.cat)}</td><td>${esc(o.site)}</td><td class="r">${o.cost?fmt(+o.cost||0):'-'}</td><td>${o._err.length?`<span style="color:#FB7185">${o._err.join(', ')}</span>`:'<span style="color:#22C55E">✓ พร้อม</span>'}</td></tr>`).join('')}</tbody></table></div>`;
+$('#impGo').disabled=!ok;$('#impGo').textContent=ok?`นำเข้า ${ok} รายการ`:'นำเข้า';}
+$('#btnImport').onclick=()=>{imp=[];$('#impFile').value='';$('#impGo').disabled=true;$('#impGo').textContent='นำเข้า';$('#impErr').textContent='';$('#impPrev').innerHTML='<p class="x-sub" style="margin:0;color:var(--x-mut)">ยังไม่ได้เลือกไฟล์ — เลือกไฟล์ CSV เพื่อดูตัวอย่างก่อนนำเข้า</p>';openM('#impModal');};
+$('#impFile').onchange=e=>{const f=e.target.files&&e.target.files[0];if(!f)return;if(!/\.csv$/i.test(f.name)){$('#impErr').textContent='รองรับเฉพาะไฟล์ .csv';return;}const rd=new FileReader();rd.onload=()=>previewCSV(String(rd.result),f.name);rd.readAsText(f,'utf-8');};
+$('#impSample').onclick=()=>previewCSV(SAMPLE.map(r=>r.map(csvCell).join(',')).join('\n'),'ข้อมูลตัวอย่าง');
+$('#impTpl').onclick=()=>{const b=new Blob(['\uFEFF'+[COLS,SAMPLE[1]].map(r=>r.map(csvCell).join(',')).join('\r\n')],{type:'text/csv;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='asset-import-template.csv';document.body.appendChild(a);a.click();a.remove();toast('ดาวน์โหลดแม่แบบ CSV แล้ว');};
+$('#impGo').onclick=()=>{const ok=imp.filter(o=>!o._err.length);if(!ok.length){$('#impErr').textContent='ไม่มีแถวที่พร้อมนำเข้า';return;}
+ok.reverse().forEach(o=>{const cost=+o.cost||0,st=o.status||'รับเข้า/รอติดตั้ง',cr=['A','B','C','D'].includes((o.crit||'')[0])?o.crit[0]:'C';A.unshift({tag:o.tag||nextTag(o.cat),name:o.name,mfr:o.mfr||'-',model:o.model||'-',cat:o.cat,site:o.site,loc:o.loc||'-',owner:o.owner||'-',cost,nbv:cost,health:100,status:st,crit:cr,wo:0,sn:o.sn||'-',fa:'-',rfid:'-',buy:'2569-05-18',life:60,method:'เส้นตรง',salvage:Math.round(cost*.05),warr:'-',backup:'-',custom:[]});KPI.total++;if(st==='ใช้งาน')KPI.active++;if(st==='ซ่อม/ปรับปรุง')KPI.down++;KPI.cost+=cost/1e6;KPI.nbv+=cost/1e6;});
+renderKpi();render();closeAll();persist();toast(`นำเข้า ${ok.length} รายการเข้าทะเบียนแล้ว`);};
+/* transfer */
+function openMove(){const tags=sel.size?[...sel]:[];$('#mvAsset').innerHTML=(tags.length?'':'<option value="">— เลือกทรัพย์สิน —</option>')+A.map(a=>`<option value="${esc(a.tag)}"${tags.includes(a.tag)?' selected':''}>${esc(a.tag)} · ${esc(a.name)}</option>`).join('');$('#mvAsset').multiple=tags.length>1;if(tags.length>1)[...$('#mvAsset').options].forEach(o=>o.selected=tags.includes(o.value));
+$('#mvList').textContent=tags.length?`โอนย้าย ${tags.length} รายการที่เลือก`:'เลือกทรัพย์สินที่ต้องการโอนย้าย';['#mvSite','#mvLoc','#mvOwner','#mvWhy'].forEach(s=>$(s).value='');clrMv();openM('#mvModal');}
+function clrMv(){document.querySelectorAll('#mvForm .x-ferr').forEach(n=>n.remove());document.querySelectorAll('#mvForm .x-in,#mvForm .x-sel').forEach(n=>n.style.borderColor='');}
+$('#bulkMove').onclick=openMove;
+$('#mvSave').onclick=()=>{clrMv();const tags=[...$('#mvAsset').selectedOptions].map(o=>o.value).filter(Boolean);const errs=[];if(!tags.length)errs.push(['#mvAsset','กรุณาเลือกทรัพย์สิน']);if(!$('#mvSite').value)errs.push(['#mvSite','กรุณาเลือกไซต์ปลายทาง']);if(!$('#mvLoc').value.trim())errs.push(['#mvLoc','กรุณากรอกที่ตั้งใหม่']);if(!$('#mvWhy').value.trim())errs.push(['#mvWhy','กรุณาระบุเหตุผล']);
+if(errs.length){errs.forEach(([s,m])=>{const el=$(s);el.style.borderColor='#FB7185';const d=document.createElement('span');d.className='x-ferr';d.style.cssText='color:#FB7185;font-size:12px';d.textContent=m;el.after(d);});$(errs[0][0]).focus();$(errs[0][0]).scrollIntoView({block:'center'});return;}
+tags.forEach(t=>{const a=A.find(x=>x.tag===t);if(!a)return;a.site=$('#mvSite').value;a.loc=$('#mvLoc').value.trim();if($('#mvOwner').value.trim())a.owner=$('#mvOwner').value.trim();});
+sel.clear();render();closeAll();persist();toast(`บันทึกการโอนย้าย ${tags.length} รายการไป ${$('#mvSite').value} แล้ว`);};
+{const u=new URLSearchParams(location.search);const q=u.get('q');if(q){F.q=q;$('#fq').value=q;$('#q').value=q;}if(u.get('new')==='1')setTimeout(()=>$('#btnAdd').click(),0);}
 render();
     </script>
       <script src="../../assets/site-nav.js"></script>
