@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="th" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ITMAINT Reports KPI</title>
+    <link rel="stylesheet" href="../../assets/hark.css" />
+    <link rel="stylesheet" href="../../assets/hark-hero.css" />
+    <style>
+      :root { color-scheme: dark !important; --x-bg:#0A1024; --x-card:#0f1a36; --x-card2:#13214a; --x-line:rgba(86,140,255,.28); --x-glow:0 0 0 1px rgba(86,140,255,.18),0 0 18px rgba(56,120,255,.12); --x-blue:#5b9bff; --x-pink:#ff6fa8; --x-mute:#9fb0d6; --x-font:"Noto Sans Thai",system-ui,sans-serif; }
+      html,body { background:var(--x-bg); color:#e8eeff; font-family:var(--x-font); }
+      html { overflow-x:clip; } body { overflow-x:clip; }
+      .page { max-width:none; padding:0; margin:0; }
+      .x-app { display:grid; grid-template-columns:240px 1fr; align-items:stretch; }
+      .x-side { background:#08102a; border-right:1px solid var(--x-line); padding:16px 12px; }
+      .x-logo { display:flex; gap:10px; align-items:center; padding:4px 8px 16px; }
+      .x-logo b { font:var(--type-label); font-weight:600; display:block; color:#fff; }
+      .x-logo small { color:var(--x-mute); font:var(--type-caption); }
+      .x-grp { font:var(--type-caption); color:var(--x-mute); margin:14px 8px 4px; text-transform:uppercase; letter-spacing:.04em; }
+      .x-nav a { display:flex; align-items:center; gap:10px; min-height:var(--tap); padding:0 10px; border-radius:var(--r-s); color:#c8d4f2; text-decoration:none; font:var(--type-small); font-family:var(--x-font); }
+      .x-nav a:hover { background:rgba(91,155,255,.08); }
+      .x-nav a.on { background:linear-gradient(90deg,rgba(91,155,255,.22),rgba(91,155,255,.04)); color:#fff; box-shadow:inset 2px 0 0 var(--x-blue); }
+      .x-tile { width:32px; height:32px; flex:none; border-radius:10px; display:grid; place-items:center; background:linear-gradient(135deg,#3b82f6,#7c3aed); color:#fff; }
+      .x-tile.g2 { background:linear-gradient(135deg,#06b6d4,#3b82f6); } .x-tile.g3 { background:linear-gradient(135deg,#f97316,#ec4899); } .x-tile.g4 { background:linear-gradient(135deg,#10b981,#06b6d4); }
+      .x-nav .x-tile { width:26px; height:26px; border-radius:8px; }
+      .x-mainwrap { min-width:0; display:flex; flex-direction:column; }
+      .x-top { display:flex; align-items:center; gap:10px; padding:12px 20px; border-bottom:1px solid var(--x-line); background:rgba(10,16,36,.9); position:sticky; top:0; z-index:5; flex-wrap:wrap; }
+      .x-in, .x-sel { min-height:var(--tap); background:var(--x-card); border:1px solid var(--x-line); border-radius:12px; color:#e8eeff; padding:0 12px; font:var(--type-small); font-family:var(--x-font); }
+      .x-search { flex:1; min-width:160px; display:flex; align-items:center; gap:8px; }
+      .x-search .x-in { flex:1; min-width:0; }
+      .x-kbd { font:var(--type-caption); color:var(--x-mute); border:1px solid var(--x-line); border-radius:6px; padding:2px 6px; }
+      .x-btn { min-height:var(--tap); min-width:var(--tap); display:inline-flex; align-items:center; justify-content:center; gap:6px; padding:0 14px; border-radius:12px; border:1px solid var(--x-line); background:var(--x-card); color:#e8eeff; font:var(--type-small); font-family:var(--x-font); font-weight:500; cursor:pointer; }
+      .x-btn:hover { border-color:var(--x-blue); }
+      .x-pri { background:linear-gradient(135deg,#c2410c,#be185d); border:0; color:#fff; }
+      .x-ico { padding:0; }
+      .x-av { display:flex; align-items:center; gap:8px; font:var(--type-small); }
+      .x-av span:first-child { width:36px; height:36px; border-radius:50%; display:grid; place-items:center; background:linear-gradient(135deg,#3b82f6,#ec4899); font-weight:600; }
+      .x-burger { display:none; }
+      .x-body { padding:20px; display:grid; gap:16px; }
+      .x-h1 { font:var(--type-title); font-family:var(--x-font); margin:0; color:#fff; }
+      .x-sub { color:var(--x-mute); font:var(--type-small); margin:4px 0 0; }
+      .x-card { background:var(--x-card); border:1px solid var(--x-line); border-radius:16px; box-shadow:var(--x-glow); padding:16px; min-width:0; }
+      .x-grid { display:grid; grid-template-columns:280px 1fr; gap:16px; align-items:start; }
+      .x-rail h3 { font:var(--type-caption); color:var(--x-mute); margin:12px 4px 6px; }
+      .x-rail h3:first-of-type { margin-top:0; }
+      .x-rep { display:block; width:100%; text-align:left; background:none; border:1px solid transparent; border-radius:12px; padding:8px 10px; min-height:var(--tap); color:#dfe7ff; cursor:pointer; font-family:var(--x-font); }
+      .x-rep b { display:block; font:var(--type-small); font-family:var(--x-font); font-weight:500; }
+      .x-rep small { display:block; font:var(--type-caption); font-family:var(--x-font); color:var(--x-mute); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+      .x-rep:hover { background:rgba(91,155,255,.07); }
+      .x-rep.on { background:var(--x-card2); border-color:var(--x-blue); }
+      .x-filters { display:flex; flex-wrap:wrap; gap:10px; align-items:end; }
+      .x-filters label { display:grid; gap:4px; font:var(--type-caption); color:var(--x-mute); font-family:var(--x-font); }
+      .x-chips { display:flex; gap:6px; flex-wrap:wrap; }
+      .x-chips .x-btn.on { border-color:var(--x-blue); background:var(--x-card2); }
+      .x-kpis { display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:12px; }
+      .x-kpi { display:flex; gap:12px; align-items:center; }
+      .x-kpi .v { font:var(--type-heading); font-family:var(--x-font); color:#fff; display:block; }
+      .x-kpi .l { font:var(--type-caption); font-family:var(--x-font); color:var(--x-mute); }
+      .x-cap { font:var(--type-caption); color:var(--x-mute); margin:6px 0 0; }
+      .x-chartbox { position:relative; height:280px; width:100%; min-width:0; overflow:hidden; }
+      .x-chartbox { display:flex; flex-direction:column; gap:6px; }
+      .x-chartbox svg { display:block; width:100%; flex:1; min-height:0; font-family:var(--x-font); }
+      .x-chartbox .ax { fill:var(--x-mute); font-size:12px; }
+      .x-chartbox .vl { fill:#e8eeff; font-size:12px; }
+      .x-chartbox .gr { stroke:rgba(86,140,255,.14); stroke-width:1; }
+      .x-legend { display:flex; gap:16px; font:var(--type-caption); font-family:var(--x-font); color:var(--x-mute); margin:0; }
+      .x-legend i { display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:6px; vertical-align:middle; }
+      .x-app, .x-grid, .x-stack { grid-template-columns:minmax(0,1fr); }
+      .x-app { grid-template-columns:240px minmax(0,1fr); }
+      .x-grid { grid-template-columns:280px minmax(0,1fr); }
+      .x-stack { display:grid; gap:16px; min-width:0; }
+      .x-tbl { overflow-x:auto; }
+      .x-tbl table { width:100%; border-collapse:collapse; font:var(--type-small); font-family:var(--x-font); white-space:nowrap; }
+      .x-tbl th, .x-tbl td { padding:10px 12px; border-bottom:1px solid rgba(86,140,255,.14); text-align:right; }
+      .x-tbl th:first-child, .x-tbl td:first-child { text-align:left; }
+      .x-tbl thead th { color:var(--x-mute); font-weight:500; font-size:var(--size-caption); }
+      .x-tbl tfoot td { font-weight:600; color:#fff; border-top:1px solid var(--x-line); }
+      .x-modal { position:fixed; inset:0; background:rgba(3,6,18,.72); display:none; place-items:center; z-index:20; padding:16px; }
+      .x-modal.open { display:grid; }
+      .x-dlg { width:min(560px,100%); max-height:calc(100% - 32px); overflow-y:auto; display:grid; gap:12px; }
+      .x-dlg label { display:grid; gap:4px; font:var(--type-caption); color:var(--x-mute); font-family:var(--x-font); }
+      .x-checks { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:4px; }
+      .x-checks label { display:flex; align-items:center; gap:8px; min-height:var(--tap); color:#dfe7ff; font:var(--type-small); font-family:var(--x-font); }
+      .x-checks input { width:20px; height:20px; accent-color:#3b82f6; }
+      .x-toast { position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:var(--x-card2); border:1px solid var(--x-blue); box-shadow:var(--x-glow); color:#fff; padding:12px 18px; border-radius:12px; font:var(--type-small); font-family:var(--x-font); opacity:0; pointer-events:none; transition:opacity var(--dur-quick) var(--ease-out); z-index:30; }
+      .x-toast.show { opacity:1; }
+      .x-row { display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; align-items:center; }
+      @media (max-width:1000px) { .x-grid { grid-template-columns:minmax(0,1fr); } .x-rail { max-height:300px; overflow-y:auto; } }
+      @media (max-width:760px) {
+        .x-app { grid-template-columns:minmax(0,1fr); }
+        .x-side { position:fixed; left:0; top:0; bottom:0; overflow-y:auto; width:260px; z-index:15; transform:translateX(-100%); transition:transform var(--dur-quick) var(--ease-out); }
+        .x-side.open { transform:none; }
+        .x-burger { display:inline-flex; }
+        .x-top { padding:10px 12px; } .x-body { padding:12px; }
+        .x-av b, .x-kbd, .x-hide { display:none; }
+        .x-search { order:9; flex-basis:100%; }
+        .x-chartbox { height:220px; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page" id="top">
+      <div class="x-app">
+        <aside class="x-side" id="side" aria-label="เมนูหลัก">
+          <div class="x-logo"><span class="x-tile g3"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.4-.6-.6-2.4z"/></svg></span><div><b>IT&amp;MAINT</b><small>Smart Asset · Smart Work</small></div></div>
+          <nav class="x-nav" id="sidenav"></nav>
+        </aside>
+        <div class="x-mainwrap">
+          <header class="x-top">
+            <button class="x-btn x-ico x-burger" id="burger" aria-label="เปิดเมนู"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+            <select class="x-sel" aria-label="ไซต์"><option>ทุกไซต์</option><option>โรงงานสมุทรสาคร</option><option>โรงงานระยอง</option></select>
+            <div class="x-search"><input class="x-in" id="q" type="search" placeholder="ค้นหาทรัพย์สิน ใบงาน อะไหล่…" aria-label="ค้นหา" /><span class="x-kbd">Ctrl+K</span></div>
+            <button class="x-btn x-pri" id="newwo">+ แจ้งซ่อม</button>
+            <button class="x-btn x-ico" aria-label="การแจ้งเตือน"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10 21h4"/></svg></button>
+            <div class="x-av"><span>A</span><b>Admin</b></div>
+          </header>
+          <main class="x-body">
+            <div class="x-row">
+              <div><h1 class="x-h1">รายงาน &amp; KPI</h1><p class="x-sub">MTTR · MTBF · Availability · PM Compliance · ค่าซ่อม · Bad actors · ผลงานช่าง · อะไหล่ · ตรวจนับ</p></div>
+              <button class="x-btn" id="opencustom">+ รายงานกำหนดเอง</button>
+            </div>
+            <div class="x-grid">
+              <nav class="x-card x-rail" id="rail" aria-label="รายการรายงาน"></nav>
+              <div class="x-stack">
+                <div class="x-card x-filters">
+                  <label>ตั้งแต่<input class="x-in" type="text" value="1 พ.ย. 2568" /></label>
+                  <label>ถึง<input class="x-in" type="text" value="11 ต.ค. 2569" /></label>
+                  <label>ไซต์<select class="x-sel"><option>ทุกไซต์</option><option>โรงงานสมุทรสาคร</option><option>โรงงานระยอง</option></select></label>
+                  <label>ช่วงลัด<div class="x-chips" id="quick"><button class="x-btn">เดือนนี้</button><button class="x-btn">3 เดือน</button><button class="x-btn on">12 เดือน</button><button class="x-btn">ปีงบประมาณนี้</button></div></label>
+                  <div class="x-chips"><button class="x-btn x-pri" id="show">แสดง</button><button class="x-btn" data-t="ส่งออก Excel แล้ว">Excel</button><button class="x-btn" data-t="ส่งออก CSV แล้ว">CSV</button><button class="x-btn" id="printbtn">พิมพ์</button></div>
+                </div>
+                <section class="x-card x-stack" style="gap:14px">
+                  <div><h2 class="x-h1" id="rtitle" style="font:var(--type-heading);font-family:var(--x-font)"></h2><p class="x-cap">ช่วง 1 พ.ย. 2568 – 11 ต.ค. 2569 · สร้างเมื่อ 11 ต.ค. 2569 00:42 น.</p></div>
+                  <div class="x-kpis" id="kpis"></div>
+                  <div class="x-chartbox" id="chart" role="img" aria-label="กราฟรายงาน"></div>
+                  <div class="x-tbl" id="tbl"></div>
+                </section>
+              </div>
+            </div>
+          </main>
+        </div>
+      </div>
+      <div class="x-modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mtitle">
+        <form class="x-card x-dlg" id="cform">
+          <div class="x-row"><h2 id="mtitle" style="font:var(--type-heading);font-family:var(--x-font);margin:0">สร้างรายงานกำหนดเอง</h2><button type="button" class="x-btn x-ico" id="mclose" aria-label="ปิด">✕</button></div>
+          <label>ชื่อรายงาน<input class="x-in" id="cname" required placeholder="เช่น ค่าซ่อมตามแผนก" /></label>
+          <label>แหล่งข้อมูล<select class="x-sel" id="csrc"><option>ใบสั่งงาน</option><option>ทรัพย์สิน</option><option>แผน PM</option><option>การจ่ายอะไหล่</option><option>การตรวจนับ</option></select></label>
+          <div><p class="x-cap" style="margin:0 0 4px">เลือกคอลัมน์</p><div class="x-checks">
+            <label><input type="checkbox" checked />เลขที่ใบงาน</label><label><input type="checkbox" checked />ทรัพย์สิน</label><label><input type="checkbox" checked />ประเภทงาน</label><label><input type="checkbox" />ช่างผู้รับผิดชอบ</label><label><input type="checkbox" />Downtime (ชม.)</label><label><input type="checkbox" checked />ค่าใช้จ่าย</label><label><input type="checkbox" />ฟิลด์กำหนดเอง: แผนก</label><label><input type="checkbox" />ฟิลด์กำหนดเอง: Cost center</label>
+          </div></div>
+          <label>จัดกลุ่มตาม<select class="x-sel"><option>เดือน</option><option>ทรัพย์สิน</option><option>หมวด</option><option>ช่าง</option><option>ไซต์</option></select></label>
+          <label>กราฟ<select class="x-sel"><option>แท่ง</option><option>เส้น</option><option>แท่ง + เส้น</option><option>ไม่มีกราฟ</option></select></label>
+          <label>ตั้งเวลาส่งอีเมล<select class="x-sel"><option>ไม่ส่ง</option><option>ทุกวันจันทร์ 08:00</option><option>วันที่ 1 ของทุกเดือน</option><option>ทุกสิ้นไตรมาส</option></select></label>
+          <div class="x-chips" style="justify-content:flex-end"><button type="button" class="x-btn" id="mcancel">ยกเลิก</button><button class="x-btn x-pri">บันทึกรายงาน</button></div>
+        </form>
+      </div>
+      <div class="x-toast" id="toast" role="status"></div>
+    </div>
+    <script src="../../assets/hark.js"></script>
+    <script>
+      const $ = (s) => document.querySelector(s);
+      const I = { grid:'<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>', box:'<path d="M21 8l-9-5-9 5 9 5 9-5zM3 8v8l9 5 9-5V8"/>', wrench:'<path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.4-.6-.6-2.4z"/>', cart:'<path d="M3 3h2l2.4 12h11l2-8H6"/><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/>', chart:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>', gear:'<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M5 19l2-2M17 7l2-2"/>', clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>', bolt:'<path d="M13 2L4 14h7l-1 8 9-12h-7z"/>', coin:'<circle cx="12" cy="12" r="9"/><path d="M9 9h5a2 2 0 0 1 0 4H10a2 2 0 0 0 0 4h5M12 6v2M12 16v2"/>', list:'<path d="M8 6h13M8 12h13M8 18h13M3 6h1M3 12h1M3 18h1"/>' };
+      const svg = (k, s = 16) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${I[k]}</svg>`;
+      const NAV = [["ภาพรวม","grid","",[["แดชบอร์ด"]]],["ทรัพย์สิน","box","g2",[["ทะเบียนทรัพย์สิน"],["ตรวจนับ"]]],["ซ่อมบำรุง","wrench","g3",[["ใบสั่งงาน"],["แผน PM"]]],["คลัง & จัดซื้อ","cart","g4",[["อะไหล่"],["ใบขอซื้อ"]]],["วิเคราะห์","chart","",[["RCA/FMEA"],["รายงาน & KPI",1]]],["ระบบ","gear","g2",[["ผู้ใช้ & สิทธิ์"],["ตั้งค่า"]]]];
+      $("#sidenav").innerHTML = NAV.map(([g, ic, c, items]) => `<p class="x-grp">${g}</p>` + items.map(([n, on]) => `<a href="#top" class="${on ? "on" : ""}" ${on ? 'aria-current="page"' : ""}><span class="x-tile ${c}">${svg(ic, 14)}</span>${n}</a>`).join("")).join("");
+
+      const M = [["พ.ย. 2568",1,1,0,1,3,3.5,null,null,960],["ธ.ค. 2568",0,0,0,0,null,null,null,null,0],["ม.ค. 2569",1,1,0,1,1,1.5,null,null,580],["ก.พ. 2569",4,1,2,3,2.0,2.0,100,3250],["มี.ค. 2569",6,1,3,5,4.5,4.5,100,7840],["เม.ย. 2569",5,1,3,4,1.8,1.8,75,5120],["พ.ค. 2569",7,2,4,6,3.2,6.4,100,9635],["มิ.ย. 2569",6,1,4,5,2.5,2.5,80,6900],["ก.ค. 2569",8,1,5,7,5.0,5.0,83,11200],["ส.ค. 2569",5,0,4,4,null,null,100,4580],["ก.ย. 2569",9,1,6,8,2.7,2.7,86,6670],["ต.ค. 2569",13,2,5,3,null,238.1,0,4960]].map((r) => r.length === 10 ? [r[0],r[1],r[2],r[3],r[4],r[5],r[6],r[7],r[9]] : r);
+      const f = (v, d) => (v === null || v === undefined ? "—" : typeof v === "number" ? v.toLocaleString("en-US", d ? { minimumFractionDigits: d, maximumFractionDigits: d } : {}) : v);
+      const sum = (i) => M.reduce((a, r) => a + (r[i] || 0), 0);
+      const kpiMain = [["Breakdown ทั้งช่วง","12","bolt","g3"],["MTBF เครื่องสำคัญ A/B","15,136 ชม.","clock",""],["Availability เครื่องสำคัญ","99.71%","chart","g4"],["Backlog ปัจจุบัน","18","list","g2"],["ค่าใช้จ่ายรวม","61,695 บาท","coin","g3"]];
+
+      const R = {
+        kpi: { g:"ซ่อมบำรุง", t:"KPI งานซ่อมบำรุงรายเดือน", d:"MTTR, MTBF, Availability, Backlog และค่าใช้จ่ายรายเดือน", kpis:kpiMain,
+          head:["เดือน","ใบงาน","Breakdown","PM","เสร็จ/ปิด","MTTR (ชม.)","Downtime (ชม.)","PM Compliance %","ค่าใช้จ่าย"],
+          rows:M.map((r) => [r[0],r[1],r[2],r[3],r[4],f(r[5],1),f(r[6],1),r[7] === null ? "—" : r[7] + "%",f(r[8])]),
+          foot:["รวม",sum(1),sum(2),sum(3),sum(4),"2.9 (เฉลี่ย)",f(sum(6),1),"86%",f(sum(8))],
+          combo:{ labels:M.map((r) => r[0].split(" ")[0]), bars:M.map((r) => r[1]), line:M.map((r) => r[5]) } },
+        sla: { g:"ซ่อมบำรุง", t:"สรุปใบสั่งงานตามประเภท & SLA", d:"จำนวนใบงานแยกประเภท และสัดส่วนที่ผ่าน SLA",
+          head:["ประเภท","ใบงาน","ผ่าน SLA","ผ่าน SLA %"], rows:[["Breakdown",12,10,"83%"],["PM",36,33,"92%"],["Corrective",11,9,"82%"],["Request",6,6,"100%"]], bar:[["Breakdown","PM","Corrective","Request"],[12,36,11,6],"ใบงาน"] },
+        pmc: { g:"ซ่อมบำรุง", t:"PM Compliance ตามแผน", d:"งาน PM ที่ทำตามกำหนดเทียบกับแผน",
+          head:["หมวด","ตามแผน","ทำตามกำหนด","Compliance %"], rows:[["เครื่องจักรการผลิต",18,16,"89%"],["ระบบปรับอากาศ",8,7,"88%"],["ระบบไฟฟ้า",6,5,"83%"],["IT & เครือข่าย",10,8,"80%"]], bar:[["การผลิต","ปรับอากาศ","ไฟฟ้า","IT"],[89,88,83,80],"Compliance %"] },
+        cost: { g:"ต้นทุน", t:"ค่าซ่อมบำรุงตามทรัพย์สิน", d:"ค่าแรง ค่าอะไหล่ และค่าจ้างภายนอกต่อทรัพย์สิน",
+          head:["ทรัพย์สิน","ค่าแรง","อะไหล่","ภายนอก","รวม (บาท)"], rows:[["CONV-03","4,200","12,850","3,000","20,050"],["MTR-007","2,600","9,400","0","12,000"],["CMP-02","3,100","6,725","2,500","12,325"],["AHU-05","1,900","5,220","0","7,120"],["อื่น ๆ","3,400","6,800","0","10,200"]], bar:[["CONV-03","MTR-007","CMP-02","AHU-05","อื่น ๆ"],[20050,12000,12325,7120,10200],"บาท"] },
+        bad: { g:"ความน่าเชื่อถือ", t:"Bad Actors — เครื่องที่หยุดบ่อย", d:"ทรัพย์สินที่ Downtime สูงสุดในช่วงที่เลือก",
+          head:["ทรัพย์สิน","ครั้งที่หยุด","Downtime (ชม.)"], rows:[["CONV-03",4,"212.6"],["MTR-007",3,"28.4"],["CMP-02",2,"14.5"],["AHU-05",2,"7.5"]], bar:[["CONV-03","MTR-007","CMP-02","AHU-05"],[212.6,28.4,14.5,7.5],"Downtime ชม."], h:true },
+        tech: { g:"บุคลากร", t:"ผลงานช่าง", d:"ใบงานที่ปิด เวลาเฉลี่ย และอัตราผ่าน SLA ต่อช่าง",
+          head:["ช่าง","ใบงานที่ปิด","เวลาเฉลี่ย (ชม.)","ผ่าน SLA %"], rows:[["สมชัย",14,"2.4","93%"],["วิชัย",11,"3.1","91%"],["ธนพล",9,"2.8","89%"],["อนุชา",7,"3.6","86%"],["ปรีชา",5,"4.2","80%"]], bar:[["สมชัย","วิชัย","ธนพล","อนุชา","ปรีชา"],[14,11,9,7,5],"ใบงานที่ปิด"] },
+        reg: { g:"ทรัพย์สิน", t:"สรุปทะเบียนทรัพย์สินตามหมวด", d:"จำนวนและมูลค่าทรัพย์สินแยกตามหมวด",
+          head:["หมวด","จำนวน","มูลค่า (บาท)"], rows:[["เครื่องจักร",42,"8,450,000"],["IT & เครือข่าย",128,"3,210,000"],["ปรับอากาศ",24,"1,180,000"],["ยานพาหนะ",6,"2,900,000"]], bar:[["เครื่องจักร","IT","ปรับอากาศ","ยานพาหนะ"],[42,128,24,6],"จำนวน"] },
+        audit: { g:"ทรัพย์สิน", t:"ผลการตรวจนับทรัพย์สิน", d:"พบ ไม่พบ และย้ายตำแหน่ง จากรอบตรวจนับล่าสุด",
+          head:["สถานะ","จำนวน","สัดส่วน"], rows:[["พบตามทะเบียน",182,"91%"],["ย้ายตำแหน่ง",11,"5.5%"],["ไม่พบ",5,"2.5%"],["ชำรุด",2,"1%"]], bar:[["พบ","ย้าย","ไม่พบ","ชำรุด"],[182,11,5,2],"รายการ"] },
+        parts: { g:"คลัง", t:"การจ่ายอะไหล่", d:"อะไหล่ที่จ่ายออกมากที่สุดและมูลค่า",
+          head:["อะไหล่","จำนวนจ่าย","มูลค่า (บาท)"], rows:[["สายพาน B-52",8,"9,600"],["ลูกปืน 6205",24,"4,320"],["ฟิลเตอร์อากาศ",30,"5,400"],["คอนแทคเตอร์ 32A",6,"7,800"]], bar:[["สายพาน","ลูกปืน","ฟิลเตอร์","คอนแทคเตอร์"],[8,24,30,6],"จำนวนจ่าย"] },
+      };
+      let cur = "kpi";
+      const W = 720, H = 280;
+      const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" })[c]);
+      const nice = (v) => { if (!(v > 0)) return 1; const p = Math.pow(10, Math.floor(Math.log10(v))); const n = v / p; return (n <= 1 ? 1 : n <= 2 ? 2 : n <= 5 ? 5 : 10) * p; };
+      const TICKS = [0, 1, 2, 3, 4];
+      const sv = (body) => `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" aria-hidden="true">${body}</svg>`;
+      function vbars(labels, vals, opts) {
+        const L = 48, Rr = opts.right ? 48 : 16, T = 24, B = 34, pw = W - L - Rr, ph = H - T - B;
+        const max = nice(Math.max(0, ...vals.map((v) => v || 0)) * 1.1), n = labels.length, bw = pw / n;
+        let s = "";
+        TICKS.forEach((i) => { const y = T + ph - (ph * i) / 4; s += `<line class="gr" x1="${L}" x2="${W - Rr}" y1="${y}" y2="${y}"/><text class="ax" x="${L - 8}" y="${y + 4}" text-anchor="end">${f(Math.round((max * i) / 4 * 10) / 10)}</text>`; });
+        labels.forEach((l, i) => {
+          const v = vals[i] || 0, h = (ph * v) / max, x = L + i * bw + bw * 0.18, w = bw * 0.64, y = T + ph - h;
+          const col = opts.color ? opts.color(i) : "var(--x-blue)";
+          s += `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="3" style="fill:${col}"/>`;
+          if (opts.labels) s += `<text class="vl" x="${x + w / 2}" y="${y - 6}" text-anchor="middle">${f(v)}</text>`;
+          s += `<text class="ax" x="${x + w / 2}" y="${H - 12}" text-anchor="middle">${esc(l)}</text>`;
+        });
+        if (opts.line) {
+          const lmax = nice(Math.max(0, ...opts.line.filter((v) => v !== null)) * 1.1);
+          const pts = opts.line.map((v, i) => (v === null ? null : [L + i * bw + bw / 2, T + ph - (ph * v) / lmax])).filter(Boolean);
+          TICKS.forEach((i) => { const y = T + ph - (ph * i) / 4; s += `<text class="ax" x="${W - Rr + 8}" y="${y + 4}">${f(Math.round((lmax * i) / 4 * 10) / 10)}</text>`; });
+          s += `<polyline points="${pts.map((p) => p.join(",")).join(" ")}" fill="none" style="stroke:var(--x-pink)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>`;
+          s += pts.map((p) => `<circle cx="${p[0]}" cy="${p[1]}" r="3" style="fill:var(--x-pink)"/>`).join("");
+          s += `<text class="ax" x="${L}" y="14">ใบงาน</text><text class="ax" x="${W - Rr + 40}" y="14" text-anchor="end">MTTR ชม.</text>`;
+        }
+        return sv(s);
+      }
+      function hbars(labels, vals, color) {
+        const L = 90, Rr = 60, T = 12, B = 12, pw = W - L - Rr, ph = H - T - B;
+        const max = Math.max(1, ...vals.map((v) => v || 0)), n = labels.length, bh = ph / n;
+        let s = "";
+        labels.forEach((l, i) => {
+          const v = vals[i] || 0, w = (pw * v) / max, y = T + i * bh + bh * 0.2, h = bh * 0.6;
+          s += `<text class="ax" x="${L - 10}" y="${y + h / 2 + 4}" text-anchor="end">${esc(l)}</text><rect x="${L}" y="${y}" width="${w}" height="${h}" rx="3" style="fill:${color(i)}"/><text class="vl" x="${L + w + 8}" y="${y + h / 2 + 4}">${f(v)}</text>`;
+        });
+        s += `<line class="gr" x1="${L}" x2="${L}" y1="${T}" y2="${H - B}"/>`;
+        return sv(s);
+      }
+      function chartSVG(r) {
+        if (r.combo) return `<p class="x-legend"><span><i style="background:var(--x-blue)"></i>ใบงาน</span><span><i style="background:var(--x-pink)"></i>MTTR (ชม.)</span></p>` + vbars(r.combo.labels, r.combo.bars, { line:r.combo.line, right:true });
+        const color = (i) => (i === 0 ? "var(--x-pink)" : "var(--x-blue)");
+        return r.h ? hbars(r.bar[0], r.bar[1], color) : vbars(r.bar[0], r.bar[1], { color, labels:true });
+      }
+      function rail() {
+        const groups = [...new Set(Object.values(R).map((r) => r.g))];
+        $("#rail").innerHTML = groups.map((g) => `<h3>${g}</h3>` + Object.entries(R).filter(([, r]) => r.g === g).map(([k, r]) => `<button class="x-rep ${k === cur ? "on" : ""}" data-k="${k}" ${k === cur ? 'aria-current="true"' : ""}><b>${r.t}</b><small>${r.d}</small></button>`).join("")).join("");
+      }
+      function render() {
+        const r = R[cur];
+        $("#rtitle").textContent = r.t;
+        $("#kpis").innerHTML = (r.kpis || []).map(([l, v, ic, c]) => `<div class="x-card x-kpi"><span class="x-tile ${c}">${svg(ic, 18)}</span><div><span class="v">${v}</span><span class="l">${l}</span></div></div>`).join("");
+        $("#kpis").hidden = !r.kpis;
+        $("#tbl").innerHTML = `<table><thead><tr>${r.head.map((h) => `<th scope="col">${h}</th>`).join("")}</tr></thead><tbody>${r.rows.map((row) => `<tr>${row.map((c, i) => (i ? `<td>${f(c)}</td>` : `<th scope="row" style="text-align:left;font-weight:500">${c}</th>`)).join("")}</tr>`).join("")}</tbody>${r.foot ? `<tfoot><tr>${r.foot.map((c) => `<td>${c}</td>`).join("")}</tr></tfoot>` : ""}</table>`;
+        const cv = $("#chart");
+        cv.setAttribute("aria-label", r.t + (r.bar ? ": " + r.bar[0].map((l, i) => l + " " + r.bar[1][i]).join(", ") : ": ใบงานรายเดือนและ MTTR"));
+        cv.innerHTML = chartSVG(r);
+      }
+      $("#rail").addEventListener("click", (e) => { const b = e.target.closest(".x-rep"); if (!b) return; cur = b.dataset.k; rail(); render(); });
+      const toast = (m) => { const t = $("#toast"); t.textContent = m; t.classList.add("show"); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove("show"), 2400); };
+      $("#quick").addEventListener("click", (e) => { const b = e.target.closest("button"); if (!b) return; [...$("#quick").children].forEach((x) => x.classList.toggle("on", x === b)); e.preventDefault(); });
+      document.querySelectorAll("[data-t]").forEach((b) => b.addEventListener("click", () => toast(b.dataset.t)));
+      $("#show").onclick = () => { render(); toast("อัปเดตรายงานแล้ว"); };
+      $("#printbtn").onclick = () => { if (navigator.webdriver || /Headless/i.test(navigator.userAgent)) { toast("พิมพ์รายงาน"); return; } window.print(); };
+      $("#newwo").onclick = () => toast("เปิดฟอร์มแจ้งซ่อม");
+      $("#burger").onclick = () => $("#side").classList.toggle("open");
+      document.addEventListener("keydown", (e) => { if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") { e.preventDefault(); $("#q").focus(); } if (e.key === "Escape") closeM(); });
+      const openM = () => { $("#modal").classList.add("open"); $("#cname").focus(); };
+      const closeM = () => $("#modal").classList.remove("open");
+      $("#opencustom").onclick = openM; $("#mclose").onclick = closeM; $("#mcancel").onclick = closeM;
+      $("#modal").addEventListener("click", (e) => { if (e.target.id === "modal") closeM(); });
+      $("#cform").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const name = $("#cname").value.trim(), cols = [...document.querySelectorAll(".x-checks input:checked")].map((c) => c.parentElement.textContent);
+        const k = "c" + Date.now();
+        R[k] = { g:"กำหนดเอง", t:name, d:`จาก ${$("#csrc").value} · ${cols.length} คอลัมน์`, head:cols.length ? cols : ["คอลัมน์"], rows:[cols.map((c, i) => (i ? "—" : "ตัวอย่าง"))], bar:[["ม.ค.","ก.พ.","มี.ค."],[3,5,4],name] };
+        cur = k; rail(); render(); closeM(); e.target.reset(); toast(`บันทึกรายงาน “${name}” แล้ว`);
+      });
+      rail();
+      try { render(); } catch (err) { console.error(err); }
+    </script>
+  </body>
+</html>
