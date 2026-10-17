@@ -177,32 +177,33 @@
     </div>
     <div class="x-toast" id="toast" role="status" aria-live="polite"></div>
     <dialog class="x-dlg" id="dlgNew" aria-labelledby="hNew">
-      <form method="dialog" id="fNew">
+      <form method="dialog" id="fNew" novalidate>
         <h2 id="hNew">อะไหล่ใหม่</h2>
         <div class="x-form" id="newFields">
-          <label>รหัส<input class="x-in" name="code" required placeholder="SP-XXX-000" /></label>
-          <label>ชื่อ<input class="x-in" name="name" required /></label>
-          <label class="x-full">สเปก<input class="x-in" name="spec" /></label>
-          <label>หน่วย<select class="x-sel" name="unit"><option>ชิ้น</option><option>ตัว</option><option>เส้น</option><option>ลิตร</option><option>ตลับ</option><option>ถัง</option></select></label>
-          <label>หมวด<select class="x-sel" name="cat"><option>เครื่องกล</option><option>ไฟฟ้า</option><option>IT</option><option>วัสดุสิ้นเปลือง</option><option>HVAC</option></select></label>
+          <label>รหัส *<input class="x-in" name="code" required placeholder="SP-XXX-000" /></label>
+          <label>ชื่อ *<input class="x-in" name="name" required placeholder="เช่น ลูกปืน 6206-2RS" /></label>
+          <label class="x-full">สเปก<input class="x-in" name="spec" placeholder="เช่น 30x62x16 mm" /></label>
+          <label>หน่วย *<select class="x-sel" name="unit" required><option value="">— เลือกหน่วย —</option><option>ชิ้น</option><option>ตัว</option><option>เส้น</option><option>ลิตร</option><option>ตลับ</option><option>ถัง</option></select></label>
+          <label>หมวด *<select class="x-sel" name="cat" required><option value="">— เลือกหมวด —</option><option>เครื่องกล</option><option>ไฟฟ้า</option><option>IT</option><option>วัสดุสิ้นเปลือง</option><option>HVAC</option></select></label>
           <label class="x-tog x-full"><input type="checkbox" name="crit" /> อะไหล่วิกฤต</label>
-          <label>จุดสั่งซื้อ<input class="x-in" name="min" type="number" min="0" value="2" /></label>
-          <label>สูงสุด<input class="x-in" name="max" type="number" min="0" value="10" /></label>
-          <label>คลัง<select class="x-sel" name="wh"><option value="SKN">WH-SKN คลังอะไหล่สมุทรสาคร</option><option value="RYG">WH-RYG คลังอะไหล่ระยอง</option></select></label>
-          <label>ผู้ขายหลัก<input class="x-in" name="vendor" /></label>
+          <label>จุดสั่งซื้อ *<input class="x-in" name="min" type="number" min="0" required placeholder="เช่น 2" /></label>
+          <label>สูงสุด *<input class="x-in" name="max" type="number" min="1" required placeholder="เช่น 10" /></label>
+          <label>คลัง *<select class="x-sel" name="wh" required><option value="">— เลือกคลัง —</option><option value="SKN">WH-SKN คลังอะไหล่สมุทรสาคร</option><option value="RYG">WH-RYG คลังอะไหล่ระยอง</option></select></label>
+          <label>ผู้ขายหลัก<input class="x-in" name="vendor" placeholder="เช่น หจก. ไทยพาร์ท ซัพพลาย" /></label>
+          <label>ต้นทุนต่อหน่วย (บาท)<input class="x-in" name="cost" type="number" min="0" step="0.01" placeholder="เช่น 185" /></label>
         </div>
         <div><button class="x-btn" type="button" id="addField">+ เพิ่มฟิลด์</button></div>
         <div class="x-foot"><button class="x-btn" type="button" value="cancel" onclick="this.closest('dialog').close()">ยกเลิก</button><button class="x-btn x-btn--p" type="submit">บันทึก</button></div>
       </form>
     </dialog>
     <dialog class="x-dlg" id="dlgMove" aria-labelledby="hMove">
-      <form method="dialog" id="fMove">
+      <form method="dialog" id="fMove" novalidate>
         <h2 id="hMove">รับเข้า/เบิกจ่าย</h2>
         <div class="x-form">
-          <label>ประเภท<select class="x-sel" name="type"><option value="in">รับเข้า</option><option value="out">เบิก WO</option><option value="adj">ปรับปรุง</option><option value="tr">โอนคลัง</option></select></label>
-          <label>คลัง<select class="x-sel" name="wh"><option value="SKN">WH-SKN คลังอะไหล่สมุทรสาคร</option><option value="RYG">WH-RYG คลังอะไหล่ระยอง</option></select></label>
-          <label class="x-full">อะไหล่<select class="x-sel" name="part" id="movePart"></select></label>
-          <label>จำนวน<input class="x-in" name="qty" type="number" required value="1" /></label>
+          <label>ประเภท *<select class="x-sel" name="type" required><option value="">— เลือกประเภท —</option><option value="in">รับเข้า</option><option value="out">เบิก WO</option><option value="adj">ปรับปรุง</option><option value="tr">โอนคลัง</option></select></label>
+          <label>คลัง *<select class="x-sel" name="wh" required><option value="">— เลือกคลัง —</option><option value="SKN">WH-SKN คลังอะไหล่สมุทรสาคร</option><option value="RYG">WH-RYG คลังอะไหล่ระยอง</option></select></label>
+          <label class="x-full">อะไหล่ *<select class="x-sel" name="part" id="movePart" required></select></label>
+          <label>จำนวน *<input class="x-in" name="qty" type="number" required placeholder="เช่น 5" /></label>
           <label>อ้างอิง (WO/PO)<input class="x-in" name="ref" placeholder="WO-2569-0000" /></label>
         </div>
         <p class="fineprint" style="color:var(--x-muted)">ปรับปรุงใส่ค่าลบเพื่อลดยอด · โอนคลังย้ายจากคลังที่เลือกไปอีกคลัง</p>
@@ -270,7 +271,7 @@
         $("kLow").textContent = P.filter(isLow).length;
         $("kOut").textContent = P.filter((p) => qty(p) === 0).length;
         $("kUse").textContent = fmt(used30);
-        $("movePart").innerHTML = P.map((p) => `<option value="${esc(p.code)}">${esc(p.code)} · ${esc(p.name)}</option>`).join("");
+        const mp = $("movePart").value; $("movePart").innerHTML = '<option value="">— เลือกอะไหล่ —</option>' + P.map((p) => `<option value="${esc(p.code)}">${esc(p.code)} · ${esc(p.name)}</option>`).join(""); $("movePart").value = mp;
       }
       function renderMoves() {
         $("movesBody").innerHTML = M.map((m) => `<tr><th scope="row" class="rowhead">${m.d}</th><td><span class="x-type ${TYPES[m.t][1]}">${TYPES[m.t][0]}</span></td>
@@ -293,7 +294,22 @@
       function renderAll() { renderParts(); renderMoves(); renderSugg(); }
       let tt;
       function toast(msg) { const t = $("toast"); t.textContent = "✓ " + msg; t.classList.add("is-on"); clearTimeout(tt); tt = setTimeout(() => t.classList.remove("is-on"), 2800); }
-      function openDlg(id) { $(id).showModal(); }
+      function openDlg(id) { const f = $(id).querySelector("form"); f.reset(); clearErr(f); $(id).showModal(); const f0 = f.querySelector("input,select"); if (f0) f0.focus(); }
+      function clearErr(f) { f.querySelectorAll(".x-err").forEach((m) => m.remove()); f.querySelectorAll("[aria-invalid]").forEach((x) => { x.removeAttribute("aria-invalid"); x.style.borderColor = ""; }); }
+      function setErr(el, msg) { el.setAttribute("aria-invalid", "true"); el.style.borderColor = "#ff6b7d"; const m = document.createElement("small"); m.className = "x-err"; m.style.cssText = "display:block;color:#ff8f9c;margin-top:4px"; m.textContent = msg; el.closest("label").appendChild(m); }
+      function validate(f, extra) {
+        clearErr(f); let first = null;
+        f.querySelectorAll("[required]").forEach((el) => {
+          const v = el.value.trim(); let msg = "";
+          if (!v) msg = el.tagName === "SELECT" ? "กรุณาเลือกรายการ" : "กรุณากรอกข้อมูลช่องนี้";
+          else if (el.type === "number" && el.min !== "" && +v < +el.min) msg = "ต้องไม่น้อยกว่า " + el.min;
+          if (msg) { setErr(el, msg); first = first || el; }
+        });
+        if (!first && extra) { const x = extra(); if (x) { setErr(f.elements[x[0]], x[1]); first = f.elements[x[0]]; } }
+        if (first) first.focus();
+        return !first;
+      }
+      ["fNew", "fMove"].forEach((id) => ["input", "change"].forEach((ev) => $(id).addEventListener(ev, (e) => { const t = e.target; if (t.getAttribute && t.getAttribute("aria-invalid") && String(t.value).trim()) { t.removeAttribute("aria-invalid"); t.style.borderColor = ""; const m = t.closest("label").querySelector(".x-err"); if (m) m.remove(); } })));
       document.querySelectorAll(".x-tab").forEach((b) => b.addEventListener("click", () => {
         document.querySelectorAll(".x-tab").forEach((x) => { x.setAttribute("aria-selected", x === b); $("tab-" + x.dataset.tab).classList.toggle("x-hide", x !== b); });
       }));
@@ -310,16 +326,28 @@
         $("newFields").appendChild(l); l.querySelector("input").focus();
       });
       $("fNew").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const fe = e.target.elements;
+        if (!validate(e.target, () => P.some((p) => p.code === fe.code.value.trim().toUpperCase()) ? ["code", "รหัสนี้มีอยู่แล้วในทะเบียน"] : +fe.max.value < +fe.min.value ? ["max", "ค่าสูงสุดต้องไม่น้อยกว่าจุดสั่งซื้อ"] : null)) return;
         const f = new FormData(e.target), code = f.get("code").trim().toUpperCase();
-        if (P.some((p) => p.code === code)) { e.preventDefault(); toast("รหัสนี้มีอยู่แล้ว"); return; }
-        P.unshift({ code, name: f.get("name"), spec: f.get("spec") || "–", unit: f.get("unit"), crit: !!f.get("crit"), SKN: 0, RYG: 0, min: +f.get("min"), max: +f.get("max"), po: 0, cost: 0, vendor: f.get("vendor") });
-        e.target.reset(); renderAll(); toast(`เพิ่มอะไหล่ ${code} แล้ว`);
+        P.unshift({ code, name: f.get("name").trim(), spec: f.get("spec").trim() || "–", unit: f.get("unit"), crit: !!f.get("crit"), SKN: 0, RYG: 0, min: +f.get("min"), max: +f.get("max"), po: 0, cost: +f.get("cost") || 0, vendor: f.get("vendor") });
+        $("dlgNew").close(); e.target.reset(); $("fs").value = "all"; $("fq").value = ""; renderAll(); document.querySelector('[data-tab="parts"]').click(); toast(`เพิ่มอะไหล่ ${code} แล้ว`);
       });
       $("fMove").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const fe = e.target.elements;
+        if (!validate(e.target, () => {
+          const pp = P.find((x) => x.code === fe.part.value), qq = Math.trunc(+fe.qty.value), tt2 = fe.type.value;
+          if (!qq) return ["qty", "จำนวนต้องไม่เป็น 0"];
+          if (tt2 !== "adj" && qq < 0) return ["qty", "ใส่จำนวนเป็นค่าบวก (ค่าลบใช้กับปรับปรุงเท่านั้น)"];
+          if ((tt2 === "out" || tt2 === "tr") && qq > pp[fe.wh.value]) return ["qty", `ยอดใน WH-${fe.wh.value} ไม่พอ (มี ${pp[fe.wh.value]} ${pp.unit})`];
+          if ((tt2 === "out") && !fe.ref.value.trim()) return ["ref", "การเบิกต้องระบุเลขที่ WO"];
+          return null;
+        })) return;
         const f = new FormData(e.target), p = P.find((x) => x.code === f.get("part")), t = f.get("type"), w = f.get("wh"), o = w === "SKN" ? "RYG" : "SKN";
         let q = Math.trunc(+f.get("qty"));
         if (t !== "adj") q = Math.abs(q);
-        if ((t === "out" || t === "tr") && q > p[w]) { e.preventDefault(); toast(`ยอดใน WH-${w} ไม่พอ (มี ${p[w]})`); return; }
+        $("dlgMove").close();
         if (t === "in") p[w] += q;
         if (t === "out") { p[w] -= q; used30 += q; }
         if (t === "adj") p[w] = Math.max(0, p[w] + q);
