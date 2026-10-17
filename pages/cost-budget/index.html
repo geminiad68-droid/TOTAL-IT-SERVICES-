@@ -204,7 +204,7 @@
                 <p class="amt">2,500,000 <span style="font-size:12px;color:var(--ink2)">บาท</span></p>
                 <dl class="meta"><dt>ไซต์</dt><dd>โรงงานสมุทรสาคร</dd><dt>ROI</dt><dd>22%</dd><dt>Payback</dt><dd>4.5 ปี</dd><dt>เริ่ม</dt><dd>ไตรมาส 2/2569</dd></dl>
                 <p class="sub">เครื่องอายุ 14 ปี ค่าซ่อมต่อปีสูงและหยุดสายผลิตบ่อย</p>
-                <div class="row" style="margin-top:12px"><button class="btn primary" type="button" data-approve>อนุมัติ</button><button class="btn ghost" type="button">ดูรายละเอียด</button></div>
+                <div class="row" style="margin-top:12px"><button class="btn primary" type="button" data-approve>อนุมัติ</button><button class="btn ghost" type="button" data-detail>ดูรายละเอียด</button></div>
               </article>
               <article class="card">
                 <span class="chip ok">อนุมัติ · ผูกพัน</span>
@@ -212,7 +212,7 @@
                 <p class="amt">380,000 <span style="font-size:12px;color:var(--ink2)">บาท</span></p>
                 <dl class="meta"><dt>ไซต์</dt><dd>โรงงานสมุทรสาคร</dd><dt>ROI</dt><dd>31%</dd><dt>Payback</dt><dd>2.8 ปี</dd><dt>สถานะ PO</dt><dd>ผูกพันแล้ว</dd></dl>
                 <p class="sub">รองรับระบบ CMMS และ DAM เพิ่มพื้นที่จัดเก็บ 3 เท่า</p>
-                <div class="row" style="margin-top:12px"><button class="btn ghost" type="button">ติดตาม PO</button></div>
+                <div class="row" style="margin-top:12px"><button class="btn ghost" type="button" data-po="PO-2569-0142">ติดตาม PO</button></div>
               </article>
               <article class="card">
                 <span class="chip">ร่าง</span>
@@ -220,7 +220,7 @@
                 <p class="amt">900,000 <span style="font-size:12px;color:var(--ink2)">บาท</span></p>
                 <dl class="meta"><dt>ไซต์</dt><dd>โรงงานระยอง</dd><dt>ROI</dt><dd>18%</dd><dt>Payback</dt><dd>5.2 ปี</dd><dt>เริ่ม</dt><dd>ไตรมาส 4/2569</dd></dl>
                 <p class="sub">เซ็นเซอร์สั่นสะเทือน 120 จุด ต่อยอด Predictive Maintenance</p>
-                <div class="row" style="margin-top:12px"><button class="btn primary" type="button" data-approve>ส่งขออนุมัติ</button><button class="btn ghost" type="button">แก้ไขร่าง</button></div>
+                <div class="row" style="margin-top:12px"><button class="btn primary" type="button" data-approve>ส่งขออนุมัติ</button><button class="btn ghost" type="button" data-edit>แก้ไขร่าง</button></div>
               </article>
             </div>
           </section>
@@ -231,16 +231,23 @@
     <dialog id="dlg">
       <h3 style="margin:0 0 6px">เพิ่มบรรทัดงบประมาณ</h3>
       <p class="sub" style="margin-bottom:8px">ปีงบ 2569</p>
-      <form method="dialog" id="frm">
-        <label class="f">ประเภท<select name="type"><option>OPEX</option><option>CAPEX</option></select></label>
-        <label class="f">ไซต์<select name="site"><option>โรงงานสมุทรสาคร</option><option>โรงงานระยอง</option></select></label>
-        <label class="f">ศูนย์ต้นทุน<input name="cc" value="CC-1003 สาธารณูปโภค" /></label>
-        <label class="f">หมวด<input name="cat" value="ค่าไฟฟ้า & น้ำ" /></label>
-        <label class="f">จำนวนเงิน (บาท)<input name="amt" type="number" value="500000" /></label>
+      <form method="dialog" id="frm" novalidate>
+        <label class="f">ประเภท<select name="type" required><option value="">— เลือกประเภท —</option><option>OPEX</option><option>CAPEX</option></select></label>
+        <label class="f">ไซต์<select name="site" required><option value="">— เลือกไซต์ —</option><option>โรงงานสมุทรสาคร</option><option>โรงงานระยอง</option></select></label>
+        <label class="f">ศูนย์ต้นทุน<input name="cc" required placeholder="เช่น CC-1003 สาธารณูปโภค" /></label>
+        <label class="f">หมวด<input name="cat" required placeholder="เช่น ค่าไฟฟ้า & น้ำ" /></label>
+        <label class="f">จำนวนเงิน (บาท)<input name="amt" type="number" min="1" required inputmode="numeric" placeholder="เช่น 500000" /></label>
         <div id="extra"></div>
         <button class="btn ghost" type="button" id="morefield" style="margin:6px 0 12px">+ เพิ่มฟิลด์</button>
-        <div class="row" style="justify-content:flex-end"><button class="btn ghost" value="cancel" type="submit">ยกเลิก</button><button class="btn primary" id="save" value="ok" type="submit">บันทึกงบ</button></div>
+        <div class="row" style="justify-content:flex-end"><button class="btn ghost" type="button" id="cancelAdd">ยกเลิก</button><button class="btn primary" id="save" value="ok" type="submit">บันทึกงบ</button></div>
       </form>
+    </dialog>
+
+    <dialog id="pdlg" aria-labelledby="pdlgTitle">
+      <h3 style="margin:0 0 6px" id="pdlgTitle"></h3>
+      <p class="sub" style="margin-bottom:8px" id="pdlgSub"></p>
+      <div id="pdlgBody"></div>
+      <div class="row" style="justify-content:flex-end;margin-top:14px" id="pdlgAct"></div>
     </dialog>
 
     <script>
@@ -290,28 +297,136 @@
       }
 
       var dlg = document.getElementById("dlg");
-      document.getElementById("addbtn").onclick = function () { dlg.showModal(); };
       document.getElementById("morefield").onclick = function () {
         var l = document.createElement("label");
         l.className = "f";
         l.innerHTML = 'ฟิลด์เพิ่มเติม<input placeholder="เช่น ผู้รับผิดชอบ / เลขที่อ้างอิง" />';
         document.getElementById("extra").appendChild(l);
       };
-      document.getElementById("frm").onsubmit = function (e) {
-        if (dlg.returnValue === "cancel" || e.submitter.value === "cancel") return;
-        var f = e.target, type = f.type.value, amt = Number(f.amt.value) || 0;
+      function clearErrs(form) {
+        form.querySelectorAll(".v-err").forEach(function (n) { n.remove(); });
+        form.querySelectorAll("[aria-invalid]").forEach(function (n) { n.removeAttribute("aria-invalid"); n.style.borderColor = ""; });
+      }
+      function validate(form) {
+        clearErrs(form);
+        var first = null;
+        form.querySelectorAll("[required]").forEach(function (el) {
+          var v = String(el.value || "").trim(), msg = "";
+          if (!v) msg = el.tagName === "SELECT" ? "กรุณาเลือกรายการ" : "กรุณากรอกข้อมูลช่องนี้";
+          else if (el.type === "number" && el.min !== "" && Number(v) < Number(el.min)) msg = "ต้องมากกว่าหรือเท่ากับ " + el.min;
+          if (!msg) return;
+          el.setAttribute("aria-invalid", "true"); el.style.borderColor = "#ff5c7a";
+          var sm = document.createElement("small"); sm.className = "v-err"; sm.style.cssText = "display:block;color:#ff6b81;margin-top:4px;font-size:12px"; sm.textContent = msg;
+          (el.closest("label") || el.parentNode).appendChild(sm);
+          first = first || el;
+        });
+        if (first) first.focus();
+        return !first;
+      }
+      function liveClear(e) {
+        var t = e.target;
+        if (t.hasAttribute && t.hasAttribute("aria-invalid") && String(t.value).trim()) {
+          t.removeAttribute("aria-invalid"); t.style.borderColor = "";
+          var sm = t.closest("label") && t.closest("label").querySelector(".v-err"); if (sm) sm.remove();
+        }
+      }
+      var frm = document.getElementById("frm");
+      frm.addEventListener("input", liveClear); frm.addEventListener("change", liveClear);
+      document.getElementById("addbtn").onclick = function () { frm.reset(); clearErrs(frm); document.getElementById("extra").innerHTML = ""; dlg.showModal(); };
+      document.getElementById("cancelAdd").onclick = function () { dlg.close(); };
+      frm.onsubmit = function (e) {
+        e.preventDefault();
+        var el = frm.elements;
+        if (!validate(frm)) return;
+        var type = el.type.value, amt = Number(el.amt.value) || 0;
         var tr = document.createElement("tr");
         tr.innerHTML =
           '<td><span class="chip ' + (type === "CAPEX" ? "capex" : "opex") + '">' + type + "</span></td>" +
-          "<td>" + f.site.value + " / " + f.cc.value + "</td><td>" + f.cat.value + "</td>" +
+          "<td>" + esc(el.site.value) + " / " + esc(el.cc.value) + "</td><td>" + esc(el.cat.value) + "</td>" +
           '<td class="num">' + amt.toLocaleString("th-TH") + '</td><td class="num">0</td>' +
           '<td><span class="bar"><span style="width:0%"></span></span>0.0%</td>';
         document.getElementById("rows").appendChild(tr);
-        toast("เพิ่มบรรทัดงบ " + f.cat.value + " แล้ว");
+        dlg.close();
+        toast("เพิ่มบรรทัดงบ " + el.cat.value + " แล้ว");
       };
-      var msgs = { "+ แจ้งซ่อม": "เปิดฟอร์มแจ้งซ่อมใหม่", "ดูรายละเอียด": "เปิดรายละเอียดโครงการ", "ติดตาม PO": "PO-2569-0142 · รอส่งมอบ", "แก้ไขร่าง": "เปิดร่างโครงการเพื่อแก้ไข" };
-      document.querySelectorAll(".top .btn.primary, .plan .btn.ghost").forEach(function (b) {
-        b.addEventListener("click", function () { toast(msgs[b.textContent.trim()] || b.textContent); });
+      function esc(t) { return String(t).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+
+      // capital-plan cards: details / PO tracking / edit draft
+      var pdlg = document.getElementById("pdlg");
+      function meta(card) {
+        var o = {}; var dts = card.querySelectorAll("dl.meta dt");
+        dts.forEach(function (dt) { o[dt.textContent.trim()] = dt.nextElementSibling.textContent.trim(); });
+        return o;
+      }
+      function openP(title, sub, body, actions) {
+        document.getElementById("pdlgTitle").textContent = title;
+        document.getElementById("pdlgSub").textContent = sub;
+        document.getElementById("pdlgBody").innerHTML = body;
+        var act = document.getElementById("pdlgAct"); act.innerHTML = "";
+        actions.forEach(function (a) {
+          var b = document.createElement(a.href ? "a" : "button");
+          b.className = "btn " + (a.primary ? "primary" : "ghost");
+          if (a.href) b.href = a.href; else b.type = "button";
+          b.textContent = a.label;
+          if (a.fn) b.onclick = a.fn;
+          act.appendChild(b);
+        });
+        pdlg.showModal();
+      }
+      var closeBtn = { label: "ปิด", fn: function () { pdlg.close(); } };
+      function amtOf(card) { return card.querySelector(".amt").firstChild.textContent.trim(); }
+      document.querySelectorAll("[data-detail]").forEach(function (b) {
+        b.onclick = function () {
+          var card = b.closest(".card"), m = meta(card), chip = card.querySelector(".chip").textContent;
+          var rows = [["สถานะ", chip], ["งบลงทุน", amtOf(card) + " บาท"]];
+          Object.keys(m).forEach(function (k) { rows.push([k, m[k]]); });
+          rows.push(["เหตุผล", card.querySelector("p.sub").textContent]);
+          var body = '<dl class="meta">' + rows.map(function (r) { return "<dt>" + r[0] + "</dt><dd>" + esc(r[1]) + "</dd>"; }).join("") + "</dl>" +
+            '<p class="ctitle" style="margin-top:10px">ประวัติการอนุมัติ</p><p class="sub">สร้างโดย Admin · 12 ส.ค. 2568<br>ส่งคณะกรรมการลงทุน · 03 ก.ย. 2568<br>' + (chip.indexOf("อนุมัติ ·") === 0 ? "อนุมัติโดย ผจก.โรงงาน" : "รอผู้อนุมัติ: ผจก.โรงงาน / CFO") + "</p>";
+          var acts = [closeBtn];
+          var ap = card.querySelector("[data-approve]:not([disabled])");
+          if (ap) acts.unshift({ label: ap.textContent, primary: true, fn: function () { pdlg.close(); ap.click(); } });
+          openP(card.querySelector("h3").textContent, "รายละเอียดโครงการลงทุน · ปีงบ 2569", body, acts.reverse());
+        };
+      });
+      document.querySelectorAll("[data-po]").forEach(function (b) {
+        b.onclick = function () {
+          var card = b.closest(".card"), po = b.dataset.po;
+          var steps = [["ใบขอซื้อ PR-2569-0088 อนุมัติ", "05 ก.ย. 2568", true], ["ออกใบสั่งซื้อ " + po, "10 ก.ย. 2568", true], ["ผู้ขายยืนยันคำสั่งซื้อ (บจก. ดาต้าเน็ต)", "12 ก.ย. 2568", true], ["จัดส่ง / รับของเข้าคลัง", "กำหนด 30 ต.ค. 2568", false], ["ตั้งหนี้ / จ่ายชำระ", "—", false]];
+          var body = '<dl class="meta"><dt>เลขที่ PO</dt><dd>' + po + "</dd><dt>มูลค่า</dt><dd>" + amtOf(card) + ' บาท</dd><dt>สถานะ</dt><dd><span class="chip warn">รอส่งมอบ</span></dd></dl>' +
+            '<ol style="margin:8px 0 0;padding-left:18px;font-size:13px;line-height:1.9">' + steps.map(function (st) { return '<li style="color:' + (st[2] ? "var(--ink)" : "var(--ink2)") + '">' + (st[2] ? "✓ " : "○ ") + st[0] + ' <span style="color:var(--ink2)">· ' + st[1] + "</span></li>"; }).join("") + "</ol>";
+          openP("ติดตาม " + po, card.querySelector("h3").textContent, body, [{ label: "เปิดหน้า PR / PO", href: "../purchasing-pr-po/" }, { label: "ปิด", primary: true, fn: function () { pdlg.close(); } }]);
+        };
+      });
+      document.querySelectorAll("[data-edit]").forEach(function (b) {
+        b.onclick = function () {
+          var card = b.closest(".card"), m = meta(card);
+          var amt = amtOf(card).replace(/,/g, "");
+          var body = '<form id="efrm" novalidate>' +
+            '<label class="f">ชื่อโครงการ<input name="name" required value="' + esc(card.querySelector("h3").textContent) + '" /></label>' +
+            '<label class="f">ไซต์<select name="site" required><option value="">— เลือกไซต์ —</option>' + ["โรงงานสมุทรสาคร", "โรงงานระยอง"].map(function (x) { return "<option" + (x === m["ไซต์"] ? " selected" : "") + ">" + x + "</option>"; }).join("") + "</select></label>" +
+            '<label class="f">งบลงทุน (บาท)<input name="amt" type="number" min="1" required value="' + amt + '" /></label>' +
+            '<label class="f">ROI (%)<input name="roi" type="number" min="0" required value="' + parseFloat(m["ROI"]) + '" /></label>' +
+            '<label class="f">Payback (ปี)<input name="pb" type="number" min="0" step="0.1" required value="' + parseFloat(m["Payback"]) + '" /></label>' +
+            '<label class="f">เริ่ม<input name="start" required value="' + esc(m["เริ่ม"] || "") + '" /></label>' +
+            '<label class="f">เหตุผล<input name="why" required value="' + esc(card.querySelector("p.sub").textContent) + '" /></label></form>';
+          openP("แก้ไขร่างโครงการ", "ร่าง · ปีงบ 2569", body, [{ label: "ยกเลิก", fn: function () { pdlg.close(); } }, { label: "บันทึกร่าง", primary: true, fn: function () {
+            var f = document.getElementById("efrm"); if (!validate(f)) return; var e = f.elements;
+            card.querySelector("h3").textContent = e.name.value.trim();
+            card.querySelector(".amt").firstChild.textContent = Number(e.amt.value).toLocaleString("en-US") + " ";
+            card.querySelectorAll("dl.meta dt").forEach(function (dt) {
+              var k = dt.textContent.trim(), dd = dt.nextElementSibling;
+              if (k === "ไซต์") dd.textContent = e.site.value; if (k === "ROI") dd.textContent = e.roi.value + "%";
+              if (k === "Payback") dd.textContent = e.pb.value + " ปี"; if (k === "เริ่ม") dd.textContent = e.start.value.trim();
+            });
+            card.querySelector("p.sub").textContent = e.why.value.trim();
+            pdlg.close(); toast("บันทึกร่าง " + e.name.value.trim() + " แล้ว");
+          } }]);
+          var ef = document.getElementById("efrm"); ef.addEventListener("input", liveClear); ef.addEventListener("change", liveClear);
+        };
+      });
+      document.querySelectorAll(".top .btn.primary").forEach(function (b) {
+        b.addEventListener("click", function () { toast("เปิดฟอร์มแจ้งซ่อมใหม่"); });
       });
       document.querySelector(".ibtn").onclick = function () {
         var d = this.querySelector(".dotbadge"); if (d) d.remove();
