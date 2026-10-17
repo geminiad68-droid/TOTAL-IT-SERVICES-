@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ITMAINT Reports Lite</title>
+<style>
+*{box-sizing:border-box}
+:root{--bg:#0A1024;--card:#111A36;--card2:#0E1630;--line:rgba(96,140,255,.28);--glow:0 0 0 1px rgba(96,140,255,.18),0 0 18px rgba(64,110,255,.12);--tx:#E7ECFA;--tx2:#9AA7C7;--blue:#5B8CFF;--r:16px;--tap:44px}
+html,body{margin:0;background:var(--bg);color:var(--tx);font-family:"Noto Sans Thai",sans-serif;font-size:14px;overflow-x:hidden}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+.app{display:grid;grid-template-columns:240px minmax(0,1fr)}
+.side{background:#0B1330;border-right:1px solid var(--line);padding:18px 12px}
+.brand{display:flex;gap:10px;align-items:center;padding:4px 6px 18px}
+.logo{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#3B82F6,#8B5CF6);display:grid;place-items:center;font-weight:700}
+.brand b{display:block;font-size:15px}.brand small{color:var(--tx2);font-size:12px}
+.grp{color:var(--tx2);font-size:12px;margin:14px 8px 4px;letter-spacing:.04em}
+.nav a{display:flex;align-items:center;gap:10px;min-height:var(--tap);padding:0 10px;border-radius:12px;color:var(--tx);text-decoration:none}
+.nav a:hover{background:rgba(91,140,255,.08)}
+.nav a.on{background:linear-gradient(90deg,rgba(91,140,255,.22),rgba(139,92,246,.12));box-shadow:inset 0 0 0 1px var(--line)}
+.ic{width:28px;height:28px;border-radius:8px;display:grid;place-items:center;font-size:13px;flex:none}
+.g1{background:linear-gradient(135deg,#2563EB,#06B6D4)}.g2{background:linear-gradient(135deg,#7C3AED,#EC4899)}.g3{background:linear-gradient(135deg,#EA580C,#DB2777)}.g4{background:linear-gradient(135deg,#059669,#0EA5E9)}.g5{background:linear-gradient(135deg,#9333EA,#3B82F6)}
+.main{min-width:0;padding:16px 20px 32px}
+.top{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:18px}
+.menu{display:none}
+.field{min-height:var(--tap);background:var(--card2);border:1px solid var(--line);border-radius:12px;padding:0 12px}
+.search{flex:1;min-width:160px}
+.btn{min-height:var(--tap);padding:0 16px;border-radius:12px;border:1px solid var(--line);background:var(--card2)}
+.btn:hover{border-color:var(--blue)}
+.pri{border:0;color:#fff;font-weight:600;background:linear-gradient(135deg,#C2410C,#BE185D)}
+.av{display:flex;align-items:center;gap:8px;min-height:var(--tap)}
+.av i{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#3B82F6,#EC4899);display:grid;place-items:center;font-style:normal;font-weight:600}
+h1{margin:0;font-size:24px}.sub{color:var(--tx2);margin:4px 0 16px}
+.card{background:var(--card);border:1px solid var(--line);box-shadow:var(--glow);border-radius:var(--r);padding:16px}
+.wrap{display:grid;grid-template-columns:260px minmax(0,1fr);gap:16px;align-items:start}
+.list h4{margin:12px 6px 4px;font-size:12px;color:var(--tx2);font-weight:500}
+.list h4:first-of-type{margin-top:0}
+.rep{display:block;width:100%;text-align:left;min-height:var(--tap);padding:8px 10px;border:0;background:none;border-radius:10px}
+.rep:hover{background:rgba(91,140,255,.08)}
+.rep.on{background:#1E2C5C;box-shadow:inset 3px 0 0 var(--blue)}
+.add{width:100%;margin-top:12px}
+.filters{display:flex;flex-wrap:wrap;gap:10px;align-items:end;margin-bottom:16px}
+.filters label{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--tx2)}
+.filters .field{color:var(--tx)}
+.acts{display:flex;gap:8px;flex-wrap:wrap;margin-left:auto}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:16px}
+.kpi{display:flex;gap:12px;align-items:center}
+.kpi .ic{width:42px;height:42px;border-radius:12px;font-size:18px}
+.kpi b{display:block;font-size:20px}.kpi span{color:var(--tx2);font-size:12px}
+.chart{margin-bottom:16px}.chart h3,.tcard h3{margin:0 0 8px;font-size:15px}
+.chart svg{display:block;width:100%;height:220px}
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{padding:10px;border-bottom:1px solid rgba(96,140,255,.15);text-align:right;white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+thead th{color:var(--tx2);font-weight:500}
+tbody tr:hover{background:rgba(91,140,255,.06)}
+.hl{background:#2A1E2E}
+.bar{display:flex;align-items:center;gap:8px;justify-content:flex-end}
+.bar i{display:block;height:8px;border-radius:4px;background:linear-gradient(90deg,#EA580C,#DB2777)}
+.bar s{display:block;width:120px;height:8px;border-radius:4px;background:rgba(255,255,255,.06);text-decoration:none}
+.modal{position:fixed;inset:0;background:rgba(3,6,18,.72);display:none;align-items:center;justify-content:center;padding:16px;z-index:10}
+.modal.open{display:flex}
+.modal .card{width:min(520px,100%);max-height:90%;overflow:auto}
+.modal h2{margin:0 0 12px;font-size:18px}
+.fm{display:flex;flex-direction:column;gap:4px;margin-bottom:12px;color:var(--tx2);font-size:12px}
+.fm .field{color:var(--tx)}
+.checks{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:12px}
+.checks label{display:flex;align-items:center;gap:8px;min-height:var(--tap)}
+.checks input{width:18px;height:18px}
+.mact{display:flex;gap:8px;justify-content:flex-end}
+.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:#16224A;border:1px solid var(--blue);border-radius:12px;padding:12px 18px;display:none;z-index:20}
+.toast.show{display:block}
+@media(max-width:900px){.app{grid-template-columns:1fr}.side{display:none;border-right:0;border-bottom:1px solid var(--line)}.side.open{display:block}.menu{display:inline-block}.wrap{grid-template-columns:1fr}.acts{margin-left:0}.main{padding:12px}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="side" id="side">
+  <div class="brand"><div class="logo">IT</div><div><b>IT&amp;MAINT</b><small>Smart Asset · Smart Work</small></div></div>
+  <nav class="nav">
+    <div class="grp">ภาพรวม</div><a href="#"><span class="ic g1">▦</span>แดชบอร์ด</a>
+    <div class="grp">ทรัพย์สิน</div><a href="#"><span class="ic g4">▣</span>ทะเบียนทรัพย์สิน</a><a href="#"><span class="ic g4">✓</span>ตรวจนับ</a>
+    <div class="grp">ซ่อมบำรุง</div><a href="#"><span class="ic g3">⚒</span>ใบสั่งงาน</a><a href="#"><span class="ic g3">↻</span>แผน PM</a>
+    <div class="grp">คลัง &amp; จัดซื้อ</div><a href="#"><span class="ic g1">▤</span>คลังอะไหล่</a><a href="#"><span class="ic g1">₿</span>จัดซื้อ</a>
+    <div class="grp">วิเคราะห์</div><a href="#"><span class="ic g2">◎</span>RCA/FMEA</a><a href="#" class="on"><span class="ic g2">▥</span>รายงาน &amp; KPI</a>
+    <div class="grp">ระบบ</div><a href="#"><span class="ic g5">⚙</span>ตั้งค่า</a>
+  </nav>
+</aside>
+<main class="main">
+  <div class="top">
+    <button class="btn menu" id="menu" aria-label="เมนู">☰</button>
+    <select class="field" aria-label="ไซต์"><option>ทุกไซต์</option><option>โรงงานสมุทรสาคร</option><option>โรงงานระยอง</option></select>
+    <input class="field search" type="search" placeholder="ค้นหาทรัพย์สิน ใบงาน อะไหล่…" aria-label="ค้นหา" />
+    <button class="btn pri" data-toast="เปิดฟอร์มแจ้งซ่อม">+ แจ้งซ่อม</button>
+    <div class="av"><i>A</i>Admin</div>
+  </div>
+  <h1>รายงาน &amp; KPI</h1>
+  <p class="sub">MTTR · MTBF · Availability · PM Compliance · ค่าซ่อม · Bad actors · ผลงานช่าง · อะไหล่ · ตรวจนับ</p>
+  <div class="wrap">
+    <div class="card list" id="list"><button class="btn pri add" id="openM">+ รายงานกำหนดเอง</button></div>
+    <div>
+      <div class="card filters">
+        <label>ตั้งแต่<input class="field" value="1 พ.ย. 2568" size="11" /></label>
+        <label>ถึง<input class="field" value="11 ต.ค. 2569" size="11" /></label>
+        <label>ไซต์<select class="field"><option>ทุกไซต์</option><option>โรงงานสมุทรสาคร</option><option>โรงงานระยอง</option></select></label>
+        <label>ช่วงลัด<select class="field"><option>12 เดือนล่าสุด</option><option>เดือนนี้</option><option>ไตรมาสนี้</option><option>ปีนี้</option></select></label>
+        <div class="acts">
+          <button class="btn pri" data-toast="แสดงรายงานแล้ว">แสดง</button>
+          <button class="btn" data-toast="กำลังส่งออก Excel…">Excel</button>
+          <button class="btn" data-toast="กำลังส่งออก CSV…">CSV</button>
+          <button class="btn" data-toast="ส่งไปยังเครื่องพิมพ์แล้ว">พิมพ์</button>
+        </div>
+      </div>
+      <div id="rKpi">
+        <div class="kpis">
+          <div class="card kpi"><span class="ic g3">⚡</span><div><b>12</b><span>Breakdown</span></div></div>
+          <div class="card kpi"><span class="ic g1">⏱</span><div><b>15,136 ชม.</b><span>MTBF A/B</span></div></div>
+          <div class="card kpi"><span class="ic g4">◉</span><div><b>99.71%</b><span>Availability</span></div></div>
+          <div class="card kpi"><span class="ic g2">▤</span><div><b>18</b><span>Backlog</span></div></div>
+          <div class="card kpi"><span class="ic g5">฿</span><div><b>61,695 บาท</b><span>ค่าใช้จ่ายรวม</span></div></div>
+        </div>
+        <div class="card chart">
+          <h3>ใบงานรายเดือน</h3>
+          <svg viewBox="0 0 600 220" role="img" aria-label="ใบงานรายเดือน พ.ย.68 ถึง ต.ค.69 สูงสุด 13 ใบในเดือน ต.ค.69">
+            <defs><linearGradient id="gb" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#EC4899"/><stop offset="1" stop-color="#EA580C"/></linearGradient></defs>
+            <g stroke="rgba(96,140,255,.15)"><line x1="40" y1="30" x2="590" y2="30"/><line x1="40" y1="110" x2="590" y2="110"/><line x1="40" y1="190" x2="590" y2="190" stroke="rgba(96,140,255,.4)"/></g>
+            <g fill="#9AA7C7" font-size="11" text-anchor="end"><text x="32" y="34">13</text><text x="32" y="114">6.5</text><text x="32" y="194">0</text></g>
+            <g fill="url(#gb)">
+              <rect x="50" y="178" width="26" height="12" rx="3"/><rect x="96" y="188" width="26" height="2"/><rect x="142" y="178" width="26" height="12" rx="3"/><rect x="188" y="188" width="26" height="2"/><rect x="234" y="165" width="26" height="25" rx="3"/><rect x="280" y="178" width="26" height="12" rx="3"/><rect x="326" y="188" width="26" height="2"/><rect x="372" y="178" width="26" height="12" rx="3"/><rect x="418" y="165" width="26" height="25" rx="3"/><rect x="464" y="178" width="26" height="12" rx="3"/><rect x="510" y="188" width="26" height="2"/><rect x="556" y="30" width="26" height="160" rx="3"/>
+            </g>
+            <g fill="#E7ECFA" font-size="11" text-anchor="middle"><text x="63" y="172">1</text><text x="155" y="172">1</text><text x="247" y="159">2</text><text x="293" y="172">1</text><text x="385" y="172">1</text><text x="431" y="159">2</text><text x="477" y="172">1</text><text x="569" y="24">13</text></g>
+            <g fill="#9AA7C7" font-size="11" text-anchor="middle"><text x="63" y="208">พ.ย.68</text><text x="109" y="208">ธ.ค.</text><text x="155" y="208">ม.ค.69</text><text x="201" y="208">ก.พ.</text><text x="247" y="208">มี.ค.</text><text x="293" y="208">เม.ย.</text><text x="339" y="208">พ.ค.</text><text x="385" y="208">มิ.ย.</text><text x="431" y="208">ก.ค.</text><text x="477" y="208">ส.ค.</text><text x="523" y="208">ก.ย.</text><text x="569" y="208">ต.ค.</text></g>
+          </svg>
+        </div>
+      </div>
+      <div class="card tcard"><h3 id="tTitle"></h3><div class="tw"><table id="tbl"></table></div></div>
+    </div>
+  </div>
+</main>
+</div>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mT">
+  <div class="card">
+    <h2 id="mT">สร้างรายงานกำหนดเอง</h2>
+    <label class="fm">ชื่อรายงาน<input class="field" id="mName" placeholder="เช่น ค่าซ่อมรายไตรมาส" /></label>
+    <label class="fm">แหล่งข้อมูล<select class="field" id="mSrc"><option>ใบสั่งงาน</option><option>ทรัพย์สิน</option><option>อะไหล่ &amp; คลัง</option><option>แผน PM</option><option>ตรวจนับ</option></select></label>
+    <div class="fm">คอลัมน์</div>
+    <div class="checks">
+      <label><input type="checkbox" checked />เลขที่ใบงาน</label><label><input type="checkbox" checked />ทรัพย์สิน</label>
+      <label><input type="checkbox" checked />ประเภทงาน</label><label><input type="checkbox" />ช่างผู้รับผิดชอบ</label>
+      <label><input type="checkbox" />Downtime</label><label><input type="checkbox" checked />ค่าใช้จ่าย</label>
+      <label><input type="checkbox" />สถานะ SLA</label><label><input type="checkbox" />รวมฟิลด์เพิ่มเติม</label>
+    </div>
+    <label class="fm">จัดกลุ่มตาม<select class="field"><option>เดือน</option><option>ทรัพย์สิน</option><option>หมวด</option><option>ช่าง</option><option>ไซต์</option></select></label>
+    <label class="fm">ตั้งเวลาส่งอีเมล<select class="field"><option>ไม่ส่ง</option><option>ทุกวัน 08:00</option><option>ทุกจันทร์ 08:00</option><option>วันที่ 1 ของเดือน</option></select></label>
+    <div class="mact"><button class="btn" id="mCancel">ยกเลิก</button><button class="btn pri" id="mSave">บันทึก</button></div>
+  </div>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+var M=["พ.ย. 2568","ธ.ค. 2568","ม.ค. 2569","ก.พ. 2569","มี.ค. 2569","เม.ย. 2569","พ.ค. 2569","มิ.ย. 2569","ก.ค. 2569","ส.ค. 2569","ก.ย. 2569","ต.ค. 2569"];
+var kpiRows=[[1,1,0,1,"3.5","3.5","100%","8,450"],[0,0,0,0,"—","0","—","0"],[1,1,0,1,"2.0","2.0","100%","6,200"],[0,0,0,0,"—","0","—","0"],[2,1,1,2,"4.8","4.8","100%","12,900"],[1,0,1,1,"1.5","0","100%","4,350"],[0,0,0,0,"—","0","—","0"],[1,1,0,1,"6.2","6.2","100%","7,840"],[2,2,0,2,"5.1","10.2","—","11,275"],[1,1,0,1,"3.0","3.0","—","5,720"],[0,0,0,0,"—","0","—","0"],[13,2,5,3,"—","238.1","0%","4,960"]];
+function bar(v,max,t){return {b:Math.round(v/max*120),t:t}}
+var R=[
+ {g:"ซ่อมบำรุง",n:"KPI งานซ่อมบำรุงรายเดือน",kpi:1,c:["เดือน","ใบงาน","Breakdown","PM","เสร็จ/ปิด","MTTR (ชม.)","Downtime (ชม.)","PM Compliance %","ค่าใช้จ่าย (บาท)"],r:kpiRows.map(function(x,i){return [M[i]].concat(x)})},
+ {g:"ซ่อมบำรุง",n:"สรุปใบสั่งงานตามประเภท & SLA",c:["ประเภท","จำนวน","ผ่าน SLA","เกิน SLA","% ผ่าน SLA"],r:[["Breakdown",12,9,3,"75%"],["PM",7,6,1,"86%"],["แจ้งซ่อมทั่วไป",3,3,0,"100%"],["ตรวจสอบ",0,0,0,"—"]]},
+ {g:"ซ่อมบำรุง",n:"PM Compliance ตามแผน",c:["แผน PM","ทรัพย์สิน","ตามแผน","ทำจริง","Compliance"],r:[["PM-CONV รายเดือน","CONV-03",12,11,"92%"],["PM-AHU รายไตรมาส","AHU-05",4,4,"100%"],["PM-CMP รายเดือน","CMP-02",12,9,"75%"],["PM-MTR รายครึ่งปี","MTR-007",2,1,"50%"]]},
+ {g:"ต้นทุน",n:"ค่าซ่อมบำรุงตามทรัพย์สิน",c:["ทรัพย์สิน","ค่าแรง","ค่าอะไหล่","รวม (บาท)"],r:[["CONV-03 สายพานลำเลียง","9,600","14,850","24,450"],["MTR-007 มอเตอร์ปั๊ม","5,200","11,320","16,520"],["CMP-02 ปั๊มลม","4,400","8,975","13,375"],["AHU-05 เครื่องส่งลมเย็น","3,000","4,350","7,350"]]},
+ {g:"ความน่าเชื่อถือ",n:"Bad Actors",c:["รหัส","ทรัพย์สิน","Downtime","ครั้ง"],r:[["CONV-03","สายพานลำเลียง",bar(261,261,"261 ชม."),3],["MTR-007","มอเตอร์ปั๊ม",bar(142,261,"142 ชม."),2],["CMP-02","ปั๊มลม",bar(96,261,"96 ชม."),2],["AHU-05","เครื่องส่งลมเย็น",bar(48,261,"48 ชม."),1]]},
+ {g:"บุคลากร",n:"ผลงานช่าง",c:["ช่าง","ใบงานที่ปิด","เวลาเฉลี่ย","ผ่าน SLA %"],r:[["สมชัย",bar(9,9,"9"),"3.2 ชม.","94%"],["วิชัย",bar(7,9,"7"),"4.1 ชม.","88%"],["ธนพล",bar(5,9,"5"),"3.8 ชม.","90%"],["อนุชา",bar(4,9,"4"),"5.0 ชม.","80%"],["ปรีชา",bar(3,9,"3"),"4.6 ชม.","83%"]]},
+ {g:"ทรัพย์สิน",n:"สรุปทะเบียนตามหมวด",c:["หมวด","จำนวน","มูลค่า (บาท)"],r:[["เครื่องจักรการผลิต",42,"18,450,000"],["ระบบปรับอากาศ",26,"3,920,000"],["ระบบไฟฟ้า",31,"2,610,000"],["คอมพิวเตอร์ & IT",118,"4,280,000"]]},
+ {g:"ทรัพย์สิน",n:"ผลการตรวจนับ",c:["รอบตรวจนับ","ทั้งหมด","พบ","ไม่พบ","ความครบถ้วน"],r:[["Q1/2569",217,214,3,"98.6%"],["Q2/2569",217,215,2,"99.1%"],["Q3/2569",217,217,0,"100%"]]},
+ {g:"คลัง",n:"การจ่ายอะไหล่",c:["รหัสอะไหล่","รายการ","จำนวนจ่าย","มูลค่า (บาท)"],r:[["SP-BLT-12","สายพาน 12 นิ้ว",4,"9,600"],["SP-BRG-6205","ลูกปืน 6205",16,"3,840"],["SP-FLT-AHU","ไส้กรองอากาศ AHU",24,"4,350"],["SP-OIL-CMP","น้ำมันปั๊มลม 4 ล.",6,"2,700"]]}
+];
+var cur=0,list=document.getElementById("list"),addBtn=document.getElementById("openM");
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]})}
+function drawList(){
+  list.querySelectorAll("h4,.rep").forEach(function(e){e.remove()});
+  var last="";
+  R.forEach(function(r,i){
+    if(r.g!==last){var h=document.createElement("h4");h.textContent=r.g;list.insertBefore(h,addBtn);last=r.g}
+    var b=document.createElement("button");b.className="rep"+(i===cur?" on":"");b.textContent=r.n;
+    b.onclick=function(){cur=i;drawList();show()};list.insertBefore(b,addBtn);
+  });
+}
+function show(){
+  var r=R[cur];
+  document.getElementById("rKpi").style.display=r.kpi?"":"none";
+  document.getElementById("tTitle").textContent=r.n;
+  var h="<thead><tr>"+r.c.map(function(c){return "<th scope='col'>"+esc(c)+"</th>"}).join("")+"</tr></thead><tbody>";
+  if(!r.r.length)h+="<tr><td colspan='"+r.c.length+"'>ยังไม่มีข้อมูล · กด แสดง เพื่อสร้างรายงาน</td></tr>";
+  r.r.forEach(function(row,i){
+    h+="<tr"+(r.kpi&&i===11?" class='hl'":"")+">"+row.map(function(v){
+      return "<td>"+(v&&v.t!==undefined?"<span class='bar'><s><i style='width:"+v.b+"px'></i></s>"+esc(v.t)+"</span>":esc(v))+"</td>"}).join("")+"</tr>";
+  });
+  document.getElementById("tbl").innerHTML=h+"</tbody>";
+}
+var toastEl=document.getElementById("toast"),tt;
+function toast(m){toastEl.textContent=m;toastEl.classList.add("show");clearTimeout(tt);tt=setTimeout(function(){toastEl.classList.remove("show")},2400)}
+document.querySelectorAll("[data-toast]").forEach(function(b){b.onclick=function(){toast(b.dataset.toast)}});
+document.getElementById("menu").onclick=function(){document.getElementById("side").classList.toggle("open")};
+var modal=document.getElementById("modal");
+function closeM(){modal.classList.remove("open")}
+addBtn.onclick=function(){modal.classList.add("open");document.getElementById("mName").focus()};
+document.getElementById("mCancel").onclick=closeM;
+modal.onclick=function(e){if(e.target===modal)closeM()};
+document.addEventListener("keydown",function(e){if(e.key==="Escape")closeM()});
+document.getElementById("mSave").onclick=function(){
+  var n=document.getElementById("mName").value.trim()||"รายงานกำหนดเอง "+(R.length-8);
+  var cols=[].map.call(modal.querySelectorAll(".checks input:checked"),function(c){return c.parentNode.textContent});
+  if(!cols.length)cols=["รายการ"];
+  R.push({g:"กำหนดเอง",n:n,c:cols,r:[]});cur=R.length-1;
+  drawList();show();closeM();document.getElementById("mName").value="";
+  toast("บันทึกรายงาน “"+n+"” แล้ว");
+};
+drawList();show();
+</script>
+</body>
+</html>
