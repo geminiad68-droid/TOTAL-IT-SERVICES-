@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="th" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>IT&MAINT — ต้นทุน & งบประมาณ</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Noto+Sans+Thai:wght@400;500;600&display=swap" />
+    <style>
+      :root {
+        --bg: #0a1024; --panel: #101a38; --panel2: #0e1630; --line: rgba(90,140,255,.28);
+        --glow: 0 0 0 1px rgba(90,140,255,.18), 0 8px 30px rgba(0,0,0,.45);
+        --ink: #eaf0ff; --ink2: #93a3c9; --blue: #4d8dff; --grad: linear-gradient(135deg,#ff8a2b,#ff3d7f);
+        --r: 16px; --sans: "Noto Sans Thai", Geist, system-ui, sans-serif;
+      }
+      * { box-sizing: border-box; }
+      body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--sans); font-size: 14px; overflow-x: hidden; }
+      .app { display: grid; grid-template-columns: 248px 1fr; min-height: 100vh; }
+      .side { background: linear-gradient(180deg,#0c1430,#0a1024); border-right: 1px solid var(--line); padding: 16px 12px; }
+      .logo { display: flex; gap: 10px; align-items: center; padding: 6px 8px 16px; }
+      .logo .tile { width: 38px; height: 38px; border-radius: 11px; background: var(--grad); display: grid; place-items: center; flex: none; }
+      .logo b { display: block; font-size: 16px; letter-spacing: .3px; }
+      .logo small { color: var(--ink2); font-size: 12px; }
+      .sgroup { color: #8494bd; font-size: 12px; letter-spacing: .6px; margin: 14px 10px 6px; text-transform: uppercase; }
+      .snav a { display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 10px; border-radius: 12px; color: #c3cde8; text-decoration: none; }
+      .snav a:hover { background: rgba(77,141,255,.12); }
+      .snav a.on { background: linear-gradient(90deg, rgba(255,138,43,.22), rgba(255,61,127,.14)); color: #fff; box-shadow: inset 0 0 0 1px rgba(255,138,43,.35); }
+      .snav .d { width: 7px; height: 7px; border-radius: 50%; background: #35406b; flex: none; }
+      .snav a.on .d { background: #ff8a2b; }
+      .main { min-width: 0; display: flex; flex-direction: column; }
+      .top { display: flex; gap: 12px; align-items: center; padding: 12px 20px; border-bottom: 1px solid var(--line); background: rgba(10,16,36,.9); position: sticky; top: 0; z-index: 20; backdrop-filter: blur(8px); flex-wrap: wrap; }
+      .search { flex: 1; min-width: 160px; display: flex; align-items: center; gap: 8px; background: var(--panel2); border: 1px solid var(--line); border-radius: 12px; padding: 0 12px; min-height: 44px; color: var(--ink2); }
+      .search input { flex: 1; min-width: 0; background: none; border: 0; color: var(--ink); font: inherit; outline: none; }
+      .kbd { border: 1px solid var(--line); border-radius: 7px; padding: 3px 7px; font-size: 12px; color: var(--ink2); }
+      select, .btn, .ibtn { font: inherit; color: var(--ink); background: var(--panel2); border: 1px solid var(--line); border-radius: 12px; min-height: 44px; padding: 0 14px; cursor: pointer; }
+      .ibtn { width: 44px; padding: 0; display: grid; place-items: center; position: relative; }
+      .dotbadge { position: absolute; top: 7px; right: 8px; width: 8px; height: 8px; border-radius: 50%; background: #ff3d7f; }
+      .btn.primary { background: var(--grad); border: 0; color: #fff; font-weight: 600; }
+      .btn.ghost:hover, .ibtn:hover { border-color: rgba(90,140,255,.6); }
+      .avatar { display: flex; align-items: center; gap: 8px; min-height: 44px; }
+      .avatar .circle { width: 34px; height: 34px; border-radius: 50%; background: var(--grad); display: grid; place-items: center; font-weight: 600; font-size: 13px; }
+      .avatar small { display: block; color: var(--ink2); font-size: 12px; }
+      .wrap { padding: 20px; display: grid; gap: 16px; }
+      h1 { font-size: 22px; margin: 0 0 4px; }
+      .sub { color: var(--ink2); margin: 0; font-size: 12.5px; line-height: 1.6; }
+      .card { background: linear-gradient(180deg, var(--panel), var(--panel2)); border: 1px solid var(--line); border-radius: var(--r); box-shadow: var(--glow); padding: 16px; }
+      .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+      .tabs { display: flex; gap: 8px; }
+      .tab { background: var(--panel2); border: 1px solid var(--line); color: var(--ink2); border-radius: 12px; min-height: 44px; padding: 0 16px; cursor: pointer; font: inherit; }
+      .tab.on { background: var(--grad); border-color: transparent; color: #fff; font-weight: 600; }
+      .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; }
+      .kpi .tile { width: 36px; height: 36px; border-radius: 11px; display: grid; place-items: center; margin-bottom: 10px; }
+      .t1 { background: linear-gradient(135deg,#2b6cff,#7a3dff); } .t2 { background: linear-gradient(135deg,#ff8a2b,#ff3d7f); }
+      .t3 { background: linear-gradient(135deg,#14b8a6,#2b6cff); } .t4 { background: linear-gradient(135deg,#a855f7,#ec4899); }
+      .kpi .lab { color: var(--ink2); font-size: 12px; } .kpi .fig { font-size: 22px; font-weight: 600; margin: 2px 0; }
+      .kpi .note { color: #8f9dc2; font-size: 12px; }
+      .grid2 { display: grid; grid-template-columns: 1.6fr 1fr; gap: 16px; }
+      .ctitle { font-size: 15px; font-weight: 600; margin: 0 0 2px; } .cnote { color: var(--ink2); font-size: 12px; margin: 0 0 12px; }
+      svg.chart { width: 100%; height: auto; display: block; }
+      .legend { display: flex; gap: 14px; flex-wrap: wrap; color: var(--ink2); font-size: 12px; margin-top: 10px; }
+      .legend i { width: 10px; height: 10px; border-radius: 3px; display: inline-block; margin-right: 6px; }
+      .tw { overflow-x: auto; } table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 620px; }
+      th, td { text-align: left; padding: 11px 10px; border-bottom: 1px solid rgba(90,140,255,.15); white-space: nowrap; }
+      th { color: var(--ink2); font-weight: 500; font-size: 12px; }
+      td.num { text-align: right; font-variant-numeric: tabular-nums; }
+      .chip { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 12px; border: 1px solid var(--line); color: #bcd0ff; background: #131d40; }
+      .chip.capex { background: #142254; border-color: #2b5bd0; }
+      .chip.opex { background: #0f2c3a; border-color: #1a8f84; color: #8ff0e2; }
+      .chip.warn { background: #3a2412; border-color: #b8641f; color: #ffc08a; }
+      .chip.ok { background: #10301f; border-color: #1f9a4c; color: #93edb5; }
+      .bar { width: 120px; height: 7px; border-radius: 99px; background: #1b2650; overflow: hidden; display: inline-block; vertical-align: middle; margin-right: 8px; }
+      .bar span { display: block; height: 100%; background: var(--grad); }
+      .plan { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px,1fr)); gap: 16px; }
+      .plan h3 { margin: 10px 0 4px; font-size: 15px; } .plan .amt { font-size: 20px; font-weight: 600; }
+      dl.meta { display: grid; grid-template-columns: auto auto; gap: 6px 12px; margin: 12px 0; font-size: 12.5px; }
+      dl.meta dt { color: var(--ink2); } dl.meta dd { margin: 0; text-align: right; }
+      .hide { display: none; }
+      dialog { border: 1px solid var(--line); border-radius: var(--r); background: var(--panel); color: var(--ink); padding: 18px; width: min(460px, 92vw); box-shadow: var(--glow); }
+      dialog::backdrop { background: rgba(4,8,20,.7); }
+      label.f { display: block; margin: 10px 0; font-size: 12.5px; color: var(--ink2); }
+      label.f select, label.f input { width: 100%; margin-top: 5px; background: var(--panel2); color: var(--ink); border: 1px solid var(--line); border-radius: 12px; min-height: 44px; padding: 0 12px; font: inherit; }
+      .toast { position: fixed; right: 18px; bottom: 18px; background: var(--panel); border: 1px solid rgba(34,197,94,.5); border-radius: 14px; padding: 12px 16px; box-shadow: var(--glow); z-index: 50; }
+      @media (max-width: 900px) { .app { grid-template-columns: 1fr; } .side { display: none; } .grid2 { grid-template-columns: 1fr; } }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <aside class="side">
+        <div class="logo">
+          <span class="tile"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M12 12l8-4.5M12 12v9M12 12L4 7.5"/></svg></span>
+          <span><b>IT&MAINT</b><small>Smart Asset · Smart Work</small></span>
+        </div>
+        <nav class="snav">
+          <p class="sgroup">ภาพรวม</p>
+          <a href="#"><span class="d"></span>หน้าหลัก</a>
+          <a href="#"><span class="d"></span>Command Center</a>
+          <p class="sgroup">ทรัพย์สิน</p>
+          <a href="#"><span class="d"></span>ทะเบียนทรัพย์สิน</a>
+          <a href="#"><span class="d"></span>ค่าเสื่อม / Depreciation</a>
+          <p class="sgroup">ซ่อมบำรุง</p>
+          <a href="#"><span class="d"></span>แจ้งซ่อม / Service Desk</a>
+          <a href="#"><span class="d"></span>CMMS (งานซ่อมบำรุง)</a>
+          <p class="sgroup">คลัง & จัดซื้อ</p>
+          <a href="#"><span class="d"></span>คลังอะไหล่</a>
+          <a href="#"><span class="d"></span>PR / PO / จัดซื้อ</a>
+          <a class="on" href="#"><span class="d"></span>ต้นทุน & งบประมาณ</a>
+          <p class="sgroup">วิเคราะห์</p>
+          <a href="#"><span class="d"></span>รายงาน / Dashboard</a>
+          <a href="#"><span class="d"></span>EAM & Predictive</a>
+          <p class="sgroup">ระบบ</p>
+          <a href="#"><span class="d"></span>ตั้งค่า / จัดการระบบ</a>
+        </nav>
+      </aside>
+
+      <div class="main">
+        <header class="top">
+          <select aria-label="เลือกไซต์"><option>ทุกไซต์</option><option>โรงงานสมุทรสาคร</option><option>โรงงานระยอง</option></select>
+          <div class="search">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+            <input placeholder="ค้นหา งบประมาณ / ศูนย์ต้นทุน / ใบสั่งงาน…" />
+            <span class="kbd">Ctrl + K</span>
+          </div>
+          <button class="btn primary" type="button">+ แจ้งซ่อม</button>
+          <button class="ibtn" type="button" aria-label="การแจ้งเตือน"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9a6 6 0 1112 0c0 5 2 6 2 6H4s2-1 2-6z"/><path d="M10 20a2 2 0 004 0"/></svg><span class="dotbadge"></span></button>
+          <span class="avatar"><span class="circle">A</span><span>Admin<small>ผู้ดูแลระบบ</small></span></span>
+        </header>
+
+        <div class="wrap">
+          <div>
+            <h1>ต้นทุน & งบประมาณ</h1>
+            <p class="sub">ปีงบประมาณ ต.ค.–ก.ย. · OPEX จากใบสั่งงานจริง · CAPEX จากทรัพย์สินที่ซื้อ + แผนลงทุนที่อนุมัติ</p>
+          </div>
+
+          <div class="row">
+            <select aria-label="ปีงบประมาณ"><option>ปีงบ 2569</option><option>ปีงบ 2568 (ปิดแล้ว)</option><option>ปีงบ 2570</option></select>
+            <select aria-label="ไซต์"><option>ทุกไซต์</option><option>โรงงานสมุทรสาคร</option><option>โรงงานระยอง</option></select>
+            <button class="btn ghost" type="button" id="xls">⬇ ส่งออก Excel</button>
+            <span style="flex:1"></span>
+            <div class="tabs">
+              <button class="tab on" type="button" data-tab="ov">ภาพรวมงบ</button>
+              <button class="tab" type="button" data-tab="cap">แผนลงทุน</button>
+            </div>
+          </div>
+
+          <section id="ov">
+            <div class="kpis">
+              <div class="card kpi"><span class="tile t1"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M4 19V5M4 19h16"/><path d="M8 15v-4M13 15V8M18 15v-6"/></svg></span><p class="lab">งบ OPEX</p><p class="fig">4,800,000</p><p class="note">บาท · ทั้งปีงบ 2569</p></div>
+              <div class="card kpi"><span class="tile t2"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 3v18M7 7h7a3 3 0 010 6H8a3 3 0 000 6h8"/></svg></span><p class="lab">OPEX จริง</p><p class="fig">4,860</p><p class="note">0.1% ของงบ</p></div>
+              <div class="card kpi"><span class="tile t3"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><p class="lab">OPEX คงเหลือ</p><p class="fig">4,795,140</p><p class="note">บาท</p></div>
+              <div class="card kpi"><span class="tile t4"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M3 20h18"/><rect x="5" y="9" width="5" height="11"/><rect x="14" y="4" width="5" height="16"/></svg></span><p class="lab">งบ CAPEX</p><p class="fig">6,000,000</p><p class="note">บาท · แผนลงทุนที่อนุมัติ</p></div>
+              <div class="card kpi"><span class="tile t2"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M20 7H4a1 1 0 00-1 1v9a1 1 0 001 1h16a1 1 0 001-1V8a1 1 0 00-1-1z"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg></span><p class="lab">CAPEX จริง+ผูกพัน</p><p class="fig">380,000</p><p class="note">จริง 0 · ผูกพัน 380,000</p></div>
+              <div class="card kpi"><span class="tile t1"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 019 9h-9z"/></svg></span><p class="lab">CAPEX คงเหลือ</p><p class="fig">5,620,000</p><p class="note">ใช้แล้ว 6.3%</p></div>
+            </div>
+
+            <div class="grid2" style="margin-top:16px">
+              <figure class="card" style="margin:0">
+                <p class="ctitle">OPEX รายเดือน & สะสมเทียบงบ</p>
+                <p class="cnote">ต.ค. 2568 – ก.ย. 2569 · บาท</p>
+                <svg class="chart" viewBox="0 0 640 280" role="img" aria-label="OPEX สะสมยังต่ำกว่าเส้นงบมาก ใช้จริงเพียง 4,860 บาท"><g id="opexsvg"></g></svg>
+                <div class="legend"><span><i style="background:#2b6cff"></i>OPEX รายเดือน</span><span><i style="background:#ff8a2b"></i>สะสม</span><span><i style="background:#8aa0d8"></i>เส้นงบสะสม</span></div>
+              </figure>
+              <figure class="card" style="margin:0">
+                <p class="ctitle">การใช้งบ CAPEX</p>
+                <p class="cnote">6,000,000 บาท · ปีงบ 2569</p>
+                <svg class="chart" viewBox="0 0 300 240" role="img" aria-label="CAPEX ใช้แล้ว 6.3% เป็นยอดผูกพันทั้งหมด">
+                  <g transform="translate(150,110)">
+                    <circle r="78" fill="none" stroke="#1b2650" stroke-width="26"/>
+                    <circle r="78" fill="none" stroke="#ff8a2b" stroke-width="26" stroke-dasharray="30.8 459.2" transform="rotate(-90)" stroke-linecap="butt"/>
+                    <text text-anchor="middle" y="-2" font-size="26" font-weight="600" fill="#eaf0ff">6.3%</text>
+                    <text text-anchor="middle" y="20" font-size="12" fill="#93a3c9">ใช้แล้ว</text>
+                  </g>
+                </svg>
+                <div class="legend"><span><i style="background:#2b6cff"></i>จริง 0</span><span><i style="background:#ff8a2b"></i>ผูกพัน 380,000</span><span><i style="background:#1b2650"></i>คงเหลือ 5,620,000</span></div>
+              </figure>
+            </div>
+
+            <div class="card" style="margin-top:16px">
+              <div class="row" style="justify-content:space-between">
+                <div><p class="ctitle">บรรทัดงบประมาณ</p><p class="cnote" style="margin:0">แยกตามไซต์ / ศูนย์ต้นทุน และหมวดค่าใช้จ่าย</p></div>
+                <button class="btn primary" type="button" id="addbtn">+ เพิ่มงบ</button>
+              </div>
+              <div class="tw" style="margin-top:12px">
+                <table>
+                  <thead><tr><th>ประเภท</th><th>ไซต์ / ศูนย์ต้นทุน</th><th>หมวด</th><th class="num">งบ</th><th class="num">จริง</th><th>การใช้</th></tr></thead>
+                  <tbody id="rows">
+                    <tr><td><span class="chip opex">OPEX</span></td><td>โรงงานสมุทรสาคร / CC-1001 ซ่อมบำรุง</td><td>ค่าแรงช่างซ่อม</td><td class="num">1,800,000</td><td class="num">3,200</td><td><span class="bar"><span style="width:1%"></span></span>0.2%</td></tr>
+                    <tr><td><span class="chip opex">OPEX</span></td><td>โรงงานสมุทรสาคร / CC-1002 คลังอะไหล่</td><td>อะไหล่ & วัสดุสิ้นเปลือง</td><td class="num">1,200,000</td><td class="num">1,660</td><td><span class="bar"><span style="width:1%"></span></span>0.1%</td></tr>
+                    <tr><td><span class="chip opex">OPEX</span></td><td>โรงงานระยอง / CC-2001 ผลิต</td><td>สัญญาบำรุงรักษาภายนอก</td><td class="num">1,000,000</td><td class="num">0</td><td><span class="bar"><span style="width:0%"></span></span>0.0%</td></tr>
+                    <tr><td><span class="chip opex">OPEX</span></td><td>โรงงานสมุทรสาคร / CC-3001 IT</td><td>License & Cloud</td><td class="num">800,000</td><td class="num">0</td><td><span class="bar"><span style="width:0%"></span></span>0.0%</td></tr>
+                    <tr><td><span class="chip capex">CAPEX</span></td><td>โรงงานสมุทรสาคร / CC-1001 ซ่อมบำรุง</td><td>เครื่องจักรทดแทน</td><td class="num">4,500,000</td><td class="num">0</td><td><span class="bar"><span style="width:0%"></span></span>0.0%</td></tr>
+                    <tr><td><span class="chip capex">CAPEX</span></td><td>โรงงานสมุทรสาคร / CC-3001 IT</td><td>เซิร์ฟเวอร์ & เครือข่าย</td><td class="num">1,500,000</td><td class="num">380,000</td><td><span class="bar"><span style="width:25%"></span></span>25.3%</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <section id="cap" class="hide">
+            <div class="plan">
+              <article class="card">
+                <span class="chip warn">รออนุมัติ</span>
+                <h3>เปลี่ยนเครื่อง CNC เก่า</h3>
+                <p class="amt">2,500,000 <span style="font-size:12px;color:var(--ink2)">บาท</span></p>
+                <dl class="meta"><dt>ไซต์</dt><dd>โรงงานสมุทรสาคร</dd><dt>ROI</dt><dd>22%</dd><dt>Payback</dt><dd>4.5 ปี</dd><dt>เริ่ม</dt><dd>ไตรมาส 2/2569</dd></dl>
+                <p class="sub">เครื่องอายุ 14 ปี ค่าซ่อมต่อปีสูงและหยุดสายผลิตบ่อย</p>
+                <div class="row" style="margin-top:12px"><button class="btn primary" type="button" data-approve>อนุมัติ</button><button class="btn ghost" type="button">ดูรายละเอียด</button></div>
+              </article>
+              <article class="card">
+                <span class="chip ok">อนุมัติ · ผูกพัน</span>
+                <h3>อัปเกรดเซิร์ฟเวอร์</h3>
+                <p class="amt">380,000 <span style="font-size:12px;color:var(--ink2)">บาท</span></p>
+                <dl class="meta"><dt>ไซต์</dt><dd>โรงงานสมุทรสาคร</dd><dt>ROI</dt><dd>31%</dd><dt>Payback</dt><dd>2.8 ปี</dd><dt>สถานะ PO</dt><dd>ผูกพันแล้ว</dd></dl>
+                <p class="sub">รองรับระบบ CMMS และ DAM เพิ่มพื้นที่จัดเก็บ 3 เท่า</p>
+                <div class="row" style="margin-top:12px"><button class="btn ghost" type="button">ติดตาม PO</button></div>
+              </article>
+              <article class="card">
+                <span class="chip">ร่าง</span>
+                <h3>ระบบ IoT เฟส 2</h3>
+                <p class="amt">900,000 <span style="font-size:12px;color:var(--ink2)">บาท</span></p>
+                <dl class="meta"><dt>ไซต์</dt><dd>โรงงานระยอง</dd><dt>ROI</dt><dd>18%</dd><dt>Payback</dt><dd>5.2 ปี</dd><dt>เริ่ม</dt><dd>ไตรมาส 4/2569</dd></dl>
+                <p class="sub">เซ็นเซอร์สั่นสะเทือน 120 จุด ต่อยอด Predictive Maintenance</p>
+                <div class="row" style="margin-top:12px"><button class="btn primary" type="button" data-approve>ส่งขออนุมัติ</button><button class="btn ghost" type="button">แก้ไขร่าง</button></div>
+              </article>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+
+    <dialog id="dlg">
+      <h3 style="margin:0 0 6px">เพิ่มบรรทัดงบประมาณ</h3>
+      <p class="sub" style="margin-bottom:8px">ปีงบ 2569</p>
+      <form method="dialog" id="frm">
+        <label class="f">ประเภท<select name="type"><option>OPEX</option><option>CAPEX</option></select></label>
+        <label class="f">ไซต์<select name="site"><option>โรงงานสมุทรสาคร</option><option>โรงงานระยอง</option></select></label>
+        <label class="f">ศูนย์ต้นทุน<input name="cc" value="CC-1003 สาธารณูปโภค" /></label>
+        <label class="f">หมวด<input name="cat" value="ค่าไฟฟ้า & น้ำ" /></label>
+        <label class="f">จำนวนเงิน (บาท)<input name="amt" type="number" value="500000" /></label>
+        <div id="extra"></div>
+        <button class="btn ghost" type="button" id="morefield" style="margin:6px 0 12px">+ เพิ่มฟิลด์</button>
+        <div class="row" style="justify-content:flex-end"><button class="btn ghost" value="cancel" type="submit">ยกเลิก</button><button class="btn primary" id="save" value="ok" type="submit">บันทึกงบ</button></div>
+      </form>
+    </dialog>
+
+    <script>
+      // tabs
+      document.querySelectorAll(".tab").forEach(function (t) {
+        t.onclick = function () {
+          document.querySelectorAll(".tab").forEach(function (x) { x.classList.remove("on"); });
+          t.classList.add("on");
+          document.getElementById("ov").classList.toggle("hide", t.dataset.tab !== "ov");
+          document.getElementById("cap").classList.toggle("hide", t.dataset.tab !== "cap");
+        };
+      });
+
+      // OPEX chart
+      (function () {
+        var m = ["ต.ค.","พ.ย.","ธ.ค.","ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย."];
+        var v = [3200, 1660, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        var budget = 4800000, x0 = 46, y0 = 230, w = 580, h = 190, step = w / 12, max = 400000, out = "";
+        for (var i = 0; i <= 4; i++) {
+          var gy = y0 - (h * i) / 4, lab = (max * i) / 4;
+          out += '<line x1="' + x0 + '" y1="' + gy + '" x2="' + (x0 + w) + '" y2="' + gy + '" stroke="rgba(90,140,255,.15)"/>';
+          out += '<text x="' + (x0 - 6) + '" y="' + (gy + 4) + '" text-anchor="end" font-size="10" fill="#7f8db3">' + (lab / 1000) + 'k</text>';
+        }
+        var cum = 0, pts = [], cpts = [];
+        for (var j = 0; j < 12; j++) {
+          cum += v[j];
+          var cx = x0 + step * j + step / 2;
+          var bh = Math.max(v[j] ? 3 : 0, (v[j] / max) * h);
+          out += '<rect x="' + (cx - 11) + '" y="' + (y0 - bh) + '" width="22" height="' + bh + '" rx="3" fill="#2b6cff"/>';
+          out += '<text x="' + cx + '" y="' + (y0 + 16) + '" text-anchor="middle" font-size="10" fill="#7f8db3">' + m[j] + '</text>';
+          pts.push(cx + "," + (y0 - (cum / max) * h));
+          cpts.push(cx + "," + (y0 - (budget * ((j + 1) / 12) / budget) * h * 0.98));
+        }
+        out += '<polyline points="' + pts.join(" ") + '" fill="none" stroke="#ff8a2b" stroke-width="2"/>';
+        out += '<polyline points="' + cpts.join(" ") + '" fill="none" stroke="#8aa0d8" stroke-width="1.5" stroke-dasharray="4 4"/>';
+        out += '<text x="' + (x0 + w) + '" y="36" text-anchor="end" font-size="10" fill="#8aa0d8">เส้นงบสะสม 4,800,000</text>';
+        out += '<line x1="' + x0 + '" y1="' + y0 + '" x2="' + (x0 + w) + '" y2="' + y0 + '" stroke="rgba(90,140,255,.35)"/>';
+        document.getElementById("opexsvg").innerHTML = out;
+      })();
+
+      function toast(msg) {
+        var el = document.createElement("div");
+        el.className = "toast";
+        el.textContent = "✓ " + msg;
+        document.body.appendChild(el);
+        setTimeout(function () { el.remove(); }, 2600);
+      }
+
+      var dlg = document.getElementById("dlg");
+      document.getElementById("addbtn").onclick = function () { dlg.showModal(); };
+      document.getElementById("morefield").onclick = function () {
+        var l = document.createElement("label");
+        l.className = "f";
+        l.innerHTML = 'ฟิลด์เพิ่มเติม<input placeholder="เช่น ผู้รับผิดชอบ / เลขที่อ้างอิง" />';
+        document.getElementById("extra").appendChild(l);
+      };
+      document.getElementById("frm").onsubmit = function (e) {
+        if (dlg.returnValue === "cancel" || e.submitter.value === "cancel") return;
+        var f = e.target, type = f.type.value, amt = Number(f.amt.value) || 0;
+        var tr = document.createElement("tr");
+        tr.innerHTML =
+          '<td><span class="chip ' + (type === "CAPEX" ? "capex" : "opex") + '">' + type + "</span></td>" +
+          "<td>" + f.site.value + " / " + f.cc.value + "</td><td>" + f.cat.value + "</td>" +
+          '<td class="num">' + amt.toLocaleString("th-TH") + '</td><td class="num">0</td>' +
+          '<td><span class="bar"><span style="width:0%"></span></span>0.0%</td>';
+        document.getElementById("rows").appendChild(tr);
+        toast("เพิ่มบรรทัดงบ " + f.cat.value + " แล้ว");
+      };
+      var msgs = { "+ แจ้งซ่อม": "เปิดฟอร์มแจ้งซ่อมใหม่", "ดูรายละเอียด": "เปิดรายละเอียดโครงการ", "ติดตาม PO": "PO-2569-0142 · รอส่งมอบ", "แก้ไขร่าง": "เปิดร่างโครงการเพื่อแก้ไข" };
+      document.querySelectorAll(".top .btn.primary, .plan .btn.ghost").forEach(function (b) {
+        b.addEventListener("click", function () { toast(msgs[b.textContent.trim()] || b.textContent); });
+      });
+      document.querySelector(".ibtn").onclick = function () {
+        var d = this.querySelector(".dotbadge"); if (d) d.remove();
+        toast("แจ้งเตือน: งบ CAPEX ผูกพันใหม่ 380,000 บาท");
+      };
+      document.getElementById("xls").onclick = function () { toast("กำลังส่งออกไฟล์ Excel งบประมาณ 2569"); };
+      document.querySelectorAll("[data-approve]").forEach(function (b) {
+        b.onclick = function () {
+          var card = b.closest(".card"), chip = card.querySelector(".chip");
+          var draft = b.textContent.indexOf("ส่ง") === 0;
+          chip.className = draft ? "chip warn" : "chip ok";
+          chip.textContent = draft ? "รออนุมัติ" : "อนุมัติ · ผูกพัน";
+          b.disabled = true;
+          b.style.opacity = ".5";
+          toast((draft ? "ส่งขออนุมัติ " : "อนุมัติ ") + card.querySelector("h3").textContent + " แล้ว");
+        };
+      });
+      document.addEventListener("keydown", function (e) {
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") { e.preventDefault(); document.querySelector(".search input").focus(); }
+      });
+    </script>
+  </body>
+</html>
