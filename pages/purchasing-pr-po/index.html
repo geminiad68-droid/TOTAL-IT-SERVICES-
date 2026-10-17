@@ -1,0 +1,512 @@
+<!doctype html>
+<html lang="th" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>IT&MAINT — จัดซื้อ PR/PO &amp; สัญญา</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400&display=swap"
+    />
+    <link rel="stylesheet" href="../../assets/hark.css" />
+    <link rel="stylesheet" href="../../assets/hark-hero.css" />
+    <style>
+      :root {
+        --x-bg: #0a1024;
+        --x-panel: #0e1630;
+        --x-panel-2: #111b38;
+        --x-line: #1f3a6e;
+        --x-glow: 0 0 0 1px #2a4d8f, 0 0 18px #1b4fa033;
+        --x-ink: #eaf0ff;
+        --x-ink-2: #93a3c9;
+        --x-orange: #ff6a00;
+        --x-pink: #ff2d8f;
+        --x-grad: linear-gradient(120deg, #e8520a, #d2156e);
+      }
+      body { background: var(--x-bg); color: var(--x-ink); }
+      .x-app { display: grid; grid-template-columns: 252px minmax(0, 1fr); min-height: 100vh; }
+      .x-side { background: #080d1e; border-right: 1px solid #16213f; padding: 14px 12px 28px; }
+      .x-logo { display: flex; gap: 10px; align-items: center; padding: 8px 8px 16px; }
+      .x-logo b { display: block; font: var(--weight-bold) 18px/1.2 var(--sans); letter-spacing: .02em; }
+      .x-logo span { color: var(--x-ink-2); font: var(--type-caption); }
+      .x-grp { color: #6f80a8; font: var(--type-tag); letter-spacing: .08em; text-transform: uppercase; padding: 16px 10px 6px; }
+      .x-nav a {
+        display: flex; align-items: center; gap: 10px; min-height: var(--tap);
+        padding: 8px 10px; border-radius: var(--r-s); color: #c3cfe8; font: var(--type-small);
+        text-decoration: none; border: 1px solid transparent;
+      }
+      .x-nav a:hover { background: #101a35; }
+      .x-nav a[aria-current="page"] { background: linear-gradient(90deg, #15224a, #101a35); border-color: var(--x-line); box-shadow: var(--x-glow); color: #fff; }
+      .x-nav .x-badge { margin-left: auto; background: #c8102e; color: #fff; font: var(--type-tag); border-radius: var(--r-pill); padding: 2px 7px; }
+      .x-ico { width: 26px; height: 26px; border-radius: 8px; display: grid; place-items: center; background: #15224a; flex: none; }
+      .x-main { min-width: 0; display: flex; flex-direction: column; }
+      .x-top {
+        display: flex; gap: 12px; align-items: center; padding: 12px 20px;
+        border-bottom: 1px solid #16213f; background: #080d1e; position: sticky; top: 0; z-index: 5; flex-wrap: wrap;
+      }
+      .x-search { flex: 1 1 260px; display: flex; align-items: center; gap: 8px; min-height: var(--tap); padding: 0 12px; background: #0d1530; border: 1px solid #1b2a52; border-radius: var(--r-pill); color: var(--x-ink-2); font: var(--type-small); }
+      .x-search kbd { margin-left: auto; font: var(--weight-regular) 12px/1 "Geist Mono", monospace; background: #17244a; border: 1px solid #263a6c; border-radius: 6px; padding: 5px 7px; color: #b9c6e4; }
+      .x-sel, .x-ghost {
+        min-height: var(--tap); background: #0d1530; color: var(--x-ink); border: 1px solid #1b2a52;
+        border-radius: var(--r-pill); padding: 0 14px; font: var(--type-small); cursor: pointer;
+      }
+      .x-cta {
+        min-height: var(--tap); border: 0; border-radius: var(--r-pill); background: var(--x-grad);
+        color: #fff; font: var(--type-label); padding: 0 18px; cursor: pointer;
+      }
+      .x-cta:hover { filter: brightness(1.08); }
+      .x-avatar { display: flex; gap: 8px; align-items: center; min-height: var(--tap); }
+      .x-avatar div span { display: block; color: var(--x-ink-2); font: var(--type-caption); }
+      .x-dot-n { position: relative; }
+      .x-dot-n::after { content: "3"; position: absolute; top: -2px; right: -4px; background: #c8102e; color: #fff; font: var(--weight-medium) 12px/1 var(--sans); border-radius: var(--r-pill); padding: 3px 5px; }
+      .x-body { padding: 20px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; align-content: start; min-width: 0; }
+      .x-body > * { min-width: 0; }
+      @media (max-width: 600px) { .x-body { padding: 14px; } .x-top { padding: 10px 14px; } .x-avatar div { display: none; } }
+      .x-h1 { font: var(--type-heading); }
+      .x-h1 + p { color: var(--x-ink-2); font: var(--type-small); margin-top: 4px; }
+      .x-card { background: var(--x-panel); border: 1px solid var(--x-line); border-radius: var(--r-m); box-shadow: var(--x-glow); }
+      .x-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+      .x-kpi { padding: 14px; display: grid; gap: 8px; }
+      .x-kpi .x-tile { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; }
+      .x-kpi b { font: var(--weight-medium) 26px/1.1 var(--sans); }
+      .x-kpi span { color: var(--x-ink-2); font: var(--type-caption); }
+      .x-tabs { display: flex; gap: 6px; padding: 6px; border-radius: var(--r-pill); background: #0c1430; border: 1px solid #1b2a52; width: fit-content; max-width: 100%; flex-wrap: wrap; }
+      .x-tab { min-height: var(--tap); border: 0; background: transparent; color: var(--x-ink-2); font: var(--type-label); padding: 0 16px; border-radius: var(--r-pill); cursor: pointer; }
+      .x-tab[aria-selected="true"] { background: var(--x-grad); color: #fff; }
+      .x-filters { display: flex; gap: 10px; flex-wrap: wrap; padding: 12px 14px; }
+      .x-filters input, .x-filters select { flex: 1 1 200px; min-height: var(--tap); background: #0b1228; color: var(--x-ink); border: 1px solid #1b2a52; border-radius: var(--r-s); padding: 0 12px; font: var(--type-small); }
+      table.x-t { width: 100%; border-collapse: collapse; }
+      table.x-t th { text-align: left; color: #7f90b8; font: var(--type-tag); letter-spacing: .04em; padding: 12px 14px; border-bottom: 1px solid #1b2a52; white-space: nowrap; }
+      table.x-t td { padding: 12px 14px; border-bottom: 1px solid #152445; font: var(--type-small); vertical-align: middle; }
+      table.x-t tbody tr { cursor: pointer; }
+      table.x-t tbody tr:hover { background: #121c3c; }
+      table.x-t tbody tr:last-child td { border-bottom: 0; }
+      .x-mono { font: var(--weight-regular) 14px/1.3 "Geist Mono", monospace; }
+      .x-sub { color: var(--x-ink-2); font: var(--type-caption); display: block; margin-top: 3px; }
+      .x-num { text-align: right; font: var(--weight-medium) 14px/1.3 "Geist Mono", monospace; white-space: nowrap; }
+      .x-tag { display: inline-block; font: var(--type-tag); border-radius: var(--r-pill); padding: 4px 10px; border: 1px solid; white-space: nowrap; }
+      .t-blue { color: #8ab4ff; border-color: #2b4f93; background: #142a55; }
+      .t-wait { color: #ffc46b; border-color: #7a4f12; background: #33210a; }
+      .t-ok { color: #5fe0a8; border-color: #14603f; background: #0a2b1e; }
+      .t-grey { color: #a8b6d6; border-color: #2a3a63; background: #121c3c; }
+      .t-red { color: #ff8b90; border-color: #7a2328; background: #2d1013; }
+      .x-scroll { overflow-x: auto; }
+      .x-mini { min-height: var(--tap); min-width: var(--tap); border-radius: var(--r-pill); border: 1px solid #2b4f93; background: #142a55; color: #cfe0ff; font: var(--type-tag); padding: 0 12px; cursor: pointer; }
+      .x-mini--cta { border: 0; background: var(--x-grad); color: #fff; }
+      /* drawer + modal */
+      .x-veil { position: fixed; inset: 0; background: #04060f99; backdrop-filter: blur(3px); z-index: 20; display: none; }
+      .x-veil[data-open] { display: block; }
+      .x-drawer {
+        position: fixed; top: 0; right: 0; bottom: 0; width: min(520px, 100%); background: var(--x-panel-2);
+        border-left: 1px solid var(--x-line); z-index: 21; transform: translateX(100%);
+        transition: transform var(--dur-quick) var(--ease-out); overflow-y: auto; padding: 18px;
+      }
+      .x-drawer[data-open] { transform: none; }
+      .x-modal {
+        position: fixed; z-index: 22; inset: auto; left: 50%; top: 50%; transform: translate(-50%, -48%);
+        width: min(620px, calc(100% - 24px)); max-height: 88vh; overflow-y: auto; background: var(--x-panel-2);
+        border: 1px solid var(--x-line); border-radius: var(--r-m); box-shadow: 0 24px 80px #00000080; padding: 18px; display: none;
+      }
+      .x-modal[data-open] { display: block; }
+      .x-xrow { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 14px; }
+      .x-xrow h3 { font: var(--type-heading); }
+      .x-x { margin-left: auto; width: var(--tap); height: var(--tap); border-radius: var(--r-pill); background: #16224a; border: 1px solid #27396b; color: #cfe0ff; font-size: 18px; cursor: pointer; flex: none; }
+      .x-track { display: grid; gap: 0; margin: 4px 0 18px; }
+      .x-step { display: grid; grid-template-columns: 26px minmax(0, 1fr); gap: 12px; }
+      .x-step .x-bul { width: 18px; height: 18px; border-radius: var(--r-pill); border: 2px solid #2b4f93; margin: 2px 4px; }
+      .x-step.is-done .x-bul { background: var(--fill-system-green); border-color: var(--fill-system-green); }
+      .x-step.is-now .x-bul { background: var(--x-orange); border-color: var(--x-orange); box-shadow: 0 0 0 5px #ff6a0033, 0 0 18px #ff6a00cc; }
+      .x-step .x-leg { grid-column: 1; width: 2px; height: 20px; background: #233a6b; margin-left: 12px; }
+      .x-step p { font: var(--type-small); }
+      .x-step.is-now p { color: #ffd0ab; font: var(--type-label); }
+      .x-step small { color: var(--x-ink-2); }
+      .x-f { display: grid; gap: 6px; margin-bottom: 12px; }
+      .x-f label { color: var(--x-ink-2); font: var(--type-caption); }
+      .x-f input, .x-f select { min-height: var(--tap); background: #0b1228; color: var(--x-ink); border: 1px solid #1b2a52; border-radius: var(--r-s); padding: 0 12px; font: var(--type-small); width: 100%; box-sizing: border-box; }
+      .x-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+      .x-err { color: #ff8b90; font: var(--type-caption); margin: 0; }
+      .x-err:empty { display: none; }
+      .x-li .x-err { grid-column: 1 / -1; margin-top: -2px; }
+      .x-lines-err { margin: 0 0 10px; }
+      [aria-invalid="true"] { border-color: #ff5c66 !important; box-shadow: 0 0 0 1px #ff5c6655; }
+      .x-li { display: grid; grid-template-columns: minmax(0, 1fr) 72px 72px 96px 44px; gap: 8px; margin-bottom: 8px; }
+      .x-li input, .x-li select, .x-del { min-height: var(--tap); background: #0b1228; color: var(--x-ink); border: 1px solid #1b2a52; border-radius: 10px; padding: 0 10px; font: var(--type-small); width: 100%; box-sizing: border-box; }
+      .x-del { border: 1px solid #27396b; background: #16224a; color: #cfe0ff; border-radius: 10px; cursor: pointer; }
+      .x-foot { display: flex; gap: 10px; justify-content: flex-end; margin-top: 16px; flex-wrap: wrap; }
+      .x-total { display: flex; justify-content: space-between; align-items: center; padding: 12px 14px; background: #0b1228; border: 1px solid #1b2a52; border-radius: var(--r-s); margin-top: 8px; }
+      .x-toast {
+        position: fixed; left: 50%; bottom: 26px; transform: translate(-50%, 16px); z-index: 30;
+        background: #0e1630; border: 1px solid var(--x-line); box-shadow: var(--x-glow); color: var(--x-ink);
+        border-radius: var(--r-pill); padding: 12px 20px; font: var(--type-label); opacity: 0; pointer-events: none;
+        transition: opacity var(--dur-quick) var(--ease-out), transform var(--dur-quick) var(--ease-out);
+      }
+      .x-toast[data-open] { opacity: 1; transform: translate(-50%, 0); }
+      .x-hide { display: none !important; }
+      @media (max-width: 900px) {
+        .x-app { grid-template-columns: minmax(0, 1fr); }
+        .x-side { display: none; }
+        .x-2, .x-li { grid-template-columns: minmax(0, 1fr); }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="x-app">
+      <aside class="x-side">
+        <div class="x-logo">
+          <svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2ea8ff"/><stop offset="1" stop-color="#8a5bff"/></linearGradient></defs><rect width="34" height="34" rx="10" fill="url(#lg)"/><path d="M11 23V14l6-4 6 4v9" stroke="#fff" stroke-width="2" fill="none"/><circle cx="17" cy="18" r="2.4" fill="#fff"/></svg>
+          <div><b>IT&amp;MAINT</b><span>Smart Asset · Smart Work</span></div>
+        </div>
+        <nav class="x-nav" aria-label="เมนูหลัก">
+          <p class="x-grp">ภาพรวม</p>
+          <a href="#"><span class="x-ico">🏠</span>หน้าหลัก</a>
+          <a href="#"><span class="x-ico">📊</span>Command Center</a>
+          <p class="x-grp">ทรัพย์สิน</p>
+          <a href="#"><span class="x-ico">🗄️</span>ทะเบียนทรัพย์สิน</a>
+          <a href="#"><span class="x-ico">💻</span>IT Asset &amp; License</a>
+          <p class="x-grp">ซ่อมบำรุง</p>
+          <a href="#"><span class="x-ico">🛠️</span>แจ้งซ่อม / Service Desk<span class="x-badge">5</span></a>
+          <a href="#"><span class="x-ico">🧰</span>งานซ่อม (WO)</a>
+          <p class="x-grp">คลัง &amp; จัดซื้อ</p>
+          <a href="#"><span class="x-ico">📦</span>คลังอะไหล่<span class="x-badge">3</span></a>
+          <a href="#" aria-current="page"><span class="x-ico">🧾</span>จัดซื้อ PR/PO &amp; สัญญา</a>
+          <a href="#"><span class="x-ico">💰</span>ต้นทุน &amp; งบประมาณ</a>
+          <p class="x-grp">วิเคราะห์</p>
+          <a href="#"><span class="x-ico">📈</span>รายงาน / Dashboard</a>
+          <p class="x-grp">ระบบ</p>
+          <a href="#"><span class="x-ico">⚙️</span>ตั้งค่า / จัดการระบบ</a>
+        </nav>
+      </aside>
+
+      <div class="x-main">
+        <header class="x-top">
+          <select class="x-sel" aria-label="เลือกไซต์">
+            <option>ทุกไซต์</option>
+            <option>โรงงานสมุทรสาคร</option>
+            <option>โรงงานระยอง</option>
+          </select>
+          <div class="x-search"><span aria-hidden="true">🔍</span>ค้นหา PR/PO, ผู้ขาย, สัญญา…<kbd>Ctrl + K</kbd></div>
+          <button class="x-cta" id="btn-wo" type="button">+ แจ้งซ่อม</button>
+          <button class="x-ghost x-dot-n" id="btn-bell" type="button" aria-label="การแจ้งเตือน 3 รายการ">🔔</button>
+          <div class="x-avatar">
+            <span class="x-ico" style="width: 34px; height: 34px; border-radius: var(--r-pill)">A</span>
+            <div><b style="font: var(--type-label)">Gwmii indy</b><span>Admin</span></div>
+          </div>
+        </header>
+
+        <main class="x-body">
+          <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap">
+            <div>
+              <h1 class="x-h1">จัดซื้อ PR/PO &amp; สัญญา</h1>
+              <p>ใบขอซื้อ ใบสั่งซื้อ และสัญญา MA เชื่อมต่องานซ่อมและคลังอะไหล่</p>
+            </div>
+            <button class="x-cta" id="primary" type="button" style="margin-left: auto">+ ใบขอซื้อ</button>
+          </div>
+
+          <section class="x-kpis" aria-label="สรุปตัวเลข">
+            <div class="x-card x-kpi"><span class="x-tile" style="background: linear-gradient(135deg, #ff8a3d, #ff3d77)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" aria-hidden="true"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2zM9 8h6M9 12h6"/></svg></span><b>2</b><span>PR รออนุมัติ</span></div>
+            <div class="x-card x-kpi"><span class="x-tile" style="background: linear-gradient(135deg, #3d8bff, #7a5bff)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" aria-hidden="true"><path d="M3 5h3l2 11h11l2-8H7"/><circle cx="10" cy="20" r="1.5"/><circle cx="17" cy="20" r="1.5"/></svg></span><b>3</b><span>PO เปิดอยู่</span></div>
+            <div class="x-card x-kpi"><span class="x-tile" style="background: linear-gradient(135deg, #16c79a, #1fa2ff)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" aria-hidden="true"><path d="M2 6h12v10H2zM14 10h4l4 4v2h-8"/><circle cx="6" cy="18" r="2"/><circle cx="18" cy="18" r="2"/></svg></span><b>2</b><span>รอรับของ</span></div>
+            <div class="x-card x-kpi"><span class="x-tile" style="background: linear-gradient(135deg, #ffb33d, #ff5c5c)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4M12 13v3l2 1"/></svg></span><b>2</b><span>สัญญาใกล้หมด 60 วัน</span></div>
+            <div class="x-card x-kpi"><span class="x-tile" style="background: linear-gradient(135deg, #8a5bff, #2ea8ff)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></span><b>380,000</b><span>ยอดสั่งซื้อปีงบ 2569 (บาท)</span></div>
+          </section>
+
+          <div class="x-tabs" role="tablist" aria-label="มุมมองจัดซื้อ">
+            <button class="x-tab" role="tab" id="tab-pr" aria-selected="true" aria-controls="p-pr" type="button">ใบขอซื้อ (PR)</button>
+            <button class="x-tab" role="tab" id="tab-po" aria-selected="false" aria-controls="p-po" type="button">ใบสั่งซื้อ (PO)</button>
+            <button class="x-tab" role="tab" id="tab-ct" aria-selected="false" aria-controls="p-ct" type="button">สัญญา MA/บริการ</button>
+          </div>
+
+          <section class="x-card" id="p-pr" role="tabpanel" aria-labelledby="tab-pr">
+            <div class="x-filters">
+              <input id="pr-q" type="search" placeholder="ค้นหาเลขที่ / วัตถุประสงค์" aria-label="ค้นหา PR" />
+              <select id="pr-s" aria-label="สถานะ">
+                <option value="">ทุกสถานะ</option>
+                <option>ร่าง</option><option>รออนุมัติ</option><option>อนุมัติแล้ว</option>
+                <option>ไม่อนุมัติ</option><option>ออก PO แล้ว</option><option>ยกเลิก</option>
+              </select>
+            </div>
+            <div class="x-scroll">
+              <table class="x-t">
+                <thead><tr><th>เลขที่</th><th>วัตถุประสงค์ / รายการ</th><th>ผู้ขอ</th><th style="text-align: right">ยอดรวม (บาท)</th><th>สถานะ</th></tr></thead>
+                <tbody id="pr-body"></tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="x-card x-hide" id="p-po" role="tabpanel" aria-labelledby="tab-po">
+            <div class="x-scroll">
+              <table class="x-t">
+                <thead><tr><th>เลขที่ PO</th><th>ผู้ขาย</th><th>PR อ้างอิง</th><th style="text-align: right">ยอด (บาท)</th><th>กำหนดส่ง</th><th>สถานะ</th><th></th></tr></thead>
+                <tbody id="po-body"></tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="x-card x-hide" id="p-ct" role="tabpanel" aria-labelledby="tab-ct">
+            <div class="x-scroll">
+              <table class="x-t">
+                <thead><tr><th>เลขที่</th><th>ผู้ขาย</th><th>ประเภท</th><th>ทรัพย์สินที่ครอบคลุม</th><th>เริ่ม – สิ้นสุด</th><th style="text-align: right">มูลค่า/ปี (บาท)</th></tr></thead>
+                <tbody id="ct-body"></tbody>
+              </table>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <div class="x-veil" id="veil"></div>
+
+    <aside class="x-drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="dr-title" tabindex="-1"></aside>
+
+    <div class="x-modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="md-title">
+      <div class="x-xrow">
+        <div><h3 id="md-title">สร้างใบขอซื้อ (PR)</h3><p class="x-sub">PR-2569-xxxx · ผู้ขอ: Admin</p></div>
+        <button class="x-x" type="button" data-close aria-label="ปิด">✕</button>
+      </div>
+      <div class="x-2">
+        <div class="x-f"><label for="m-type">ประเภท</label><select id="m-type"><option>ขอซื้อทั่วไป</option><option>เติมสต็อก</option><option>ขอซื้อเร่งด่วน</option></select></div>
+        <div class="x-f"><label for="m-bud">งบประมาณ</label><select id="m-bud"><option>OPEX</option><option>CAPEX</option></select></div>
+      </div>
+      <div class="x-f"><label for="m-purpose">วัตถุประสงค์ / เหตุผล *</label><input id="m-purpose" required aria-describedby="e-purpose" placeholder="เช่น ต่ออายุไลเซนส์ / เติมสต็อกอะไหล่" /><p class="x-err" id="e-purpose" role="alert"></p></div>
+      <div class="x-2">
+        <div class="x-f"><label for="m-site">ไซต์ *</label><select id="m-site" required aria-describedby="e-site"><option value="">— เลือกไซต์ —</option><option>โรงงานสมุทรสาคร</option><option>โรงงานระยอง</option></select><p class="x-err" id="e-site" role="alert"></p></div>
+        <div class="x-f"><label for="m-cc">ศูนย์ต้นทุน</label><input id="m-cc" value="CC-IT-01" /></div>
+      </div>
+      <p class="x-sub" style="margin: 6px 0 8px">รายการ (Line items)</p>
+      <div id="lines"></div>
+      <p class="x-err x-lines-err" id="e-lines" role="alert"></p>
+      <div style="display: flex; gap: 10px; flex-wrap: wrap">
+        <button class="x-mini" type="button" id="add-line">+ เพิ่มรายการ</button>
+        <button class="x-mini" type="button" id="add-field">+ เพิ่มฟิลด์</button>
+      </div>
+      <div id="extra"></div>
+      <div class="x-total"><span class="x-sub" style="margin: 0">ยอดรวมทั้งสิ้น</span><b class="x-num" id="m-total">0.00</b></div>
+      <div class="x-foot">
+        <button class="x-ghost" type="button" data-close>ยกเลิก</button>
+        <button class="x-cta" type="button" id="m-save">บันทึกและส่งอนุมัติ</button>
+      </div>
+    </div>
+
+    <div class="x-toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script src="../../assets/hark.js"></script>
+    <script>
+      document.documentElement.setAttribute("data-theme", "dark");
+      var PR = [
+        { no: "PR-2569-0003", date: "1 ต.ค. 2568", type: "ขอซื้อทั่วไป", purpose: "ต่ออายุไลเซนส์ ESET Endpoint 100 เครื่อง", n: 1, by: "admin", amt: 58000, st: "รออนุมัติ",
+          items: [["ESET Endpoint Protection Advanced (100 seats / 1 ปี)", 1, "ชุด", 58000]], link: "ผูกกับ IT Asset: ESET License · ครบกำหนด 31 ต.ค. 2568", step: 1 },
+        { no: "PR-2569-0002", date: "28 ก.ย. 2568", type: "เติมสต็อก", purpose: "เติมสต็อกอะไหล่คงคลังต่ำกว่าจุดสั่งซื้อ", n: 2, by: "admin", amt: 21030, st: "รออนุมัติ",
+          items: [["ฟิลเตอร์แอร์ 24x24 นิ้ว", 20, "ชิ้น", 850], ["คอนแทคเตอร์ 3P 25A", 2, "ตัว", 2015]], link: "ผูกกับคลังอะไหล่: SP-0112, SP-0233", step: 1 },
+        { no: "PR-2569-0001", date: "15 ก.ย. 2568", type: "ขอซื้อทั่วไป", purpose: "เปลี่ยนคอมเพรสเซอร์ชิลเลอร์ อาคาร A", n: 3, by: "somchai.k", amt: 186500, st: "ออก PO แล้ว",
+          items: [["คอมเพรสเซอร์ Scroll 10TR", 1, "ตัว", 164000], ["น้ำยา R-410A", 2, "ถัง", 9500], ["ค่าแรงติดตั้ง", 1, "งาน", 3500]],
+          link: "ผูกกับ WO-2569-0142 · ทรัพย์สิน CH-001", step: 3 }
+      ];
+      var PO = [
+        ["PO-2569-0007", "บจก. เอ็นเตอร์ไพรส์ แอร์", "PR-2569-0001", 186500, "10 ต.ค. 2568", "ส่งบางส่วน"],
+        ["PO-2569-0006", "บจก. ไซเบอร์ซีเคียว", "PR-2568-0098", 128000, "5 ต.ค. 2568", "รับครบ"],
+        ["PO-2569-0005", "หจก. ไทยพาร์ท ซัพพลาย", "PR-2568-0095", 65500, "18 ต.ค. 2568", "รอส่ง"]
+      ];
+      var CT = [
+        ["CT-2567-012", "บจก. ไซเบอร์ซีเคียว", "MA", "FortiCare · Firewall FW-001", "13 ต.ค. 2567 – 12 ต.ค. 2568", 11, 96000],
+        ["CT-2567-008", "บจก. เอ็นเตอร์ไพรส์ แอร์", "บริการ", "ชิลเลอร์ CH-001, CH-002", "26 พ.ย. 2567 – 25 พ.ย. 2568", 55, 240000],
+        ["CT-2568-003", "บจก. ออฟฟิศ โซลูชัน", "เช่า", "เครื่องพิมพ์ PRN-010 ถึง PRN-018", "25 ก.พ. 2568 – 24 ก.พ. 2569", 146, 144000]
+      ];
+      var STEPS = ["PR สร้าง", "อนุมัติ", "ออก PO", "ผู้ขายจัดส่ง", "รับของ", "ขึ้นทะเบียนทรัพย์สิน"];
+      var baht = function (n) { return n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }); };
+      var tagFor = function (s) {
+        var m = { "รออนุมัติ": "t-wait", "อนุมัติแล้ว": "t-ok", "ออก PO แล้ว": "t-blue", "ร่าง": "t-grey", "ยกเลิก": "t-grey", "ไม่อนุมัติ": "t-red", "รอส่ง": "t-wait", "ส่งบางส่วน": "t-blue", "รับครบ": "t-ok" };
+        return '<span class="x-tag ' + (m[s] || "t-grey") + '">' + s + "</span>";
+      };
+
+      function renderPR() {
+        var q = document.getElementById("pr-q").value.trim().toLowerCase(), s = document.getElementById("pr-s").value;
+        var rows = PR.filter(function (p) {
+          return (!q || (p.no + " " + p.purpose).toLowerCase().indexOf(q) > -1) && (!s || p.st === s);
+        });
+        document.getElementById("pr-body").innerHTML = rows.length ? rows.map(function (p, i) {
+          return '<tr tabindex="0" data-pr="' + PR.indexOf(p) + '"><td><b class="x-mono">' + p.no + '</b><span class="x-sub">' + p.date +
+            ' · <span class="x-tag t-blue">' + p.type + "</span></span></td><td>" + p.purpose + '<span class="x-sub">' + p.n +
+            ' รายการ</span></td><td>' + p.by + '</td><td class="x-num">' + baht(p.amt) + "</td><td>" + tagFor(p.st) + "</td></tr>";
+        }).join("") : '<tr><td colspan="5" style="color: var(--x-ink-2)">ไม่พบใบขอซื้อที่ตรงเงื่อนไข</td></tr>';
+      }
+      document.getElementById("pr-q").oninput = renderPR;
+      document.getElementById("pr-s").onchange = renderPR;
+
+      function renderPO() { document.getElementById("po-body").innerHTML = PO.map(function (r) {
+        return '<tr><td><b class="x-mono">' + r[0] + "</b></td><td>" + r[1] + '</td><td class="x-mono" style="color: var(--x-ink-2)">' + r[2] +
+          '</td><td class="x-num">' + baht(r[3]) + "</td><td>" + r[4] + "</td><td>" + tagFor(r[5]) +
+          '</td><td><button class="x-mini x-mini--cta" type="button" data-recv="' + r[0] + '"' + (r[5] === "รับครบ" ? " disabled style=\"opacity:.45\"" : "") + ">รับของ</button></td></tr>";
+      }).join(""); }
+      renderPO();
+
+      document.getElementById("ct-body").innerHTML = CT.map(function (r) {
+        var cls = r[5] <= 30 ? "t-red" : r[5] <= 60 ? "t-wait" : "t-ok";
+        return '<tr><td><b class="x-mono">' + r[0] + "</b></td><td>" + r[1] + '</td><td><span class="x-tag t-blue">' + r[2] + "</span></td><td>" + r[3] +
+          "</td><td>" + r[4] + '<span class="x-sub"><span class="x-tag ' + cls + '">หมดใน ' + r[5] + ' วัน</span></span></td><td class="x-num">' + baht(r[6]) + "</td></tr>";
+      }).join("");
+
+      var veil = document.getElementById("veil"), drawer = document.getElementById("drawer"), modal = document.getElementById("modal");
+      function closeAll() { [veil, drawer, modal].forEach(function (e) { e.removeAttribute("data-open"); }); }
+      veil.onclick = closeAll;
+      document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeAll(); });
+      document.addEventListener("click", function (e) { if (e.target.closest("[data-close]")) closeAll(); });
+
+      var toast = document.getElementById("toast"), tt;
+      function say(msg) { toast.textContent = msg; toast.setAttribute("data-open", ""); clearTimeout(tt); tt = setTimeout(function () { toast.removeAttribute("data-open"); }, 2800); }
+
+      function openPR(i) {
+        var p = PR[i];
+        drawer.innerHTML = '<div class="x-xrow"><div><h3 id="dr-title">' + p.no + '</h3><p class="x-sub">' + p.date + " · " + p.type + " · ผู้ขอ " + p.by +
+          '</p></div><button class="x-x" type="button" data-close aria-label="ปิด">✕</button></div>' +
+          '<p style="font: var(--type-label); margin-bottom: 10px">' + p.purpose + "</p>" +
+          '<div class="x-track">' + STEPS.map(function (s, k) {
+            var cls = k < p.step ? "is-done" : k === p.step ? "is-now" : "";
+            return (k ? '<div class="x-step"><div class="x-leg"></div><div></div></div>' : "") +
+              '<div class="x-step ' + cls + '"><div class="x-bul"></div><div><p>' + s + "</p>" +
+              "<small>" + (k < p.step ? "เสร็จแล้ว" : k === p.step ? "ขั้นตอนปัจจุบัน" : "รอดำเนินการ") + "</small></div></div>";
+          }).join("") + "</div>" +
+          '<div class="x-scroll x-card" style="margin-bottom: 14px"><table class="x-t"><thead><tr><th>รายการ</th><th>จำนวน</th><th style="text-align: right">ราคา/หน่วย</th><th style="text-align: right">รวม</th></tr></thead><tbody>' +
+          p.items.map(function (it) {
+            return "<tr><td>" + it[0] + "</td><td>" + it[1] + " " + it[2] + '</td><td class="x-num">' + baht(it[3]) + '</td><td class="x-num">' + baht(it[1] * it[3]) + "</td></tr>";
+          }).join("") + '</tbody></table></div>' +
+          '<div class="x-total"><span class="x-sub" style="margin: 0">ยอดรวม</span><b class="x-num">' + baht(p.amt) + " บาท</b></div>" +
+          '<p class="x-sub" style="margin: 14px 0 6px">การเชื่อมโยง</p><p style="font: var(--type-small)">' + p.link +
+          ' <a class="x-mini" href="#" style="display: inline-block; line-height: 42px; text-decoration: none; margin-left: 6px">เปิดดู</a></p>' +
+          (p.st === "รออนุมัติ" ? '<div class="x-foot"><button class="x-ghost" type="button" data-act="ไม่อนุมัติ">ไม่อนุมัติ</button><button class="x-cta" type="button" data-act="อนุมัติ">อนุมัติ</button></div>'
+            : '<div class="x-foot"><button class="x-ghost" type="button" data-close>ปิด</button></div>');
+        veil.setAttribute("data-open", ""); drawer.setAttribute("data-open", ""); drawer.focus();
+        drawer.querySelectorAll("[data-act]").forEach(function (b) {
+          b.onclick = function () {
+            p.st = b.dataset.act === "อนุมัติ" ? "อนุมัติแล้ว" : "ไม่อนุมัติ";
+            if (b.dataset.act === "อนุมัติ") p.step = 2;
+            renderPR(); closeAll(); say(p.no + " " + b.dataset.act + "เรียบร้อย");
+          };
+        });
+      }
+      document.getElementById("pr-body").addEventListener("click", function (e) {
+        var tr = e.target.closest("tr[data-pr]"); if (tr) openPR(+tr.dataset.pr);
+      });
+      document.getElementById("pr-body").addEventListener("keydown", function (e) {
+        var tr = e.target.closest("tr[data-pr]");
+        if (tr && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); openPR(+tr.dataset.pr); }
+      });
+      document.getElementById("po-body").addEventListener("click", function (e) {
+        var b = e.target.closest("[data-recv]");
+        if (!b || b.disabled) return;
+        PO.forEach(function (r) { if (r[0] === b.dataset.recv) r[5] = "รับครบ"; });
+        renderPO(); say("บันทึกรับของ " + b.dataset.recv + " ครบแล้ว · อัปเดตคลังอะไหล่");
+      });
+
+      var LABELS = ["ใบขอซื้อ", "ใบสั่งซื้อ", "สัญญา"], tabs = [].slice.call(document.querySelectorAll(".x-tab"));
+      tabs.forEach(function (t, i) {
+        t.onclick = function () {
+          tabs.forEach(function (o, k) {
+            o.setAttribute("aria-selected", k === i ? "true" : "false");
+            document.getElementById(o.getAttribute("aria-controls")).classList.toggle("x-hide", k !== i);
+          });
+          document.getElementById("primary").textContent = "+ " + LABELS[i];
+        };
+      });
+
+      var lines = document.getElementById("lines");
+      function addLine(name, qty, unit, price) {
+        var d = document.createElement("div");
+        d.className = "x-li";
+        d.innerHTML = '<input class="l-n" placeholder="รายการ" value="' + (name || "") + '" aria-label="รายการ" />' +
+          '<input class="l-q" type="number" min="1" value="' + (qty || 1) + '" aria-label="จำนวน" />' +
+          '<select class="l-u" aria-label="หน่วย"><option>ชิ้น</option><option>ชุด</option><option>ตัว</option><option>งาน</option></select>' +
+          '<input class="l-p" type="number" min="0" value="' + (price || 0) + '" aria-label="ราคา/หน่วย" />' +
+          '<button class="x-del" type="button" aria-label="ลบรายการ">✕</button>' +
+          '<p class="x-err" role="alert"></p>';
+        if (unit) d.querySelector(".l-u").value = unit;
+        d.querySelector(".x-del").onclick = function () { d.remove(); total(); };
+        d.oninput = total; d.onchange = total;
+        lines.appendChild(d); total();
+      }
+      function total() {
+        var sum = 0;
+        [].slice.call(lines.children).forEach(function (r) { sum += (+r.querySelector(".l-q").value || 0) * (+r.querySelector(".l-p").value || 0); });
+        document.getElementById("m-total").textContent = baht(sum);
+        return sum;
+      }
+      document.getElementById("add-line").onclick = function () { addLine(); };
+      document.getElementById("add-field").onclick = function () {
+        var n = document.getElementById("extra").children.length + 1, d = document.createElement("div");
+        d.className = "x-f"; d.style.marginTop = "12px";
+        d.innerHTML = '<label for="xf' + n + '">ฟิลด์เพิ่มเติม ' + n + "</label>" +
+          '<input id="xf' + n + '" placeholder="เช่น เลขที่ใบเสนอราคา / ผู้ขายที่เสนอ" />';
+        document.getElementById("extra").appendChild(d); d.querySelector("input").focus();
+      };
+      addLine("", 1, "ชิ้น", 0);
+
+      document.getElementById("primary").onclick = function () {
+        var i = tabs.findIndex(function (t) { return t.getAttribute("aria-selected") === "true"; });
+        if (i !== 0) { say("ยังไม่เปิดใช้งานในตัวอย่างนี้: " + LABELS[i]); return; }
+        clearErrors(modal);
+        veil.setAttribute("data-open", ""); modal.setAttribute("data-open", "");
+        document.getElementById("m-purpose").focus();
+      };
+      function setErr(el, msgEl, msg) {
+        if (el) { if (msg) el.setAttribute("aria-invalid", "true"); else el.removeAttribute("aria-invalid"); }
+        if (msgEl) msgEl.textContent = msg || "";
+      }
+      function clearErrors(scope) {
+        scope.querySelectorAll("[aria-invalid]").forEach(function (e) { e.removeAttribute("aria-invalid"); });
+        scope.querySelectorAll(".x-err").forEach(function (e) { e.textContent = ""; });
+      }
+      // Generic required-field validator for every create form on this page.
+      // Returns the first invalid element, or null when the form is valid.
+      function validatePR() {
+        clearErrors(modal);
+        var first = null, mark = function (el, msgEl, msg) { setErr(el, msgEl, msg); if (!first) first = el; };
+        var purpose = document.getElementById("m-purpose"), site = document.getElementById("m-site");
+        if (!purpose.value.trim()) mark(purpose, document.getElementById("e-purpose"), "กรุณาระบุวัตถุประสงค์");
+        if (!site.value) mark(site, document.getElementById("e-site"), "กรุณาเลือกไซต์");
+        var rows = [].slice.call(lines.children);
+        if (!rows.length) mark(document.getElementById("add-line"), document.getElementById("e-lines"), "ต้องมีรายการอย่างน้อย 1 รายการ");
+        rows.forEach(function (r) {
+          var n = r.querySelector(".l-n"), q = r.querySelector(".l-q"), p = r.querySelector(".l-p"), msgs = [], bad = [];
+          if (!n.value.trim()) { msgs.push("กรุณาระบุชื่อรายการ"); bad.push(n); }
+          if (q.value === "" || !(+q.value > 0)) { msgs.push("จำนวนต้องมากกว่า 0"); bad.push(q); }
+          if (p.value === "" || isNaN(+p.value) || +p.value < 0) { msgs.push("ราคาต่อหน่วยต้องไม่ติดลบ"); bad.push(p); }
+          bad.forEach(function (el) { el.setAttribute("aria-invalid", "true"); if (!first) first = el; });
+          r.querySelector(".x-err").textContent = msgs.join(" · ");
+        });
+        return first;
+      }
+      function onFix(e) {
+        var el = e.target; if (!el.getAttribute || el.getAttribute("aria-invalid") !== "true") return;
+        el.removeAttribute("aria-invalid");
+        var row = el.closest(".x-li");
+        if (row) { if (!row.querySelector("[aria-invalid]")) row.querySelector(".x-err").textContent = ""; }
+        else { var m = document.getElementById(el.getAttribute("aria-describedby")); if (m) m.textContent = ""; }
+      }
+      modal.addEventListener("input", onFix);
+      modal.addEventListener("change", onFix);
+      document.getElementById("add-line").addEventListener("click", function () { setErr(document.getElementById("add-line"), document.getElementById("e-lines"), ""); });
+
+      document.getElementById("m-save").onclick = function () {
+        var bad = validatePR();
+        if (bad) { bad.focus(); return; }
+        var purpose = document.getElementById("m-purpose").value.trim();
+        var sum = total(), no = "PR-2569-000" + (PR.length + 1);
+        var items = [].slice.call(lines.children).map(function (r) {
+          return [r.querySelector(".l-n").value.trim(), +r.querySelector(".l-q").value, r.querySelector(".l-u").value, +r.querySelector(".l-p").value];
+        });
+        PR.unshift({ no: no, date: "วันนี้", type: document.getElementById("m-type").value, purpose: purpose, n: items.length,
+          by: "admin", amt: sum, st: "รออนุมัติ", items: items, step: 1,
+          link: document.getElementById("m-site").value + " · " + document.getElementById("m-cc").value + " · " + document.getElementById("m-bud").value });
+        renderPR(); closeAll(); say("สร้าง " + no + " และส่งอนุมัติแล้ว");
+        document.getElementById("m-purpose").value = ""; document.getElementById("m-site").value = "";
+        lines.innerHTML = ""; document.getElementById("extra").innerHTML = ""; addLine("", 1, "ชิ้น", 0); clearErrors(modal);
+      };
+
+      document.getElementById("btn-wo").onclick = function () { say("เปิดฟอร์มแจ้งซ่อมใหม่ (ตัวอย่าง)"); };
+      document.getElementById("btn-bell").onclick = function () { say("3 แจ้งเตือน: PR รออนุมัติ 2 · FortiCare FW-001 หมดใน 11 วัน"); };
+
+      renderPR();
+    </script>
+  </body>
+</html>
