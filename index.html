@@ -427,5 +427,6 @@
       new Chart($("#badChart"), { type: "bar", data: { labels: BA.map((b) => b[0]), datasets: [{ label: "ชม. หยุดเครื่อง", data: BA.map((b) => b[1]), backgroundColor: ["var(--x-red)", "var(--x-orange)", "var(--x-yellow)", "var(--x-blue)", "var(--x-cyan)"] }] },
         options: { indexAxis: "y", maintainAspectRatio: false, scales: { x: { ticks: { callback: (v) => v + " ชม." } } }, plugins: { legend: { display: false }, tooltip: { callbacks: { label: (c) => `${c.raw} ชม. · ${BA[c.dataIndex][2]} ครั้ง` } }, datalabels: { ...Hark.labels.values, formatter: (v, c) => `${v.toFixed(1)} · ${BA[c.dataIndex][2]} ครั้ง` } } } });
     </script>
-  </body>
+      <script src="assets/site-nav.js"></script>
+</body>
 </html>
