@@ -172,19 +172,24 @@
 
     <div class="x-modal" id="x-modal" role="dialog" aria-modal="true" aria-labelledby="m-h">
       <div class="x-dh"><h2 id="m-h">สร้างใบสั่งงาน</h2></div>
-      <form class="x-form" id="m-form" onsubmit="return saveWO(event)">
-        <label>ประเภท<select class="x-sel" name="ty" id="m-ty"></select></label>
-        <label>ระดับ<select class="x-sel" name="pr" id="m-pr"></select></label>
-        <label class="x-full">ทรัพย์สิน<input class="x-in" name="as" id="m-as" placeholder="พิมพ์ Asset Tag หรือชื่อ เช่น CNC" autocomplete="off" required /><div class="x-ta" id="m-ta"></div></label>
-        <label class="x-full">หัวข้อ<input class="x-in" name="ti" required placeholder="เช่น มอเตอร์มีเสียงดังผิดปกติ" /></label>
-        <label class="x-full">รายละเอียดอาการ<textarea class="x-in" name="de"></textarea></label>
-        <label>ไซต์/ที่ตั้ง<select class="x-sel" name="si"><option>โรงงานสมุทรสาคร</option><option>โรงงานระยอง</option></select></label>
+      <form class="x-form" id="m-form" novalidate onsubmit="return saveWO(event)">
+        <label>ประเภท *<select class="x-sel" name="ty" id="m-ty" required></select></label>
+        <label>ระดับ *<select class="x-sel" name="pr" id="m-pr" required></select></label>
+        <label class="x-full">ทรัพย์สิน *<input class="x-in" name="as" id="m-as" placeholder="พิมพ์ Asset Tag หรือชื่อ เช่น CNC" autocomplete="off" required /><div class="x-ta" id="m-ta"></div></label>
+        <label class="x-full">หัวข้อ *<input class="x-in" name="ti" required placeholder="เช่น มอเตอร์มีเสียงดังผิดปกติ" /></label>
+        <label class="x-full">รายละเอียดอาการ<textarea class="x-in" name="de" placeholder="อธิบายอาการ เวลาที่พบ และผลกระทบ"></textarea></label>
+        <label>ไซต์/ที่ตั้ง *<select class="x-sel" name="si" required><option value="">— เลือกไซต์ —</option><option>โรงงานสมุทรสาคร</option><option>โรงงานระยอง</option></select></label>
         <label>ผู้รับผิดชอบ/ช่าง<select class="x-sel" name="te" id="m-te"></select></label>
         <label>วันที่กำหนดเสร็จ (SLA)<input class="x-in" type="datetime-local" name="du" /></label>
         <label>แนบไฟล์<input class="x-in" type="file" multiple style="padding-top:8px" /></label>
         <div class="x-full x-extra" id="m-extra"><b style="font-size:14px;font-weight:600">ฟิลด์เพิ่มเติม</b><button class="x-addf" type="button" onclick="addField()">+ เพิ่มฟิลด์</button></div>
       </form>
       <div class="x-mfoot"><button class="x-btn" type="button" onclick="closeAll()">ยกเลิก</button><button class="x-btn x-btn--p" type="submit" form="m-form">บันทึก</button></div>
+    </div>
+    <div class="x-modal" id="a-modal" role="dialog" aria-modal="true" aria-labelledby="a-h" style="z-index:24;width:min(520px,94vw)">
+      <div class="x-dh"><h2 id="a-h"></h2><p id="a-sub" style="margin:4px 0 0;color:var(--x-dim);font-size:13px"></p></div>
+      <form class="x-form" id="a-form" novalidate></form>
+      <div class="x-mfoot"><button class="x-btn" type="button" id="a-cancel">ยกเลิก</button><button class="x-btn x-btn--p" type="submit" form="a-form" id="a-ok">ยืนยัน</button></div>
     </div>
     <div class="x-toast" id="x-toast" role="status"></div>
     </div>
@@ -251,7 +256,7 @@
       fill($("#f-st"), [["open", "งานที่ยังเปิด"], ["all", "ทุกสถานะ"], ["wait", "รออนุมัติ/มอบหมาย"], ...STATUSES.map((s) => [s, s])]);
       fill($("#f-ty"), TYPES, "ทุกประเภท");
       fill($("#f-pr"), Object.entries(PRIOS), "ทุกระดับ");
-      fill($("#m-ty"), TYPES); fill($("#m-pr"), Object.entries(PRIOS)); $("#m-pr").value = "P3";
+      fill($("#m-ty"), TYPES, "— เลือกประเภท —"); fill($("#m-pr"), Object.entries(PRIOS), "— เลือกระดับ —");
       fill($("#m-te"), TECHS, "ยังไม่มอบหมาย");
 
       function slaText(r) {
@@ -342,7 +347,8 @@
       function drawerBody() {
         const r = cur;
         if (tab === 0) return `<dl class="x-dl"><dt>ทรัพย์สิน</dt><dd>${r.as} · ${r.an}</dd><dt>ประเภท</dt><dd>${r.ty}</dd><dt>ระดับ</dt><dd>${PRIOS[r.pr]}</dd><dt>ไซต์</dt><dd>${r.si}</dd><dt>ช่าง</dt><dd>${r.te || "ยังไม่มอบหมาย"}</dd><dt>SLA</dt><dd>${slaText(r)}</dd><dt>ผู้แจ้ง</dt><dd>ฝ่ายผลิต · 8 มี.ค. 2569</dd><dt>อาการ</dt><dd>${r.de || r.ti}</dd></dl>`;
-        if (tab === 1) { const i = stepIdx(r.st); return `<ol class="x-tl">${STEPS.map((s, j) => `<li class="${j < i ? "done" : j === i ? "now" : ""}"><b>${s}</b><small>${j <= i ? DATES[j] : "รอดำเนินการ"}</small></li>`).join("")}</ol>`; }
+        if (tab === 1) { if (r.st === "ยกเลิก") return `<ol class="x-tl"><li class="done"><b>แจ้ง</b><small>${DATES[0]}</small></li>${(r.log || []).map((l) => `<li class="now"><b>${l[1]}</b><small>${l[0]}</small></li>`).join("")}</ol>`;
+          const i = stepIdx(r.st); return `<ol class="x-tl">${STEPS.map((s, j) => `<li class="${j < i ? "done" : j === i ? "now" : ""}"><b>${s}</b><small>${j <= i ? DATES[j] : "รอดำเนินการ"}</small></li>`).join("")}</ol>` + ((r.log || []).length ? `<p style="color:var(--x-dim);margin:14px 0 8px">บันทึกการดำเนินการ</p><ol class="x-tl">${r.log.map((l) => `<li class="done"><b>${l[1]}</b><small>${l[0]}</small></li>`).join("")}</ol>` : ""); }
         if (tab === 2) return `<table class="x-mini"><thead><tr><th>รายการ</th><th>จำนวน</th><th>รวม</th></tr></thead><tbody><tr><td>SP-BRG-6205 ลูกปืน 6205-2RS</td><td>×2</td><td>฿370</td></tr><tr><td>ค่าแรง ${r.te || "ช่าง"} (3 ชม. × ฿250)</td><td>3 ชม.</td><td>฿750</td></tr></tbody><tfoot><tr><td>รวมค่าใช้จ่าย</td><td></td><td>฿1,120</td></tr></tfoot></table>`;
         if (tab === 3) return ["ตัดไฟและล็อกเอาท์ (LOTO)", "ตรวจสอบเสียง/การสั่นสะเทือน", "เปลี่ยนชิ้นส่วนที่ชำรุด", "ทดสอบเดินเครื่อง 30 นาที", "ทำความสะอาดพื้นที่"].map((c, j) => `<label class="x-chk"><input type="checkbox" ${j < 2 ? "checked" : ""} /> ${c}</label>`).join("");
         return `<div class="x-files"><div>รูปก่อนซ่อม.jpg</div><div>รูปหลังซ่อม.jpg</div><div>+ อัปโหลดไฟล์</div></div>`;
@@ -352,17 +358,57 @@
         $("#d-chips").innerHTML = chip(cur.st, stColor(cur.st)) + chip(PRIOS[cur.pr], prColor[cur.pr]) + chip(cur.ty, "grey") + (overdue(cur) ? chip("เกิน SLA", "red") : "");
         document.querySelectorAll("#d-tabs button").forEach((b) => b.classList.toggle("on", +b.dataset.t === tab));
         $("#d-body").innerHTML = drawerBody();
+        footState();
       }
       function openDrawer(no) { cur = rows.find((r) => r.no === no); tab = 0; paintDrawer(); $("#x-drawer").classList.add("open"); $("#x-scrim").classList.add("open"); }
       $("#d-tabs").addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) { tab = +b.dataset.t; paintDrawer(); } });
-      document.querySelectorAll(".x-dfoot button").forEach((b) => b.addEventListener("click", () => {
-        cur.st = b.dataset.a; if (cur.st === "มอบหมายแล้ว" && !cur.te) cur.te = "สมชัย";
-        toast(`${cur.no}: ${b.textContent}แล้ว`); paintDrawer(); render();
-      }));
+      const stamp = () => { const d = new Date(); return d.toLocaleDateString("th-TH", { day: "numeric", month: "short", year: "numeric" }) + " " + String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0"); };
+      const PRE = ["ร่าง", "รออนุมัติ", "อนุมัติแล้ว", "มอบหมายแล้ว"];
+      function footState() {
+        const closed = CLOSED.includes(cur.st);
+        document.querySelectorAll(".x-dfoot button").forEach((b) => {
+          const a = b.dataset.a; let on = !closed;
+          if (a === "กำลังซ่อม") on = !!cur.te && ["มอบหมายแล้ว", "รออะไหล่/ผู้ขาย"].includes(cur.st);
+          if (a === "มอบหมายแล้ว") b.textContent = cur.te && !closed ? "มอบหมายใหม่" : "มอบหมาย";
+          b.disabled = !on; b.style.opacity = on ? "" : ".45";
+          b.title = on ? "" : a === "กำลังซ่อม" ? (cur.te ? "เริ่มได้เมื่อสถานะเป็นมอบหมายแล้ว/รออะไหล่" : "ต้องมอบหมายช่างก่อน") : "ใบสั่งงานนี้ปิดแล้ว";
+        });
+      }
+      function logIt(text) { (cur.log = cur.log || []).push([stamp(), text]); }
+      function done(msg) { $("#a-modal").classList.remove("open"); paintDrawer(); render(); toast(msg); }
+      let aSave = null;
+      function actModal(title, sub, html, ok, fn) {
+        $("#a-h").textContent = title; $("#a-sub").textContent = sub; $("#a-form").innerHTML = html; $("#a-ok").textContent = ok; aSave = fn;
+        $("#a-modal").classList.add("open"); const f0 = $("#a-form").querySelector("select,input,textarea"); if (f0) setTimeout(() => f0.focus(), 30);
+      }
+      $("#a-cancel").addEventListener("click", () => $("#a-modal").classList.remove("open"));
+      $("#a-form").addEventListener("submit", (e) => { e.preventDefault(); if (!validate($("#a-form"))) return; aSave(Object.fromEntries(new FormData($("#a-form")))); });
+      const ACT = {
+        "มอบหมายแล้ว": () => actModal((cur.te ? "มอบหมายใหม่ " : "มอบหมาย ") + cur.no, cur.ti + (cur.te ? " · ปัจจุบัน: " + cur.te : ""),
+          `<label class="x-full">ช่างผู้รับผิดชอบ *<select class="x-sel" name="te" required><option value="">— เลือกช่าง —</option>${TECHS.map((t) => `<option${t === cur.te ? " disabled" : ""}>${t}</option>`).join("")}</select></label>
+           <label class="x-full">หมายเหตุถึงช่าง<textarea class="x-in" name="nt" placeholder="เช่น เตรียมลูกปืน 6205 ×2 และเครื่องมือ LOTO"></textarea></label>`, "มอบหมาย", (v) => {
+            const old = cur.te; cur.te = v.te; if (PRE.includes(cur.st)) cur.st = "มอบหมายแล้ว";
+            logIt((old ? `เปลี่ยนช่างจาก ${old} เป็น ${v.te}` : `มอบหมายให้ ${v.te}`) + (v.nt ? ` · ${v.nt}` : "")); done(`${cur.no}: มอบหมายให้ ${v.te} แล้ว`);
+          }),
+        "กำลังซ่อม": () => { cur.st = "กำลังซ่อม"; logIt(`${cur.te} เริ่มงาน`); done(`${cur.no}: เริ่มงานแล้ว · สถานะกำลังซ่อม`); },
+        "ปิดงาน": () => actModal("ปิดงาน " + cur.no, cur.ti,
+          `<label class="x-full">สาเหตุของปัญหา *<select class="x-sel" name="ca" required><option value="">— เลือกสาเหตุ —</option><option>ชิ้นส่วนสึกหรอตามอายุ</option><option>ขาดการบำรุงรักษา</option><option>ใช้งานผิดวิธี</option><option>ไฟฟ้า/สัญญาณขัดข้อง</option><option>ซอฟต์แวร์/การตั้งค่า</option><option>อื่น ๆ</option></select></label>
+           <label class="x-full">การแก้ไขที่ดำเนินการ *<textarea class="x-in" name="fx" required placeholder="เช่น เปลี่ยนลูกปืน 6205 ×2 ทดสอบเดินเครื่อง 30 นาที ปกติ"></textarea></label>
+           <label>ชั่วโมงแรงงาน *<input class="x-in" name="hr" type="number" min="0.5" step="0.5" required placeholder="เช่น 3" /></label>
+           <label>ผู้ตรวจรับ *<input class="x-in" name="by" required placeholder="เช่น หัวหน้าฝ่ายผลิต" /></label>`, "ปิดงาน", (v) => {
+            cur.st = "ปิดงาน"; cur.fix = v; logIt(`ปิดงาน · สาเหตุ: ${v.ca} · ${v.fx} · ${v.hr} ชม. · ตรวจรับโดย ${v.by}`); done(`${cur.no}: ปิดงานแล้ว`);
+          }),
+        "ยกเลิก": () => actModal("ยกเลิกใบสั่งงาน " + cur.no, cur.ti,
+          `<label class="x-full">เหตุผลที่ยกเลิก *<select class="x-sel" name="rs" required><option value="">— เลือกเหตุผล —</option><option>แจ้งซ้ำ</option><option>ไม่พบปัญหา</option><option>รวมกับใบงานอื่น</option><option>ผู้แจ้งขอยกเลิก</option></select></label>
+           <label class="x-full">รายละเอียดเพิ่มเติม<textarea class="x-in" name="nt" placeholder="เช่น ซ้ำกับ WO-2569-0009"></textarea></label>`, "ยืนยันยกเลิก", (v) => {
+            cur.st = "ยกเลิก"; logIt(`ยกเลิก · ${v.rs}${v.nt ? " · " + v.nt : ""}`); done(`${cur.no}: ยกเลิกแล้ว (${v.rs})`);
+          }),
+      };
+      document.querySelectorAll(".x-dfoot button").forEach((b) => b.addEventListener("click", () => { if (!b.disabled) ACT[b.dataset.a](); }));
 
       // Modal
-      function openModal() { $("#x-modal").classList.add("open"); $("#x-scrim").classList.add("open"); setTimeout(() => $("#m-as").focus(), 50); }
-      function closeAll() { ["#x-modal", "#x-drawer", "#x-scrim"].forEach((s) => $(s).classList.remove("open")); }
+      function openModal() { $("#m-form").reset(); clearErr($("#m-form")); $("#m-extra").querySelectorAll("div").forEach((d) => d.remove()); $("#x-modal").classList.add("open"); $("#x-scrim").classList.add("open"); setTimeout(() => $("#m-as").focus(), 50); }
+      function closeAll() { ["#x-modal", "#a-modal", "#x-drawer", "#x-scrim"].forEach((s) => $(s).classList.remove("open")); }
       document.addEventListener("keydown", (e) => {
         if (e.key === "Escape") closeAll();
         if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") { e.preventDefault(); $("#x-gsearch").focus(); }
@@ -381,13 +427,31 @@
         $("#m-extra").insertBefore(d, $(".x-addf"));
       }
       let seq = 11;
+      function clearErr(form) { form.querySelectorAll(".x-err").forEach((m) => m.remove()); form.querySelectorAll("[aria-invalid]").forEach((x) => { x.removeAttribute("aria-invalid"); x.style.borderColor = ""; }); }
+      function setErr(el, msg) { el.setAttribute("aria-invalid", "true"); el.style.borderColor = "#F87171"; const m = document.createElement("small"); m.className = "x-err"; m.style.cssText = "color:#FCA5A5;font-size:12px"; m.textContent = msg; el.closest("label").appendChild(m); }
+      function validate(form, extra) {
+        clearErr(form); let first = null;
+        form.querySelectorAll("[required]").forEach((el) => {
+          const v = el.value.trim(); let msg = "";
+          if (!v) msg = el.tagName === "SELECT" ? "กรุณาเลือกรายการ" : "กรุณากรอกข้อมูลช่องนี้";
+          else if (el.type === "number" && el.min !== "" && +v < +el.min) msg = "ต้องไม่น้อยกว่า " + el.min;
+          if (msg) { setErr(el, msg); first = first || el; }
+        });
+        if (!first && extra) { const x = extra(); if (x) { setErr(form.elements[x[0]], x[1]); first = form.elements[x[0]]; } }
+        if (first) first.focus();
+        return !first;
+      }
+      ["#m-form", "#a-form"].forEach((id) => ["input", "change"].forEach((ev) => $(id).addEventListener(ev, (e) => { const t = e.target; if (t.getAttribute && t.getAttribute("aria-invalid") && String(t.value).trim()) { t.removeAttribute("aria-invalid"); t.style.borderColor = ""; const m = t.closest("label") && t.closest("label").querySelector(".x-err"); if (m) m.remove(); } })));
       function saveWO(e) {
         e.preventDefault();
+        const fe = e.target.elements;
+        if (!validate(e.target, () => fe.du.value && new Date(fe.du.value).getTime() < Date.now() ? ["du", "วันที่กำหนดเสร็จต้องเป็นเวลาในอนาคต"] : null)) return false;
         const f = new FormData(e.target), [tag, ...nm] = f.get("as").split(" ");
         const due = f.get("du") ? new Date(f.get("du")).getTime() : Date.now() + 48 * 3600e3;
         const no = `WO-2569-${String(seq++).padStart(4, "0")}`;
-        rows.unshift({ no, ty: f.get("ty"), ti: f.get("ti"), de: f.get("de"), as: tag, an: nm.join(" ") || "-", pr: f.get("pr"), st: f.get("te") ? "มอบหมายแล้ว" : "อนุมัติแล้ว", te: f.get("te"), due, age: 0, si: f.get("si") });
-        e.target.reset(); $("#m-pr").value = "P3"; $("#m-extra").querySelectorAll("div").forEach((d) => d.remove());
+        rows.unshift({ no, ty: f.get("ty"), ti: f.get("ti"), de: f.get("de"), as: tag, an: nm.join(" ") || "-", pr: f.get("pr"), st: f.get("te") ? "มอบหมายแล้ว" : "อนุมัติแล้ว", te: f.get("te"), due, age: 0, si: f.get("si"), log: [[stamp(), "สร้างใบสั่งงานโดย " + ME + (f.get("te") ? " · มอบหมาย " + f.get("te") : "")]] });
+        $("#f-q").value = ""; $("#f-st").value = "open"; $("#f-ty").value = ""; $("#f-pr").value = ""; $("#f-me").checked = false; $("#f-ov").checked = false;
+        e.target.reset(); $("#m-extra").querySelectorAll("div").forEach((d) => d.remove());
         closeAll(); render(); toast(`บันทึกใบสั่งงาน ${no} เรียบร้อย`);
         return false;
       }
@@ -395,7 +459,7 @@
       function toast(m) { const t = $("#x-toast"); t.textContent = m; t.classList.add("show"); clearTimeout(tt); tt = setTimeout(() => t.classList.remove("show"), 2600); }
 
       // Charts
-      new Chart($("#c-status"), {
+      try { new Chart($("#c-status"), {
         type: "doughnut",
         data: { labels: KANBAN, datasets: [{ data: [4, 8, 5, 1, 2] }] },
         options: { cutout: "62%", plugins: { legend: { position: "right" }, datalabels: Hark.labels.percent } }
@@ -406,10 +470,14 @@
         type: "bar",
         data: { labels: buckets.map((b) => b + " วัน"), datasets: [{ label: "งาน", data: aging, backgroundColor: ["var(--chart-muted)", "var(--chart-muted)", "var(--chart-ink)", "var(--chart-bad)"] }] },
         options: { scales: { y: { ticks: { stepSize: 1 } } }, plugins: { legend: { display: false }, datalabels: Hark.labels.values } }
-      });
+      }); } catch (err) { /* charts unavailable */ }
 
+      const qp = new URLSearchParams(location.search);
+      if (qp.get("q")) { $("#f-q").value = qp.get("q"); $("#f-st").value = "all"; }
       render();
       paintDrawer();
+      if (qp.get("q") && rows.some((r) => r.no === qp.get("q"))) openDrawer(qp.get("q"));
+      if (qp.get("new") === "1") openModal();
       setInterval(render, 60000);
     </script>
       <script src="../../assets/site-nav.js"></script>
