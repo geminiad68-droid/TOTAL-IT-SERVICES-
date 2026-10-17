@@ -77,6 +77,9 @@
       .u-hi { color: #FCA5A5; border-color: rgba(239,68,68,.4); } .u-md { color: #FCD34D; border-color: rgba(245,158,11,.4); } .u-lo { color: #93C5FD; border-color: rgba(59,130,246,.4); } .u-st { background: #B91C1C; color: #fff; }
       .s-wait { background: #C2410C; color: #fff; } .s-new { background: #1D4ED8; color: #fff; } .s-tri { background: #6D28D9; color: #fff; }
       .s-wo { background: #047857; color: #fff; } .s-rej { background: #374151; color: #E5E7EB; } .s-can { background: #1F2937; color: #9CA3AF; }
+      .x-err { color: #FB7185; font-size: 12px; font-weight: 500; display: block; margin-top: 4px; }
+      .x-field.bad, .x-seg.bad { border-color: #FB7185 !important; box-shadow: 0 0 0 3px rgba(251,113,133,.18); }
+      .x-req { color: #FB7185; }
       .x-acts { display: flex; gap: 6px; justify-content: flex-end; }
       .x-empty { text-align: center; color: var(--mut); padding: 28px; }
       .x-chan { display: grid; gap: 12px; }
@@ -236,9 +239,9 @@
         <div class="x-dlg x-dlg--sm">
           <h2 id="woT">เปิดใบสั่งงาน</h2>
           <p class="x-sub" id="woFor" style="margin:0"></p>
-          <label>ประเภทงาน<span class="x-field"><select id="woType"><option>ซ่อมแก้ไข (CM)</option><option>ซ่อมฉุกเฉิน</option><option>ตรวจเช็ค</option></select></span></label>
-          <label>ระดับ<span class="x-field"><select id="woPri"><option>ปกติ</option><option>สูง</option><option>ด่วน/เครื่องหยุด</option></select></span></label>
-          <label>มอบหมายช่าง<span class="x-field"><select id="woTech"><option>สมชาย ใจดี (ไฟฟ้า/แอร์)</option><option>วิทยา ทองมา (IT)</option><option>ประเสริฐ แก้วใส (เครื่องจักร)</option><option>ทีมอาคาร</option></select></span></label>
+          <label>ประเภทงาน <span class="x-req">*</span><span class="x-field"><select id="woType"><option value="">— เลือกประเภทงาน —</option><option>ซ่อมแก้ไข (CM)</option><option>ซ่อมฉุกเฉิน</option><option>ตรวจเช็ค</option></select></span></label>
+          <label>ระดับ <span class="x-req">*</span><span class="x-field"><select id="woPri"><option value="">— เลือกระดับ —</option><option>ปกติ</option><option>สูง</option><option>ด่วน/เครื่องหยุด</option></select></span></label>
+          <label>มอบหมายช่าง <span class="x-req">*</span><span class="x-field"><select id="woTech"><option value="">— เลือกช่าง —</option><option>สมชาย ใจดี (ไฟฟ้า/แอร์)</option><option>วิทยา ทองมา (IT)</option><option>ประเสริฐ แก้วใส (เครื่องจักร)</option><option>ทีมอาคาร</option></select></span></label>
           <div class="x-foot"><button class="x-btn" data-close>ยกเลิก</button><button class="x-btn x-btn--pri" id="woOk">สร้างใบสั่งงาน</button></div>
         </div>
       </div>
@@ -302,14 +305,25 @@
         if (b.dataset.wo) {
           woTarget = rows.find((r) => r.no === b.dataset.wo);
           $("#woFor").textContent = `${woTarget.no} · ${woTarget.sym}`;
-          $("#woPri").value = woTarget.ur === "สูง" ? "สูง" : "ปกติ";
+          clearWoErr(); $("#woType").value = ""; $("#woTech").value = "";
+          $("#woPri").value = woTarget.ur === "เครื่องหยุด" ? "ด่วน/เครื่องหยุด" : woTarget.ur === "สูง" ? "สูง" : "ปกติ";
           show("#woModal");
         }
         if (b.dataset.rej) { const r = rows.find((x) => x.no === b.dataset.rej); r.st = "ไม่รับเรื่อง"; render(); toast(`ไม่รับเรื่อง ${r.no}`); }
       });
+      function clearWoErr() { document.querySelectorAll("#woModal .x-err").forEach((n) => n.remove()); document.querySelectorAll("#woModal .x-field.bad").forEach((n) => n.classList.remove("bad")); }
+      function fieldErr(sel, msg) { const el = $(sel), w = el.closest(".x-field") || el; w.classList.add("bad"); el.setAttribute("aria-invalid", "true"); const m = document.createElement("small"); m.className = "x-err"; m.textContent = msg; w.insertAdjacentElement("afterend", m); return el; }
+      ["#woType", "#woPri", "#woTech"].forEach((id) => $(id).addEventListener("change", (e) => { const w = e.target.closest(".x-field"); if (e.target.value && w.classList.contains("bad")) { w.classList.remove("bad"); e.target.removeAttribute("aria-invalid"); const n = w.nextElementSibling; if (n && n.classList.contains("x-err")) n.remove(); } }));
       $("#woOk").addEventListener("click", () => {
+        if (!woTarget || !rows.includes(woTarget) || !open(woTarget.st)) { hide(); toast("เลือกใบแจ้งซ่อมจากตารางเพื่อเปิดใบสั่งงาน"); return; }
+        clearWoErr(); const bad = [];
+        if (!$("#woType").value) bad.push(fieldErr("#woType", "กรุณาเลือกประเภทงาน"));
+        if (!$("#woPri").value) bad.push(fieldErr("#woPri", "กรุณาเลือกระดับ"));
+        if (!$("#woTech").value) bad.push(fieldErr("#woTech", "กรุณามอบหมายช่าง"));
+        if (bad.length) { bad[0].focus(); return; }
         const no = "WO-2569-" + String(woSeq++).padStart(4, "0");
-        Object.assign(woTarget, { st: "เปิดใบสั่งงานแล้ว", wo: no + " · " + $("#woTech").value.split(" (")[0], fresh: true });
+        Object.assign(woTarget, { st: "เปิดใบสั่งงานแล้ว", wo: no + " · " + $("#woTech").value.split(" (")[0] + " · " + $("#woType").value + " · " + $("#woPri").value, fresh: true });
+        woTarget = null;
         woCount++; $("#woBadge").textContent = +$("#woBadge").textContent + 1;
         hide(); render(); toast(`สร้าง ${no} แล้ว`);
       });
@@ -330,16 +344,17 @@
       const ASSETS = ["AC-MR3-01 · แอร์ห้องประชุม 3", "PC-ACC-014 · คอมพิวเตอร์ฝ่ายบัญชี", "PMP-11 · ปั๊มน้ำ อาคาร B", "CONV-03 · สายพานไลน์ผลิต 1", "PRN-HR-02 · เครื่องพิมพ์ฝ่ายบุคคล", "ไม่ระบุทรัพย์สิน"];
       let W;
       const bar = (n) => `<div class="x-stepper">${[1, 2, 3].map((i) => `<span class="${i <= n ? "on" : ""}"></span>`).join("")}</div>`;
+      let E = {};
       function wiz() {
         const d = $("#rqDlg");
         if (W.step === 1) d.innerHTML = `<h2 id="rqT">แจ้งซ่อม · 1/3 เลือกหมวด</h2>${bar(1)}
           <div class="x-cats">${CATS.map(([n, i, g]) => `<button class="x-cat ${W.cat === n ? "on" : ""}" data-cat="${n}"><span class="x-tile ${g}"><svg><use href="#${i}"/></svg></span>${n}</button>`).join("")}</div>
           <div class="x-foot"><button class="x-btn" data-close>ยกเลิก</button><button class="x-btn x-btn--pri" data-go="2" ${W.cat ? "" : "disabled"}>ถัดไป</button></div>`;
         if (W.step === 2) d.innerHTML = `<h2 id="rqT">แจ้งซ่อม · 2/3 รายละเอียด (${W.cat})</h2>${bar(2)}
-          <label>ทรัพย์สิน<div class="x-two"><span class="x-field"><select id="wAsset">${ASSETS.map((a) => `<option ${a === W.asset ? "selected" : ""}>${a}</option>`).join("")}</select></span>
-            <button class="x-btn" id="wScan"><svg width="18" height="18"><use href="#i-qr"/></svg>สแกน QR</button></div></label>
-          <label>อาการ<span class="x-field"><input id="wSym" value="${W.sym}" placeholder="เช่น แอร์ไม่เย็น มีน้ำหยด" /></span></label>
-          <div class="x-lb">ความเร่งด่วน<div class="x-seg">${["ต่ำ", "ปานกลาง", "สูง", "เครื่องหยุด"].map((u) => `<button data-ur="${u}" class="${W.ur === u ? "on" : ""}">${u}</button>`).join("")}</div></div>
+          <label>ทรัพย์สิน <span class="x-req">*</span><div class="x-two"><span class="x-field${E.asset ? " bad" : ""}"><select id="wAsset"${E.asset ? ' aria-invalid="true"' : ""}><option value="">— เลือกทรัพย์สิน —</option>${ASSETS.map((a) => `<option ${a === W.asset ? "selected" : ""}>${a}</option>`).join("")}</select></span>
+            <button class="x-btn" id="wScan"><svg width="18" height="18"><use href="#i-qr"/></svg>สแกน QR</button></div>${E.asset ? `<small class="x-err">${E.asset}</small>` : ""}</label>
+          <label>อาการ <span class="x-req">*</span><span class="x-field${E.sym ? " bad" : ""}"><input id="wSym" value="${W.sym}" placeholder="เช่น แอร์ไม่เย็น มีน้ำหยด"${E.sym ? ' aria-invalid="true"' : ""} /></span>${E.sym ? `<small class="x-err">${E.sym}</small>` : ""}</label>
+          <div class="x-lb">ความเร่งด่วน <span class="x-req">*</span><div class="x-seg${E.ur ? " bad" : ""}" id="wUr">${["ต่ำ", "ปานกลาง", "สูง", "เครื่องหยุด"].map((u) => `<button data-ur="${u}" class="${W.ur === u ? "on" : ""}" aria-pressed="${W.ur === u}">${u}</button>`).join("")}</div>${E.ur ? `<small class="x-err">${E.ur}</small>` : ""}</div>
           <label>แนบรูป<div class="x-drop" id="wPhoto" role="button" tabindex="0"><svg width="20" height="20"><use href="#i-cam"/></svg><br>${W.photos ? `แนบแล้ว ${W.photos} รูป · แตะเพื่อเพิ่ม` : "แตะเพื่อถ่ายหรือเลือกรูป"}</div></label>
           ${W.extra.map((x, i) => `<label>ฟิลด์เพิ่มเติม<div class="x-two"><span class="x-field"><input data-xk="${i}" value="${x.k}" placeholder="ชื่อฟิลด์" /></span><span class="x-field"><input data-xv="${i}" value="${x.v}" placeholder="ค่า" /></span></div></label>`).join("")}
           <button class="x-btn x-btn--sm" id="wAdd" style="justify-self:start"><svg width="16" height="16"><use href="#i-plus"/></svg>เพิ่มฟิลด์</button>
@@ -359,22 +374,37 @@
         document.querySelectorAll("[data-xk]").forEach((el) => (W.extra[el.dataset.xk].k = el.value.replace(/[<>"]/g, "")));
         document.querySelectorAll("[data-xv]").forEach((el) => (W.extra[el.dataset.xv].v = el.value.replace(/[<>"]/g, "")));
       }
-      $("#newBtn").addEventListener("click", () => { W = { step: 1, cat: "", asset: ASSETS[0], sym: "", ur: "ปานกลาง", photos: 0, extra: [] }; wiz(); show("#rqModal"); });
+      function openNew() { W = { step: 1, cat: "", asset: "", sym: "", ur: "", photos: 0, extra: [] }; E = {}; wiz(); show("#rqModal"); }
+      $("#newBtn").addEventListener("click", openNew);
+      $("#rqDlg").addEventListener("input", (e) => { if (e.target.id === "wSym" && E.sym && e.target.value.trim()) { delete E.sym; const w = e.target.closest(".x-field"); w.classList.remove("bad"); e.target.removeAttribute("aria-invalid"); const n = w.nextElementSibling; if (n && n.classList.contains("x-err")) n.remove(); } });
+      $("#rqDlg").addEventListener("change", (e) => { if (e.target.id === "wAsset") { W.asset = e.target.value; if (E.asset && W.asset) { delete E.asset; const w = e.target.closest(".x-field"); w.classList.remove("bad"); const n = w.parentNode.nextElementSibling; if (n && n.classList.contains("x-err")) n.remove(); } } });
       $("#rqDlg").addEventListener("click", (e) => {
         const b = e.target.closest("button, #wPhoto"); if (!b) return;
         sync();
         if (b.dataset.cat) W.cat = b.dataset.cat;
-        if (b.dataset.go) W.step = +b.dataset.go;
-        if (b.dataset.ur) W.ur = b.dataset.ur;
-        if (b.id === "wScan") { W.asset = ASSETS[3]; toast("สแกนสำเร็จ: CONV-03"); }
+        if (b.dataset.go) {
+          const to = +b.dataset.go;
+          if (W.step === 2 && to === 3) {
+            E = {};
+            if (!W.asset) E.asset = "กรุณาเลือกทรัพย์สิน (หรือเลือก “ไม่ระบุทรัพย์สิน”)";
+            if (!W.sym.trim()) E.sym = "กรุณาระบุอาการ";
+            if (!W.ur) E.ur = "กรุณาเลือกความเร่งด่วน";
+            if (Object.keys(E).length) { wiz(); const f = E.asset ? $("#wAsset") : E.sym ? $("#wSym") : $("#wUr button"); f && f.focus(); return; }
+          }
+          W.step = to;
+        }
+        if (b.dataset.ur) { W.ur = b.dataset.ur; delete E.ur; }
+        if (E.asset && W.asset) delete E.asset;
+        if (b.id === "wScan") { W.asset = ASSETS[3]; delete E.asset; toast("สแกนสำเร็จ: CONV-03"); }
         if (b.id === "wPhoto") W.photos++;
         if (b.id === "wAdd") W.extra.push({ k: "", v: "" });
         if (b.id === "wOk") {
+          if (!W.cat || !W.asset || !W.sym.trim() || !W.ur) { W.step = W.cat ? 2 : 1; wiz(); return; }
           W.no = "RQ-2569-" + String(rqSeq++).padStart(4, "0"); W.step = 4;
           const now = new Date();
           rows.unshift({ no: W.no, date: `วันนี้ · ${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`, ch: "เว็บ",
-            sym: W.sym || `แจ้งซ่อมหมวด${W.cat}`, asset: W.asset, ur: W.ur, by: ME, st: "รอคัดกรอง", fresh: true });
-          render();
+            sym: W.sym.trim(), asset: W.asset.replace(" · ", " · ") + " · " + W.cat, ur: W.ur, by: ME, st: "รอคัดกรอง", fresh: true });
+          $("#q").value = ""; $("#fs").value = "ทุกสถานะ"; $("#mine").checked = false; render(); toast(`ส่งใบแจ้งซ่อม ${W.no} แล้ว`);
         }
         if (!b.hasAttribute("data-close")) wiz();
       });
@@ -389,6 +419,11 @@
         $("#qr").innerHTML = `<g fill="#0A1024">${out}</g>`;
       })();
       render();
+      /* ?new=1 → open the new repair request form straight away */
+      if (new URLSearchParams(location.search).get("new") === "1") {
+        openNew();
+        try { const u = new URL(location.href); u.searchParams.delete("new"); history.replaceState(null, "", u.pathname + (u.search || "") + u.hash); } catch (e) {}
+      }
     </script>
       <script src="../../assets/site-nav.js"></script>
 </body>
