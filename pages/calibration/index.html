@@ -121,37 +121,39 @@
       </div>
     </div>
 
-    <dialog id="regDlg" aria-labelledby="regT"><form method="dialog" id="regForm">
+    <dialog id="regDlg" aria-labelledby="regT"><form method="dialog" id="regForm" novalidate>
       <h2 id="regT">ลงทะเบียนเครื่องมือวัด</h2>
-      <label class="x-f">ทรัพย์สิน (เฉพาะหมวด "ต้องสอบเทียบ")<select class="x-sel" name="asset" required>
+      <label class="x-f">ทรัพย์สิน (เฉพาะหมวด "ต้องสอบเทียบ") *<select class="x-sel" name="asset" required>
+        <option value="">— เลือกทรัพย์สิน —</option>
         <option value="TRQ-003|ประแจทอร์ค 20–100 N·m|ห้องซ่อมบำรุง">TRQ-003 ประแจทอร์ค 20–100 N·m</option>
         <option value="PHM-002|เครื่องวัด pH ตั้งโต๊ะ|ห้องปฏิบัติการ QC">PHM-002 เครื่องวัด pH ตั้งโต๊ะ</option>
         <option value="VNC-015|เวอร์เนียร์คาลิปเปอร์ดิจิทัล|ไลน์ผลิต 2">VNC-015 เวอร์เนียร์คาลิปเปอร์ดิจิทัล</option></select></label>
       <div class="x-g2">
-        <label class="x-f">รอบ (เดือน)<input class="x-in" name="cycle" type="number" min="1" value="12" required /></label>
-        <label class="x-f">เกณฑ์ความคลาดเคลื่อน<input class="x-in" name="tol" value="±0.5" required /></label>
+        <label class="x-f">รอบ (เดือน) *<input class="x-in" name="cycle" type="number" min="1" required placeholder="เช่น 12" /></label>
+        <label class="x-f">เกณฑ์ความคลาดเคลื่อน *<input class="x-in" name="tol" required placeholder="เช่น ±0.5 หรือ ±0.1%" /></label>
         <label class="x-f">ช่วงการวัด<input class="x-in" name="range" placeholder="เช่น 0–100" /></label>
-        <label class="x-f">แจ้งเตือนล่วงหน้า (วัน)<input class="x-in" name="warn" type="number" min="0" value="30" /></label>
+        <label class="x-f">แจ้งเตือนล่วงหน้า (วัน)<input class="x-in" name="warn" type="number" min="0" placeholder="เช่น 30" /></label>
       </div>
-      <label class="x-f">ผู้ให้บริการ<input class="x-in" name="vendor" value="บริษัท สยามคาลิเบรชั่น แล็บ จำกัด" /></label>
+      <label class="x-f">ผู้ให้บริการ *<input class="x-in" name="vendor" required placeholder="เช่น บริษัท สยามคาลิเบรชั่น แล็บ จำกัด" list="vendorList" /><datalist id="vendorList"><option value="บริษัท สยามคาลิเบรชั่น แล็บ จำกัด"></option></datalist></label>
       <div id="extra" class="x-g2"></div>
       <div><button type="button" class="x-btn" id="addField">+ เพิ่มฟิลด์</button></div>
-      <div class="x-foot"><button class="x-btn" value="cancel" formnovalidate>ยกเลิก</button><button class="x-btn x-pri" value="ok">บันทึก</button></div>
+      <div class="x-foot"><button type="button" class="x-btn" data-close>ยกเลิก</button><button type="submit" class="x-btn x-pri" value="ok">บันทึก</button></div>
     </form></dialog>
 
-    <dialog id="resDlg" aria-labelledby="resT"><form method="dialog" id="resForm">
+    <dialog id="resDlg" aria-labelledby="resT"><form method="dialog" id="resForm" novalidate>
       <h2 id="resT">บันทึกผลสอบเทียบ</h2>
       <p class="x-mut" id="resSub"></p>
       <div class="x-g2">
-        <label class="x-f">วันที่สอบเทียบ<input class="x-in" name="date" type="date" required /></label>
-        <label class="x-f">ผล<select class="x-sel" name="result"><option value="pass">ผ่าน</option><option value="fail">ไม่ผ่าน</option><option value="adj">ปรับตั้ง</option></select></label>
+        <label class="x-f">วันที่สอบเทียบ *<input class="x-in" name="date" type="date" required /></label>
+        <label class="x-f">ผล *<select class="x-sel" name="result" required><option value="">— เลือกผล —</option><option value="pass">ผ่าน</option><option value="fail">ไม่ผ่าน</option><option value="adj">ปรับตั้ง</option></select></label>
       </div>
       <div style="overflow-x:auto"><table class="x-tbl"><thead><tr><th>จุดวัด</th><th>ค่าอ้างอิง</th><th>ค่าที่อ่านได้</th><th>Error</th><th>ผ่านเกณฑ์</th></tr></thead><tbody id="pts"></tbody></table></div>
       <div class="x-g2">
-        <label class="x-f">เลขใบรับรอง<input class="x-in" name="cert" required placeholder="CAL-69-xxxxx" /></label>
+        <label class="x-f">เลขใบรับรอง *<input class="x-in" name="cert" required placeholder="CAL-69-xxxxx" /></label>
         <label class="x-f">แนบไฟล์<input class="x-in" name="file" type="file" accept=".pdf,image/*" style="padding-top:10px" /></label>
       </div>
-      <div class="x-foot"><button class="x-btn" value="cancel" formnovalidate>ยกเลิก</button><button class="x-btn x-pri" value="ok">บันทึกผล</button></div>
+      <p class="x-err" id="ptsErr" style="color:#F87171;margin:0;font-size:12.5px"></p>
+      <div class="x-foot"><button type="button" class="x-btn" data-close>ยกเลิก</button><button type="submit" class="x-btn x-pri" value="ok">บันทึกผล</button></div>
     </form></dialog>
 
     <div class="x-toast" id="toast" role="status" aria-live="polite"></div>
@@ -191,7 +193,7 @@
           <div><span class="x-lbl">ครบกำหนด</span>${thd(due(t))}<div class="x-mut">${d >= 0 ? "อีก " + d + " วัน" : "เลย " + -d + " วัน"}</div><span class="x-st s-${s}">${STL[s]}</span></div>
           <div><span class="x-lbl">ผล/ใบรับรอง</span>${t.result ? `<span class="${t.result === "fail" ? "s-fail" : "s-ok"}">● ${RES[t.result]}</span> · ${t.cert}` : '<span class="s-pend">● รอผล</span>'}</div>
           <div><span class="x-lbl">ผู้ให้บริการ</span><span style="font-size:13px">${t.vendor || "—"}</span></div>
-          <div class="x-act"><button class="x-btn x-pri" data-rec="${t.id}">บันทึกผล</button>${t.wo ? `<a class="x-btn" href="#" style="color:#93C5FD">🔗 ${t.wo}</a>` : `<button class="x-btn" data-wo="${t.id}">เปิดใบงาน</button>`}</div>
+          <div class="x-act"><button class="x-btn x-pri" data-rec="${t.id}">บันทึกผล</button>${t.wo ? `<a class="x-btn" href="../wo/?q=${t.wo}" style="color:#93C5FD">🔗 ${t.wo}</a>` : `<button class="x-btn" data-wo="${t.id}">เปิดใบงาน</button>`}</div>
         </article>`; }).join("") || '<div class="x-card x-mut">ไม่พบเครื่องมือในสถานะนี้</div>';
         let tl = "";
         for (let i = 0; i < 12; i++) {
@@ -212,35 +214,58 @@
       $("#menuBtn").onclick = () => $("#side").classList.toggle("open");
       $("#woBtn").onclick = (e) => { e.preventDefault(); toast("เปิดฟอร์มแจ้งซ่อมใหม่"); };
       $("#bellBtn").onclick = () => { const s = tools.filter((t) => status(t) === "soon"); toast(s.length ? `ใกล้ครบกำหนด ${s.length} รายการ: ${s.map((t) => t.id).join(", ")}` : "ไม่มีการแจ้งเตือนใหม่"); };
-      $("#regBtn").onclick = () => { $("#regForm").reset(); $("#extra").innerHTML = ""; $("#regDlg").showModal(); };
+      $("#regBtn").onclick = () => { $("#regForm").reset(); clearErr($("#regForm")); $("#extra").innerHTML = ""; $("#regDlg").showModal(); };
       $("#addField").onclick = () => { const n = $("#extra").children.length + 1; $("#extra").insertAdjacentHTML("beforeend", `<label class="x-f">ฟิลด์เพิ่มเติม ${n}<input class="x-in" placeholder="ชื่อฟิลด์ : ค่า" /></label>`); };
-      $("#regDlg").addEventListener("close", () => {
-        if ($("#regDlg").returnValue !== "ok") return;
-        const fd = new FormData($("#regForm")), [id, name, loc] = fd.get("asset").split("|");
-        if (tools.some((t) => t.id === id)) return toast(`${id} ลงทะเบียนไว้แล้ว`);
+      function clearErr(f) { f.querySelectorAll(".x-err:not(#ptsErr)").forEach((m) => m.remove()); f.querySelectorAll("[aria-invalid]").forEach((x) => { x.removeAttribute("aria-invalid"); x.style.borderColor = ""; }); const pe = f.querySelector("#ptsErr"); if (pe) pe.textContent = ""; }
+      function setErr(el, msg) { el.setAttribute("aria-invalid", "true"); el.style.borderColor = "#F87171"; const host = el.closest("label"); if (!host) return; const m = document.createElement("small"); m.className = "x-err"; m.style.cssText = "display:block;color:#F87171;margin-top:4px;font-size:12.5px"; m.textContent = msg; host.appendChild(m); }
+      function validate(f) {
+        clearErr(f); let first = null;
+        f.querySelectorAll("label [required]").forEach((el) => {
+          const v = el.value.trim(); let msg = "";
+          if (!v) msg = el.tagName === "SELECT" ? "กรุณาเลือกรายการ" : "กรุณากรอกข้อมูลช่องนี้";
+          else if (el.type === "number" && el.min !== "" && +v < +el.min) msg = "ต้องไม่น้อยกว่า " + el.min;
+          if (msg) { setErr(el, msg); first = first || el; }
+        });
+        return first;
+      }
+      ["#regForm", "#resForm"].forEach((id) => ["input", "change"].forEach((ev) => $(id).addEventListener(ev, (e) => { const t = e.target; if (t.getAttribute && t.getAttribute("aria-invalid") && String(t.value).trim()) { t.removeAttribute("aria-invalid"); t.style.borderColor = ""; const m = t.closest("label") && t.closest("label").querySelector(".x-err"); if (m) m.remove(); } })));
+      document.querySelectorAll("dialog [data-close]").forEach((b) => b.addEventListener("click", () => b.closest("dialog").close()));
+      $("#regForm").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const f = $("#regForm"); let first = validate(f);
+        if (!first && tools.some((t) => t.id === f.elements.asset.value.split("|")[0])) { setErr(f.elements.asset, "เครื่องมือนี้ลงทะเบียนไว้แล้ว"); first = f.elements.asset; }
+        if (first) { first.focus(); return; }
+        const fd = new FormData(f), [id, name, loc] = fd.get("asset").split("|");
         const num = parseFloat(String(fd.get("tol")).replace(/[^\d.]/g, "")) || 0.5, rmax = parseFloat(String(fd.get("range")).split(/[–-]/).pop()) || 100;
         tools.push({ id, name, loc, cycle: +fd.get("cycle"), tol: fd.get("tol"), tolAbs: /%/.test(fd.get("tol")) ? (num / 100) * rmax : num, unit: "", ref: [0, rmax / 2, rmax], last: null, result: null, cert: "", vendor: fd.get("vendor") });
-        filter = "all"; render(); toast(`ลงทะเบียน ${id} ${name} แล้ว · รอผลสอบเทียบครั้งแรก`);
+        $("#regDlg").close(); filter = "all"; render(); toast(`ลงทะเบียน ${id} ${name} แล้ว · รอผลสอบเทียบครั้งแรก`);
       });
       function openRes(t) {
-        cur = t; $("#resForm").reset(); $("#resSub").textContent = `${t.id} ${t.name} · เกณฑ์ ${t.tol}`;
-        $("#resForm").date.value = "2026-10-11";
-        $("#pts").innerHTML = t.ref.map((v, i) => `<tr><td>P${i + 1}</td><td><input class="x-in" type="number" step="any" value="${v}" aria-label="ค่าอ้างอิง P${i + 1}"></td><td><input class="x-in" type="number" step="any" value="${v}" aria-label="ค่าที่อ่านได้ P${i + 1}"></td><td class="err">0</td><td class="ok"></td></tr>`).join("");
+        cur = t; $("#resForm").reset(); clearErr($("#resForm")); $("#resSub").textContent = `${t.id} ${t.name} · เกณฑ์ ${t.tol}`;
+        $("#pts").innerHTML = t.ref.map((v, i) => `<tr><td>P${i + 1}</td><td><input class="x-in" type="number" step="any" value="${v}" aria-label="ค่าอ้างอิง P${i + 1}"></td><td><input class="x-in" type="number" step="any" placeholder="กรอกค่า" aria-label="ค่าที่อ่านได้ P${i + 1}"></td><td class="err">—</td><td class="ok"></td></tr>`).join("");
         calc(); $("#resDlg").showModal();
       }
       function calc() {
         let all = true;
-        $("#pts").querySelectorAll("tr").forEach((tr) => { const [a, b] = tr.querySelectorAll("input"), e = +b.value - +a.value, ok = Math.abs(e) <= cur.tolAbs + 1e-9; all = all && ok;
+        $("#pts").querySelectorAll("tr").forEach((tr) => { const [a, b] = tr.querySelectorAll("input");
+          if (b.value === "" || a.value === "") { all = false; tr.querySelector(".err").textContent = "—"; tr.querySelector(".ok").innerHTML = ""; return; }
+          const e = +b.value - +a.value, ok = Math.abs(e) <= cur.tolAbs + 1e-9; all = all && ok;
           tr.querySelector(".err").textContent = (e > 0 ? "+" : "") + +e.toFixed(4) + (cur.unit ? " " + cur.unit : "");
           tr.querySelector(".ok").innerHTML = `<span class="x-st ${ok ? "s-ok" : "s-fail"}">${ok ? "ผ่าน" : "ไม่ผ่าน"}</span>`; });
         return all;
       }
-      $("#pts").addEventListener("input", () => { const ok = calc(); const sel = $("#resForm").result; if (!ok && sel.value === "pass") sel.value = "fail"; });
-      $("#resDlg").addEventListener("close", () => {
-        if ($("#resDlg").returnValue !== "ok" || !cur) return;
-        const fd = new FormData($("#resForm")), [y, m, d] = fd.get("date").split("-").map(Number);
-        cur.last = new Date(y, m - 1, d); cur.result = fd.get("result"); cur.cert = fd.get("cert");
-        render(); toast(`บันทึกผล ${cur.id}: ${RES[cur.result]} · ${cur.cert}${cur.result === "fail" ? " · ระงับการบันทึกค่าในเช็คลิสต์" : ""}`);
+      $("#pts").addEventListener("input", (ev) => { ev.target.removeAttribute("aria-invalid"); ev.target.style.borderColor = ""; $("#ptsErr").textContent = ""; const ok = calc(); const filled = [...$("#pts").querySelectorAll("input")].every((i) => i.value !== ""); const sel = $("#resForm").elements.result; if (filled && !ok && sel.value === "pass") sel.value = "fail"; });
+      $("#resForm").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const f = $("#resForm"); let first = validate(f);
+        const empty = [...$("#pts").querySelectorAll("input")].filter((i) => i.value === "");
+        empty.forEach((i) => { i.setAttribute("aria-invalid", "true"); i.style.borderColor = "#F87171"; });
+        if (empty.length) { $("#ptsErr").textContent = "กรุณากรอกค่าที่อ่านได้ทุกจุดวัด"; first = first || empty[0]; }
+        if (!first && f.elements.result.value === "pass" && !calc()) { setErr(f.elements.result, "มีจุดวัดเกินเกณฑ์ ไม่สามารถบันทึกเป็น “ผ่าน”"); first = f.elements.result; }
+        if (first || !cur) { if (first) first.focus(); return; }
+        const fd = new FormData(f), [y, m, d] = fd.get("date").split("-").map(Number);
+        cur.last = new Date(y, m - 1, d); cur.result = fd.get("result"); cur.cert = fd.get("cert").trim();
+        $("#resDlg").close(); render(); toast(`บันทึกผล ${cur.id}: ${RES[cur.result]} · ${cur.cert}${cur.result === "fail" ? " · ระงับการบันทึกค่าในเช็คลิสต์" : ""}`);
       });
       render();
     </script>
