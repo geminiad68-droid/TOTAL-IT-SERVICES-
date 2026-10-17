@@ -326,20 +326,20 @@ day,RFID,GPS,QR
     <dialog id="dlg-scan" aria-labelledby="scan-t">
       <h2 id="scan-t">สแกนทรัพย์สิน</h2>
       <form id="f-scan">
-        <label>Asset Tag<input name="tag" required placeholder="เช่น MTR-007" autocomplete="off" /></label>
-        <label>โซน<select name="zone"><option>โซน A · Line 1</option><option>โซน B · Line 2</option><option>คลังอะไหล่</option></select></label>
-        <div class="x-row"><button type="button" class="x-btn" data-close>ยกเลิก</button><button class="x-btn x-btn--pri">บันทึกการสแกน</button></div>
+        <label>Asset Tag <span style="color:#FB7185">*</span><input name="tag" placeholder="เช่น MTR-007" autocomplete="off" /></label>
+        <label>โซน <span style="color:#FB7185">*</span><select name="zone"><option value="">— เลือกโซน —</option><option>โซน A · Line 1</option><option>โซน B · Line 2</option><option>คลังอะไหล่</option></select></label>
+        <div class="x-row"><button type="button" class="x-btn" data-close>ยกเลิก</button><button type="button" class="x-btn x-btn--pri" id="scan-save">บันทึกการสแกน</button></div>
       </form>
     </dialog>
     <dialog id="dlg-zone" aria-labelledby="zone-t">
       <h2 id="zone-t">เพิ่มโซน</h2>
       <form id="f-zone">
-        <label>ชื่อโซน<input name="name" required placeholder="เช่น โซน C · Line 3" /></label>
-        <label>ประเภท<select name="type"><option>RFID</option><option>BLE</option><option>Geofence</option></select></label>
-        <label>รัศมี (เมตร)<input name="r" type="number" min="1" value="50" inputmode="numeric" /></label>
+        <label>ชื่อโซน <span style="color:#FB7185">*</span><input name="name" placeholder="เช่น โซน C · Line 3" /></label>
+        <label>ประเภท <span style="color:#FB7185">*</span><select name="type"><option value="">— เลือกประเภท —</option><option>RFID</option><option>BLE</option><option>Geofence</option></select></label>
+        <label>รัศมี (เมตร) <span style="color:#FB7185">*</span><input name="r" type="number" min="1" placeholder="เช่น 50" inputmode="numeric" /></label>
         <div id="extra" style="display:grid;gap:12px"></div>
         <button type="button" class="x-btn" id="add-field"><svg class="x-ico"><use href="#i-plus"/></svg>เพิ่มฟิลด์</button>
-        <div class="x-row"><button type="button" class="x-btn" data-close>ยกเลิก</button><button class="x-btn x-btn--pri">บันทึกโซน</button></div>
+        <div class="x-row"><button type="button" class="x-btn" data-close>ยกเลิก</button><button type="button" class="x-btn x-btn--pri" id="zone-save">บันทึกโซน</button></div>
       </form>
     </dialog>
     <div class="x-tip" id="tip" hidden></div>
@@ -382,19 +382,36 @@ day,RFID,GPS,QR
       $$("[data-open-dlg]").forEach((b) => (b.onclick = () => $("#" + b.dataset.openDlg).showModal()));
       $$("[data-close]").forEach((b) => (b.onclick = () => b.closest("dialog").close()));
       const now = () => new Date().toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" });
+      const vErr = (f, list) => {
+        f.querySelectorAll(".x-ferr").forEach((n) => n.remove()); f.querySelectorAll("[aria-invalid]").forEach((n) => { n.removeAttribute("aria-invalid"); n.style.borderColor = ""; });
+        list.forEach(([el, m]) => { el.setAttribute("aria-invalid", "true"); el.style.borderColor = "#FB7185"; const d = document.createElement("span"); d.className = "x-ferr"; d.style.cssText = "color:#FB7185;font-size:12px"; d.textContent = m; el.after(d); });
+        if (list.length) { list[0][0].focus(); list[0][0].scrollIntoView({ block: "center" }); } return !list.length;
+      };
+      $$("[data-open-dlg]").forEach((b) => b.addEventListener("click", () => { const f = $("#" + b.dataset.openDlg).querySelector("form"); if (f) { f.reset(); vErr(f, []); } }));
+      $("#scan-save").onclick = () => $("#f-scan").dispatchEvent(new Event("submit", { cancelable: true }));
+      $("#zone-save").onclick = () => $("#f-zone").dispatchEvent(new Event("submit", { cancelable: true }));
       $("#f-scan").onsubmit = (e) => {
-        e.preventDefault(); const f = e.target, tag = f.tag.value.trim().toUpperCase(), zone = f.zone.value;
+        e.preventDefault(); const f = e.target, L = [];
+        if (!f.elements["tag"].value.trim()) L.push([f.elements["tag"], "กรุณากรอก Asset Tag"]); else if (!/^[A-Za-z]{2,5}-?\d{1,4}$/.test(f.elements["tag"].value.trim())) L.push([f.elements["tag"], "รูปแบบ Tag ไม่ถูกต้อง (เช่น MTR-007)"]);
+        if (!f.elements["zone"].value) L.push([f.elements["zone"], "กรุณาเลือกโซน"]);
+        if (!vErr(f, L)) return;
+        const tag = f.elements["tag"].value.trim().toUpperCase(), zone = f.elements["zone"].value;
         $("#rows").insertAdjacentHTML("afterbegin", `<tr><th scope="row"></th><td data-label="แหล่ง"><span class="x-src x-src--qr">QR</span></td><td data-label="ตำแหน่งที่พบ"></td><td data-label="ตามทะเบียน" class="sub">—</td><td data-label="เวลา">วันนี้ ${now()}</td></tr>`);
         const r = $("#rows").firstElementChild; r.children[0].textContent = tag; r.children[2].textContent = zone;
         f.closest("dialog").close(); f.reset(); show("p-over"); toast(`บันทึกการสแกน ${tag} · ${zone} แล้ว`);
       };
       $("#add-field").onclick = () => { const l = document.createElement("label"); l.innerHTML = 'ฟิลด์เพิ่มเติม<input placeholder="ชื่อฟิลด์ เช่น ชั้น / ห้อง" />'; $("#extra").append(l); l.querySelector("input").focus(); };
       $("#f-zone").onsubmit = (e) => {
-        e.preventDefault(); const f = e.target, c = document.createElement("div");
+        e.preventDefault(); const L = [], ff = e.target;
+        if (!ff.elements["name"].value.trim()) L.push([ff.elements["name"], "กรุณากรอกชื่อโซน"]); else if ([...$("#readers").querySelectorAll("h3")].some((h) => h.textContent.trim() === ff.elements["name"].value.trim())) L.push([ff.elements["name"], "มีโซนชื่อนี้แล้ว"]);
+        if (!ff.elements["type"].value) L.push([ff.elements["type"], "กรุณาเลือกประเภท"]);
+        if (!ff.elements["r"].value || +ff.elements["r"].value < 1) L.push([ff.elements["r"], "กรุณาระบุรัศมีอย่างน้อย 1 เมตร"]);
+        if (!vErr(ff, L)) return;
+        const f = e.target, c = document.createElement("div");
         c.className = "x-card x-reader";
         c.innerHTML = '<span class="x-tile x-t1"><svg class="x-ico"><use href="#i-pin"/></svg></span><div><h3></h3><p></p></div><dl><dt>สถานะ</dt><dd><span class="x-flag x-flag--off">รอติดตั้ง</span></dd><dt>รัศมี</dt><dd></dd></dl>';
-        c.querySelector("h3").textContent = f.name.value; c.querySelector("p").textContent = "โซนใหม่ · " + f.type.value; c.querySelector("dl dd:last-child").textContent = f.r.value + " ม.";
-        $("#readers").append(c); toast(`เพิ่มโซน ${f.name.value} แล้ว`); f.closest("dialog").close(); f.reset(); $("#extra").innerHTML = "";
+        c.querySelector("h3").textContent = f.elements["name"].value; c.querySelector("p").textContent = "โซนใหม่ · " + f.elements["type"].value; c.querySelector("dl dd:last-child").textContent = f.elements["r"].value + " ม.";
+        $("#readers").append(c); toast(`เพิ่มโซน ${f.elements["name"].value} แล้ว`); f.closest("dialog").close(); f.reset(); $("#extra").innerHTML = "";
       };
       $("#site").onchange = (e) => { $("#site-name").textContent = e.target.value; toast("เปลี่ยนไซต์เป็น " + e.target.value); };
       $("#repair").onclick = () => toast("เปิดฟอร์มแจ้งซ่อมใหม่");
