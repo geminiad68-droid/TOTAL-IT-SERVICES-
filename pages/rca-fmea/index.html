@@ -58,6 +58,9 @@
       .x-modal{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(560px,calc(100vw - 24px));max-height:calc(100vh - 32px);overflow-y:auto;z-index:21;display:none;box-sizing:border-box}
       .x-modal.open,.x-drawer.open{display:block}
       .x-drawer{position:fixed;top:0;right:0;height:100vh;width:min(760px,100vw);overflow-y:auto;z-index:21;border-radius:16px 0 0 16px;display:none;box-sizing:border-box}
+      .x-err{color:#FB7185;font:var(--type-small);font-weight:500}.x-in.bad,.x-sel.bad{border-color:#FB7185!important;box-shadow:0 0 0 3px rgba(251,113,133,.18)}.x-req{color:#FB7185}
+      .x-sod{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.x-rpnbox{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;border:1px dashed var(--x-line);color:var(--x-tx2)}
+      .x-saved{color:var(--x-tx2);font:var(--type-small);margin-right:auto;align-self:center}
       .x-form{display:grid;gap:12px}.x-form label{display:grid;gap:6px;font:var(--type-small);color:var(--x-tx2)}
       .x-why{display:grid;gap:8px;counter-reset:w}.x-why label{display:grid;grid-template-columns:88px minmax(0,1fr);align-items:center;gap:8px;font:var(--type-small);color:#FFD08A}
       .x-toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:30;background:#13214A;border:1px solid var(--x-grn);color:var(--x-tx);padding:12px 18px;border-radius:12px;display:none;box-shadow:0 8px 30px rgba(0,0,0,.5)}
@@ -116,7 +119,7 @@
             <div class="x-card x-kpi"><span class="x-tile g3"><svg class="x-ic"><use href="#i-home"/></svg></span><div><b>0</b><span>CAPA ของฉัน</span></div></div>
             <div class="x-card x-kpi"><span class="x-tile g4"><svg class="x-ic"><use href="#i-alert"/></svg></span><div><b id="k-over">2</b><span>CAPA เกินกำหนด</span></div></div>
             <div class="x-card x-kpi"><span class="x-tile g5"><svg class="x-ic"><use href="#i-search"/></svg></span><div><b id="k-ver">1</b><span>รอตรวจประสิทธิผล</span></div></div>
-            <div class="x-card x-kpi"><span class="x-tile g6"><svg class="x-ic"><use href="#i-chart"/></svg></span><div><b>1</b><span>FMEA RPN ≥ 200</span></div></div>
+            <div class="x-card x-kpi"><span class="x-tile g6"><svg class="x-ic"><use href="#i-chart"/></svg></span><div><b id="k-rpn">1</b><span>FMEA RPN ≥ 200</span></div></div>
           </section>
           <div class="x-tabs" role="tablist">
             <button class="x-tab" role="tab" aria-selected="true" data-t="rca">RCA</button>
@@ -145,16 +148,35 @@
     </div>
 
     <div class="x-ov" id="ov"></div>
-    <form class="x-card x-modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mT">
+    <form class="x-card x-modal" id="modal" novalidate role="dialog" aria-modal="true" aria-labelledby="mT">
       <div class="x-hd"><h3 id="mT">เปิดเรื่อง RCA</h3><button type="button" class="x-btn x-icb x-close" aria-label="ปิด"><svg class="x-ic"><use href="#i-x"/></svg></button></div>
       <div class="x-form" id="mForm">
-        <label>หัวข้อปัญหา<input class="x-in" name="title" required placeholder="เช่น MTR-007 ฉนวนเสื่อมก่อนกำหนด" /></label>
+        <label>หัวข้อปัญหา <span class="x-req">*</span><input class="x-in" name="title" required placeholder="เช่น MTR-007 ฉนวนเสื่อมก่อนกำหนด" /></label>
         <label>เลขใบสั่งงานต้นเหตุ / Asset<input class="x-in" name="wo" placeholder="WO-2569-xxxx · รหัสทรัพย์สิน" /></label>
-        <label>วิธีวิเคราะห์<select class="x-sel" name="m"><option>5 Why</option><option>ก้างปลา</option><option selected>5 Why + ก้างปลา</option></select></label>
-        <label>ผู้รับผิดชอบ<input class="x-in" name="own" value="ประเสริฐ ช่างใหญ่" /></label>
+        <label>วิธีวิเคราะห์ <span class="x-req">*</span><select class="x-sel" name="m" required><option value="">— เลือกวิธี —</option><option>5 Why</option><option>ก้างปลา</option><option>5 Why + ก้างปลา</option></select></label>
+        <label>ผู้รับผิดชอบ <span class="x-req">*</span><input class="x-in" name="own" required placeholder="ชื่อผู้รับผิดชอบ" list="ownList" /></label><datalist id="ownList"><option value="ประเสริฐ ช่างใหญ่"><option value="สมชัย กิตติศักดิ์"><option value="วิชัย ธนชัย"><option value="อนุชา ผ่องภัทร"></datalist>
         <label>คำอธิบายปัญหา (What / Where / When / How much)<textarea class="x-in" name="desc"></textarea></label>
       </div>
-      <div class="x-acts" style="justify-content:space-between;margin-top:14px"><button type="button" class="x-btn" id="addField">+ เพิ่มฟิลด์</button><span class="x-acts"><button type="button" class="x-btn x-close">ยกเลิก</button><button class="x-btn x-cta">บันทึก</button></span></div>
+      <div class="x-acts" style="justify-content:space-between;margin-top:14px"><button type="button" class="x-btn" id="addField">+ เพิ่มฟิลด์</button><span class="x-acts"><button type="button" class="x-btn x-close">ยกเลิก</button><button type="button" class="x-btn x-cta" id="saveRca">บันทึก</button></span></div>
+    </form>
+    <form class="x-card x-modal" id="fmModal" novalidate role="dialog" aria-modal="true" aria-labelledby="fmT">
+      <div class="x-hd"><h3 id="fmT">เพิ่ม Failure mode</h3><button type="button" class="x-btn x-icb x-close" aria-label="ปิดฟอร์ม Failure mode"><svg class="x-ic"><use href="#i-x"/></svg></button></div>
+      <div class="x-form">
+        <label>ทรัพย์สิน <span class="x-req">*</span><input class="x-in" name="a" required placeholder="รหัสทรัพย์สิน เช่น PMP-011" list="astList" /></label><datalist id="astList"><option value="CONV-03"><option value="CMP-02"><option value="MTR-007"><option value="PMP-011"><option value="AHU-04"></datalist>
+        <label>ชิ้นส่วน / ระบบย่อย <span class="x-req">*</span><input class="x-in" name="p" required placeholder="เช่น ซีลเพลา" /></label>
+        <label>Failure mode <span class="x-req">*</span><input class="x-in" name="f" required placeholder="เช่น ซีลรั่ว" /></label>
+        <label>ผลกระทบ (Effect) <span class="x-req">*</span><input class="x-in" name="e" required placeholder="เช่น น้ำรั่ว ปั๊มหยุด" /></label>
+        <label>สาเหตุ <span class="x-req">*</span><input class="x-in" name="c" required placeholder="เช่น ติดตั้งไม่ได้ศูนย์" /></label>
+        <label>การควบคุมปัจจุบัน<input class="x-in" name="ctl" placeholder="เช่น ตรวจด้วยสายตารายสัปดาห์" /></label>
+        <div class="x-sod">
+          <label>Severity (S) <span class="x-req">*</span><select class="x-sel" name="S" required><option value="">—</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select></label>
+          <label>Occurrence (O) <span class="x-req">*</span><select class="x-sel" name="O" required><option value="">—</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select></label>
+          <label>Detection (D) <span class="x-req">*</span><select class="x-sel" name="D" required><option value="">—</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select></label>
+        </div>
+        <div class="x-rpnbox" id="rpnPrev">RPN = S × O × D · เลือกคะแนนให้ครบ</div>
+        <label>ข้อเสนอแนะ / Action<input class="x-in" name="r" placeholder="เช่น ตั้ง alignment ด้วยเลเซอร์" /></label>
+      </div>
+      <div class="x-acts" style="justify-content:flex-end;margin-top:14px"><button type="button" class="x-btn x-close">ยกเลิก</button><button type="button" class="x-btn x-cta" id="saveFm">บันทึก</button></div>
     </form>
     <aside class="x-card x-drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="dT">
       <div class="x-hd"><div><h3 id="dT">RCA-2569-0001 · CONV-03 ลูกปืนแตกซ้ำ</h3><p>WO-2569-0003 · CONV-03 สายพานลำเลียง Line 2</p></div><button type="button" class="x-btn x-icb x-close" aria-label="ปิด"><svg class="x-ic"><use href="#i-x"/></svg></button></div>
@@ -162,7 +184,7 @@
       <div class="x-why" id="why"></div>
       <h3 style="margin-top:20px">ก้างปลา 6M</h3>
       <svg class="x-fish" id="fish" viewBox="0 0 760 330" width="100%" role="img" aria-label="แผนภาพก้างปลา 6M ของปัญหาลูกปืนแตก"></svg>
-      <div class="x-acts" style="justify-content:flex-end;margin-top:12px"><button class="x-btn x-cta" id="saveWs">บันทึกการวิเคราะห์</button></div>
+      <div class="x-acts" style="justify-content:flex-end;margin-top:12px"><span class="x-saved" id="wsSaved"></span><button type="button" class="x-btn x-close">ปิด</button><button class="x-btn x-cta" id="saveWs">บันทึกการวิเคราะห์</button></div>
     </aside>
     <div class="x-toast" id="toast" role="status"></div>
 
@@ -196,7 +218,7 @@
         $("#rcaBody").innerHTML = rcas.filter((r) => !q || JSON.stringify(r).toLowerCase().includes(q)).map((r, i) => `<tr class="x-click" tabindex="0" data-i="${i}">
           <td data-l="เลขที่ / หัวข้อ"><span><b>${esc(r.id)}</b> ${esc(r.t)}<small>${esc(r.d)}</small></span></td>
           <td data-l="ทรัพย์สิน"><span>${esc(r.a)}<small>${esc(r.an)}</small></span></td><td data-l="วิธี">${esc(r.m)}</td>
-          <td data-l="ผู้รับผิดชอบ">${esc(r.o)}</td><td data-l="CAPA">${esc(r.c)}</td><td data-l="สถานะ"><span><span class="x-st s-blu">${esc(r.s)}</span></span></td></tr>`).join("");
+          <td data-l="ผู้รับผิดชอบ">${esc(r.o)}</td><td data-l="CAPA">${esc(r.c)}</td><td data-l="สถานะ"><span><span class="x-st ${r.s === "วิเคราะห์แล้ว" ? "s-grn" : r.s === "เปิดเรื่อง" ? "s-amb" : "s-blu"}">${esc(r.s)}</span>${r.u ? `<small>บันทึก ${esc(r.u)}</small>` : ""}</span></td></tr>`).join("");
         $("#k-open").textContent = rcas.length;
       }
       function renderCapa() {
@@ -213,15 +235,19 @@
       const rpnCls = (v) => (v >= 200 ? "s-red" : v >= 120 ? "s-amb" : "s-grn");
       function renderFmea() {
         $("#fmBody").innerHTML = fms.map((f) => { const r = f.S * f.O * f.D; return `<tr><td data-l="ทรัพย์สิน"><span><b>${esc(f.a)}</b><small>${esc(f.p)}</small></span></td><td data-l="Failure → Effect">${esc(f.f)}</td><td data-l="สาเหตุ / ควบคุม">${esc(f.c)}</td><td data-l="S">${f.S}</td><td data-l="O">${f.O}</td><td data-l="D">${f.D}</td><td data-l="RPN"><span><span class="x-rpn ${rpnCls(r)}">${r}</span></span></td><td data-l="ข้อเสนอแนะ">${esc(f.r)}</td></tr>`; }).join("");
-        const cnt = { "8-6": 2 };
-        fms.slice(1).forEach((f) => (cnt[f.S + "-" + f.O] = (cnt[f.S + "-" + f.O] || 0) + 1));
+        const cnt = {};
+        fms.forEach((f) => (cnt[f.S + "-" + f.O] = (cnt[f.S + "-" + f.O] || 0) + 1));
+        $("#k-rpn").textContent = fms.filter((f) => f.S * f.O * f.D >= 200).length;
         let h = "";
         for (let s = 10; s >= 1; s--) { h += `<div class="l">${s}</div>`; for (let o = 1; o <= 10; o++) { const v = s * o, n = cnt[s + "-" + o] || ""; h += `<div title="S${s} × O${o} = ${v}" style="background:${v >= 50 ? "#8E1F3A" : v >= 25 ? "#6B420A" : "#0F4A35"};color:#fff;${n ? "outline:2px solid #fff" : ""}">${n}</div>`; } }
         h += `<div class="l"></div>` + Array.from({ length: 10 }, (_, i) => `<div class="l">${i + 1}</div>`).join("");
         $("#mx").innerHTML = h;
         const sorted = fms.map((f) => ({ n: f.a, v: f.S * f.O * f.D })).sort((a, b) => b.v - a.v), tot = sorted.reduce((s, x) => s + x.v, 0);
         let acc = 0; const cum = sorted.map((x) => Math.round(((acc += x.v) / tot) * 100));
-        if (chart) chart.destroy();
+        if (chart && chart.destroy) chart.destroy();
+        const cap = $("#pareto").closest("figure").querySelector(".chart__cap"); if (cap && sorted[0]) cap.firstChild.textContent = `Pareto RPN: ${sorted[0].n} สูงสุดที่ ${sorted[0].v}`;
+        $("#pareto").setAttribute("aria-label", sorted.map((x) => "RPN " + x.n + " " + x.v).join(", "));
+        if (typeof Chart !== "function") { chart = 1; return; }
         chart = new Chart($("#pareto"), {
           type: "bar",
           data: { labels: sorted.map((x) => x.n), datasets: [
@@ -257,17 +283,47 @@
       $("#capaBody").onclick = (e) => { const b = e.target.closest("[data-a]"); if (!b) return; const c = capas[b.dataset.i];
         c.s = { done: "ver", pass: "done", fail: "doing" }[b.dataset.a];
         toast({ done: "ส่งตรวจประสิทธิผลแล้ว", pass: "CAPA ผ่านการตรวจ ปิดเรื่องแล้ว", fail: "ส่งกลับให้ผู้รับผิดชอบแก้ไข" }[b.dataset.a]); renderCapa(); };
-      const openWs = (tr) => { if (!tr) return; const r = rcas[tr.dataset.i]; $("#dT").textContent = `${r.id} · ${r.t}`; $("#drawer .x-hd p").textContent = `${r.d} · ${r.a} ${r.an}`; openEl($("#drawer")); };
+      // persistence
+      const LS = { get(k) { try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } }, set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} } };
+      (() => { const r = LS.get("rca-list"), f = LS.get("rca-fms"); if (Array.isArray(r) && r.length) rcas.splice(0, rcas.length, ...r); if (Array.isArray(f) && f.length) fms.splice(0, fms.length, ...f); })();
+      if (!rcas[0].why) rcas[0].why = why.slice();
+      let wsIdx = 0;
+      function fillWs(i) { wsIdx = i; const r = rcas[i], w = r.why || ["", "", "", "", ""];
+        $("#why").innerHTML = w.map((x, j) => `<label>ทำไม ${j + 1}<input class="x-in" value="${esc(x)}" placeholder="ทำไม…?" /></label>`).join("");
+        $("#wsSaved").textContent = r.u ? "บันทึกล่าสุด " + r.u : "ยังไม่ได้บันทึก"; }
+      const openWs = (tr) => { if (!tr) return; const i = +tr.dataset.i, r = rcas[i]; $("#dT").textContent = `${r.id} · ${r.t}`; $("#drawer .x-hd p").textContent = `${r.d} · ${r.a} ${r.an}`; fillWs(i); openEl($("#drawer")); };
       $("#rcaBody").onclick = (e) => openWs(e.target.closest("tr"));
       $("#rcaBody").onkeydown = (e) => { if (e.key === "Enter") openWs(e.target.closest("tr")); };
-      $("#why").innerHTML = why.map((w, i) => `<label>ทำไม ${i + 1}<input class="x-in" value="${esc(w)}" /></label>`).join("");
-      $("#saveWs").onclick = () => { $$("#why input").forEach((x, i) => (why[i] = x.value)); closeAll(); toast("บันทึกการวิเคราะห์ 5 Why แล้ว"); };
-      $("#newRca").onclick = () => openEl($("#modal"));
-      $("#addField").onclick = () => { const l = document.createElement("label"); l.innerHTML = `ฟิลด์เพิ่มเติม<input class="x-in" placeholder="ชื่อฟิลด์ : ค่า" />`; $("#mForm").append(l); l.querySelector("input").focus(); };
-      $("#modal").onsubmit = (e) => { e.preventDefault(); const f = new FormData(e.target), wo = f.get("wo") || "—";
-        rcas.push({ id: "RCA-2569-" + String(rcas.length + 1).padStart(4, "0"), t: f.get("title"), d: "วันนี้ · " + wo, a: wo.split("·").pop().trim(), an: "", m: f.get("m"), o: f.get("own") || "—", c: "0/0", s: "เปิดเรื่อง" });
-        e.target.reset(); closeAll(); renderRca(); toast("เปิดเรื่อง " + rcas[rcas.length - 1].id + " แล้ว"); };
-      $("#addFm").onclick = () => toast("เพิ่ม Failure mode ใหม่ (ฟอร์มตัวอย่าง)");
+      fillWs(0);
+      const stamp = () => new Date().toLocaleString("th-TH", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
+      $("#saveWs").onclick = () => { const r = rcas[wsIdx], w = $$("#why input").map((x) => x.value.trim());
+        const filled = w.filter(Boolean).length;
+        if (!filled) { const first = $("#why input"); first.classList.add("bad"); first.focus(); $("#wsSaved").textContent = "กรอกอย่างน้อย ทำไม 1"; return; }
+        r.why = w; r.u = stamp(); if (filled === 5) r.s = "วิเคราะห์แล้ว"; else if (r.s === "เปิดเรื่อง") r.s = "กำลังวิเคราะห์";
+        if (wsIdx === 0) w.forEach((x, i) => (why[i] = x));
+        LS.set("rca-list", rcas); renderRca(); $("#wsSaved").textContent = "บันทึกล่าสุด " + r.u; closeAll(); toast(`บันทึกการวิเคราะห์ 5 Why ของ ${r.id} แล้ว (${filled}/5)`); };
+      function clearErr(form) { form.querySelectorAll(".x-err").forEach((n) => n.remove()); form.querySelectorAll(".bad").forEach((n) => { n.classList.remove("bad"); n.removeAttribute("aria-invalid"); }); }
+      function validate(form) { clearErr(form); const bad = [];
+        form.querySelectorAll("[required]").forEach((el) => { if (!String(el.value).trim()) { el.classList.add("bad"); el.setAttribute("aria-invalid", "true"); const m = document.createElement("small"); m.className = "x-err"; m.textContent = "กรุณากรอก/เลือก " + el.closest("label").childNodes[0].textContent.trim(); el.insertAdjacentElement("afterend", m); bad.push(el); } });
+        if (bad.length) bad[0].focus(); return !bad.length; }
+      ["#modal", "#fmModal"].forEach((id) => { const f = $(id); const fix = (e) => { const t = e.target; if (t.classList && t.classList.contains("bad") && String(t.value).trim()) { t.classList.remove("bad"); t.removeAttribute("aria-invalid"); const n = t.nextElementSibling; if (n && n.classList.contains("x-err")) n.remove(); } }; f.addEventListener("input", fix); f.addEventListener("change", fix); });
+      $("#newRca").onclick = () => { $("#modal").reset(); clearErr($("#modal")); $("#mForm").querySelectorAll(".x-extra").forEach((n) => n.remove()); openEl($("#modal")); };
+      $("#addField").onclick = () => { const l = document.createElement("label"); l.className = "x-extra"; l.innerHTML = `ฟิลด์เพิ่มเติม<input class="x-in" placeholder="ชื่อฟิลด์ : ค่า" />`; $("#mForm").append(l); l.querySelector("input").focus(); };
+      function saveRca() { const form = $("#modal"); if (!validate(form)) return; const f = new FormData(form), wo = String(f.get("wo") || "").trim() || "—";
+        rcas.push({ id: "RCA-2569-" + String(rcas.length + 1).padStart(4, "0"), t: f.get("title").trim(), d: new Date().toLocaleDateString("th-TH", { day: "numeric", month: "short", year: "numeric" }) + " · " + wo, a: wo.split("·").pop().trim(), an: String(f.get("desc") || "").trim().slice(0, 60), m: f.get("m"), o: f.get("own").trim(), c: "0/0", s: "เปิดเรื่อง", why: ["", "", "", "", ""] });
+        LS.set("rca-list", rcas); form.reset(); closeAll(); $("#q").value = ""; $$(".x-tab")[0].click(); renderRca(); toast("เปิดเรื่อง " + rcas[rcas.length - 1].id + " แล้ว"); }
+      $("#saveRca").onclick = saveRca;
+      $("#modal").onsubmit = (e) => { e.preventDefault(); saveRca(); };
+      const fmF = $("#fmModal");
+      function rpnPreview() { const S = +fmF.elements.S.value, O = +fmF.elements.O.value, D = +fmF.elements.D.value;
+        $("#rpnPrev").innerHTML = S && O && D ? `RPN = ${S} × ${O} × ${D} = <span class="x-rpn ${rpnCls(S * O * D)}">${S * O * D}</span>${S * O * D >= 200 ? " · ความเสี่ยงสูง ต้องมี Action" : ""}` : "RPN = S × O × D · เลือกคะแนนให้ครบ"; }
+      fmF.addEventListener("change", rpnPreview);
+      $("#addFm").onclick = () => { fmF.reset(); clearErr(fmF); rpnPreview(); openEl(fmF); };
+      function saveFm() { if (!validate(fmF)) return; const g = (k) => fmF.elements[k].value.trim();
+        const ctl = g("ctl"); fms.push({ a: g("a").toUpperCase(), p: g("p"), f: g("f") + " → " + g("e"), c: g("c") + (ctl ? " / " + ctl : ""), S: +g("S"), O: +g("O"), D: +g("D"), r: g("r") || "—" });
+        LS.set("rca-fms", fms); const nf = fms[fms.length - 1], rpn = nf.S * nf.O * nf.D; closeAll(); renderFmea(); toast(`เพิ่ม Failure mode ${nf.a} · RPN ${rpn} แล้ว`); }
+      $("#saveFm").onclick = saveFm;
+      fmF.onsubmit = (e) => { e.preventDefault(); saveFm(); };
       $$(".x-close").forEach((b) => (b.onclick = closeAll)); $("#ov").onclick = closeAll;
       $("#menuBtn").onclick = () => { $("#side").classList.add("open"); $("#ov").classList.add("open"); };
       $("#q").oninput = renderRca;
