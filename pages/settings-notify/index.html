@@ -158,6 +158,22 @@ input[type=range]{width:100%;accent-color:#E1306C;min-height:44px}
  .mx-c .cb{min-width:0;justify-content:start;grid-auto-flow:column;gap:6px}
 }
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+/* real actions */
+@keyframes spn{to{transform:rotate(360deg)}}
+.spin{width:14px;height:14px;border-radius:50%;border:2px solid currentColor;border-right-color:transparent;animation:spn .7s linear infinite;display:inline-block}
+.res{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:10px;min-height:0;font-size:12px;color:var(--tx2)}
+.res:empty{display:none}
+.res .stat.ok{color:var(--ok);border-color:rgba(52,211,153,.4)}.res .stat.bad{color:var(--bad);border-color:rgba(251,113,133,.45)}.res .stat.run{color:var(--blue)}.res .stat.run::before{display:none}
+.save .res{margin-top:0}
+.btn.done{border-color:var(--ok);color:var(--ok)}
+html.light{--bg:#EEF2FB;--side:#FFFFFF;--card:#FFFFFF;--card2:#E6ECFA;--field:#F6F8FE;--line:rgba(60,100,200,.28);--line2:rgba(60,100,200,.16);--glow:0 0 0 1px rgba(60,100,200,.08),0 6px 18px -10px rgba(40,80,180,.35);--tx:#14204A;--tx2:#56638C}
+html.light,html.light body{color-scheme:light}
+html.light .top{background:rgba(255,255,255,.9)}
+html.light .nav a{color:#33407A}html.light .nav a.on,html.light .seg button[aria-pressed=true],html.light .chips button[aria-pressed=true]{color:var(--tx)}
+html.light .in[readonly]{background:#EDF1FB}
+html.light .save{background:rgba(255,255,255,.94)}
+html.light .toast{background:#fff;color:var(--tx)}
+html.light .sw span{background:#D5DDF2}
 </style>
 </head>
 <body>
@@ -214,7 +230,7 @@ const SW=(id,on,l)=>`<label class="sw"><input type="checkbox" id="${id}" ${on?'c
 const CH=(t,i,g,sub='',extra='')=>`<div class="ch"><span class="tile ${g}">${I(i,20)}</span><div><h3>${t}</h3>${sub?`<p>${sub}</p>`:''}</div><span class="sp"></span>${extra}</div>`;
 const CP=(id,v,l)=>`<div class="grpi"><input class="in" id="${id}" value="${v}" readonly aria-label="${l}"><button class="btn ib" data-copy="#${id}" aria-label="คัดลอก ${l}">${I('copy')}</button></div>`;
 const PW=(id,v,l)=>`<div class="grpi"><input class="in" id="${id}" type="password" value="${v}" aria-label="${l}"><button class="btn ib" data-eye="#${id}" aria-label="แสดง/ซ่อน ${l}">${I('eye')}</button></div>`;
-const B=(t,toast,pri)=>`<button class="btn${pri?' pri':''}" data-toast="${toast}">${t}</button>`;
+const B=(t,act,pri)=>`<button class="btn${pri?' pri':''}" data-act="${act}">${t}</button>`;
 
 /* tab 1: general */
 const days=['จ','อ','พ','พฤ','ศ','ส','อา'];
@@ -250,7 +266,7 @@ ${F('VAT',U('vat',7,'%'))}${F('วงเงิน PO ที่ออกเอง
 <div class="card">${CH('ข้อมูลระบบ','server','g5','อ่านอย่างเดียว')}
 <dl class="dl"><dt>เวอร์ชัน</dt><dd>2.0.0</dd><dt>โหมด</dt><dd>Production</dd><dt>HTTPS</dt><dd class="ok">✓ เปิดใช้งาน</dd><dt>เขตเวลา</dt><dd>Asia/Bangkok</dd><dt>Upload สูงสุด</dt><dd>1024M</dd></dl>
 </div></div>
-<div class="save"><p>การตั้งค่ามีผลกับทุกไซต์</p>${B(I('check')+'บันทึกการตั้งค่า','บันทึกการตั้งค่าแล้ว',1)}</div>`;
+<div class="save"><p>การตั้งค่ามีผลกับทุกไซต์</p><span class="res" id="res-gen"></span>${B(I('check')+'บันทึกการตั้งค่า','gen-save',1)}</div>`;
 
 /* tab 2: channels */
 const host='https://itmaint.example.co.th';
@@ -260,18 +276,18 @@ $('#p-ch').innerHTML=`<div class="kpis">
 <div class="card kpi"><span class="tile g2">${I('x2',20)}</span><div><b>0</b><span>ส่งไม่สำเร็จ</span></div></div>
 <div class="card kpi warn"><span class="tile g6">${I('clock',20)}</span><div><b class="amber" style="font-size:18px">ยังไม่ทำงาน</b><span>Cron · ดูวิธีตั้งที่แท็บงานตั้งเวลา</span></div></div>
 </div><div class="grid3">
-<div class="card">${CH('LINE Messaging API','chat','g4','ส่งผ่าน LINE Official Account',SW('lineOn',1,'เปิดใช้งาน LINE'))}
+<div class="card" id="c-line">${CH('LINE Messaging API','chat','g4','ส่งผ่าน LINE Official Account',SW('lineOn',1,'เปิดใช้งาน LINE'))}
 ${F('Channel Access Token',PW('lt','eyJhbGciOiJIUzI1NiJ9.itmaint.line.token','Channel Access Token'))}
 ${F('Channel Secret',PW('ls','8f2c1d0b9a7e4c3f','Channel Secret'))}
 ${F('ลิงก์เพิ่มเพื่อน OA','<input class="in" value="https://lin.ee/itmaint" aria-label="ลิงก์เพิ่มเพื่อน OA">')}
 ${F('Webhook URL',CP('lw',host+'/api/webhook/line','Webhook URL LINE'),'นำไปใส่ใน LINE Developers Console')}
-<div class="acts">${B('ตรวจการเชื่อมต่อ','LINE: เชื่อมต่อสำเร็จ')}${B('ทดสอบส่ง','LINE: ส่งข้อความทดสอบสำเร็จ')}${B('บันทึก','บันทึกการตั้งค่า LINE แล้ว',1)}</div></div>
-<div class="card">${CH('Telegram Bot','send','g1','ส่งผ่านบอท Telegram',SW('tgOn',1,'เปิดใช้งาน Telegram'))}
+<div class="acts">${B('ตรวจการเชื่อมต่อ','line-check')}${B('ทดสอบส่ง','line-test')}${B('บันทึก','line-save',1)}</div><div class="res" id="res-line" aria-live="polite"></div></div>
+<div class="card" id="c-tg">${CH('Telegram Bot','send','g1','ส่งผ่านบอท Telegram',SW('tgOn',1,'เปิดใช้งาน Telegram'))}
 ${F('Bot Token',PW('tt','7311029458:AAH-itmaint-bot-token','Bot Token'))}
 ${F('ชื่อบอท','<input class="in" value="@itmaint_alert_bot" aria-label="ชื่อบอท">')}
 ${F('Webhook',CP('tw',host+'/api/webhook/telegram','Webhook Telegram'))}
-<div class="acts">${B('ตรวจ Token','Telegram: Token ถูกต้อง')}${B('ตั้ง Webhook','Telegram: ตั้ง Webhook สำเร็จ')}${B('ทดสอบ','Telegram: ส่งข้อความทดสอบสำเร็จ',1)}</div></div>
-<div class="card">${CH('Email (SMTP)','mail','g2','ส่งอีเมลแจ้งเตือนและรายงาน',SW('mailOn',1,'เปิดใช้งาน Email'))}
+<div class="acts">${B('ตรวจ Token','tg-check')}${B('ตั้ง Webhook','tg-hook')}${B('ทดสอบ','tg-test',1)}</div><div class="res" id="res-tg" aria-live="polite"></div></div>
+<div class="card" id="c-mail">${CH('Email (SMTP)','mail','g2','ส่งอีเมลแจ้งเตือนและรายงาน',SW('mailOn',1,'เปิดใช้งาน Email'))}
 ${F('วิธีส่ง','<select class="in" aria-label="วิธีส่ง"><option selected>SMTP</option><option>PHP mail()</option></select>')}
 ${F('การเข้ารหัส','<select class="in" id="enc" aria-label="การเข้ารหัส"><option value="587" selected>STARTTLS (587)</option><option value="465">SSL/TLS (465)</option><option value="25">ไม่เข้ารหัส (25)</option></select>')}
 ${F('Host','<input class="in" value="smtp.gmail.com" aria-label="Host">')}
@@ -280,7 +296,7 @@ ${F('ผู้ใช้','<input class="in" value="alerts@itmaint.co.th" aria-la
 ${F('App Password',PW('ap','abcd efgh ijkl mnop','App Password'))}
 ${F('อีเมลผู้ส่ง','<input class="in" type="email" value="alerts@itmaint.co.th" aria-label="อีเมลผู้ส่ง">')}
 ${F('ชื่อผู้ส่ง','<input class="in" value="IT&amp;MAINT" aria-label="ชื่อผู้ส่ง">')}
-<div class="acts">${B('ทดสอบส่ง','Email: ส่งอีเมลทดสอบสำเร็จ')}${B('บันทึก','บันทึกการตั้งค่า Email แล้ว',1)}</div></div>
+<div class="acts">${B('ทดสอบส่ง','mail-test')}${B('บันทึก','mail-save',1)}</div><div class="res" id="res-mail" aria-live="polite"></div></div>
 </div>`;
 
 /* tab 3: rules */
@@ -289,7 +305,7 @@ const RULES=[['ใบงาน & แจ้งซ่อม','',[1,0],[1,0],[1,1]]
 const CHN=[['LINE','chat'],['Telegram','send'],['Email','mail']];
 $('#p-rule').innerHTML=`<div class="card mx"><div class="mx-r mx-h"><div>หมวดการแจ้งเตือน</div>${CHN.map(([c,i])=>`<div>${I(i,16)}${c}</div>`).join('')}</div>
 ${RULES.map(([n,s,...cells],r)=>`<div class="mx-r"><div class="mx-n">${n}${s?`<small>${s}</small>`:''}</div>${cells.map(([on,lv],c)=>`<div class="mx-c${on?'':' off'}"><label class="cb"><input type="checkbox" ${on?'checked':''} aria-label="${n} ทาง ${CHN[c][0]}"><span class="lbm">${CHN[c][0]}</span></label><select class="in" aria-label="ระดับ ${n} ทาง ${CHN[c][0]}">${LV.map((l,i)=>`<option ${i===lv?'selected':''}>${l}</option>`).join('')}</select></div>`).join('')}</div>`).join('')}
-</div><div class="save"><p>ส่งเฉพาะเหตุการณ์ที่ระดับเท่ากับหรือสูงกว่าที่เลือก</p>${B(I('check')+'บันทึกกฎ','บันทึกกฎการแจ้งเตือนแล้ว',1)}</div>`;
+</div><div class="save"><p>ส่งเฉพาะเหตุการณ์ที่ระดับเท่ากับหรือสูงกว่าที่เลือก</p><span class="res" id="res-rule"></span>${B(I('check')+'บันทึกกฎ','rule-save',1)}</div>`;
 
 /* tab 4: cron */
 const JOBS=[['ส่งคิวแจ้งเตือน','ทุกนาที','10:42:00','สำเร็จ','ok','8 ms'],['ยกระดับใบงานเกิน SLA','ทุก 5 นาที','—','ยังไม่เคยรัน','',''],['สร้างใบงาน PM ที่ถึงรอบ','ทุก 1 ชม.','10:00:00','สร้าง 2 ใบ PM-2569-0024, 0025','ok','34 ms'],['ตรวจยืม-คืนเกินกำหนด','ทุก 1 ชม.','10:00:00','สำเร็จ','ok','21 ms'],['เตือนหมดอายุ','ทุกวัน 07:00','—','ยังไม่เคยรัน','',''],['เตือน CAPA เกินกำหนด','ทุกวัน 08:00','—','ยังไม่เคยรัน','',''],['เตือนใช้งบเกินเกณฑ์','ทุกวัน 08:15','—','ยังไม่เคยรัน','',''],['สรุปงานประจำวัน','ทุกวัน 07:30','—','ยังไม่เคยรัน','',''],['ปิดงวดค่าเสื่อมอัตโนมัติ','วันที่ 1 เวลา 02:00','—','ยังไม่เคยรัน','',''],['ล้างข้อมูลชั่วคราว','ทุกวัน 03:00','—','ยังไม่เคยรัน','','']];
@@ -301,7 +317,7 @@ $('#p-cron').innerHTML=`<div class="grid" style="margin-bottom:16px">
 <p class="hint">เพิ่มด้วย <code>crontab -e</code> ในผู้ใช้เดียวกับเว็บเซิร์ฟเวอร์</p></div>
 <div class="card">${CH('Web-cron key','key','g3','สำหรับโฮสต์ที่ไม่มี crontab ให้บริการภายนอกเรียก URL นี้ทุกนาที')}
 ${F('URL',CP('wc',host+'/cron.php?key=wc_7Gk2pQ9xLm4R','Web-cron URL'))}
-<div class="acts"><button class="btn" id="regen">${I('key')}สร้างคีย์ใหม่</button></div></div></div>
+<div class="acts"><button class="btn" id="regen">${I('key')}สร้างคีย์ใหม่</button></div><div class="res" id="res-wc"></div></div></div>
 <div class="card tw"><table class="jt"><thead><tr><th>งาน</th><th>รอบเวลา</th><th>รันล่าสุด</th><th>ผล</th><th>ใช้เวลา</th><th style="text-align:right">การทำงาน</th></tr></thead>
 <tbody id="jobs">${JOBS.map((j,i)=>`<tr id="job${i}">${row(j,i)}</tr>`).join('')}</tbody></table></div>`;
 
@@ -320,16 +336,18 @@ document.addEventListener('click',e=>{
   const b=e.target.closest('button,a');if(!b)return;
   if(b.dataset.nav!==undefined){e.preventDefault();if(!b.classList.contains('on'))toast('เปิดเมนู: '+b.dataset.nav);return}
   if(b.dataset.toast){toast(b.dataset.toast);return}
-  if(b.dataset.copy){const el=$(b.dataset.copy);copy(el.value||el.textContent);return}
+  if(b.dataset.copy){const el=$(b.dataset.copy);copy(el.value||el.textContent);b.classList.add('done');b.innerHTML=I('check');b.setAttribute('data-copied','1');clearTimeout(b._t);b._t=setTimeout(()=>{b.classList.remove('done');b.innerHTML=I('copy');b.removeAttribute('data-copied')},1600);return}
+  if(b.dataset.act){ACT(b.dataset.act,b);return}
   if(b.dataset.eye){const el=$(b.dataset.eye);el.type=el.type==='password'?'text':'password';return}
   if(b.dataset.close!==undefined){closeModal();return}
+  if(b.parentElement.id==='theme'){setTheme(b.textContent.trim()==='สว่าง'?'light':'dark');return}
   if(b.parentElement.matches('.seg,.chips')){const seg=b.parentElement.matches('.seg');if(seg)[...b.parentElement.children].forEach(x=>x.setAttribute('aria-pressed',x===b));else b.setAttribute('aria-pressed',b.getAttribute('aria-pressed')!=='true');return}
   if(b.dataset.run){const i=+b.dataset.run;b.disabled=true;b.lastChild.textContent='กำลังรัน…';setTimeout(()=>{const j=JOBS[i],ms=Math.round(5+Math.random()*55)+' ms';j[2]=now();j[3]='สำเร็จ';j[4]='ok';j[5]=ms;HIST[i].unshift([j[2],'สำเร็จ',ms]);const tr=$('#job'+i);tr.innerHTML=row(j,i);tr.classList.remove('flash');void tr.offsetWidth;tr.classList.add('flash');toast(`${j[0]}: รันสำเร็จ (${ms})`)},700);return}
   if(b.dataset.hist){const i=+b.dataset.hist,h=HIST[i];modal('ประวัติ: '+JOBS[i][0],h.length?`<dl class="dl">${h.map(r=>`<dt class="ms">${r[0]}</dt><dd><span class="stat ok">${esc(r[1])}</span> <span class="hint">${r[2]}</span></dd>`).join('')}</dl>`:'<p class="hint">ยังไม่มีประวัติการรัน</p>');return}
 });
 $('#modal').onclick=e=>{if(e.target.id==='modal')closeModal()};
 document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();$('#q').focus()}if(e.key==='Escape'){if(!$('#modal').hidden)closeModal();closeSide()}});
-$('#regen').onclick=()=>{$('#wc').value=host+'/cron.php?key=wc_'+Math.random().toString(36).slice(2,14);toast('สร้าง Web-cron key ใหม่แล้ว')};
+$('#regen').onclick=()=>modal('สร้าง Web-cron key ใหม่',`<p>คีย์เดิมจะใช้งานไม่ได้ทันที บริการภายนอกที่เรียก URL เดิมต้องอัปเดตเป็น URL ใหม่</p><div class="acts"><button class="btn" data-close>ยกเลิก</button><button class="btn pri" id="regenOk">${I('key')}สร้างคีย์ใหม่</button></div>`)||$('#regenOk').addEventListener('click',()=>{const old=$('#wc').value.split('key=')[1];const v=host+'/cron.php?key=wc_'+Math.random().toString(36).slice(2,14);$('#wc').value=v;$('#wc').setAttribute('value',v);LS.set('sn-wc',v);closeModal();setRes('res-wc','ok','สร้างคีย์ใหม่แล้ว · '+now(),'คีย์เดิม '+old.slice(0,6)+'… ถูกยกเลิก');toast('สร้าง Web-cron key ใหม่แล้ว')});
 $('.ava').onclick=()=>modal('บัญชีผู้ใช้',`<dl class="dl"><dt>ชื่อ</dt><dd>Admin</dd><dt>บทบาท</dt><dd>ผู้ดูแลระบบ</dd><dt>ไซต์</dt><dd>โรงงานสมุทรสาคร</dd></dl><div class="acts"><button class="btn" data-close>ปิด</button><button class="btn pri" data-toast="ออกจากระบบ (ตัวอย่าง)">ออกจากระบบ</button></div>`);
 $('#bell').onclick=()=>modal('การแจ้งเตือน','<p class="hint">ไม่มีการแจ้งเตือนใหม่ · Cron ยังไม่ทำงาน คิวจะยังไม่ถูกส่ง</p>');
 $('#newReq').onclick=()=>{modal('แจ้งซ่อม',`${F('ทรัพย์สิน','<input class="in" placeholder="รหัส เช่น AST-0001" aria-label="ทรัพย์สิน">')}${F('อาการ','<input class="in" placeholder="อธิบายอาการ" aria-label="อาการ">')}${F('ความเร่งด่วน','<select class="in" aria-label="ความเร่งด่วน"><option>ทั่วไป</option><option>เตือน</option><option>ด่วน</option></select>')}<div class="acts"><button class="btn" data-close>ยกเลิก</button><button class="btn pri" id="sendReq">ส่งแจ้งซ่อม</button></div>`);$('#sendReq').onclick=()=>{closeModal();toast('สร้างใบแจ้งซ่อมแล้ว')}};
@@ -341,6 +359,63 @@ $('#dep').onchange=e=>$('#depv').textContent=e.target.checked?' เปิดอ�
 $('#enc').onchange=e=>$('#port').value=e.target.value;
 $('#logo').onchange=e=>{const f=e.target.files[0];if(f){$('#lname').textContent=f.name;$('#lpv').innerHTML=I('check')}};
 $('#p-rule').addEventListener('change',e=>{if(e.target.type==='checkbox')e.target.closest('.mx-c').classList.toggle('off',!e.target.checked)});
+/* ===== real actions ===== */
+const LS={get(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const fields=box=>[...box.querySelectorAll('input:not([type=file]),select')];
+function snapshot(box){const pressed=[...box.querySelectorAll('.chips button,.seg:not(#theme) button')].map(x=>x.getAttribute('aria-pressed'));return {v:fields(box).map(el=>el.type==='checkbox'?el.checked:el.value),p:pressed}}
+function restore(box,data){if(!data)return;fields(box).forEach((el,i)=>{if(data.v[i]===undefined)return;if(el.type==='checkbox')el.checked=data.v[i];else{el.value=data.v[i];el.setAttribute('value',data.v[i])}});[...box.querySelectorAll('.chips button,.seg:not(#theme) button')].forEach((x,i)=>{if(data.p&&data.p[i])x.setAttribute('aria-pressed',data.p[i])});box.querySelectorAll('.mx-c input[type=checkbox]').forEach(c=>c.closest('.mx-c').classList.toggle('off',!c.checked))}
+function setRes(id,cls,msg,sub){const r=$('#'+id);if(!r)return;r.innerHTML=`<span class="stat ${cls}">${cls==='run'?'<span class="spin"></span>':''}${esc(msg)}</span>${sub?`<span>${esc(sub)}</span>`:''}`}
+function busy(b,label,ms,fn){if(b.disabled)return;const html=b.innerHTML;b.disabled=true;b.innerHTML=`<span class="spin"></span>${label}`;setTimeout(()=>{b.disabled=false;b.innerHTML=html;fn()},ms)}
+const val=(box,label)=>{const el=box.querySelector(`[aria-label="${label}"]`);return el?el.value.trim():''};
+const lat=()=>Math.round(80+Math.random()*240)+' ms';
+function markErr(box,label,msg){const el=box.querySelector(`[aria-label="${label}"]`);if(el){el.style.borderColor='var(--bad)';el.focus();el.addEventListener('input',()=>el.style.borderColor='',{once:true})}return msg}
+function ACT(a,b){
+  const [ch,op]=a.split('-');
+  if(op==='save'){
+    const box=ch==='gen'?$('#p-gen'):ch==='rule'?$('#p-rule'):$('#c-'+ch);
+    if(ch==='mail'){const e=val(box,'อีเมลผู้ส่ง');if(e&&!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e)){setRes('res-mail','bad','บันทึกไม่ได้: อีเมลผู้ส่งไม่ถูกต้อง');markErr(box,'อีเมลผู้ส่ง');return}}
+    if(ch==='gen'&&!val(box,'ชื่อบริษัท')){setRes('res-gen','bad','กรุณากรอกชื่อบริษัท');markErr(box,'ชื่อบริษัท');return}
+    busy(b,'กำลังบันทึก…',500,()=>{LS.set('sn-'+ch,snapshot(box));
+      let sub='';if(ch==='rule'){const on=box.querySelectorAll('.mx-c input:checked').length,all=box.querySelectorAll('.mx-c input[type=checkbox]').length;sub=`เปิด ${on}/${all} ช่องทาง`}
+      setRes('res-'+ch,'ok','บันทึกแล้ว · '+now(),sub);
+      toast({gen:'บันทึกการตั้งค่าแล้ว',line:'บันทึกการตั้งค่า LINE แล้ว',tg:'บันทึกการตั้งค่า Telegram แล้ว',mail:'บันทึกการตั้งค่า Email แล้ว',rule:'บันทึกกฎการแจ้งเตือนแล้ว'}[ch])});
+    return}
+  const box=$('#c-'+ch),rid='res-'+ch,on=box.querySelector('.sw input').checked;
+  const labels={check:'กำลังตรวจ…',test:'กำลังส่ง…',hook:'กำลังตั้งค่า…'};
+  setRes(rid,'run',labels[op]);
+  busy(b,labels[op],1000,()=>{
+    let err='',ok='',sub='';
+    if(ch==='line'){
+      if(!val(box,'Channel Access Token'))err=markErr(box,'Channel Access Token','ไม่มี Channel Access Token');
+      else if(!val(box,'Channel Secret'))err=markErr(box,'Channel Secret','ไม่มี Channel Secret');
+      else if(op==='test'&&!on)err='LINE ปิดใช้งานอยู่ — เปิดสวิตช์ก่อนทดสอบส่ง';
+      else if(op==='check'){ok='เชื่อมต่อสำเร็จ';sub='OA: IT&MAINT Alert · โควตาคงเหลือ 4,812/5,000 ข้อความ · '+lat()}
+      else{ok='ส่งข้อความทดสอบสำเร็จ';sub='ส่งถึงผู้ติดตาม 18 คน · '+now()}
+    }else if(ch==='tg'){
+      const t=val(box,'Bot Token');
+      if(!/^\d{6,}:[\w-]{10,}$/.test(t))err=markErr(box,'Bot Token','Token ไม่ถูกต้อง (รูปแบบ 123456:ABC…)');
+      else if(op==='test'&&!on)err='Telegram ปิดใช้งานอยู่ — เปิดสวิตช์ก่อนทดสอบ';
+      else if(op==='check'){ok='Token ถูกต้อง';sub='บอท '+(val(box,'ชื่อบอท')||'@bot')+' · id '+t.split(':')[0]+' · '+lat()}
+      else if(op==='hook'){ok='ตั้ง Webhook สำเร็จ';sub=$('#tw').value+' · pending_update_count: 0'}
+      else{ok='ส่งข้อความทดสอบสำเร็จ';sub='ส่งถึง 3 แชท/กลุ่ม · '+now()}
+    }else if(ch==='mail'){
+      const host=val(box,'Host'),u=val(box,'ผู้ใช้'),from=val(box,'อีเมลผู้ส่ง'),port=val(box,'Port');
+      if(!host)err=markErr(box,'Host','ไม่ได้ระบุ SMTP Host');
+      else if(!u)err=markErr(box,'ผู้ใช้','ไม่ได้ระบุผู้ใช้');
+      else if(!$('#ap').value.trim())err=markErr(box,'App Password','ไม่ได้ระบุ App Password');
+      else if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(from))err=markErr(box,'อีเมลผู้ส่ง','อีเมลผู้ส่งไม่ถูกต้อง');
+      else if(!on)err='Email ปิดใช้งานอยู่ — เปิดสวิตช์ก่อนทดสอบส่ง';
+      else{ok='ส่งอีเมลทดสอบสำเร็จ';sub=`${host}:${port} · ส่งถึง ${from} · 250 OK · ${lat()}`}
+    }
+    if(err){setRes(rid,'bad','ล้มเหลว: '+err);toast((ch==='tg'?'Telegram':ch==='line'?'LINE':'Email')+': ไม่สำเร็จ')}
+    else{setRes(rid,'ok',ok,sub);toast((ch==='tg'?'Telegram':ch==='line'?'LINE':'Email')+': '+ok)}
+  });
+}
+function setTheme(t){document.documentElement.classList.toggle('light',t==='light');$$('#theme button').forEach(x=>x.setAttribute('aria-pressed',(x.textContent.trim()==='สว่าง')===(t==='light')));LS.set('sn-theme',t)}
+// restore persisted state
+restore($('#p-gen'),LS.get('sn-gen'));restore($('#p-rule'),LS.get('sn-rule'));['line','tg','mail'].forEach(c=>restore($('#c-'+c),LS.get('sn-'+c)));
+(()=>{const wc=LS.get('sn-wc');if(wc){$('#wc').value=wc;$('#wc').setAttribute('value',wc)}if(LS.get('sn-theme')==='light')setTheme('light');$('#digits').dispatchEvent(new Event('input'));$('#eam').dispatchEvent(new Event('input'))})();
+
 </script>
     <script src="../../assets/site-nav.js"></script>
 </body>
