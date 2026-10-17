@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="th" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ITMAINT Calibration</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" />
+    <link rel="stylesheet" href="../../assets/hark.css" />
+    <link rel="stylesheet" href="../../assets/hark-hero.css" />
+    <style>
+      :root{color-scheme:dark;--x-bg:#0A1024;--x-card:#0F1934;--x-card2:#131F40;--x-line:rgba(86,140,255,.28);--x-glow:0 0 0 1px rgba(86,140,255,.18),0 0 18px rgba(56,110,255,.12);--x-tx:#E8EEFF;--x-tx2:#9DABCF;--x-r:16px;--x-grad:linear-gradient(135deg,#C2410C,#BE185D);--x-ok:#34D399;--x-warn:#FBBF24;--x-bad:#F87171;--x-info:#60A5FA}
+      body{background:var(--x-bg);color:var(--x-tx);font-family:"Noto Sans Thai","Geist",system-ui,sans-serif;font-size:14px;line-height:1.5}
+      .x-app{display:grid;grid-template-columns:248px minmax(0,1fr);min-height:100vh}
+      .x-side{background:#0B1430;border-right:1px solid var(--x-line);padding:16px 12px;position:sticky;top:0;height:100vh;overflow-y:auto}
+      .x-logo{display:flex;gap:10px;align-items:center;padding:4px 8px 16px}.x-logo b{font-size:20px;display:block;line-height:1.1}.x-logo small{color:var(--x-tx2);font-size:12px}
+      .x-grp{margin:14px 8px 4px;font-size:12px;color:var(--x-tx2);letter-spacing:.04em}
+      .x-nav a{display:flex;align-items:center;gap:10px;min-height:44px;padding:0 12px;border-radius:12px;color:var(--x-tx);text-decoration:none;font-size:14px}
+      .x-nav a:hover{background:rgba(96,165,250,.08)}.x-nav a.on{background:linear-gradient(90deg,#1D4ED8,#2563EB);box-shadow:0 0 16px rgba(37,99,235,.45)}
+      .x-nav svg{width:18px;height:18px;flex:none;stroke:currentColor;fill:none;stroke-width:1.8}
+      .x-top{display:flex;align-items:center;gap:10px;padding:12px 20px;border-bottom:1px solid var(--x-line);position:sticky;top:0;background:rgba(10,16,36,.92);backdrop-filter:blur(12px);z-index:5}
+      .x-in,.x-sel{min-height:44px;background:var(--x-card);border:1px solid var(--x-line);border-radius:12px;color:var(--x-tx);padding:0 12px;font:inherit;min-width:0}
+      .x-search{flex:1;display:flex;align-items:center;gap:8px;max-width:520px;min-width:0}.x-search .x-in{flex:1;width:100%}
+      .x-kbd{font:12px "Geist Mono",monospace;color:var(--x-tx2);border:1px solid var(--x-line);border-radius:6px;padding:2px 6px;white-space:nowrap}
+      .x-btn{min-height:44px;min-width:44px;display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:0 16px;border-radius:12px;border:1px solid var(--x-line);background:var(--x-card2);color:var(--x-tx);font:inherit;font-weight:600;cursor:pointer;white-space:nowrap;text-decoration:none}
+      .x-btn:hover{border-color:#5B8CFF}.x-pri{background:var(--x-grad);border:0;color:#fff;box-shadow:0 4px 18px rgba(190,24,93,.35)}
+      .x-ico{padding:0;position:relative}.x-ico svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8}
+      .x-badge{position:absolute;top:6px;right:6px;background:#E11D48;color:#fff;font-size:12px;line-height:16px;min-width:16px;border-radius:8px}
+      .x-av{display:flex;align-items:center;gap:8px;min-height:44px}.x-av i{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#6366F1,#06B6D4);display:grid;place-items:center;font-style:normal;font-weight:700}
+      .x-menu{display:none}
+      .x-body{padding:20px;display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:20px;align-items:start}
+      .x-card{background:linear-gradient(180deg,var(--x-card2),var(--x-card));border:1px solid var(--x-line);border-radius:var(--x-r);box-shadow:var(--x-glow);padding:18px}
+      .x-head{display:flex;gap:14px;align-items:center;flex-wrap:wrap;justify-content:space-between;margin-bottom:16px}
+      .x-head h1{font-size:24px;line-height:1.3;margin:0}.x-head p{color:var(--x-tx2);font-size:13px;max-width:62ch}
+      .x-tile{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;flex:none;background:linear-gradient(135deg,#3B82F6,#8B5CF6)}.x-tile svg{width:22px;height:22px;stroke:#fff;fill:none;stroke-width:1.8}
+      .x-chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+      .x-chip{min-height:44px;padding:0 14px;border-radius:999px;border:1px solid var(--x-line);background:var(--x-card);color:var(--x-tx);font:inherit;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+      .x-chip b{background:#24325C;color:#fff;border-radius:999px;padding:0 8px;font-size:12px}.x-chip[aria-pressed=true]{background:#1D4ED8;border-color:#5B8CFF}
+      .x-row,.x-thead{display:grid;grid-template-columns:minmax(200px,2fr) 1fr 1fr 1.2fr 1.3fr 1.3fr auto;gap:12px;align-items:center}
+      .x-thead{color:var(--x-tx2);font-size:12px;padding:0 16px 8px}
+      .x-row{padding:14px 16px;margin-bottom:10px}
+      .x-tool{display:flex;gap:12px;align-items:center;min-width:0}.x-tool b{display:block}.x-mut{color:var(--x-tx2);font-size:12px}
+      .x-ring{flex:none;width:56px;height:56px;position:relative}.x-ring span{position:absolute;inset:0;display:grid;place-items:center;font-size:12px;font-weight:700;text-align:center;line-height:1}
+      .x-st{display:inline-block;font-size:12px;padding:2px 10px;border-radius:999px;border:1px solid currentColor;margin-top:2px}
+      .s-ok{color:var(--x-ok)}.s-soon{color:var(--x-warn)}.s-over,.s-fail{color:var(--x-bad)}.s-pend{color:var(--x-info)}
+      .x-act{display:flex;gap:8px;flex-wrap:wrap}.x-act .x-btn{padding:0 12px;font-size:13px}
+      .x-lbl{display:none}
+      .x-tl{list-style:none;margin:12px 0 0;padding:0;border-left:2px solid var(--x-line);margin-left:6px}
+      .x-tl li{position:relative;padding:0 0 12px 16px}.x-tl li:before{content:"";position:absolute;left:-6px;top:6px;width:10px;height:10px;border-radius:50%;background:#1E2B52;border:1px solid var(--x-line)}
+      .x-tl li.has:before{background:var(--x-warn);box-shadow:0 0 10px var(--x-warn)}.x-tl li.ok:before{background:var(--x-ok)}
+      .x-tl .m{font-size:13px;font-weight:600}.x-tl .e{font-size:12px;color:var(--x-tx2)}
+      dialog{background:#0F1934;color:var(--x-tx);border:1px solid var(--x-line);border-radius:var(--x-r);box-shadow:0 0 40px rgba(37,99,235,.3);padding:0;width:min(640px,calc(100vw - 24px));max-height:calc(100vh - 24px)}
+      dialog::backdrop{background:rgba(3,6,18,.75)}
+      dialog form{padding:20px;display:grid;gap:12px}dialog h2{font-size:18px;margin:0}
+      .x-f{display:grid;gap:4px;font-size:13px;color:var(--x-tx2)}.x-f .x-in,.x-f .x-sel{width:100%;box-sizing:border-box}
+      .x-g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+      .x-tbl{width:100%;border-collapse:collapse;font-size:13px}.x-tbl th{color:var(--x-tx2);font-weight:500;text-align:left;padding:4px}.x-tbl td{padding:4px}.x-tbl .x-in{width:100%;box-sizing:border-box;padding:0 8px}
+      .x-foot{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
+      .x-toast{position:fixed;bottom:20px;right:20px;left:auto;background:#13224A;border:1px solid #5B8CFF;color:var(--x-tx);border-radius:12px;padding:12px 16px;box-shadow:0 8px 30px rgba(0,0,0,.5);transform:translateY(120px);opacity:0;transition:.3s;z-index:50;max-width:calc(100vw - 40px)}
+      .x-toast.on{transform:none;opacity:1}
+      @media (max-width:1280px){.x-body{grid-template-columns:minmax(0,1fr)}.x-thead{display:none}
+        .x-row{grid-template-columns:repeat(2,minmax(0,1fr))}.x-row>.x-tool,.x-row>.x-act{grid-column:1/-1}.x-lbl{display:block;font-size:12px;color:var(--x-tx2)}}
+      @media (max-width:900px){.x-app{grid-template-columns:minmax(0,1fr)}.x-side{position:fixed;left:0;top:0;z-index:20;width:260px;transform:translateX(-100%);transition:.25s}.x-side.open{transform:none;box-shadow:0 0 40px #000}.x-menu{display:inline-flex}.x-hide{display:none}.x-body{padding:12px}.x-top{padding:10px 12px;gap:6px}.x-kbd{display:none}}
+      @media (max-width:560px){.x-g2{grid-template-columns:1fr}.x-row{grid-template-columns:minmax(0,1fr)}.x-top .x-pri span{display:none}.x-av em{display:none}.x-sel.x-site{max-width:110px}.x-tbl .hide-s{display:none}}
+    </style>
+  </head>
+  <body>
+    <div class="x-app">
+      <aside class="x-side" id="side" aria-label="เมนูหลัก">
+        <div class="x-logo">
+          <svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#22D3EE"/><stop offset="1" stop-color="#2563EB"/></linearGradient></defs><path d="M20 2 36 11v18L20 38 4 29V11z" fill="url(#lg)"/><path d="M13 14h14M20 14v13M14 27h12" stroke="#fff" stroke-width="3" stroke-linecap="round"/></svg>
+          <div><b>IT&amp;MAINT</b><small>Smart Asset · Smart Work</small></div>
+        </div>
+        <nav class="x-nav">
+          <p class="x-grp">ภาพรวม</p>
+          <a href="#"><svg viewBox="0 0 24 24"><path d="M3 11 12 4l9 7v9H3z"/></svg>หน้าหลัก</a>
+          <a href="#"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Command Center</a>
+          <p class="x-grp">ทรัพย์สิน</p>
+          <a href="#"><svg viewBox="0 0 24 24"><path d="M3 7l9-4 9 4v10l-9 4-9-4z"/></svg>ทะเบียนทรัพย์สิน</a>
+          <a href="#"><svg viewBox="0 0 24 24"><circle cx="12" cy="10" r="3"/><path d="M12 21s-7-6-7-11a7 7 0 0 1 14 0c0 5-7 11-7 11z"/></svg>Tracking / ตรวจนับ</a>
+          <p class="x-grp">ซ่อมบำรุง</p>
+          <a href="#"><svg viewBox="0 0 24 24"><path d="M14 7a4 4 0 1 0 3 3l4 4-3 3-4-4"/></svg>แจ้งซ่อม / ใบงาน</a>
+          <a href="#"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>แผน PM</a>
+          <a href="#" class="on" aria-current="page"><svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 13l4-4M12 3v2"/></svg>สอบเทียบเครื่องมือ</a>
+          <p class="x-grp">คลัง &amp; จัดซื้อ</p>
+          <a href="#"><svg viewBox="0 0 24 24"><path d="M4 7h16l-2 12H6zM9 7V4h6v3"/></svg>อะไหล่ / PR / PO</a>
+          <p class="x-grp">วิเคราะห์</p>
+          <a href="#"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>รายงาน / Dashboard</a>
+          <p class="x-grp">ระบบ</p>
+          <a href="#"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M5 19l2-2M17 7l2-2"/></svg>ตั้งค่า / ผู้ใช้</a>
+        </nav>
+      </aside>
+      <div style="min-width:0">
+        <header class="x-top">
+          <button class="x-btn x-ico x-menu" id="menuBtn" aria-label="เปิดเมนู"><svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
+          <select class="x-sel x-site" aria-label="เลือกไซต์"><option>ทุกไซต์</option><option>โรงงานสมุทรสาคร</option><option>โรงงานระยอง</option></select>
+          <label class="x-search"><input class="x-in" id="q" type="search" placeholder="ค้นหาเครื่องมือ / รหัส / ใบรับรอง…" aria-label="ค้นหา" /><span class="x-kbd">Ctrl + K</span></label>
+          <a class="x-btn x-pri x-hide" href="#" id="woBtn">+ แจ้งซ่อม</a>
+          <button class="x-btn x-ico" id="bellBtn" aria-label="การแจ้งเตือน 2 รายการ"><svg viewBox="0 0 24 24"><path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4zM10 20a2 2 0 0 0 4 0"/></svg><span class="x-badge">2</span></button>
+          <div class="x-av"><i aria-hidden="true">A</i><em style="font-style:normal">Admin</em></div>
+        </header>
+        <main class="x-body">
+          <section>
+            <div class="x-head">
+              <div style="display:flex;gap:12px;align-items:center;min-width:0">
+                <div class="x-tile" style="background:linear-gradient(135deg,#F59E0B,#EC4899)"><svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 13l4-4M12 3v2"/></svg></div>
+                <div><h1>สอบเทียบเครื่องมือวัด</h1><p>ISO 9001 ข้อ 7.1.5 / ISO/IEC 17025 · เครื่องมือที่หมดอายุหรือไม่ผ่าน ระบบจะไม่ให้บันทึกค่าในเช็คลิสต์</p></div>
+              </div>
+              <button class="x-btn x-pri" id="regBtn">+ ลงทะเบียนเครื่องมือ</button>
+            </div>
+            <div class="x-chips" id="chips" role="group" aria-label="กรองตามสถานะ"></div>
+            <div class="x-thead" aria-hidden="true"><span>เครื่องมือ</span><span>รอบ/เกณฑ์</span><span>สอบเทียบล่าสุด</span><span>ครบกำหนด</span><span>ผล/ใบรับรอง</span><span>ผู้ให้บริการ</span><span>การดำเนินการ</span></div>
+            <div id="list"></div>
+          </section>
+          <aside class="x-card" aria-label="กำหนดสอบเทียบ 12 เดือนข้างหน้า">
+            <div style="display:flex;gap:10px;align-items:center"><div class="x-tile" style="background:linear-gradient(135deg,#06B6D4,#3B82F6)"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></div><div><b>Timeline 12 เดือนข้างหน้า</b><div class="x-mut">วันครบกำหนดสอบเทียบ</div></div></div>
+            <ol class="x-tl" id="tl"></ol>
+          </aside>
+        </main>
+      </div>
+    </div>
+
+    <dialog id="regDlg" aria-labelledby="regT"><form method="dialog" id="regForm">
+      <h2 id="regT">ลงทะเบียนเครื่องมือวัด</h2>
+      <label class="x-f">ทรัพย์สิน (เฉพาะหมวด "ต้องสอบเทียบ")<select class="x-sel" name="asset" required>
+        <option value="TRQ-003|ประแจทอร์ค 20–100 N·m|ห้องซ่อมบำรุง">TRQ-003 ประแจทอร์ค 20–100 N·m</option>
+        <option value="PHM-002|เครื่องวัด pH ตั้งโต๊ะ|ห้องปฏิบัติการ QC">PHM-002 เครื่องวัด pH ตั้งโต๊ะ</option>
+        <option value="VNC-015|เวอร์เนียร์คาลิปเปอร์ดิจิทัล|ไลน์ผลิต 2">VNC-015 เวอร์เนียร์คาลิปเปอร์ดิจิทัล</option></select></label>
+      <div class="x-g2">
+        <label class="x-f">รอบ (เดือน)<input class="x-in" name="cycle" type="number" min="1" value="12" required /></label>
+        <label class="x-f">เกณฑ์ความคลาดเคลื่อน<input class="x-in" name="tol" value="±0.5" required /></label>
+        <label class="x-f">ช่วงการวัด<input class="x-in" name="range" placeholder="เช่น 0–100" /></label>
+        <label class="x-f">แจ้งเตือนล่วงหน้า (วัน)<input class="x-in" name="warn" type="number" min="0" value="30" /></label>
+      </div>
+      <label class="x-f">ผู้ให้บริการ<input class="x-in" name="vendor" value="บริษัท สยามคาลิเบรชั่น แล็บ จำกัด" /></label>
+      <div id="extra" class="x-g2"></div>
+      <div><button type="button" class="x-btn" id="addField">+ เพิ่มฟิลด์</button></div>
+      <div class="x-foot"><button class="x-btn" value="cancel" formnovalidate>ยกเลิก</button><button class="x-btn x-pri" value="ok">บันทึก</button></div>
+    </form></dialog>
+
+    <dialog id="resDlg" aria-labelledby="resT"><form method="dialog" id="resForm">
+      <h2 id="resT">บันทึกผลสอบเทียบ</h2>
+      <p class="x-mut" id="resSub"></p>
+      <div class="x-g2">
+        <label class="x-f">วันที่สอบเทียบ<input class="x-in" name="date" type="date" required /></label>
+        <label class="x-f">ผล<select class="x-sel" name="result"><option value="pass">ผ่าน</option><option value="fail">ไม่ผ่าน</option><option value="adj">ปรับตั้ง</option></select></label>
+      </div>
+      <div style="overflow-x:auto"><table class="x-tbl"><thead><tr><th>จุดวัด</th><th>ค่าอ้างอิง</th><th>ค่าที่อ่านได้</th><th>Error</th><th>ผ่านเกณฑ์</th></tr></thead><tbody id="pts"></tbody></table></div>
+      <div class="x-g2">
+        <label class="x-f">เลขใบรับรอง<input class="x-in" name="cert" required placeholder="CAL-69-xxxxx" /></label>
+        <label class="x-f">แนบไฟล์<input class="x-in" name="file" type="file" accept=".pdf,image/*" style="padding-top:10px" /></label>
+      </div>
+      <div class="x-foot"><button class="x-btn" value="cancel" formnovalidate>ยกเลิก</button><button class="x-btn x-pri" value="ok">บันทึกผล</button></div>
+    </form></dialog>
+
+    <div class="x-toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="../../assets/hark.js"></script>
+    <script>
+      document.documentElement.setAttribute("data-theme", "dark");
+      const TODAY = new Date(2026, 9, 11), M = ["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."];
+      const thd = (d) => d ? `${d.getDate()} ${M[d.getMonth()]} ${d.getFullYear() + 543}` : "—";
+      const addM = (d, n) => new Date(d.getFullYear(), d.getMonth() + n, d.getDate());
+      const days = (d) => Math.round((d - TODAY) / 864e5);
+      const $ = (s) => document.querySelector(s);
+      const tools = [
+        { id: "GAU-011", name: "เกจวัดแรงดันดิจิทัล", loc: "ห้อง Utility", cycle: 12, tol: "±0.1% FS", tolAbs: 0.01, unit: "bar", ref: [0, 5, 10], last: new Date(2025, 9, 26), result: "pass", cert: "CAL-68-11987", vendor: "บริษัท สยามคาลิเบรชั่น แล็บ จำกัด" },
+        { id: "SCL-002", name: "เครื่องชั่งดิจิทัล 60 กก.", loc: "ห้องปฏิบัติการ QC", cycle: 12, tol: "±0.01 kg", tolAbs: 0.01, unit: "kg", ref: [10, 30, 60], last: new Date(2025, 10, 10), result: "pass", cert: "CAL-68-11223", vendor: "บริษัท สยามคาลิเบรชั่น แล็บ จำกัด", wo: "WO-2569-0009" },
+        { id: "THM-004", name: "เทอร์โมมิเตอร์อินฟราเรด", loc: "ห้องปฏิบัติการ QC", cycle: 12, tol: "±1.0 °C", tolAbs: 1, unit: "°C", ref: [0, 50, 100], last: new Date(2026, 8, 1), result: "pass", cert: "CAL-69-00412", vendor: "บริษัท สยามคาลิเบรชั่น แล็บ จำกัด" },
+      ];
+      const ST = { all: "ทั้งหมด", over: "เกินกำหนด", soon: "ภายใน 30 วัน", fail: "ไม่ผ่าน", pend: "รอผล", ok: "ปกติ" };
+      const STL = { over: "เกินกำหนด", soon: "ใกล้ครบ", fail: "ไม่ผ่าน", pend: "รอผล", ok: "ปกติ" };
+      const RES = { pass: "ผ่าน", fail: "ไม่ผ่าน", adj: "ปรับตั้ง" };
+      let filter = "all", woSeq = 21, cur = null;
+      const due = (t) => t.last ? addM(t.last, t.cycle) : addM(TODAY, 0);
+      function status(t) { if (!t.result) return "pend"; if (t.result === "fail") return "fail"; const d = days(due(t)); return d < 0 ? "over" : d <= 30 ? "soon" : "ok"; }
+      function ring(t, s) {
+        const d = days(due(t)), tot = t.cycle * 30.4, p = Math.max(0, Math.min(1, d / tot)), c = 2 * Math.PI * 23;
+        const col = { ok: "#34D399", soon: "#FBBF24", over: "#F87171", fail: "#F87171", pend: "#60A5FA" }[s];
+        return `<div class="x-ring" role="img" aria-label="อีก ${d} วันถึงครบกำหนด"><svg viewBox="0 0 56 56" width="56" height="56"><circle cx="28" cy="28" r="23" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="5"/><circle cx="28" cy="28" r="23" fill="none" stroke="${col}" stroke-width="5" stroke-linecap="round" stroke-dasharray="${c * p} ${c}" transform="rotate(-90 28 28)" style="filter:drop-shadow(0 0 4px ${col})"/></svg><span>${d}<br><small style="font-weight:400;font-size:12px">วัน</small></span></div>`;
+      }
+      function render() {
+        const q = $("#q").value.trim().toLowerCase(), cnt = { all: tools.length, over: 0, soon: 0, fail: 0, pend: 0, ok: 0 };
+        tools.forEach((t) => cnt[status(t)]++);
+        $("#chips").innerHTML = Object.keys(ST).map((k) => `<button class="x-chip" data-f="${k}" aria-pressed="${k === filter}">${ST[k]} <b>${cnt[k]}</b></button>`).join("");
+        const rows = tools.filter((t) => (filter === "all" || status(t) === filter) && (!q || (t.id + t.name + t.loc + (t.cert || "") + t.vendor).toLowerCase().includes(q)));
+        $("#list").innerHTML = rows.map((t) => { const s = status(t), d = days(due(t)); return `<article class="x-card x-row">
+          <div class="x-tool">${ring(t, s)}<div style="min-width:0"><b>${t.id} ${t.name}</b><span class="x-mut">${t.loc}</span></div></div>
+          <div><span class="x-lbl">รอบ/เกณฑ์</span>ทุก ${t.cycle} เดือน<div class="x-mut">${t.tol}</div></div>
+          <div><span class="x-lbl">สอบเทียบล่าสุด</span>${thd(t.last)}</div>
+          <div><span class="x-lbl">ครบกำหนด</span>${thd(due(t))}<div class="x-mut">${d >= 0 ? "อีก " + d + " วัน" : "เลย " + -d + " วัน"}</div><span class="x-st s-${s}">${STL[s]}</span></div>
+          <div><span class="x-lbl">ผล/ใบรับรอง</span>${t.result ? `<span class="${t.result === "fail" ? "s-fail" : "s-ok"}">● ${RES[t.result]}</span> · ${t.cert}` : '<span class="s-pend">● รอผล</span>'}</div>
+          <div><span class="x-lbl">ผู้ให้บริการ</span><span style="font-size:13px">${t.vendor || "—"}</span></div>
+          <div class="x-act"><button class="x-btn x-pri" data-rec="${t.id}">บันทึกผล</button>${t.wo ? `<a class="x-btn" href="#" style="color:#93C5FD">🔗 ${t.wo}</a>` : `<button class="x-btn" data-wo="${t.id}">เปิดใบงาน</button>`}</div>
+        </article>`; }).join("") || '<div class="x-card x-mut">ไม่พบเครื่องมือในสถานะนี้</div>';
+        let tl = "";
+        for (let i = 0; i < 12; i++) {
+          const m = addM(new Date(TODAY.getFullYear(), TODAY.getMonth(), 1), i), hit = tools.filter((t) => { const x = due(t); return x.getMonth() === m.getMonth() && x.getFullYear() === m.getFullYear(); });
+          tl += `<li class="${hit.length ? (hit.some((t) => days(due(t)) <= 30) ? "has" : "ok") : ""}"><div class="m">${M[m.getMonth()]} ${m.getFullYear() + 543}</div>${hit.map((t) => `<div class="e">${due(t).getDate()} ${M[m.getMonth()]} · ${t.id} ${t.name}</div>`).join("") || '<div class="e">—</div>'}</li>`;
+        }
+        $("#tl").innerHTML = tl;
+      }
+      function toast(msg) { const el = $("#toast"); el.textContent = msg; el.classList.add("on"); clearTimeout(el._t); el._t = setTimeout(() => el.classList.remove("on"), 3000); }
+      document.addEventListener("click", (e) => {
+        const f = e.target.closest("[data-f]"), r = e.target.closest("[data-rec]"), w = e.target.closest("[data-wo]");
+        if (f) { filter = f.dataset.f; render(); }
+        if (w) { const t = tools.find((x) => x.id === w.dataset.wo); t.wo = `WO-2569-00${woSeq++}`; render(); toast(`เปิดใบงาน ${t.wo} สำหรับ ${t.id} แล้ว`); }
+        if (r) openRes(tools.find((x) => x.id === r.dataset.rec));
+      });
+      $("#q").addEventListener("input", render);
+      document.addEventListener("keydown", (e) => { if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") { e.preventDefault(); $("#q").focus(); } });
+      $("#menuBtn").onclick = () => $("#side").classList.toggle("open");
+      $("#woBtn").onclick = (e) => { e.preventDefault(); toast("เปิดฟอร์มแจ้งซ่อมใหม่"); };
+      $("#bellBtn").onclick = () => { const s = tools.filter((t) => status(t) === "soon"); toast(s.length ? `ใกล้ครบกำหนด ${s.length} รายการ: ${s.map((t) => t.id).join(", ")}` : "ไม่มีการแจ้งเตือนใหม่"); };
+      $("#regBtn").onclick = () => { $("#regForm").reset(); $("#extra").innerHTML = ""; $("#regDlg").showModal(); };
+      $("#addField").onclick = () => { const n = $("#extra").children.length + 1; $("#extra").insertAdjacentHTML("beforeend", `<label class="x-f">ฟิลด์เพิ่มเติม ${n}<input class="x-in" placeholder="ชื่อฟิลด์ : ค่า" /></label>`); };
+      $("#regDlg").addEventListener("close", () => {
+        if ($("#regDlg").returnValue !== "ok") return;
+        const fd = new FormData($("#regForm")), [id, name, loc] = fd.get("asset").split("|");
+        if (tools.some((t) => t.id === id)) return toast(`${id} ลงทะเบียนไว้แล้ว`);
+        const num = parseFloat(String(fd.get("tol")).replace(/[^\d.]/g, "")) || 0.5, rmax = parseFloat(String(fd.get("range")).split(/[–-]/).pop()) || 100;
+        tools.push({ id, name, loc, cycle: +fd.get("cycle"), tol: fd.get("tol"), tolAbs: /%/.test(fd.get("tol")) ? (num / 100) * rmax : num, unit: "", ref: [0, rmax / 2, rmax], last: null, result: null, cert: "", vendor: fd.get("vendor") });
+        filter = "all"; render(); toast(`ลงทะเบียน ${id} ${name} แล้ว · รอผลสอบเทียบครั้งแรก`);
+      });
+      function openRes(t) {
+        cur = t; $("#resForm").reset(); $("#resSub").textContent = `${t.id} ${t.name} · เกณฑ์ ${t.tol}`;
+        $("#resForm").date.value = "2026-10-11";
+        $("#pts").innerHTML = t.ref.map((v, i) => `<tr><td>P${i + 1}</td><td><input class="x-in" type="number" step="any" value="${v}" aria-label="ค่าอ้างอิง P${i + 1}"></td><td><input class="x-in" type="number" step="any" value="${v}" aria-label="ค่าที่อ่านได้ P${i + 1}"></td><td class="err">0</td><td class="ok"></td></tr>`).join("");
+        calc(); $("#resDlg").showModal();
+      }
+      function calc() {
+        let all = true;
+        $("#pts").querySelectorAll("tr").forEach((tr) => { const [a, b] = tr.querySelectorAll("input"), e = +b.value - +a.value, ok = Math.abs(e) <= cur.tolAbs + 1e-9; all = all && ok;
+          tr.querySelector(".err").textContent = (e > 0 ? "+" : "") + +e.toFixed(4) + (cur.unit ? " " + cur.unit : "");
+          tr.querySelector(".ok").innerHTML = `<span class="x-st ${ok ? "s-ok" : "s-fail"}">${ok ? "ผ่าน" : "ไม่ผ่าน"}</span>`; });
+        return all;
+      }
+      $("#pts").addEventListener("input", () => { const ok = calc(); const sel = $("#resForm").result; if (!ok && sel.value === "pass") sel.value = "fail"; });
+      $("#resDlg").addEventListener("close", () => {
+        if ($("#resDlg").returnValue !== "ok" || !cur) return;
+        const fd = new FormData($("#resForm")), [y, m, d] = fd.get("date").split("-").map(Number);
+        cur.last = new Date(y, m - 1, d); cur.result = fd.get("result"); cur.cert = fd.get("cert");
+        render(); toast(`บันทึกผล ${cur.id}: ${RES[cur.result]} · ${cur.cert}${cur.result === "fail" ? " · ระงับการบันทึกค่าในเช็คลิสต์" : ""}`);
+      });
+      render();
+    </script>
+  </body>
+</html>
