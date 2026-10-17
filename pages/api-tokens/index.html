@@ -1,0 +1,498 @@
+<!doctype html>
+<html lang="th" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>IT&amp;MAINT REST API &amp; Token</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400&family=Noto+Sans+Thai:wght@400;500;600&display=swap"
+    />
+    <link rel="stylesheet" href="../../assets/hark.css" />
+    <link rel="stylesheet" href="../../assets/hark-hero.css" />
+    <style>
+      :root{--x-bg:#0A1024;--x-glass:#121830;--x-line:rgba(99,179,255,.18);--x-ink:#E8EEFF;--x-dim:#A9B5D1;--x-red:#F87171;--x-amber:#FBBF24;--x-green:#34D399;--x-blue:#60A5FA;--x-violet:#A78BFA;--x-grad:linear-gradient(135deg,#C2410C,#BE185D)}
+      body{background:#0A1024}
+      .x-app{position:fixed;inset:0;display:grid;grid-template-columns:260px 1fr;background:var(--x-bg);color:var(--x-ink);font:var(--weight-regular) 14px/1.5 var(--sans),"Noto Sans Thai",sans-serif;overflow:hidden}
+      .x-app::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(800px 400px at 70% -10%,rgba(99,179,255,.16),transparent 60%),radial-gradient(600px 400px at 0% 100%,rgba(167,139,250,.12),transparent 60%),linear-gradient(rgba(99,179,255,.05) 1px,transparent 1px) 0 0/40px 40px,linear-gradient(90deg,rgba(99,179,255,.05) 1px,transparent 1px) 0 0/40px 40px}
+      .x-app *{font-family:inherit}
+      .x-glass{background:var(--x-glass);backdrop-filter:blur(var(--hark-blur,20px));-webkit-backdrop-filter:blur(20px);border:1px solid var(--x-line);border-radius:16px}
+      .x-side{position:relative;overflow-y:auto;border-right:1px solid var(--x-line);padding:20px 14px;background:rgba(10,16,36,.6)}
+      .x-logo{display:flex;gap:10px;align-items:center;padding:0 8px 18px}
+      .x-logo b{display:block;font-size:16px}.x-logo small{color:var(--x-dim);font-size:12px}
+      .x-tile{flex:none;display:grid;place-items:center;width:40px;height:40px;border-radius:12px;color:#fff;background:var(--x-grad)}
+      .x-tile svg{width:20px;height:20px}
+      .x-t-blue{background:linear-gradient(135deg,#3B82F6,#06B6D4)}.x-t-red{background:linear-gradient(135deg,#F43F5E,#F97316)}.x-t-amber{background:linear-gradient(135deg,#F59E0B,#EF4444)}.x-t-green{background:linear-gradient(135deg,#10B981,#22D3EE)}.x-t-violet{background:linear-gradient(135deg,#8B5CF6,#EC4899)}.x-t-cyan{background:linear-gradient(135deg,#06B6D4,#6366F1)}
+      .x-grp{margin:14px 8px 6px;font-size:12px;color:var(--x-dim);letter-spacing:.04em}
+      .x-nav a{display:flex;align-items:center;gap:10px;min-height:36px;padding:6px 10px;border-radius:10px;color:var(--x-ink);text-decoration:none;font-size:13px;opacity:.85}
+      .x-nav a:hover{background:rgba(99,179,255,.08);opacity:1}
+      .x-nav a.on{background:linear-gradient(90deg,rgba(255,138,61,.2),rgba(255,77,141,.12));border:1px solid rgba(255,138,61,.35);opacity:1;font-weight:600}
+      .x-nav a i{width:6px;height:6px;border-radius:50%;background:var(--x-line);flex:none}.x-nav a.on i{background:#FF8A3D}
+      .x-badge{margin-left:auto;font-size:12px;font-style:normal;padding:0 8px;border-radius:99px;background:#4A1F2E;color:#FECACA}
+      .x-main{position:relative;overflow-y:auto;display:flex;flex-direction:column}
+      .x-top{position:sticky;top:0;z-index:5;display:flex;gap:12px;align-items:center;padding:12px 24px;border-bottom:1px solid var(--x-line);background:rgba(10,16,36,.75);backdrop-filter:blur(20px)}
+      .x-in,.x-sel{height:44px;padding:0 12px;border-radius:12px;border:1px solid var(--x-line);background:#121830;color:var(--x-ink);font-size:14px}
+      .x-sel option{background:#121a36}
+      .x-search{flex:1;max-width:420px;position:relative}.x-search .x-in{width:100%;padding-left:36px}
+      .x-search svg{position:absolute;left:12px;top:12px;width:16px;height:16px;color:var(--x-dim)}
+      .x-search kbd{position:absolute;right:10px;top:10px;font:12px var(--sans);color:var(--x-dim);border:1px solid var(--x-line);border-radius:6px;padding:0 6px}
+      .x-btn{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:0 16px;border-radius:12px;border:1px solid var(--x-line);background:#141B33;color:var(--x-ink);font-size:14px;font-weight:500;cursor:pointer;white-space:nowrap}
+      .x-btn:hover{background:rgba(99,179,255,.1)}
+      .x-btn--p{border:0;background:var(--x-grad);color:#fff;box-shadow:0 6px 20px rgba(255,77,141,.3)}
+      .x-btn--sm{min-height:44px;padding:0 10px;font-size:13px;border-radius:10px}
+      .x-btn--danger{color:#FCA5A5;border-color:rgba(248,113,113,.35)}
+      .x-icon{flex:none;width:44px;height:44px;display:grid;place-items:center;border-radius:12px;border:1px solid var(--x-line);background:#141B33;color:var(--x-ink);position:relative;cursor:pointer}
+      .x-icon svg{width:18px;height:18px}.x-dotr{position:absolute;top:8px;right:9px;width:8px;height:8px;border-radius:50%;background:#FF4D8D}
+      .x-av{display:flex;align-items:center;gap:8px;font-size:13px}.x-av span{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#8B5CF6,#3B82F6);font-weight:600}
+      .x-body{padding:20px 24px 40px;display:flex;flex-direction:column;gap:18px}
+      .x-crumb{font-size:13px;color:var(--x-dim)}.x-crumb b{color:var(--x-ink);font-weight:500}
+      .x-head{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
+      .x-head h1{font-size:24px;font-weight:600}.x-head p{margin:2px 0 0;color:var(--x-dim);font-size:13px}
+      .x-kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}
+      .x-kpi{display:flex;gap:12px;align-items:flex-start;padding:14px;text-align:left;color:var(--x-ink);cursor:pointer}
+      .x-kpi:hover,.x-kpi.on{border-color:rgba(255,138,61,.6);box-shadow:0 0 0 1px rgba(255,138,61,.3) inset}
+      .x-kpi .x-tile{width:36px;height:36px}
+      .x-kpi small{display:block;font-size:12px;color:var(--x-dim)}.x-kpi b{display:block;font-size:24px;font-weight:600;line-height:1.2}.x-kpi em{font-style:normal;font-size:12px;color:var(--x-dim)}
+      .x-charts{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+      .x-card{padding:16px}.x-card h3{font-size:14px;font-weight:600;margin-bottom:8px}
+      .x-card .chart{margin:0}.x-card .chart__canvas{height:200px}
+      .x-bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+      .x-seg{display:inline-flex;padding:3px;border-radius:12px;border:1px solid var(--x-line);background:#0F1630}
+      .x-seg button{min-height:44px;padding:0 14px;border:0;border-radius:9px;background:none;color:var(--x-dim);cursor:pointer;font-size:13px}
+      .x-seg button.on{background:#1C3358;color:var(--x-ink)}
+      .x-chk{display:flex;gap:6px;align-items:center;font-size:13px;min-height:40px;cursor:pointer}.x-chk input{accent-color:#FF8A3D;width:16px;height:16px}
+      .x-tbl{overflow-x:auto;padding:4px 16px}
+      .x-tbl table{min-width:960px}
+      .x-tbl th,.x-tbl td{border-bottom:1px solid rgba(99,179,255,.1);padding:12px 8px;vertical-align:middle;color:var(--x-ink)}
+      .x-tbl thead th{color:var(--x-dim);font-size:12px;font-weight:500}
+      .x-tbl tbody tr{cursor:pointer}.x-tbl tbody tr:hover{background:rgba(99,179,255,.06)}
+      .x-tbl small{color:var(--x-dim)}
+      .x-no{font-family:"Geist Mono",monospace;font-size:13px;color:#93C5FD}
+      .x-chip{display:inline-flex;align-items:center;gap:6px;padding:2px 10px;border-radius:99px;font-size:12px;white-space:nowrap;border:1px solid}
+      .x-chip::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+      .x-c-red{color:#FCA5A5;background:#3A1C2A;border-color:rgba(248,113,113,.35)}
+      .x-c-amber{color:#FCD34D;background:#3A2E1A;border-color:rgba(251,191,36,.35)}
+      .x-c-green{color:#6EE7B7;background:#12302A;border-color:rgba(52,211,153,.35)}
+      .x-c-blue{color:#93C5FD;background:#172A4A;border-color:rgba(96,165,250,.35)}
+      .x-c-violet{color:#C4B5FD;background:#2A2350;border-color:rgba(167,139,250,.35)}
+      .x-c-grey{color:#CBD5E1;background:#222A3A;border-color:rgba(148,163,184,.3)}
+      .x-sla-over{color:#FCA5A5;font-weight:600}.x-sla-warn{color:#FCD34D}
+      .x-empty{padding:30px;text-align:center;color:var(--x-dim)}
+      .x-kan{display:grid;grid-template-columns:repeat(5,minmax(220px,1fr));gap:12px;overflow-x:auto}
+      .x-col{padding:12px;min-height:300px}.x-col.over{border-color:#FF8A3D;background:rgba(255,138,61,.06)}
+      .x-col h4{margin:0 0 10px;font-size:13px;display:flex;justify-content:space-between}
+      .x-kc{padding:10px 12px;margin-bottom:8px;border-radius:12px;background:#18203A;border:1px solid var(--x-line);cursor:grab;font-size:13px}
+      .x-kc p{margin:4px 0}.x-kc .x-row{display:flex;justify-content:space-between;gap:6px;align-items:center;font-size:12px;color:var(--x-dim)}
+      .x-scrim{position:fixed;inset:0;z-index:20;background:rgba(3,6,18,.6);opacity:0;pointer-events:none;transition:opacity var(--dur-quick) var(--ease-out)}
+      .x-scrim.open{opacity:1;pointer-events:auto}
+      .x-drawer{position:fixed;z-index:21;top:0;right:0;bottom:0;width:min(560px,100%);background:#0E1630;border-left:1px solid var(--x-line);color:var(--x-ink);transform:translateX(100%);transition:transform var(--dur-quick) var(--ease-out);display:flex;flex-direction:column;font-family:var(--sans),"Noto Sans Thai",sans-serif}
+      .x-drawer.open{transform:none}
+      .x-dh{padding:18px 20px;border-bottom:1px solid var(--x-line)}.x-dh h2{font-size:20px;font-weight:600;margin:4px 0 8px}
+      .x-tabs{display:flex;gap:4px;padding:0 20px;border-bottom:1px solid var(--x-line);overflow-x:auto}
+      .x-tabs button{min-height:44px;padding:0 10px;background:none;border:0;border-bottom:2px solid transparent;color:var(--x-dim);cursor:pointer;white-space:nowrap;font-size:13px}
+      .x-tabs button.on{color:var(--x-ink);border-color:#FF8A3D}
+      .x-dbody{flex:1;overflow-y:auto;padding:18px 20px;font-size:14px}
+      .x-dl{display:grid;grid-template-columns:140px 1fr;gap:10px 12px;margin:0}.x-dl dt{color:var(--x-dim)}.x-dl dd{margin:0}
+      .x-tl{list-style:none;margin:0;padding:0}.x-tl li{position:relative;padding:0 0 16px 24px;border-left:2px solid var(--x-line);margin-left:6px}
+      .x-tl li::before{content:"";position:absolute;left:-7px;top:3px;width:12px;height:12px;border-radius:50%;background:#1E2A4A;border:2px solid var(--x-line)}
+      .x-tl li.done::before{background:var(--x-green);border-color:var(--x-green)}.x-tl li.now::before{background:#FF8A3D;border-color:#FF8A3D}
+      .x-tl small{display:block;color:var(--x-dim)}
+      .x-mini{width:100%;border-collapse:collapse;font-size:13px}.x-mini th,.x-mini td{padding:8px 4px;border-bottom:1px solid rgba(99,179,255,.1);color:var(--x-ink)}.x-mini td:last-child,.x-mini th:last-child{text-align:right}
+      .x-mini tfoot td{font-weight:600;border:0}
+      .x-files{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.x-files div{aspect-ratio:4/3;border-radius:12px;border:1px dashed var(--x-line);display:grid;place-items:center;color:var(--x-dim);font-size:12px;text-align:center}
+      .x-dfoot{display:flex;flex-wrap:wrap;gap:8px;padding:14px 20px;border-top:1px solid var(--x-line)}
+      .x-modal{position:fixed;z-index:22;left:50%;top:50%;width:min(720px,94vw);max-height:90vh;overflow-y:auto;transform:translate(-50%,-48%);opacity:0;pointer-events:none;background:#0E1630;border:1px solid var(--x-line);border-radius:16px;color:var(--x-ink);transition:all var(--dur-quick) var(--ease-out);font-family:var(--sans),"Noto Sans Thai",sans-serif}
+      .x-modal.open{opacity:1;pointer-events:auto;transform:translate(-50%,-50%)}
+      .x-form{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:20px}
+      .x-form label{display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--x-dim);position:relative}
+      .x-form .x-full{grid-column:1/-1}.x-form textarea{height:80px;padding:10px 12px;resize:vertical}
+      .x-ta{position:absolute;top:100%;left:0;right:0;z-index:3;margin-top:4px;background:#121a36;border:1px solid var(--x-line);border-radius:12px;overflow:hidden;display:none}
+      .x-ta button{display:block;width:100%;text-align:left;padding:10px 12px;background:none;border:0;color:var(--x-ink);cursor:pointer;font-size:13px}.x-ta button:hover{background:rgba(99,179,255,.1)}
+      .x-addf{color:#FF8A3D;background:none;border:0;cursor:pointer;font-size:13px;min-height:44px;padding:0;align-self:flex-start}
+      .x-extra{display:flex;flex-direction:column;gap:8px}.x-extra div{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+      .x-mfoot{display:flex;justify-content:flex-end;gap:8px;padding:14px 20px;border-top:1px solid var(--x-line)}
+      .x-toast{position:fixed;z-index:30;bottom:24px;left:50%;transform:translate(-50%,20px);opacity:0;padding:12px 18px;border-radius:12px;background:#12302A;border:1px solid rgba(52,211,153,.4);color:#A7F3D0;font-size:14px;transition:all var(--dur-quick) var(--ease-out);font-family:var(--sans),"Noto Sans Thai",sans-serif}
+      .x-toast.show{opacity:1;transform:translate(-50%,0)}
+      @media (max-width:1200px){.x-kpis{grid-template-columns:repeat(3,1fr)}}
+      @media (max-width:860px){.x-app{grid-template-columns:1fr}.x-side{display:none}.x-charts{grid-template-columns:1fr}.x-kpis{grid-template-columns:repeat(2,1fr)}.x-form{grid-template-columns:1fr}.x-top .x-av b,.x-search kbd{display:none}}
+    
+      .x-pop{position:absolute;right:24px;top:64px;z-index:9;width:320px;padding:8px;display:none}
+      .x-pop.open{display:block}
+      .x-pop a{display:block;padding:10px 12px;border-radius:10px;color:var(--x-ink);text-decoration:none;font-size:13px}
+      .x-pop a:hover{background:rgba(99,179,255,.08)}.x-pop a small{display:block;color:var(--x-dim);font-size:12px}
+      .x-pop h4{margin:4px 12px 6px;font-size:13px;font-weight:600}
+      .x-err{color:#FCA5A5;font-size:12px;min-height:0}
+      .x-invalid{border-color:#F87171 !important;box-shadow:0 0 0 1px rgba(248,113,113,.4) inset}
+      .x-btn:disabled{opacity:.45;cursor:not-allowed}
+      .x-spin{display:inline-block;width:14px;height:14px;border-radius:50%;border:2px solid rgba(255,255,255,.25);border-top-color:#fff;animation:xspin .8s linear infinite;vertical-align:-2px}
+      @keyframes xspin{to{transform:rotate(360deg)}}
+
+      .t-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+      .x-tbl table{width:100%;border-collapse:collapse}
+      .t-pfx{font-family:"Geist Mono",monospace;font-size:12.5px;color:var(--x-dim)}
+      .t-scopes{display:flex;flex-wrap:wrap;gap:4px;max-width:320px}
+      .t-sc{font:11.5px "Geist Mono",monospace;padding:1px 8px;border-radius:99px;background:#172A4A;color:#93C5FD;border:1px solid rgba(96,165,250,.3);white-space:nowrap}
+      .t-sc.w{background:#3A2E1A;color:#FCD34D;border-color:rgba(251,191,36,.35)}
+      .t-checks{display:grid;grid-template-columns:1fr 1fr;gap:2px 16px;padding:10px 12px;border:1px solid var(--x-line);border-radius:12px;background:#0F1630}
+      .t-checks label{flex-direction:row !important;align-items:center;gap:8px !important;color:var(--x-ink) !important;min-height:36px;cursor:pointer}
+      .t-checks input{accent-color:#FF8A3D;width:16px;height:16px}
+      .t-checks small{color:var(--x-dim);font-size:11.5px}
+      .t-newtok{display:flex;gap:8px;align-items:stretch}
+      .t-newtok code{flex:1;display:block;padding:12px 14px;border-radius:12px;background:#0A1024;border:1px solid rgba(52,211,153,.45);font:13px/1.5 "Geist Mono",monospace;color:#A7F3D0;word-break:break-all;user-select:all}
+      .t-warn{padding:12px 14px;border-radius:12px;background:#3A2E1A;border:1px solid rgba(251,191,36,.35);color:#FDE68A;font-size:13px}
+      .t-ep{padding:16px;display:flex;flex-direction:column;gap:10px}
+      .t-ep-h{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+      .t-m{font:600 12px "Geist Mono",monospace;padding:3px 10px;border-radius:8px;letter-spacing:.04em}
+      .t-m-GET{background:#12302A;color:#6EE7B7;border:1px solid rgba(52,211,153,.4)}
+      .t-m-POST{background:#172A4A;color:#93C5FD;border:1px solid rgba(96,165,250,.4)}
+      .t-m-PATCH{background:#3A2E1A;color:#FCD34D;border:1px solid rgba(251,191,36,.4)}
+      .t-path{font:14px "Geist Mono",monospace;color:var(--x-ink)}
+      .t-ep p{margin:0;color:var(--x-dim);font-size:13px}
+      .t-code{position:relative}
+      .t-code pre{margin:0;padding:12px 14px;padding-right:96px;border-radius:12px;background:#0A1024;border:1px solid var(--x-line);font:12.5px/1.6 "Geist Mono",monospace;color:#CFE3FF;overflow-x:auto;white-space:pre}
+      .t-code .x-btn{position:absolute;top:6px;right:6px}
+      .t-res{border-radius:12px;border:1px solid var(--x-line);background:#0B1229;padding:10px 14px;font-size:13px}
+      .t-res pre{margin:8px 0 0;font:12px/1.5 "Geist Mono",monospace;color:var(--x-ink);max-height:260px;overflow:auto;white-space:pre-wrap}
+      .t-params{width:100%;border-collapse:collapse;font-size:12.5px}
+      .t-params td{padding:5px 6px;border-bottom:1px solid rgba(99,179,255,.08);color:var(--x-ink);vertical-align:top}
+      .t-params td:first-child{font-family:"Geist Mono",monospace;color:#93C5FD;white-space:nowrap;width:30%}
+      .t-eps{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+      .t-base{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:12px 16px}
+      .t-base code{font:13px "Geist Mono",monospace;color:#CFE3FF}
+      .x-modal .x-dh p{margin:0;color:var(--x-dim);font-size:13px}
+      @media (max-width:1200px){.t-kpis{grid-template-columns:repeat(2,1fr)}.t-eps{grid-template-columns:1fr}}
+      @media (max-width:860px){.t-checks{grid-template-columns:1fr}}
+
+    </style>
+  </head>
+  <body>
+    <div class="page" id="top">
+    <div class="x-app">
+      <aside class="x-side" aria-label="เมนูหลัก">
+        <div class="x-logo"><span class="x-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.4-.6-.6-2.4z"/></svg></span><div><b>IT&amp;MAINT</b><small>Smart Asset · Smart Work</small></div></div>
+        <nav class="x-nav" id="x-nav"></nav>
+      </aside>
+      <div class="x-main">
+        <header class="x-top">
+          <select class="x-sel" id="x-site" aria-label="เลือกไซต์"><option value="">ทุกไซต์</option><option>โรงงานสมุทรสาคร</option><option>โรงงานระยอง</option></select>
+          <div class="x-search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input class="x-in" id="x-gsearch" placeholder="ค้นหา Token scope..." aria-label="ค้นหา" /><kbd>Ctrl+K</kbd></div>
+          <span style="flex:1"></span>
+          <a class="x-btn x-btn--p" href="../repair-requests/?new=1" style="text-decoration:none">+ แจ้งซ่อม</a>
+          <button class="x-icon" type="button" id="x-bell" aria-label="การแจ้งเตือน"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10 21h4"/></svg><i class="x-dotr"></i></button>
+          <div class="x-av"><span>A</span><b>Admin</b></div>
+          <div class="x-glass x-pop" id="x-pop" role="dialog" aria-label="การแจ้งเตือน"><h4>การแจ้งเตือนใหม่ 3 รายการ</h4>
+            <a href="../wo/"><b>WO-2569-0001 เกิน SLA</b><small>สายพานลำเลียง CONV-03 · โรงงานสมุทรสาคร</small></a>
+            <a href="../wo/"><b>WO-2569-0004 เกิน SLA</b><small>ปั๊มน้ำ PMP-11 · โรงงานระยอง</small></a>
+            <a href="../purchasing-pr-po/"><b>PR รออนุมัติ 1 รายการ</b><small>ลูกปืน 6205-2RS · โรงงานสมุทรสาคร</small></a>
+          </div>
+        </header>
+        <div class="x-body">
+          <div class="x-crumb">หน้าแรก / ระบบ / <b>REST API &amp; Token</b></div>
+
+          <div class="x-head">
+            <div><h1>REST API &amp; Token</h1><p>จัดการ Personal Access Token สำหรับเชื่อมต่อ ERP / MES / BI · ใช้ Bearer Token ใน Header <code>Authorization</code></p></div>
+            <div class="x-bar"><button class="x-btn" type="button" id="t-openapi">⬇ OpenAPI (JSON)</button><button class="x-btn x-btn--p" type="button" id="t-new">+ สร้าง Token</button></div>
+          </div>
+          <div class="t-kpis" id="t-kpis"></div>
+          <div class="x-bar">
+            <div class="x-seg" id="t-tabs" role="tablist"><button type="button" data-v="active">ใช้งานอยู่</button><button type="button" data-v="expired">หมดอายุ</button><button type="button" data-v="revoked">เพิกถอนแล้ว</button><button type="button" data-v="" class="on">ทั้งหมด</button></div>
+            <input class="x-in" id="f-q" placeholder="ค้นหาชื่อ Token / scope" aria-label="ค้นหา Token" style="min-width:240px" />
+          </div>
+          <div class="x-glass x-tbl"><table><thead><tr><th>ชื่อ Token</th><th>สิทธิ์ (Scopes)</th><th>ไซต์</th><th>สร้างเมื่อ</th><th>ใช้ล่าสุด</th><th>หมดอายุ</th><th>สถานะ</th><th></th></tr></thead><tbody id="t-rows"></tbody></table></div>
+
+          <div class="x-head" style="margin-top:8px"><div><h1 style="font-size:20px">Endpoint Reference</h1><p>REST API v1 · JSON · UTF-8 · จำกัด 600 requests/นาที ต่อ Token</p></div></div>
+          <div class="x-glass t-base">
+            <span style="color:var(--x-dim);font-size:13px">Base URL</span><code id="t-baseurl">https://itmaint.example.co.th/api/v1</code>
+            <button class="x-btn x-btn--sm" type="button" id="t-copybase">คัดลอก</button>
+            <span style="flex:1"></span>
+            <label class="x-chk" style="gap:8px">ทดสอบด้วย Token <select class="x-sel" id="t-testtok" aria-label="Token สำหรับทดสอบ"></select></label>
+          </div>
+          <div class="t-eps" id="t-eps"></div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="x-scrim" id="x-scrim"></div>
+    <div class="x-modal" id="m-new" role="dialog" aria-modal="true" aria-labelledby="m-new-h">
+      <div class="x-dh"><h2 id="m-new-h">สร้าง Token ใหม่</h2><p>Token จะแสดงเพียงครั้งเดียวหลังสร้าง โปรดเก็บไว้ในที่ปลอดภัย</p></div>
+      <form class="x-form" id="m-form" novalidate>
+        <label class="x-full">ชื่อ Token *<input class="x-in" name="name" id="m-name" placeholder="เช่น ERP Sync (SAP B1)" maxlength="60" autocomplete="off" /><span class="x-err" data-err="name"></span></label>
+        <label>วันหมดอายุ *<select class="x-sel" name="exp" id="m-exp"><option value="">— เลือกระยะเวลา —</option><option value="30">30 วัน</option><option value="90">90 วัน</option><option value="180">180 วัน</option><option value="365">1 ปี</option><option value="0">ไม่มีวันหมดอายุ (ไม่แนะนำ)</option></select><span class="x-err" data-err="exp"></span></label>
+        <label>ไซต์ที่เข้าถึงได้ *<select class="x-sel" name="site" id="m-site"><option value="">— เลือกไซต์ —</option><option>ทุกไซต์</option><option>โรงงานสมุทรสาคร</option><option>โรงงานระยอง</option></select><span class="x-err" data-err="site"></span></label>
+        <div class="x-full" style="display:flex;flex-direction:column;gap:6px"><span style="font-size:13px;color:var(--x-dim)">สิทธิ์ (Scopes) * — เลือกอย่างน้อย 1 รายการ</span><div class="t-checks" id="m-scopes" tabindex="-1"></div><span class="x-err" data-err="scopes"></span></div>
+        <label class="x-full">จำกัด IP (ไม่บังคับ)<input class="x-in" name="ips" id="m-ips" placeholder="เช่น 10.10.1.0/24, 172.16.20.8" autocomplete="off" /><span class="x-err" data-err="ips"></span></label>
+        <label class="x-full">หมายเหตุ (ไม่บังคับ)<textarea class="x-in" name="note" placeholder="ใช้กับระบบใด ผู้รับผิดชอบ"></textarea></label>
+      </form>
+      <div class="x-mfoot"><button class="x-btn x-btn--p" type="button" id="m-save">สร้าง Token</button><button class="x-btn" type="button" id="m-cancel" style="order:-1">ยกเลิก</button></div>
+    </div>
+    <div class="x-modal" id="m-show" role="dialog" aria-modal="true" aria-labelledby="m-show-h" style="width:min(640px,94vw)">
+      <div class="x-dh"><h2 id="m-show-h">สร้าง Token สำเร็จ</h2><p id="m-show-sub"></p></div>
+      <div style="padding:20px;display:flex;flex-direction:column;gap:14px">
+        <div class="t-warn">⚠ คัดลอก Token นี้ตอนนี้ — ระบบเก็บเฉพาะค่า Hash และจะไม่แสดง Token เต็มอีก หากทำหายต้องสร้างใหม่</div>
+        <div class="t-newtok"><code id="m-token"></code><button class="x-btn x-btn--p" type="button" id="m-copytok" disabled>คัดลอก</button></div>
+        <div class="t-code"><pre id="m-tokcurl"></pre><button class="x-btn x-btn--sm" type="button" id="m-copycurl" disabled>คัดลอก</button></div>
+      </div>
+      <div class="x-mfoot"><button class="x-btn x-btn--p" type="button" id="m-done" disabled>ฉันเก็บ Token แล้ว</button></div>
+    </div>
+    <div class="x-modal" id="m-revoke" role="dialog" aria-modal="true" aria-labelledby="m-rev-h" style="width:min(520px,94vw)">
+      <div class="x-dh"><h2 id="m-rev-h">เพิกถอน Token?</h2></div>
+      <div style="padding:20px;display:flex;flex-direction:column;gap:10px;font-size:14px"><p id="m-rev-txt" style="margin:0"></p><p style="margin:0;color:var(--x-dim);font-size:13px">ระบบที่ใช้ Token นี้จะได้รับ <code>401 Unauthorized</code> ทันที และไม่สามารถยกเลิกการเพิกถอนได้</p></div>
+      <div class="x-mfoot"><button class="x-btn" type="button" id="m-rev-cancel">ยกเลิก</button><button class="x-btn x-btn--danger" type="button" id="m-rev-ok" disabled>เพิกถอน Token</button></div>
+    </div>
+
+    <div class="x-toast" id="x-toast" role="status"></div>
+    </div>
+
+    <script>
+      const ACTIVE_NAV = "REST API & Token";
+
+      document.documentElement.setAttribute("data-theme", "dark");
+      const $ = (s, r = document) => r.querySelector(s);
+      const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+      const esc = (v) => String(v ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+      const NAV = [
+        ["ภาพรวม", ["Command Center", "จอแสดงผล TV", "ปฏิทินรวม"]],
+        ["ทรัพย์สิน", ["ทะเบียนทรัพย์สินกลาง", "พิมพ์ป้าย QR/Barcode", "สินทรัพย์ถาวร & ค่าเสื่อม", "โอนย้าย/ยืม-คืน/จำหน่าย", "IT Asset & License", "EAM ลำดับชั้น/Lifecycle", "ติดตามตำแหน่ง", "ตรวจนับทรัพย์สิน", "คลังดิจิทัล (DAM)"]],
+        ["ซ่อมบำรุง", ["ใบสั่งงาน (WO)|18", "ใบแจ้งซ่อม", "แผน PM & เช็คลิสต์|6", "Predictive/IoT", "สอบเทียบเครื่องมือ"]],
+        ["คลัง & จัดซื้อ", ["คลังอะไหล่|3", "จัดซื้อ PR/PO & สัญญา", "ต้นทุน & งบประมาณ"]],
+        ["วิเคราะห์", ["RCA/FMEA", "รายงาน & KPI"]],
+        ["ระบบ", ["ผู้ใช้งาน", "บทบาท & สิทธิ์ (RBAC)", "ข้อมูลหลัก", "ตั้งค่าระบบ", "การแจ้งเตือน & Cron", "REST API & Token", "Audit Log"]]
+      ];
+      // the three new screens get direct links; every other item is wired by assets/site-nav.js
+      const NAV_LINKS = { "พิมพ์ป้าย QR/Barcode": "../qr-labels/", "REST API & Token": "../api-tokens/", "Audit Log": "../audit-log/" };
+      $("#x-nav").innerHTML = NAV.map(([g, items]) => `<p class="x-grp">${g}</p>` + items.map((it) => {
+        const [n, b] = it.split("|"), on = n === ACTIVE_NAV;
+        return `<a href="${NAV_LINKS[n] || "#top"}" class="${on ? "on" : ""}" ${on ? 'aria-current="page"' : ""}><i></i>${n.replace(/&/g, "&amp;")}${b ? `<em class="x-badge">${b}</em>` : ""}</a>`;
+      }).join("")).join("");
+      let tt;
+      function toast(m, bad) {
+        const t = $("#x-toast"); t.textContent = m;
+        t.style.background = bad ? "#3A1C2A" : ""; t.style.borderColor = bad ? "rgba(248,113,113,.45)" : ""; t.style.color = bad ? "#FECACA" : "";
+        t.classList.add("show"); clearTimeout(tt); tt = setTimeout(() => t.classList.remove("show"), 2600);
+      }
+      $("#x-bell").addEventListener("click", (e) => { e.stopPropagation(); $("#x-pop").classList.toggle("open"); });
+      document.addEventListener("click", (e) => { if (!e.target.closest("#x-pop,#x-bell")) $("#x-pop").classList.remove("open"); });
+      document.addEventListener("keydown", (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") { e.preventDefault(); $("#x-gsearch").focus(); }
+      });
+      $("#x-gsearch").addEventListener("input", (e) => { const q = $("#f-q"); if (q) { q.value = e.target.value; q.dispatchEvent(new Event("input")); } });
+      function download(name, text, type) {
+        const blob = new Blob([text], { type: type || "text/plain;charset=utf-8" });
+        const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = name;
+        document.body.appendChild(a); a.click(); a.remove();
+      }
+      async function copyText(text, msg, btn) {
+        if (btn) { if (!btn.dataset.label) btn.dataset.label = btn.textContent; btn.textContent = "✓ คัดลอกแล้ว"; clearTimeout(btn._t); btn._t = setTimeout(() => (btn.textContent = btn.dataset.label), 1600); }
+        try { await navigator.clipboard.writeText(text); toast(msg || "คัดลอกแล้ว"); }
+        catch (e) { const ta = document.createElement("textarea"); ta.value = text; document.body.appendChild(ta); ta.select(); try { document.execCommand("copy"); toast(msg || "คัดลอกแล้ว"); } catch (_) { toast("คัดลอกไม่สำเร็จ", true); } ta.remove(); }
+      }
+      const store = {
+        get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
+        set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+      };
+
+
+      const SCOPES = [
+        ["assets:read", "อ่านทะเบียนทรัพย์สิน"], ["assets:write", "สร้าง/แก้ไขทรัพย์สิน"],
+        ["work-orders:read", "อ่านใบสั่งงาน"], ["work-orders:write", "สร้าง/อัปเดตใบสั่งงาน"],
+        ["repair-requests:read", "อ่านใบแจ้งซ่อม"], ["repair-requests:write", "สร้างใบแจ้งซ่อม"],
+        ["spare-parts:read", "อ่านคลังอะไหล่"], ["reports:read", "อ่านรายงาน & KPI"]
+      ];
+      const TODAY = new Date("2026-03-12T09:30:00");
+      const DAY = 864e5;
+      const TH_M = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."];
+      const thDate = (iso) => { if (!iso) return "—"; const d = new Date(iso); return `${d.getDate()} ${TH_M[d.getMonth()]} ${d.getFullYear() + 543}`; };
+      const ago = (iso) => { if (!iso) return "ยังไม่เคยใช้"; const m = Math.round((TODAY - new Date(iso)) / 6e4); return m < 60 ? `${Math.max(1, m)} นาทีที่แล้ว` : m < 1440 ? `${Math.round(m / 60)} ชม.ที่แล้ว` : `${Math.round(m / 1440)} วันที่แล้ว`; };
+      const SEED = [
+        { id: "tok_01", name: "ERP Sync (SAP B1)", pfx: "itm_live_8fK2", scopes: ["assets:read", "spare-parts:read"], site: "ทุกไซต์", created: "2026-03-11T17:46:00", used: "2026-03-12T08:58:00", exp: "2026-09-11T17:46:00", revoked: null, ips: "172.16.20.8" },
+        { id: "tok_02", name: "MES ไลน์ผลิต สมุทรสาคร", pfx: "itm_live_Qa71", scopes: ["work-orders:read", "work-orders:write", "repair-requests:write"], site: "โรงงานสมุทรสาคร", created: "2025-12-01T10:00:00", used: "2026-03-12T09:21:00", exp: "2026-12-01T10:00:00", revoked: null, ips: "10.10.3.0/24" },
+        { id: "tok_03", name: "Power BI Dashboard", pfx: "itm_live_Zt9m", scopes: ["reports:read", "assets:read", "work-orders:read"], site: "ทุกไซต์", created: "2025-10-15T14:20:00", used: "2026-03-12T06:00:00", exp: "2026-04-01T00:00:00", revoked: null, ips: "" },
+        { id: "tok_04", name: "IoT Gateway ระยอง", pfx: "itm_live_r4Hc", scopes: ["repair-requests:write", "assets:read"], site: "โรงงานระยอง", created: "2026-01-20T09:10:00", used: "2026-03-12T09:28:00", exp: "2027-01-20T09:10:00", revoked: null, ips: "10.20.9.14" },
+        { id: "tok_05", name: "สคริปต์นำเข้าทรัพย์สิน (ครั้งเดียว)", pfx: "itm_live_b2Lw", scopes: ["assets:read", "assets:write"], site: "โรงงานระยอง", created: "2025-11-01T08:00:00", used: "2025-11-03T16:40:00", exp: "2025-12-01T08:00:00", revoked: null, ips: "" },
+        { id: "tok_06", name: "Legacy MES", pfx: "itm_live_m0Xe", scopes: ["work-orders:read"], site: "โรงงานสมุทรสาคร", created: "2024-06-10T11:00:00", used: "2025-11-02T10:12:00", exp: null, revoked: "2026-03-09T11:45:00", ips: "" }
+      ];
+      let toks = store.get("itm-api-tokens", null) || SEED.map((t) => ({ ...t }));
+      const save = () => store.set("itm-api-tokens", toks);
+      const status = (t) => t.revoked ? "revoked" : t.exp && new Date(t.exp) < TODAY ? "expired" : "active";
+      const ST = { active: ["ใช้งานอยู่", "green"], expired: ["หมดอายุ", "amber"], revoked: ["เพิกถอนแล้ว", "grey"] };
+      const chip = (t, c) => `<span class="x-chip x-c-${c}">${t}</span>`;
+      let tab = "";
+
+      function paintKpis() {
+        const act = toks.filter((t) => status(t) === "active"), soon = act.filter((t) => t.exp && new Date(t.exp) - TODAY < 30 * DAY);
+        const K = [["Token ใช้งานอยู่", act.length, `จาก ${toks.length} รายการ`, "x-t-green"], ["เรียก API 24 ชม.", "48,215", "สำเร็จ 99.6% · 4xx 0.4%", "x-t-blue"], ["หมดอายุใน 30 วัน", soon.length, soon.map((t) => t.name).join(", ") || "ไม่มี", "x-t-amber"], ["เวลาตอบสนองเฉลี่ย", "84 ms", "p95 210 ms", "x-t-violet"]];
+        $("#t-kpis").innerHTML = K.map((k) => `<div class="x-glass x-kpi" style="cursor:default"><span class="x-tile ${k[3]}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 7a4 4 0 1 0-3.9 5H12l2 2h2v2h2v2h3v-3l-5.1-5.1A4 4 0 0 0 15 7z"/></svg></span><span style="min-width:0"><small>${k[0]}</small><b>${k[1]}</b><em style="display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(k[2])}</em></span></div>`).join("");
+      }
+      function render() {
+        const q = $("#f-q").value.trim().toLowerCase(), site = $("#x-site").value;
+        const list = toks.filter((t) => (!tab || status(t) === tab) && (!q || (t.name + t.pfx + t.scopes.join(" ")).toLowerCase().includes(q)) && (!site || t.site === site || t.site === "ทุกไซต์"));
+        $("#t-rows").innerHTML = list.length ? list.map((t) => {
+          const s = status(t), soon = s === "active" && t.exp && new Date(t.exp) - TODAY < 30 * DAY;
+          return `<tr data-id="${t.id}"><td><b style="font-weight:500">${esc(t.name)}</b><small style="display:block" class="t-pfx">${t.pfx}••••••••</small></td>
+            <td><div class="t-scopes">${t.scopes.map((x) => `<span class="t-sc ${/write/.test(x) ? "w" : ""}">${x}</span>`).join("")}</div></td>
+            <td>${t.site.replace("โรงงาน", "")}</td><td>${thDate(t.created)}</td><td>${ago(t.used)}</td>
+            <td>${t.exp ? thDate(t.exp) : "ไม่มีวันหมดอายุ"}${soon ? '<small style="display:block" class="x-sla-warn">ใกล้หมดอายุ</small>' : ""}</td>
+            <td>${chip(...ST[s])}${s === "revoked" ? `<small style="display:block">${thDate(t.revoked)}</small>` : ""}</td>
+            <td>${s === "revoked" ? "" : `<button class="x-btn x-btn--sm x-btn--danger" type="button" data-revoke="${t.id}">เพิกถอน</button>`}</td></tr>`;
+        }).join("") : `<tr><td colspan="8" class="x-empty">ไม่พบ Token ตามตัวกรอง</td></tr>`;
+        paintKpis(); fillTestTok();
+      }
+      $$("#t-tabs button").forEach((b) => b.addEventListener("click", () => { tab = b.dataset.v; $$("#t-tabs button").forEach((x) => x.classList.toggle("on", x === b)); render(); }));
+      $("#f-q").addEventListener("input", render);
+      $("#x-site").addEventListener("change", render);
+
+      // ---------- modals ----------
+      function openM(id) { $$(".x-modal").forEach((m) => m.classList.remove("open")); $(id).classList.add("open"); $("#x-scrim").classList.add("open"); }
+      function closeAll() { $$(".x-modal").forEach((m) => m.classList.remove("open")); $("#x-scrim").classList.remove("open"); }
+      $("#x-scrim").addEventListener("click", () => { if (!$("#m-show").classList.contains("open")) closeAll(); });
+      $("#m-cancel").addEventListener("click", () => { closeAll(); resetForm(); });
+      $("#m-rev-cancel").addEventListener("click", () => { closeAll(); revId = null; $("#m-rev-txt").textContent = ""; $("#m-rev-ok").disabled = true; });
+      document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !$("#m-show").classList.contains("open")) closeAll(); });
+
+      $("#m-scopes").innerHTML = SCOPES.map(([k, d]) => `<label><input type="checkbox" name="scopes" value="${k}" /> <span><span class="t-pfx" style="color:var(--x-ink)">${k}</span><small style="display:block">${d}</small></span></label>`).join("");
+      function resetForm() {
+        $("#m-form").reset();
+        $$("#m-form .x-err").forEach((e) => (e.textContent = "")); $$("#m-form .x-invalid").forEach((e) => e.classList.remove("x-invalid"));
+      }
+      $("#t-new").addEventListener("click", () => { resetForm(); openM("#m-new"); setTimeout(() => $("#m-name").focus(), 50); });
+      const IPRE = /^(25[0-5]|2[0-4]\d|1?\d?\d)(\.(25[0-5]|2[0-4]\d|1?\d?\d)){3}(\/([0-9]|[12]\d|3[0-2]))?$/;
+      function validate() {
+        const f = $("#m-form"), errs = {};
+        const name = $("#m-name").value.trim(), ips = $("#m-ips").value.split(",").map((s) => s.trim()).filter(Boolean);
+        const scopes = $$("#m-scopes input:checked").map((i) => i.value);
+        if (!name) errs.name = "กรุณาระบุชื่อ Token";
+        else if (name.length < 3) errs.name = "ชื่อต้องมีอย่างน้อย 3 ตัวอักษร";
+        else if (toks.some((t) => status(t) !== "revoked" && t.name.toLowerCase() === name.toLowerCase())) errs.name = "มี Token ชื่อนี้อยู่แล้ว";
+        if (!$("#m-exp").value) errs.exp = "กรุณาเลือกวันหมดอายุ";
+        if (!$("#m-site").value) errs.site = "กรุณาเลือกไซต์";
+        if (!scopes.length) errs.scopes = "กรุณาเลือกสิทธิ์อย่างน้อย 1 รายการ";
+        const bad = ips.filter((ip) => !IPRE.test(ip)); if (bad.length) errs.ips = `รูปแบบ IP/CIDR ไม่ถูกต้อง: ${bad.join(", ")}`;
+        const map = { name: "#m-name", exp: "#m-exp", site: "#m-site", scopes: "#m-scopes", ips: "#m-ips" };
+        Object.keys(map).forEach((k) => { $(`[data-err="${k}"]`).textContent = errs[k] || ""; $(map[k]).classList.toggle("x-invalid", !!errs[k]); });
+        const first = Object.keys(map).find((k) => errs[k]);
+        if (first) { const el = $(map[first]); (first === "scopes" ? $("#m-scopes input") : el).focus(); return null; }
+        return { name, exp: +$("#m-exp").value, site: $("#m-site").value, scopes, ips: ips.join(", "), note: f.elements.note.value.trim() };
+      }
+      $$("#m-form input, #m-form select").forEach((el) => el.addEventListener("change", () => {
+        const k = el.name === "scopes" ? "scopes" : el.name; const e = $(`[data-err="${k}"]`);
+        if (e && e.textContent) validate();
+      }));
+      function genToken() {
+        const A = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789", b = new Uint8Array(36);
+        (window.crypto || {}).getRandomValues ? crypto.getRandomValues(b) : b.forEach((_, i) => (b[i] = Math.random() * 256));
+        return "itm_live_" + [...b].map((x) => A[x % 62]).join("");
+      }
+      const BASE = () => $("#t-baseurl").textContent.trim();
+      $("#m-save").addEventListener("click", () => {
+        const v = validate(); if (!v) return;
+        const token = genToken(), now = new Date();
+        const t = { id: "tok_" + now.getTime().toString(36), name: v.name, pfx: token.slice(0, 13), scopes: v.scopes, site: v.site, created: now.toISOString(), used: null, exp: v.exp ? new Date(now.getTime() + v.exp * DAY).toISOString() : null, revoked: null, ips: v.ips, note: v.note };
+        toks.unshift(t); save(); tab = ""; $$("#t-tabs button").forEach((x) => x.classList.toggle("on", x.dataset.v === "")); render();
+        $("#m-token").textContent = token;
+        $("#m-show-sub").textContent = `${v.name} · ${v.scopes.length} สิทธิ์ · ${v.exp ? "หมดอายุ " + thDate(t.exp) : "ไม่มีวันหมดอายุ"}`;
+        const ep = v.scopes.find((s) => s.endsWith(":read")) || "assets:read";
+        $("#m-tokcurl").textContent = `curl -H "Authorization: Bearer ${token}" \\\n  "${BASE()}/${ep.split(":")[0]}?limit=5"`;
+        ["#m-copytok", "#m-copycurl", "#m-done"].forEach((s) => ($(s).disabled = false));
+        openM("#m-show"); toast(`สร้าง Token “${v.name}” แล้ว`);
+      });
+      $("#m-copytok").addEventListener("click", () => copyText($("#m-token").textContent, "คัดลอก Token แล้ว", $("#m-copytok")));
+      $("#m-copycurl").addEventListener("click", () => copyText($("#m-tokcurl").textContent, "คัดลอกคำสั่ง curl แล้ว", $("#m-copycurl")));
+      $("#m-done").addEventListener("click", () => { $("#m-token").textContent = ""; $("#m-tokcurl").textContent = ""; ["#m-copytok", "#m-copycurl", "#m-done"].forEach((s) => ($(s).disabled = true)); closeAll(); });
+
+      let revId = null;
+      $("#t-rows").addEventListener("click", (e) => {
+        const b = e.target.closest("[data-revoke]"); if (!b) return;
+        const t = toks.find((x) => x.id === b.dataset.revoke); revId = t.id;
+        $("#m-rev-txt").innerHTML = `ต้องการเพิกถอน <b>${esc(t.name)}</b> <span class="t-pfx">(${t.pfx}••••)</span> ใช่หรือไม่?`;
+        $("#m-rev-ok").disabled = false; openM("#m-revoke");
+      });
+      $("#m-rev-ok").addEventListener("click", () => {
+        const t = toks.find((x) => x.id === revId); if (!t) { closeAll(); return; }
+        t.revoked = new Date().toISOString(); revId = null; $("#m-rev-ok").disabled = true; save(); render(); closeAll(); toast(`เพิกถอน “${t.name}” แล้ว`);
+      });
+
+      // ---------- endpoint reference ----------
+      const EPS = [
+        { m: "GET", p: "/assets", scope: "assets:read", d: "รายการทรัพย์สิน รองรับการกรองและแบ่งหน้า", q: [["site", "โรงงานสมุทรสาคร | โรงงานระยอง"], ["status", "ใช้งาน | ซ่อม | จำหน่าย"], ["q", "ค้นหารหัส/ชื่อ"], ["limit, cursor", "แบ่งหน้า (สูงสุด 200)"]],
+          res: { data: [{ code: "AST-2569-0001", name: "เครื่อง CNC Mazak VCN-530C", site: "โรงงานสมุทรสาคร", location: "อาคารผลิต A · ไลน์ 1", status: "ใช้งาน" }, { code: "AST-2569-0004", name: "ปั๊มน้ำหอยโข่ง Grundfos", site: "โรงงานระยอง", location: "ห้องปั๊ม B", status: "ซ่อม" }], next_cursor: "eyJpZCI6NH0" } },
+        { m: "GET", p: "/assets/{code}", scope: "assets:read", d: "รายละเอียดทรัพย์สินหนึ่งรายการ พร้อมประวัติซ่อมล่าสุด", q: [["code", "รหัสทรัพย์สิน เช่น AST-2569-0001"]], ex: "/assets/AST-2569-0001",
+          res: { code: "AST-2569-0001", name: "เครื่อง CNC Mazak VCN-530C", site: "โรงงานสมุทรสาคร", category: "เครื่องจักร", purchase_date: "2023-05-12", cost: 4850000, last_wo: "WO-2569-0003" } },
+        { m: "GET", p: "/work-orders", scope: "work-orders:read", d: "รายการใบสั่งงาน กรองตามสถานะ/ระดับ/ช่วงเวลา", q: [["status", "open | กำลังซ่อม | ปิดงาน ..."], ["priority", "P1–P4"], ["updated_since", "ISO 8601"], ["site", "ชื่อไซต์"]], ex: "/work-orders?status=open&priority=P1",
+          res: { data: [{ no: "WO-2569-0001", type: "Breakdown", title: "สายพานขาด หยุดไลน์ผลิต", asset: "CONV-03", priority: "P1", status: "กำลังซ่อม", site: "โรงงานสมุทรสาคร", sla_due: "2026-03-10T09:30:00+07:00" }], total: 2 } },
+        { m: "POST", p: "/work-orders", scope: "work-orders:write", d: "สร้างใบสั่งงานใหม่ (ต้องระบุ asset, type, title)", q: [["asset *", "รหัสทรัพย์สิน"], ["type *", "Breakdown | Corrective | PM ..."], ["title *", "หัวข้องาน"], ["priority", "P1–P4 (ค่าเริ่มต้น P3)"]],
+          body: { asset: "CNC-001", type: "Corrective", title: "แกนสปินเดิลมีเสียงดัง", priority: "P2", site: "โรงงานระยอง" },
+          res: { no: "WO-2569-0020", status: "อนุมัติแล้ว", created_at: "2026-03-12T09:30:00+07:00" }, code: 201 },
+        { m: "GET", p: "/repair-requests", scope: "repair-requests:read", d: "รายการใบแจ้งซ่อมจากผู้ใช้งาน/IoT", q: [["status", "ใหม่ | รับเรื่อง | แปลงเป็น WO"], ["site", "ชื่อไซต์"], ["limit", "สูงสุด 200"]], ex: "/repair-requests?status=ใหม่",
+          res: { data: [{ no: "RR-2569-0057", asset: "AHU-05", symptom: "เสียงดังผิดปกติ ลมไม่เย็น", priority: "P2", status: "ใหม่", site: "โรงงานระยอง" }], total: 1 } },
+        { m: "POST", p: "/repair-requests", scope: "repair-requests:write", d: "แจ้งซ่อมจากระบบภายนอก เช่น IoT Gateway / MES", q: [["asset *", "รหัสทรัพย์สิน"], ["symptom *", "อาการ"], ["priority", "P1–P4"], ["source", "iot | mes | api"]],
+          body: { asset: "PMP-11", symptom: "แรงดันน้ำต่ำกว่า 2 bar ต่อเนื่อง 10 นาที", priority: "P1", source: "iot" },
+          res: { no: "RR-2569-0058", status: "ใหม่", created_at: "2026-03-12T09:30:00+07:00" }, code: 201 },
+        { m: "PATCH", p: "/work-orders/{no}", scope: "work-orders:write", d: "อัปเดตสถานะ/ช่าง/บันทึกของใบสั่งงาน", q: [["status", "สถานะใหม่"], ["technician", "ชื่อช่าง"], ["note", "บันทึก"]], ex: "/work-orders/WO-2569-0002",
+          body: { status: "กำลังซ่อม", note: "ได้รับลูกปืนแล้ว เริ่มเปลี่ยน" }, res: { no: "WO-2569-0002", status: "กำลังซ่อม", updated_at: "2026-03-12T09:30:00+07:00" } }
+      ];
+      const curlOf = (e) => {
+        const url = BASE() + (e.ex || e.p);
+        if (e.m === "GET") return `curl -s "${url}" \\\n  -H "Authorization: Bearer $ITM_TOKEN"`;
+        return `curl -s -X ${e.m} "${url}" \\\n  -H "Authorization: Bearer $ITM_TOKEN" \\\n  -H "Content-Type: application/json" \\\n  -d '${JSON.stringify(e.body)}'`;
+      };
+      $("#t-eps").innerHTML = EPS.map((e, i) => `<article class="x-glass t-ep">
+        <div class="t-ep-h"><span class="t-m t-m-${e.m}">${e.m}</span><span class="t-path">/api/v1${esc(e.p)}</span><span class="t-sc ${/write/.test(e.scope) ? "w" : ""}" style="margin-left:auto">${e.scope}</span></div>
+        <p>${e.d}</p>
+        <table class="t-params">${e.q.map(([k, v]) => `<tr><td>${esc(k)}</td><td>${esc(v)}</td></tr>`).join("")}</table>
+        <div class="t-code"><pre>${esc(curlOf(e))}</pre><button class="x-btn x-btn--sm" type="button" data-copy="${i}">คัดลอก</button></div>
+        <div class="x-bar"><button class="x-btn x-btn--sm" type="button" data-try="${i}">▶ ทดสอบเรียก</button><button class="x-btn x-btn--sm" type="button" data-sample="${i}">ตัวอย่าง Response</button></div>
+        <div class="t-res" id="res-${i}" hidden></div></article>`).join("");
+      function fillTestTok() {
+        const s = $("#t-testtok"), keep = s.value, act = toks.filter((t) => status(t) === "active");
+        s.innerHTML = act.map((t) => `<option value="${t.id}">${esc(t.name)}</option>`).join("") + toks.filter((t) => status(t) !== "active").map((t) => `<option value="${t.id}">${esc(t.name)} (${ST[status(t)][0]})</option>`).join("");
+        if ([...s.options].some((o) => o.value === keep)) s.value = keep;
+      }
+      const timers = {};
+      $("#t-eps").addEventListener("click", (e) => {
+        const c = e.target.closest("[data-copy]"), tr = e.target.closest("[data-try]"), sm = e.target.closest("[data-sample]");
+        if (c) { copyText(curlOf(EPS[+c.dataset.copy]), "คัดลอกคำสั่ง curl แล้ว", c); return; }
+        if (sm) {
+          const i = +sm.dataset.sample, box = $("#res-" + i), ep = EPS[i];
+          const showing = !box.hidden && box.dataset.kind === "sample";
+          box.hidden = showing; box.dataset.kind = "sample";
+          box.innerHTML = `<b style="font-weight:500">ตัวอย่าง Response</b> ${chip(`${ep.code || 200} ${ep.code === 201 ? "Created" : "OK"}`, "green")}<pre>${esc(JSON.stringify(ep.res, null, 2))}</pre>`;
+          sm.textContent = showing ? "ตัวอย่าง Response" : "ซ่อนตัวอย่าง";
+          return;
+        }
+        if (tr) {
+          const i = +tr.dataset.try, ep = EPS[i], box = $("#res-" + i), t = toks.find((x) => x.id === $("#t-testtok").value);
+          box.hidden = false; box.dataset.kind = "try"; tr.disabled = true;
+          box.innerHTML = `<span class="x-spin"></span> กำลังเรียก <span class="t-pfx">${ep.m} /api/v1${esc(ep.ex || ep.p)}</span> …`;
+          clearTimeout(timers[i]);
+          timers[i] = setTimeout(() => {
+            tr.disabled = false;
+            const ms = 40 + Math.round(Math.random() * 120);
+            let code, label, body, col;
+            if (!t || status(t) !== "active") { code = 401; label = "Unauthorized"; col = "red"; body = { error: "invalid_token", message: t ? `Token ${ST[status(t)][0]}` : "ไม่มี Token ที่ใช้งานได้ — สร้าง Token ก่อน" }; }
+            else if (!t.scopes.includes(ep.scope)) { code = 403; label = "Forbidden"; col = "red"; body = { error: "insufficient_scope", required: ep.scope, token_scopes: t.scopes }; }
+            else { code = ep.code || 200; label = code === 201 ? "Created" : "OK"; col = "green"; body = ep.res; t.used = TODAY.toISOString(); save(); }
+            box.innerHTML = `${chip(`${code} ${label}`, col)} <span class="t-pfx">${ms} ms · Token: ${t ? esc(t.name) : "—"}</span><pre>${esc(JSON.stringify(body, null, 2))}</pre>`;
+            if (code < 300) render();
+          }, 900);
+        }
+      });
+      $("#t-copybase").addEventListener("click", () => copyText(BASE(), "คัดลอก Base URL แล้ว", $("#t-copybase")));
+      $("#t-openapi").addEventListener("click", () => {
+        const paths = {};
+        EPS.forEach((e) => {
+          const p = "/api/v1" + e.p; paths[p] = paths[p] || {};
+          paths[p][e.m.toLowerCase()] = { summary: e.d, security: [{ bearer: [e.scope] }], parameters: e.m === "GET" || e.m === "PATCH" ? e.q.filter(([k]) => !k.includes(",")).map(([k, v]) => ({ name: k.replace(" *", ""), in: e.p.includes("{" + k + "}") ? "path" : "query", required: e.p.includes("{" + k + "}"), description: v, schema: { type: "string" } })) : undefined, requestBody: e.body ? { content: { "application/json": { example: e.body } } } : undefined, responses: { [e.code || 200]: { description: "สำเร็จ", content: { "application/json": { example: e.res } } }, 401: { description: "Token ไม่ถูกต้อง" }, 403: { description: "สิทธิ์ไม่พอ" } } };
+        });
+        const spec = { openapi: "3.0.3", info: { title: "IT&MAINT REST API", version: "1.0.0" }, servers: [{ url: BASE().replace(/\/api\/v1$/, "") }], components: { securitySchemes: { bearer: { type: "http", scheme: "bearer" } } }, paths };
+        download("itmaint-openapi-v1.json", JSON.stringify(spec, null, 2), "application/json");
+        toast("ดาวน์โหลด OpenAPI spec แล้ว");
+      });
+      render();
+
+    </script>
+    <script src="../../assets/site-nav.js"></script>
+</body>
+</html>
