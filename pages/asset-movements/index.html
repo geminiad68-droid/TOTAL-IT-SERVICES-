@@ -359,7 +359,7 @@
         if (lastFocus) lastFocus.focus();
       }
 
-      const siteSel = (n) => `<label class="x-field"><select name="${n}" aria-label="ไซต์">${SITES.map((s) => `<option>${s}</option>`).join("")}</select></label>`;
+      const siteSel = (n) => `<label class="x-field"><select name="${n}" aria-label="ไซต์"><option value="">— เลือกไซต์ —</option>${SITES.map((s) => `<option>${s}</option>`).join("")}</select></label>`;
       const inp = (n, ph, type = "text") => `<label class="x-field"><input name="${n}" type="${type}" placeholder="${ph}" aria-label="${ph}" /></label>`;
       function openModal() {
         lastFocus = document.activeElement;
@@ -369,9 +369,9 @@
           <div class="x-grid2">
             <fieldset class="x-fs" data-for="t l d"><legend>จาก</legend>${siteSel("fsite")}${inp("floc", "ที่ตั้ง เช่น ฝ่ายIT")}${inp("fwho", "ผู้รับผิดชอบ")}</fieldset>
             <fieldset class="x-fs" data-for="t l"><legend>ไป</legend>${siteSel("tsite")}${inp("tloc", "ที่ตั้ง / แผนก")}${inp("twho", "ผู้รับผิดชอบ / ผู้ยืม")}</fieldset>
-            <fieldset class="x-fs" data-for="d"><legend>การจำหน่าย</legend><label class="x-field"><select name="method" aria-label="วิธีจำหน่าย"><option>ขาย</option><option>บริจาค</option><option>ทำลาย</option></select></label>${inp("nbv", "NBV (บาท)", "number")}${inp("price", "ราคาขาย (บาท)", "number")}</fieldset>
+            <fieldset class="x-fs" data-for="d"><legend>การจำหน่าย</legend><label class="x-field"><select name="method" aria-label="วิธีจำหน่าย"><option value="">— วิธีจำหน่าย —</option><option>ขาย</option><option>บริจาค</option><option>ทำลาย</option></select></label>${inp("nbv", "NBV (บาท)", "number")}${inp("price", "ราคาขาย (บาท)", "number")}</fieldset>
           </div>
-          <div class="x-grid2"><label class="x-lbl">วันที่<span class="x-field"><input type="date" name="date" value="${TODAY}" /></span></label><label class="x-lbl" data-for="l">กำหนดคืน<span class="x-field"><input type="date" name="due" value="2026-06-22" /></span></label></div>
+          <div class="x-grid2"><label class="x-lbl">วันที่<span class="x-field"><input type="date" name="date" aria-label="วันที่" /></span></label><label class="x-lbl" data-for="l">กำหนดคืน<span class="x-field"><input type="date" name="due" aria-label="กำหนดคืน" /></span></label></div>
           <label class="x-lbl">เหตุผล<textarea name="reason" placeholder="ระบุเหตุผลของการเคลื่อนไหว"></textarea></label>
           <div class="x-grid2" id="extra"></div>
           <div class="x-foot"><button type="button" class="x-btn" id="addf">${ic("plus")}เพิ่มฟิลด์</button><div class="x-acts"><button type="button" class="x-btn" data-close>ยกเลิก</button><button type="submit" class="x-btn x-btn--pri">${ic("check")}บันทึก</button></div></div>`;
@@ -396,7 +396,20 @@
       md.addEventListener("submit", (e) => {
         e.preventDefault();
         const f = new FormData(md), g = (k) => (f.get(k) || "").trim(), t = md.dataset.type, tags = f.getAll("a");
-        if (!tags.length) return toast("เลือกทรัพย์สินอย่างน้อย 1 รายการ", 1);
+        md.querySelectorAll(".x-ferr").forEach((n) => n.remove()); md.querySelectorAll("[aria-invalid]").forEach((n) => { n.removeAttribute("aria-invalid"); n.style.borderColor = ""; });
+        const errs = [];
+        if (!tags.length) errs.push([".x-pick", "เลือกทรัพย์สินอย่างน้อย 1 รายการ"]);
+        if (!g("fsite")) errs.push(["[name=fsite]", "กรุณาเลือกไซต์ต้นทาง"]);
+        if (t === "t") { if (!g("tsite")) errs.push(["[name=tsite]", "กรุณาเลือกไซต์ปลายทาง"]); if (!g("tloc")) errs.push(["[name=tloc]", "กรุณาระบุที่ตั้งปลายทาง"]); }
+        if (t === "l") { if (!g("twho")) errs.push(["[name=twho]", "กรุณาระบุผู้ยืม"]); if (!g("due")) errs.push(["[name=due]", "กรุณาระบุกำหนดคืน"]); else if (g("date") && g("due") < g("date")) errs.push(["[name=due]", "กำหนดคืนต้องไม่ก่อนวันที่ยืม"]); }
+        if (t === "d") { if (!g("method")) errs.push(["[name=method]", "กรุณาเลือกวิธีจำหน่าย"]); if (g("nbv") === "") errs.push(["[name=nbv]", "กรุณาระบุ NBV"]); if (g("method") === "ขาย" && g("price") === "") errs.push(["[name=price]", "กรุณาระบุราคาขาย"]); }
+        if (!g("date")) errs.push(["[name=date]", "กรุณาระบุวันที่"]);
+        if (!g("reason")) errs.push(["[name=reason]", "กรุณาระบุเหตุผล"]);
+        if (errs.length) {
+          errs.forEach(([q, m]) => { const el = md.querySelector(q); if (!el) return; el.setAttribute("aria-invalid", "true"); el.style.borderColor = "var(--bad)"; const box = el.closest(".x-field") || el; const d = document.createElement("span"); d.className = "x-ferr"; d.style.cssText = "display:block;color:var(--bad);font-size:12px;margin-top:4px"; d.textContent = m; box.after(d); });
+          const first = md.querySelector(errs[0][0]); const fi = first.matches("input,select,textarea") ? first : first.querySelector("input"); fi && fi.focus(); first.scrollIntoView({ block: "center" });
+          return;
+        }
         const extra = [...f.keys()].filter((k) => /^xk/.test(k) && g(k)).map((k) => `${g(k)}: ${g("xv" + k.slice(2))}`).join(" · ");
         const id = `${{ t: "TRF", l: "LON", d: "DSP" }[t]}-2569-${String(NEXT[t]++).padStart(4, "0")}`;
         const base = { id, tags, date: g("date") || TODAY, by: ME, s: 1, reason: [g("reason"), extra].filter(Boolean).join(" · ") };
