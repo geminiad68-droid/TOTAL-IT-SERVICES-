@@ -34,6 +34,9 @@ IT&MAINT — Smart Asset · Smart Work : UX/UI mockups (Thai, dark theme) สำ
 | ITMAINT TV Display | [pages/tv-display/](pages/tv-display/index.html) |
 | ITMAINT Users RBAC | [pages/users-rbac/](pages/users-rbac/index.html) |
 | IT&MAINT ใบสั่งงาน WO | [pages/wo/](pages/wo/index.html) |
+| พิมพ์ป้าย QR/Barcode | [pages/qr-labels/](pages/qr-labels/index.html) |
+| Audit Log | [pages/audit-log/](pages/audit-log/index.html) |
+| REST API & Token | [pages/api-tokens/](pages/api-tokens/index.html) |
 
 ## เอกสาร
 
