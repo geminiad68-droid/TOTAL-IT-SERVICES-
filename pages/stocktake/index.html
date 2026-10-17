@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="th" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ITMAINT Stocktake</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400&display=swap"
+    />
+    <link rel="stylesheet" href="../../assets/hark.css" />
+    <link rel="stylesheet" href="../../assets/hark-hero.css" />
+    <style>
+      :root { color-scheme: dark; --x-bg: #0A1024; --x-card: #111a36; --x-card2: #0d1530; --x-line: rgb(80 140 255 / 0.28); --x-glow: 0 0 0 1px rgb(80 140 255 / 0.12), 0 0 18px rgb(60 120 255 / 0.12); --x-blue: #4d8dff; --x-cta: linear-gradient(135deg, #c2410c, #be185d); --x-green: #22c55e; --x-orange: #fb923c; --x-red: #f87171; --x-violet: #a78bfa; }
+      html, body { background: var(--x-bg); }
+      .x-app { display: grid; grid-template-columns: 228px minmax(0, 1fr); gap: 16px; min-height: calc(100vh - 52px); }
+      .x-card { background: linear-gradient(180deg, var(--x-card), var(--x-card2)); border: 1px solid var(--x-line); border-radius: var(--r-m); box-shadow: var(--x-glow); }
+      .x-side { padding: 16px 10px; align-self: start; position: sticky; top: 12px; }
+      .x-logo { display: flex; gap: 10px; align-items: center; padding: 4px 8px 14px; }
+      .x-logo b { font: var(--type-heading); display: block; }
+      .x-logo small { color: var(--text-secondary); }
+      .x-grp { font: var(--type-tag); color: var(--text-secondary); padding: 12px 10px 4px; }
+      .x-nav a { display: flex; align-items: center; gap: 10px; min-height: var(--tap); padding: 0 10px; border-radius: var(--r-s); text-decoration: none; font: var(--type-small); color: var(--text-secondary); }
+      .x-nav a:hover { background: var(--hover-wash); color: var(--text-primary); }
+      .x-nav a[aria-current] { background: linear-gradient(90deg, #1d4ed8, #2563eb99); color: #fff; font: var(--type-label); }
+      .x-nav svg, .x-ic svg { width: 18px; height: 18px; flex: none; }
+      .x-main { display: grid; gap: 16px; align-content: start; min-width: 0; }
+      .x-top { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; padding: 8px; }
+      .x-in, .x-sel { min-height: var(--tap); background: var(--x-bg); border: 1px solid var(--x-line); border-radius: var(--r-s); color: var(--text-primary); font: var(--type-small); padding: 0 12px; }
+      .x-search { flex: 1 1 200px; display: flex; align-items: center; gap: 8px; min-height: var(--tap); padding: 0 12px; background: var(--x-bg); border: 1px solid var(--x-line); border-radius: var(--r-s); color: var(--text-secondary); font: var(--type-small); min-width: 0; }
+      .x-search input { flex: 1; min-width: 0; background: none; border: 0; color: var(--text-primary); font: inherit; outline: none; }
+      .x-kbd { font: var(--type-caption); border: 1px solid var(--x-line); border-radius: 6px; padding: 2px 6px; }
+      .x-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: var(--tap); padding: 0 16px; border-radius: var(--r-s); border: 1px solid var(--x-line); background: var(--x-card2); color: var(--text-primary); font: var(--type-label); cursor: pointer; white-space: nowrap; }
+      .x-btn:hover { border-color: var(--x-blue); }
+      .x-btn--cta { background: var(--x-cta); border-color: transparent; color: #fff; box-shadow: 0 4px 18px rgb(190 24 93 / 0.35); }
+      .x-btn--blue { background: #1d4ed8; border-color: transparent; color: #fff; }
+      .x-iconbtn { width: var(--tap); padding: 0; position: relative; }
+      .x-badge { position: absolute; top: 4px; right: 4px; min-width: 18px; height: 18px; border-radius: 9px; background: #e11d48; color: #fff; font: var(--type-caption); display: grid; place-items: center; }
+      .x-user { display: flex; align-items: center; gap: 8px; font: var(--type-label); }
+      .x-user small { display: block; color: var(--text-secondary); font: var(--type-caption); }
+      .x-av { width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; font: var(--type-tag); color: #fff; background: linear-gradient(135deg, #3b82f6, #8b5cf6); border: 2px solid var(--x-card); flex: none; }
+      .x-ic { width: 40px; height: 40px; border-radius: var(--r-s); display: grid; place-items: center; color: #fff; flex: none; }
+      .x-g1 { background: linear-gradient(135deg, #3b82f6, #1d4ed8); } .x-g2 { background: linear-gradient(135deg, #a855f7, #6d28d9); } .x-g3 { background: linear-gradient(135deg, #22c55e, #047857); } .x-g4 { background: linear-gradient(135deg, #fb923c, #db2777); }
+      .x-head { padding: 20px; display: grid; gap: 14px; }
+      .x-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; }
+      .x-row h1 { font: var(--type-title); }
+      .x-flow { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; list-style: none; margin: 0; padding: 0; }
+      .x-flow li { display: flex; align-items: center; gap: 6px; font: var(--type-small); color: var(--text-secondary); }
+      .x-flow span { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border: 1px solid var(--x-line); border-radius: var(--r-pill); background: var(--x-bg); }
+      .x-flow b { color: var(--x-blue); font-weight: var(--weight-bold); }
+      .x-flow li + li::before { content: "→"; color: var(--x-blue); }
+      .x-tabs { display: flex; flex-wrap: wrap; gap: 6px; }
+      .x-tab { min-height: var(--tap); padding: 0 14px; border-radius: var(--r-pill); border: 1px solid var(--x-line); background: none; color: var(--text-secondary); font: var(--type-small); cursor: pointer; }
+      .x-tab[aria-pressed="true"] { background: #1d4ed8; color: #fff; border-color: transparent; }
+      .x-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); gap: 16px; }
+      .x-round { padding: 18px; display: grid; gap: 14px; }
+      .x-round h3 { font: var(--type-body-strong); }
+      .x-meta { font: var(--type-small); color: var(--text-secondary); }
+      .x-mono { font-family: "Geist Mono", monospace; font-size: var(--size-meta); color: var(--x-blue); }
+      .x-ring { width: 76px; height: 76px; flex: none; position: relative; }
+      .x-ring svg { transform: rotate(-90deg); }
+      .x-ring circle { transition: stroke-dashoffset 0.6s var(--ease-out); }
+      .x-ring b { position: absolute; inset: 0; display: grid; place-items: center; font: var(--type-label); }
+      .x-tag { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: var(--r-pill); font: var(--type-tag); border: 1px solid currentColor; white-space: nowrap; }
+      .x-tag::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+      .x-ok { color: var(--x-green); } .x-warn { color: var(--x-orange); } .x-bad { color: var(--x-red); } .x-new { color: var(--x-violet); } .x-info { color: var(--x-blue); } .x-mute { color: var(--text-secondary); }
+      .x-avs { display: flex; } .x-avs .x-av + .x-av { margin-left: -8px; }
+      .x-acts { display: flex; flex-wrap: wrap; gap: 8px; } .x-acts .x-btn { flex: 1 1 140px; }
+      .x-bar { height: 6px; border-radius: 3px; background: var(--x-bg); overflow: hidden; } .x-bar i { display: block; height: 100%; background: linear-gradient(90deg, #3b82f6, #a855f7); transition: width 0.6s var(--ease-out); }
+      .x-modal { position: fixed; inset: 0; z-index: 50; background: rgb(3 6 18 / 0.72); display: none; place-items: center; padding: 16px; overflow-y: auto; }
+      .x-modal.is-open { display: grid; }
+      .x-dlg { width: min(100%, 640px); padding: 22px; display: grid; gap: 16px; background: var(--x-card); }
+      .x-dlg--wide { width: min(100%, 980px); }
+      .x-dlg h2 { font: var(--type-heading); }
+      .x-form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+      .x-form label { display: grid; gap: 6px; font: var(--type-label); color: var(--text-secondary); }
+      .x-form .x-full { grid-column: 1 / -1; }
+      .x-form em { color: #fb7185; font-style: normal; }
+      .x-pick { display: flex; flex-wrap: wrap; gap: 8px; }
+      .x-pick button { min-height: var(--tap); display: inline-flex; align-items: center; gap: 8px; padding: 0 12px 0 6px; border-radius: var(--r-pill); border: 1px solid var(--x-line); background: var(--x-bg); color: var(--text-secondary); font: var(--type-small); cursor: pointer; }
+      .x-pick button .x-av { width: 28px; height: 28px; }
+      .x-pick button[aria-pressed="true"] { border-color: var(--x-blue); color: #fff; background: #1e3a8a; }
+      .x-help { font: var(--type-small); color: var(--text-secondary); padding: 10px 12px; border-radius: var(--r-s); background: var(--x-bg); border: 1px dashed var(--x-line); }
+      .x-end { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
+      .x-phone { width: min(100%, 360px); border-radius: 40px; padding: 12px; background: #050816; border: 1px solid var(--x-line); box-shadow: var(--x-glow), 0 30px 80px rgb(0 0 0 / 0.6); }
+      .x-screen { border-radius: 30px; background: var(--x-bg); padding: 14px; display: grid; gap: 12px; }
+      .x-notch { width: 110px; height: 22px; border-radius: 12px; background: #050816; margin: -6px auto 0; }
+      .x-view { position: relative; aspect-ratio: 1; border-radius: var(--r-m); overflow: hidden; background: radial-gradient(circle at 50% 50%, #1b2a55, #060b1c); }
+      .x-view svg { position: absolute; inset: 16%; width: 68%; height: 68%; }
+      .x-scan { position: absolute; left: 16%; right: 16%; height: 2px; background: #ff3d8a; box-shadow: 0 0 14px #ff3d8a; animation: xscan 2.2s ease-in-out infinite alternate; }
+      @keyframes xscan { from { top: 18%; } to { top: 82%; } }
+      @media (prefers-reduced-motion: reduce) { .x-scan { animation: none; top: 50%; } }
+      .x-res { padding: 12px; border-radius: var(--r-s); background: var(--x-card); border: 1px solid var(--x-line); min-height: 64px; display: grid; gap: 4px; }
+      .x-toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(120px); z-index: 60; padding: 12px 18px; display: flex; gap: 10px; align-items: center; font: var(--type-label); transition: transform 0.3s var(--ease-out); max-width: calc(100% - 32px); }
+      .x-toast.is-on { transform: translateX(-50%); }
+      .x-tbl td, .x-tbl th { vertical-align: middle; }
+      .x-tbl select { min-height: var(--tap); }
+      .x-menu { display: none; }
+      @media (max-width: 900px) {
+        .x-app { grid-template-columns: minmax(0, 1fr); }
+        .x-side { display: none; position: fixed; inset: 0 auto 0 0; z-index: 40; width: 260px; overflow-y: auto; border-radius: 0 var(--r-m) var(--r-m) 0; }
+        .x-side.is-open { display: block; }
+        .x-menu { display: inline-flex; }
+        .x-user span, .x-kbd { display: none; }
+        .x-form { grid-template-columns: minmax(0, 1fr); }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page" id="top">
+      <div class="x-app">
+        <aside class="x-side x-card" id="side" aria-label="เมนูหลัก">
+          <div class="x-logo"><span class="x-ic x-g1" data-i="cube"></span><div><b>IT&amp;MAINT</b><small>Smart Asset · Smart Work</small></div></div>
+          <nav class="x-nav">
+            <p class="x-grp">ภาพรวม</p>
+            <a href="#"><span data-i="home"></span>หน้าหลัก</a>
+            <a href="#"><span data-i="chart"></span>Command Center</a>
+            <p class="x-grp">ทรัพย์สิน</p>
+            <a href="#"><span data-i="cube"></span>ทะเบียนทรัพย์สิน</a>
+            <a href="#"><span data-i="pin"></span>ยืม / โอน / ย้าย</a>
+            <a href="#" aria-current="page"><span data-i="scan"></span>ตรวจนับทรัพย์สิน</a>
+            <p class="x-grp">ซ่อมบำรุง</p>
+            <a href="#"><span data-i="wrench"></span>แจ้งซ่อม / Service Desk</a>
+            <a href="#"><span data-i="cal"></span>CMMS (งานซ่อมบำรุง)</a>
+            <p class="x-grp">คลัง &amp; จัดซื้อ</p>
+            <a href="#"><span data-i="box"></span>สินค้าคงคลัง</a>
+            <a href="#"><span data-i="cart"></span>PR / PO</a>
+            <p class="x-grp">วิเคราะห์</p>
+            <a href="#"><span data-i="chart"></span>รายงาน / Dashboard</a>
+            <p class="x-grp">ระบบ</p>
+            <a href="#"><span data-i="gear"></span>ตั้งค่า / ฟิลด์</a>
+          </nav>
+        </aside>
+
+        <div class="x-main">
+          <header class="x-top x-card">
+            <button class="x-btn x-iconbtn x-menu" id="menuBtn" aria-label="เปิดเมนู" data-i="menu"></button>
+            <select class="x-sel" aria-label="เลือกไซต์"><option>ทุกไซต์</option><option>อาคารสำนักงาน</option><option>โรงงานสมุทรสาคร</option></select>
+            <label class="x-search"><span data-i="search"></span><input id="q" placeholder="ค้นหาทรัพย์สิน / รอบตรวจนับ…" /><span class="x-kbd">Ctrl + K</span></label>
+            <button class="x-btn x-btn--blue">+ แจ้งซ่อม</button>
+            <button class="x-btn x-iconbtn" aria-label="การแจ้งเตือน 3 รายการ"><span data-i="bell"></span><span class="x-badge">3</span></button>
+            <div class="x-user"><span class="x-av">AD</span><span>Admin<small>ผู้ดูแลระบบ</small></span></div>
+          </header>
+
+          <main class="x-card x-head">
+            <div class="x-row">
+              <div style="display:flex;gap:12px;align-items:center"><span class="x-ic x-g4" data-i="scan"></span><div><h1>ตรวจนับทรัพย์สิน</h1><p class="x-meta">Stocktake · ตรวจนับและกระทบยอดกับทะเบียน</p></div></div>
+              <button class="x-btn x-btn--cta" id="newBtn">+ สร้างรอบตรวจนับ</button>
+            </div>
+            <ol class="x-flow" aria-label="ขั้นตอน">
+              <li><span><b>1</b>สร้างรอบ</span></li>
+              <li><span><b>2</b>สแกนบนมือถือ <small class="x-ok">(ทำงานออฟไลน์ได้)</small></span></li>
+              <li><span><b>3</b>ส่งกระทบยอด</span></li>
+              <li><span><b>4</b>ปรับทะเบียน</span></li>
+              <li><span><b>5</b>ปิดรอบ</span></li>
+            </ol>
+            <div class="x-tabs" id="tabs" role="group" aria-label="กรองสถานะ">
+              <button class="x-tab" aria-pressed="true" data-f="">ทั้งหมด</button>
+              <button class="x-tab" aria-pressed="false" data-f="ร่าง">ร่าง</button>
+              <button class="x-tab" aria-pressed="false" data-f="กำลังตรวจนับ">กำลังตรวจนับ</button>
+              <button class="x-tab" aria-pressed="false" data-f="รอกระทบยอด">รอกระทบยอด</button>
+              <button class="x-tab" aria-pressed="false" data-f="ปิดรอบแล้ว">ปิดรอบแล้ว</button>
+            </div>
+            <div class="x-grid" id="rounds"></div>
+          </main>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scan phone -->
+    <div class="x-modal" id="mScan" role="dialog" aria-modal="true" aria-label="หน้าสแกน">
+      <div class="x-phone">
+        <div class="x-screen">
+          <div class="x-notch"></div>
+          <div class="x-row"><b id="scRound" class="x-mono">ST</b><span class="x-tag x-warn" id="scSync">ออฟไลน์ · รอซิงก์ 3</span></div>
+          <div class="x-view"><svg viewBox="0 0 100 100" fill="none" stroke="#4d8dff" stroke-width="3"><path d="M2 22V2h20M78 2h20v20M98 78v20H78M22 98H2V78"/></svg><div class="x-scan"></div></div>
+          <div class="x-res" id="scRes" aria-live="polite"><span class="x-meta">เล็งกล้องไปที่ QR / แตะปุ่มเพื่ออ่าน RFID</span></div>
+          <div class="x-row"><span class="x-meta">นับแล้ว</span><b id="scCount">0/0</b></div>
+          <div class="x-bar"><i id="scBar" style="width:0"></i></div>
+          <button class="x-btn x-btn--cta" id="scBtn"><span data-i="scan"></span>สแกน QR/RFID</button>
+          <button class="x-btn" data-close>ปิด</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reconcile -->
+    <div class="x-modal" id="mRec" role="dialog" aria-modal="true" aria-labelledby="recT">
+      <div class="x-card x-dlg x-dlg--wide">
+        <div class="x-row"><div><h2 id="recT">กระทบยอด</h2><p class="x-meta" id="recSub"></p></div><button class="x-btn x-iconbtn" data-close aria-label="ปิด">✕</button></div>
+        <div class="table-wrap x-tbl">
+          <table>
+            <thead><tr><th scope="col">Asset Tag</th><th scope="col">ชื่อ</th><th scope="col">ตามทะเบียน</th><th scope="col">ที่พบ</th><th scope="col">ผล</th><th scope="col">การดำเนินการ</th></tr></thead>
+            <tbody id="recBody"></tbody>
+          </table>
+        </div>
+        <div class="x-end"><button class="x-btn" data-close>บันทึกร่าง</button><button class="x-btn x-btn--cta" id="closeRound">ปิดรอบ</button></div>
+      </div>
+    </div>
+
+    <!-- Create -->
+    <div class="x-modal" id="mNew" role="dialog" aria-modal="true" aria-labelledby="newT">
+      <form class="x-card x-dlg" id="fNew">
+        <div class="x-row"><h2 id="newT">สร้างรอบตรวจนับ</h2><button type="button" class="x-btn x-iconbtn" data-close aria-label="ปิด">✕</button></div>
+        <div class="x-form">
+          <label class="x-full">ชื่อรอบ <em>*</em><input class="x-in" name="name" required placeholder="เช่น ตรวจนับกลางปี 2570" /></label>
+          <label>ไซต์ <em>*</em><select class="x-sel" name="site" required><option value="">เลือกไซต์</option><option>อาคารสำนักงาน</option><option>โรงงานสมุทรสาคร</option></select></label>
+          <label>อาคาร/พื้นที่<input class="x-in" name="area" placeholder="ทุกพื้นที่" /></label>
+          <label class="x-full">หมวดทรัพย์สิน<select class="x-sel" name="cat"><option>ทุกหมวด</option><option>อุปกรณ์ไอที</option><option>อุปกรณ์เครือข่าย</option><option>เครื่องจักร</option><option>เฟอร์นิเจอร์</option></select></label>
+          <label>วันเริ่ม <em>*</em><input class="x-in" type="date" name="start" required /></label>
+          <label>วันสิ้นสุด <em>*</em><input class="x-in" type="date" name="end" required /></label>
+          <div class="x-full" style="display:grid;gap:6px"><span class="x-meta">คณะกรรมการตรวจนับ</span><div class="x-pick" id="pick"></div></div>
+        </div>
+        <p class="x-help">ⓘ ระบบดึงทรัพย์สินที่ใช้งานอยู่ตามเงื่อนไขมาเป็นรายการที่ต้องนับ</p>
+        <div class="x-row"><button type="button" class="x-btn" id="addField">+ เพิ่มฟิลด์</button><div class="x-end"><button type="button" class="x-btn" data-close>ยกเลิก</button><button class="x-btn x-btn--cta">สร้างรอบ</button></div></div>
+      </form>
+    </div>
+
+    <div class="x-toast x-card" id="toast" role="status"><span class="x-tag x-ok">สำเร็จ</span><span id="toastT"></span></div>
+
+    <script src="../../assets/hark.js"></script>
+    <script>
+      document.documentElement.setAttribute("data-theme", "dark");
+      const I = {
+        home: '<path d="M3 11l9-8 9 8v10h-6v-6H9v6H3z"/>', chart: '<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>', cube: '<path d="M12 2l9 5v10l-9 5-9-5V7zM3 7l9 5 9-5M12 12v10"/>',
+        pin: '<path d="M12 22s7-7 7-12a7 7 0 10-14 0c0 5 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/>', scan: '<path d="M3 8V3h5M16 3h5v5M21 16v5h-5M8 21H3v-5M7 12h10"/>',
+        wrench: '<path d="M14.7 6.3a4 4 0 015 5L11 20l-4 1 1-4 8.7-8.7z"/>', cal: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+        box: '<path d="M3 7l9-4 9 4v10l-9 4-9-4zM3 7l9 4 9-4"/>', cart: '<path d="M3 4h2l2 12h12l2-8H6"/><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/>',
+        gear: '<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M5 19l2-2M17 7l2-2"/>', menu: '<path d="M4 6h16M4 12h16M4 18h16"/>',
+        search: '<circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/>', bell: '<path d="M6 16V11a6 6 0 0112 0v5l2 2H4zM10 21h4"/>'
+      };
+      document.querySelectorAll("[data-i]").forEach((el) => el.insertAdjacentHTML("afterbegin", `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${I[el.dataset.i]}</svg>`));
+
+      const USERS = [["admin", "AD", "#3b82f6"], ["กมลวรรณ", "กม", "#a855f7"], ["ณัฐพล", "ณพ", "#10b981"], ["นภา", "นภ", "#f97316"], ["ศรีพร", "ศพ", "#db2777"]];
+      const av = (n) => { const u = USERS.find((x) => x[0] === n); return `<span class="x-av" title="${n}" style="background:${u[2]}">${u[1]}</span>`; };
+      const ST = { "ร่าง": "x-mute", "กำลังตรวจนับ": "x-info", "รอกระทบยอด": "x-warn", "ปิดรอบแล้ว": "x-ok" };
+      let rounds = [
+        { id: "ST-2569-0002", name: "Q4/2026 อุปกรณ์ไอทีและเครือข่าย", site: "โรงงานสมุทรสาคร", date: "9–23 ต.ค. 2569", done: 0, total: 11, mis: 0, miss: 0, status: "กำลังตรวจนับ", team: ["admin", "ณัฐพล", "ศรีพร"], g: "x-g1" },
+        { id: "ST-2569-0001", name: "ตรวจนับประจำปี — อาคารสำนักงาน", site: "อาคารสำนักงาน", date: "28 ก.ย.–12 ต.ค. 2569", done: 7, total: 12, mis: 1, miss: 1, status: "รอกระทบยอด", team: ["admin", "กมลวรรณ", "นภา"], g: "x-g2" }
+      ];
+      let filter = "", cur = null, pending = 3;
+      const $ = (s) => document.querySelector(s);
+      const pct = (r) => (r.total ? Math.round((r.done / r.total) * 100) : 0);
+
+      function render() {
+        const C = 2 * Math.PI * 32;
+        $("#rounds").innerHTML = rounds.filter((r) => !filter || r.status === filter).map((r) => `
+          <article class="x-card x-round">
+            <div class="x-row" style="flex-wrap:nowrap;align-items:flex-start">
+              <div style="display:grid;gap:6px;min-width:0"><span class="x-mono">${r.id}</span><h3>${r.name}</h3><p class="x-meta">${r.site} · ${r.date}</p><span><span class="x-tag ${ST[r.status]}">${r.status}</span></span></div>
+              <div class="x-ring"><svg viewBox="0 0 76 76" width="76" height="76"><circle cx="38" cy="38" r="32" fill="none" stroke="#0A1024" stroke-width="7"/><circle cx="38" cy="38" r="32" fill="none" stroke="url(#gr)" stroke-width="7" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C * (1 - pct(r) / 100)}"/><defs><linearGradient id="gr"><stop offset="0" stop-color="#3b82f6"/><stop offset="1" stop-color="#ec4899"/></linearGradient></defs></svg><b>${pct(r)}%</b></div>
+            </div>
+            <div class="x-row"><p class="x-meta">นับแล้ว <b style="color:var(--text-primary)">${r.done}/${r.total}</b> (${pct(r)}%)</p><p style="display:flex;gap:6px;flex-wrap:wrap">${r.mis ? `<span class="x-tag x-warn">ผิดที่ ${r.mis}</span>` : ""}${r.miss ? `<span class="x-tag x-bad">ไม่พบ ${r.miss}</span>` : ""}</p></div>
+            <div class="x-bar"><i style="width:${pct(r)}%"></i></div>
+            <div class="x-row"><span class="x-meta">คณะกรรมการ</span><span class="x-avs">${r.team.map(av).join("")}</span></div>
+            <div class="x-acts"><button class="x-btn x-btn--blue" data-scan="${r.id}" ${r.status === "ปิดรอบแล้ว" ? "disabled" : ""}><span data-i="scan"></span>เปิดหน้าสแกน</button><button class="x-btn" data-rec="${r.id}">กระทบยอด</button></div>
+          </article>`).join("") || `<p class="x-meta">ไม่มีรอบในสถานะนี้</p>`;
+        $("#rounds").querySelectorAll("[data-i]").forEach((el) => el.insertAdjacentHTML("afterbegin", `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${I[el.dataset.i]}</svg>`));
+      }
+
+      const open = (id) => { $(id).classList.add("is-open"); const f = $(id).querySelector("input, button:not([data-close])"); f && f.focus(); };
+      const close = () => document.querySelectorAll(".x-modal.is-open").forEach((m) => m.classList.remove("is-open"));
+      document.addEventListener("click", (e) => {
+        if (e.target.closest("[data-close]") || e.target.classList.contains("x-modal")) close();
+        const s = e.target.closest("[data-scan]"), r = e.target.closest("[data-rec]");
+        if (s) { cur = rounds.find((x) => x.id === s.dataset.scan); openScan(); }
+        if (r) { cur = rounds.find((x) => x.id === r.dataset.rec); openRec(); }
+      });
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") { close(); $("#side").classList.remove("is-open"); }
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") { e.preventDefault(); $("#q").focus(); }
+      });
+      $("#menuBtn").onclick = (e) => { e.stopPropagation(); $("#side").classList.toggle("is-open"); };
+      document.addEventListener("click", (e) => { if (!e.target.closest("#side")) $("#side").classList.remove("is-open"); });
+      $("#tabs").onclick = (e) => { const b = e.target.closest(".x-tab"); if (!b) return; filter = b.dataset.f; $("#tabs").querySelectorAll(".x-tab").forEach((t) => t.setAttribute("aria-pressed", t === b)); render(); };
+
+      let toastT;
+      function toast(t) { $("#toastT").textContent = t; $("#toast").classList.add("is-on"); clearTimeout(toastT); toastT = setTimeout(() => $("#toast").classList.remove("is-on"), 2600); }
+
+      // Scan simulation
+      const FEED = [["NB-0231", "โน้ตบุ๊ก Dell Latitude 5440", "พบถูกที่", "x-ok"], ["PC-0118", "คอมพิวเตอร์ HP ProDesk", "ผิดที่", "x-warn"], ["PRN-021", "เครื่องพิมพ์ Brother HL-L5100", "พบถูกที่", "x-ok"], ["AP-011", "Access Point Aruba 515", "ใหม่", "x-new"], ["SW-CORE01", "Core Switch Cisco C9300", "พบถูกที่", "x-ok"], ["UPS-004", "UPS APC 3kVA", "พบถูกที่", "x-ok"], ["CAM-017", "กล้อง IP Hikvision", "ผิดที่", "x-warn"]];
+      function scanState() { $("#scRound").textContent = cur.id; $("#scCount").textContent = `${cur.done}/${cur.total}`; $("#scBar").style.width = pct(cur) + "%"; $("#scSync").textContent = `ออฟไลน์ · รอซิงก์ ${pending}`; }
+      function openScan() { $("#scRes").innerHTML = '<span class="x-meta">เล็งกล้องไปที่ QR / แตะปุ่มเพื่ออ่าน RFID</span>'; scanState(); open("#mScan"); }
+      $("#scBtn").onclick = () => {
+        if (cur.done >= cur.total) { $("#scRes").innerHTML = '<b>นับครบทุกรายการแล้ว</b><span class="x-meta">ส่งกระทบยอดได้เลย</span>'; return; }
+        const [tag, name, st, cls] = FEED[(cur.done + cur.mis) % FEED.length];
+        if (st !== "ใหม่") cur.done++;
+        if (st === "ผิดที่") cur.mis++;
+        pending++;
+        if (cur.status === "ร่าง") cur.status = "กำลังตรวจนับ";
+        if (cur.done >= cur.total) cur.status = "รอกระทบยอด";
+        $("#scRes").innerHTML = `<div class="x-row"><span class="x-mono">${tag}</span><span class="x-tag ${cls}">${st}</span></div><b>${name}</b><span class="x-meta">บันทึกในเครื่องแล้ว · ${new Date().toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" })}</span>`;
+        if (navigator.vibrate) navigator.vibrate(40);
+        scanState(); render();
+      };
+
+      // Reconcile
+      const REC = [["NB-0207", "โน้ตบุ๊ก Lenovo T14", "ชั้น 3 · ฝ่ายบัญชี", "ชั้น 3 · ฝ่ายบัญชี", "พบ"], ["PC-0094", "คอมพิวเตอร์ Dell OptiPlex", "ชั้น 2 · HR", "ชั้น 4 · ห้องประชุม", "ผิดที่"], ["PRJ-006", "โปรเจกเตอร์ Epson EB-X51", "ชั้น 4 · ห้องประชุม", "—", "ไม่พบ"], ["MON-152", "จอ LG 27 นิ้ว", "—", "ชั้น 3 · ฝ่ายไอที", "เกินทะเบียน"], ["PRN-015", "เครื่องพิมพ์ Canon iR", "ชั้น 1 · ธุรการ", "ชั้น 1 · ธุรการ", "พบ"], ["AP-004", "Access Point Aruba 305", "ชั้น 2 · โถง", "ชั้น 2 · โถง", "พบ"]];
+      const RC = { "พบ": ["x-ok", "—"], "ผิดที่": ["x-warn", "ปรับที่ตั้ง"], "ไม่พบ": ["x-bad", "แจ้งสูญหาย"], "เกินทะเบียน": ["x-new", "ขึ้นทะเบียนใหม่"] };
+      function openRec() {
+        $("#recT").textContent = `กระทบยอด · ${cur.id}`;
+        $("#recSub").textContent = `${cur.name} · นับแล้ว ${cur.done}/${cur.total}`;
+        $("#recBody").innerHTML = REC.map(([t, n, a, b, r]) => `<tr><th scope="row"><span class="x-mono">${t}</span></th><td data-label="ชื่อ">${n}</td><td data-label="ตามทะเบียน" class="muted">${a}</td><td data-label="ที่พบ">${b}</td><td data-label="ผล"><span class="x-tag ${RC[r][0]}">${r}</span></td><td data-label="การดำเนินการ">${r === "พบ" ? '<span class="x-meta">ไม่ต้องดำเนินการ</span>' : `<button class="x-btn" data-act>${RC[r][1]}</button>`}</td></tr>`).join("");
+        $("#closeRound").disabled = cur.status === "ปิดรอบแล้ว";
+        open("#mRec");
+      }
+      $("#recBody").onclick = (e) => { const b = e.target.closest("[data-act]"); if (b) { toast(`${b.textContent} · ${b.closest("tr").querySelector(".x-mono").textContent}`); b.outerHTML = '<span class="x-tag x-ok">ดำเนินการแล้ว</span>'; } };
+      $("#closeRound").onclick = () => { cur.status = "ปิดรอบแล้ว"; close(); render(); toast(`ปิดรอบ ${cur.id} และปรับทะเบียนแล้ว`); };
+
+      // Create
+      $("#pick").innerHTML = USERS.map((u, i) => `<button type="button" aria-pressed="${i === 0}" data-u="${u[0]}">${av(u[0])}${u[0]}</button>`).join("");
+      $("#pick").onclick = (e) => { const b = e.target.closest("button"); if (b) b.setAttribute("aria-pressed", b.getAttribute("aria-pressed") !== "true"); };
+      $("#newBtn").onclick = () => open("#mNew");
+      $("#addField").onclick = () => { const l = document.createElement("label"); l.className = "x-full"; l.innerHTML = 'ฟิลด์เพิ่มเติม<input class="x-in" placeholder="ชื่อฟิลด์ เช่น เลขที่สัญญา" />'; $(".x-form").appendChild(l); l.querySelector("input").focus(); };
+      const th = (v) => new Date(v).toLocaleDateString("th-TH", { day: "numeric", month: "short", year: "numeric" });
+      $("#fNew").onsubmit = (e) => {
+        e.preventDefault();
+        const f = new FormData(e.target);
+        if (f.get("end") < f.get("start")) { toast("วันสิ้นสุดต้องไม่ก่อนวันเริ่ม"); return; }
+        const team = [...$("#pick").querySelectorAll('[aria-pressed="true"]')].map((b) => b.dataset.u);
+        const id = `ST-2569-${String(rounds.length + 1).padStart(4, "0")}`;
+        rounds.unshift({ id, name: f.get("name"), site: f.get("site") + (f.get("area") ? ` · ${f.get("area")}` : ""), date: `${th(f.get("start"))} – ${th(f.get("end"))}`, done: 0, total: 8 + Math.floor(Math.random() * 12), mis: 0, miss: 0, status: "ร่าง", team: team.length ? team : ["admin"] });
+        e.target.reset(); close(); filter = ""; $("#tabs").querySelectorAll(".x-tab").forEach((t, i) => t.setAttribute("aria-pressed", i === 0)); render();
+        toast(`สร้างรอบ ${id} แล้ว`);
+      };
+      render();
+    </script>
+  </body>
+</html>
