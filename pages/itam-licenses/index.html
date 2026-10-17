@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="th" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ITMAINT ITAM Licenses</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400&display=swap" />
+    <link rel="stylesheet" href="../../assets/hark.css" />
+    <link rel="stylesheet" href="../../assets/hark-hero.css" />
+    <link rel="stylesheet" href="../../assets/hark-charts.css" />
+    <style>
+      :root { color-scheme: dark; --x-bg: #0A1024; --x-card: #0F1832; --x-card2: #131F40; --x-line: rgba(80,140,255,.28); --x-glow: 0 0 0 1px rgba(80,140,255,.10), 0 0 18px rgba(60,120,255,.12); --x-ink: #E8EEFF; --x-dim: #9AA8CC; --x-red: #FF5D6C; --x-amber: #FFB547; --x-green: #3DDC97; --x-blue: #4C8DFF; }
+      html, body { background: var(--x-bg); color: var(--x-ink); }
+      body { margin: 0; font: var(--type-body); font-family: var(--sans), "Noto Sans Thai", "Leelawadee UI", sans-serif; }
+      .page.x-app { display: grid; grid-template-columns: 248px minmax(0, 1fr); min-height: 100vh; max-width: none; margin: 0; padding: 0; gap: 0; }
+      .x-side { background: #080D1E; border-right: 1px solid var(--x-line); padding: 18px 12px; display: flex; flex-direction: column; gap: 4px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+      .x-logo { display: flex; gap: 10px; align-items: center; padding: 4px 8px 16px; }
+      .x-logo b { font: var(--type-heading); letter-spacing: -.01em; }
+      .x-logo small { display: block; color: var(--x-dim); font: var(--type-caption); }
+      .x-grp { font: var(--type-caption); color: var(--x-dim); text-transform: uppercase; letter-spacing: .06em; padding: 14px 10px 4px; margin: 0; }
+      .x-nav { display: flex; align-items: center; gap: 10px; min-height: var(--tap); padding: 0 12px; border-radius: var(--r-s); color: var(--x-ink); text-decoration: none; font: var(--type-label); }
+      .x-nav:hover { background: rgba(76,141,255,.10); }
+      .x-nav.is-on { background: linear-gradient(90deg, #2F6BFF, #2A4FD8); box-shadow: 0 0 16px rgba(47,107,255,.45); }
+      .x-nav svg { width: 18px; height: 18px; flex: none; opacity: .9; }
+      .x-main { min-width: 0; display: flex; flex-direction: column; }
+      .x-top { display: flex; align-items: center; gap: 12px; padding: 12px 24px; border-bottom: 1px solid var(--x-line); background: rgba(10,16,36,.85); backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 5; }
+      .x-field, .x-sel { min-height: var(--tap); background: var(--x-card); border: 1px solid var(--x-line); border-radius: var(--r-s); color: var(--x-ink); font: var(--type-label); padding: 0 12px; box-sizing: border-box; }
+      .x-search { flex: 1; display: flex; align-items: center; gap: 8px; max-width: 520px; }
+      .x-search input { flex: 1; background: none; border: 0; color: var(--x-ink); font: var(--type-label); outline: none; min-width: 0; }
+      .x-kbd { font: var(--type-caption); color: var(--x-dim); border: 1px solid var(--x-line); border-radius: 6px; padding: 2px 6px; }
+      .x-ib { width: var(--tap); height: var(--tap); display: grid; place-items: center; border-radius: var(--r-s); background: var(--x-card); border: 1px solid var(--x-line); color: var(--x-ink); position: relative; cursor: pointer; }
+      .x-ib i { position: absolute; top: 2px; right: 2px; min-width: 18px; height: 18px; border-radius: 9px; background: #C81E3A; font: 600 12px/18px var(--sans); font-style: normal; color: #fff; }
+      .x-av { display: flex; align-items: center; gap: 8px; font: var(--type-label); }
+      .x-av span { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg,#4C8DFF,#9B5CFF); display: grid; place-items: center; font-weight: 600; }
+      .x-btn { min-height: var(--tap); padding: 0 18px; border-radius: var(--r-s); font: var(--type-label); font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+      .x-pri { border: 0; color: #fff; background: linear-gradient(90deg, #C2410C, #BE185D); box-shadow: 0 4px 18px rgba(190,24,93,.35); }
+      .x-pri:hover { filter: brightness(1.1); }
+      .x-ghost { background: transparent; color: var(--x-ink); border: 1px solid var(--x-line); }
+      .x-ghost:hover { background: rgba(76,141,255,.10); }
+      .x-body { padding: 24px; display: flex; flex-direction: column; gap: 18px; }
+      .x-hd { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap; }
+      .x-hd h1 { font: var(--type-title); margin: 0 0 4px; }
+      .x-hd p { margin: 0; color: var(--x-dim); font: var(--type-small); }
+      .x-acts { display: flex; gap: 10px; }
+      .x-tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--x-line); overflow-x: auto; }
+      .x-tab { min-height: var(--tap); padding: 0 16px; background: none; border: 0; border-bottom: 2px solid transparent; color: var(--x-dim); font: var(--type-label); cursor: pointer; display: flex; align-items: center; gap: 6px; white-space: nowrap; }
+      .x-tab[aria-selected="true"] { color: var(--x-ink); border-color: #FF6A3D; }
+      .x-tab b { background: #3A1828; color: #FF9AA4; border-radius: var(--r-pill); padding: 1px 8px; font: var(--type-caption); font-weight: 600; }
+      .x-card { background: linear-gradient(180deg, var(--x-card2), var(--x-card)); border: 1px solid var(--x-line); border-radius: 16px; box-shadow: var(--x-glow); padding: 18px; }
+      .x-card h3 { font: var(--type-label); font-weight: 600; margin: 0 0 12px; }
+      .x-kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+      .x-kpi { display: flex; gap: 12px; align-items: center; }
+      .x-tile { width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center; flex: none; color: #fff; }
+      .x-tile svg { width: 20px; height: 20px; }
+      .g1 { background: linear-gradient(135deg,#3B82F6,#1D4ED8); } .g2 { background: linear-gradient(135deg,#F43F5E,#BE123C); } .g3 { background: linear-gradient(135deg,#F59E0B,#C2410C); } .g4 { background: linear-gradient(135deg,#A855F7,#6D28D9); } .g5 { background: linear-gradient(135deg,#10B981,#047857); } .g6 { background: linear-gradient(135deg,#06B6D4,#0E7490); }
+      .x-kpi small { display: block; color: var(--x-dim); font: var(--type-small); }
+      .x-kpi strong { font: var(--type-figure); }
+      .x-grid2 { display: grid; grid-template-columns: 1fr 1.4fr; gap: 14px; }
+      .x-tbl { width: 100%; border-collapse: collapse; font: var(--type-small); }
+      .x-tbl th { text-align: left; color: var(--x-dim); font-weight: 500; padding: 10px; border-bottom: 1px solid var(--x-line); white-space: nowrap; }
+      .x-tbl td { padding: 10px; border-bottom: 1px solid rgba(80,140,255,.12); vertical-align: middle; }
+      .x-tbl tr:last-child td { border-bottom: 0; }
+      .x-scroll { overflow-x: auto; }
+      .x-tag { display: inline-block; padding: 2px 10px; border-radius: var(--r-pill); font: var(--type-caption); font-weight: 600; white-space: nowrap; }
+      .t-red { background: #3A1828; color: #FF9AA4; } .t-amb { background: #3A2C1A; color: #FFC772; } .t-grn { background: #123A33; color: #6BE8B1; } .t-blu { background: #18294F; color: #9DC0FF; }
+      .x-bar { width: 120px; height: 6px; border-radius: 3px; background: rgba(255,255,255,.08); overflow: hidden; margin-top: 4px; }
+      .x-bar i { display: block; height: 100%; background: linear-gradient(90deg,#3B82F6,#06B6D4); }
+      .x-bar.over i { background: linear-gradient(90deg,#F43F5E,#FF5D6C); }
+      .x-key { display: flex; align-items: center; gap: 4px; font-family: "Geist Mono", monospace; font-size: 12px; }
+      .x-eye { width: var(--tap); height: var(--tap); background: none; border: 0; color: var(--x-dim); cursor: pointer; display: grid; place-items: center; }
+      .x-devs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+      .x-dev dl { display: grid; grid-template-columns: auto 1fr; gap: 6px 12px; margin: 12px 0 0; font: var(--type-small); }
+      .x-dev dt { color: var(--x-dim); } .x-dev dd { margin: 0; }
+      .x-dev header { display: flex; gap: 12px; align-items: center; }
+      .x-dev header small { display: block; color: var(--x-dim); font: var(--type-small); }
+      .x-iss { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+      .x-iss p { color: var(--x-dim); font: var(--type-small); margin: 8px 0 14px; }
+      [hidden] { display: none !important; }
+      .x-modal { position: fixed; inset: 0; background: rgba(3,6,18,.72); backdrop-filter: blur(6px); display: grid; place-items: center; z-index: 20; padding: 16px; }
+      .x-dlg { width: min(560px, 100%); max-height: 90vh; overflow-y: auto; }
+      .x-form { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+      .x-form label { display: flex; flex-direction: column; gap: 6px; font: var(--type-small); color: var(--x-dim); }
+      .x-form .full { grid-column: 1 / -1; }
+      .x-field:focus, .x-sel:focus { outline: 2px solid #4C8DFF; outline-offset: 1px; }
+      .x-toast { position: fixed; bottom: 24px; right: 24px; z-index: 30; background: #111B38; border: 1px solid rgba(61,220,151,.45); color: var(--x-ink); border-radius: 16px; padding: 14px 18px; box-shadow: 0 8px 30px rgba(0,0,0,.5); font: var(--type-label); }
+      @media (max-width: 1100px) { .x-kpis { grid-template-columns: repeat(2, 1fr); } .x-grid2, .x-devs, .x-iss { grid-template-columns: 1fr; } }
+      @media (max-width: 820px) { .page.x-app { grid-template-columns: 1fr; } .x-side { display: none; } .x-top { padding: 10px 14px; flex-wrap: wrap; } .x-body { padding: 16px; } .x-form { grid-template-columns: 1fr; } .x-hide-sm { display: none; } }
+    </style>
+  </head>
+  <body>
+    <div class="page x-app" id="top">
+      <aside class="x-side" aria-label="เมนูหลัก">
+        <div class="x-logo">
+          <span class="x-tile g1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l9 5v10l-9 5-9-5V7z"/><path d="M12 22V12M21 7l-9 5-9-5"/></svg></span>
+          <div><b>IT&amp;MAINT</b><small>Smart Asset · Smart Work</small></div>
+        </div>
+        <p class="x-grp">ภาพรวม</p>
+        <a class="x-nav" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-8 9 8v10H3z"/></svg>หน้าหลัก</a>
+        <a class="x-nav" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Command Center</a>
+        <p class="x-grp">ทรัพย์สิน</p>
+        <a class="x-nav" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V4h8v3"/></svg>ทะเบียนทรัพย์สิน</a>
+        <a class="x-nav is-on" href="#" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg>IT Asset &amp; License</a>
+        <a class="x-nav" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6 7-11a7 7 0 10-14 0c0 5 7 11 7 11z"/><circle cx="12" cy="10" r="2"/></svg>Tracking / ยืม-โอน-ย้าย</a>
+        <a class="x-nav" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>ค่าเสื่อม / Depreciation</a>
+        <p class="x-grp">ซ่อมบำรุง</p>
+        <a class="x-nav" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a4 4 0 00-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 005.4-5.4l-2.5 2.5-2.5-2.5z"/></svg>แจ้งซ่อม / Service Desk</a>
+        <a class="x-nav" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M5 19l2-2M17 7l2-2"/></svg>CMMS / PM</a>
+        <p class="x-grp">คลัง &amp; จัดซื้อ</p>
+        <a class="x-nav" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 4h2l2 12h12l2-8H6"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg>PR / PO / จัดซื้อ</a>
+        <a class="x-nav" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l9-5 9 5v8l-9 5-9-5z"/></svg>คลังอะไหล่</a>
+        <p class="x-grp">วิเคราะห์</p>
+        <a class="x-nav" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18M7 15l4-4 3 3 5-6"/></svg>รายงาน / Dashboard</a>
+        <p class="x-grp">ระบบ</p>
+        <a class="x-nav" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.8l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-2.9 1.2V21a2 2 0 11-4 0 1.7 1.7 0 00-2.9-1.2l-.1.1a2 2 0 11-2.8-2.8l.1-.1A1.7 1.7 0 003 15H3a2 2 0 110-4 1.7 1.7 0 001.2-2.9l-.1-.1a2 2 0 112.8-2.8l.1.1A1.7 1.7 0 009 3V3a2 2 0 114 0 1.7 1.7 0 002.9 1.2l.1-.1a2 2 0 112.8 2.8l-.1.1A1.7 1.7 0 0021 9a2 2 0 110 4z"/></svg>ตั้งค่า / ผู้ใช้งาน</a>
+      </aside>
+
+      <div class="x-main">
+        <header class="x-top">
+          <select class="x-sel" aria-label="เลือกไซต์"><option>ทุกไซต์</option><option>โรงงานสมุทรสาคร</option><option>โรงงานระยอง</option></select>
+          <label class="x-field x-search"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input id="q" placeholder="ค้นหา ทรัพย์สิน / ไลเซนส์ / อุปกรณ์…" aria-label="ค้นหา" /><span class="x-kbd">Ctrl + K</span></label>
+          <button class="x-btn x-pri" type="button" onclick="toast('เปิดฟอร์มแจ้งซ่อมแล้ว')">+ แจ้งซ่อม</button>
+          <button class="x-ib" type="button" aria-label="การแจ้งเตือน 5 รายการ" onclick="toast('แจ้งเตือน 5 รายการ: ไลเซนส์ใกล้หมดอายุ 3 · เกินสิทธิ์ 2')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 1112 0c0 7 3 9 3 9H3s3-2 3-9M10 21h4"/></svg><i>5</i></button>
+          <div class="x-av"><span>A</span><div class="x-hide-sm">Admin<br /><small style="color:var(--x-dim)">ผู้ดูแลระบบ</small></div></div>
+        </header>
+
+        <main class="x-body">
+          <div class="x-hd">
+            <div>
+              <h1>IT Asset &amp; License Management</h1>
+              <p>ทะเบียนฮาร์ดแวร์ · ไลเซนส์ vs การติดตั้งจริง · Discovery Agent/API · OS End-of-Support · ISO/IEC 19770 &amp; ISO 27001 A.5.9</p>
+            </div>
+            <div class="x-acts">
+              <button class="x-btn x-ghost" type="button" onclick="toast('กำลังสร้างรายงาน Compliance (PDF)…')">รายงาน Compliance</button>
+              <button class="x-btn x-pri" type="button" onclick="openM()">+ ไลเซนส์</button>
+            </div>
+          </div>
+
+          <div class="x-tabs" role="tablist">
+            <button class="x-tab" role="tab" aria-selected="true" data-t="ov">ภาพรวม</button>
+            <button class="x-tab" role="tab" aria-selected="false" data-t="hw">ฮาร์ดแวร์ IT</button>
+            <button class="x-tab" role="tab" aria-selected="false" data-t="lic">ไลเซนส์ <b>3</b></button>
+            <button class="x-tab" role="tab" aria-selected="false" data-t="cmp">Compliance <b>2</b></button>
+          </div>
+
+          <!-- OVERVIEW -->
+          <section id="ov" role="tabpanel" style="display:flex;flex-direction:column;gap:14px">
+            <div class="x-kpis" id="kpis"></div>
+            <div class="x-grid2">
+              <div class="x-card"><h3>อุปกรณ์ตามประเภท</h3><div class="chart__canvas"><canvas id="cType" role="img" aria-label="อุปกรณ์ IT 11 เครื่อง: คอมพิวเตอร์ 3, เครือข่าย 3, เซิร์ฟเวอร์ 2, เครื่องพิมพ์ 2, NAS 1"></canvas></div></div>
+              <div class="x-card"><h3>อัตราใช้สิทธิ์ไลเซนส์ (%)</h3><div class="chart__canvas"><canvas id="cUse" role="img" aria-label="AutoCAD ใช้เกินสิทธิ์ 113% ส่วนไลเซนส์อื่นอยู่ภายในสิทธิ์"></canvas></div></div>
+            </div>
+            <div class="x-card"><h3>ระบบปฏิบัติการที่ติดตั้ง</h3>
+              <div class="x-scroll"><table class="x-tbl"><thead><tr><th>OS / Firmware</th><th>จำนวน</th><th>สถานะ</th></tr></thead><tbody>
+                <tr><td>Windows 11 Pro 23H2</td><td>2</td><td><span class="x-tag t-grn">รองรับ</span></td></tr>
+                <tr><td>Windows 10 Pro 22H2</td><td>1</td><td><span class="x-tag t-red">EOS แล้ว</span></td></tr>
+                <tr><td>VMware ESXi 8.0U2</td><td>1</td><td><span class="x-tag t-grn">รองรับ</span></td></tr>
+                <tr><td>FortiOS 7.2.8</td><td>1</td><td><span class="x-tag t-grn">รองรับ</span></td></tr>
+                <tr><td>DSM 7.2.1</td><td>1</td><td><span class="x-tag t-grn">รองรับ</span></td></tr>
+              </tbody></table></div>
+            </div>
+          </section>
+
+          <!-- HARDWARE -->
+          <section id="hw" role="tabpanel" hidden><div class="x-devs" id="devs"></div></section>
+
+          <!-- LICENSES -->
+          <section id="lic" role="tabpanel" hidden>
+            <div class="x-card x-scroll"><table class="x-tbl"><thead><tr><th>ไลเซนส์</th><th>ประเภท</th><th>ใช้ / สิทธิ์</th><th>หมดอายุ</th><th>ค่าใช้จ่าย/ปี</th><th>License Key</th></tr></thead><tbody id="lrows"></tbody></table></div>
+          </section>
+
+          <!-- COMPLIANCE -->
+          <section id="cmp" role="tabpanel" hidden>
+            <div class="x-iss">
+              <div class="x-card"><header class="x-dev" style="display:flex;gap:12px;align-items:center"><span class="x-tile g2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l10 18H2zM12 10v5M12 18v.5"/></svg></span><div><h3 style="margin:0">AutoCAD เกินสิทธิ์ +2</h3><span class="x-tag t-red">ความเสี่ยงสูง</span></div></header>
+                <p>ติดตั้งจริง 17 เครื่อง แต่มีสิทธิ์ 15 ที่นั่ง ตรวจพบโดย Discovery Agent · ISO/IEC 19770</p>
+                <div class="x-acts"><button class="x-btn x-pri" type="button" onclick="toast('สร้าง PR ซื้อ AutoCAD เพิ่ม 2 ที่นั่งแล้ว')">ซื้อเพิ่ม 2 สิทธิ์</button><button class="x-btn x-ghost" type="button" onclick="toast('ส่งงานถอนการติดตั้งให้ทีม IT แล้ว')">ถอนการติดตั้ง</button></div></div>
+              <div class="x-card"><header style="display:flex;gap:12px;align-items:center"><span class="x-tile g3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 9l6 6M15 9l-6 6"/></svg></span><div><h3 style="margin:0">WinRAR ติดตั้งไม่มีไลเซนส์ 3 เครื่อง</h3><span class="x-tag t-amb">ไม่มีสิทธิ์ใช้งาน</span></div></header>
+                <p>ซอฟต์แวร์ไม่ได้รับอนุญาตบน 3 เครื่อง · ISO 27001 A.5.9 (ทะเบียนสินทรัพย์สารสนเทศ)</p>
+                <div class="x-acts"><button class="x-btn x-pri" type="button" onclick="toast('สั่งถอน WinRAR และติดตั้ง 7-Zip แทนแล้ว')">แทนด้วย 7-Zip</button><button class="x-btn x-ghost" type="button" onclick="toast('สร้าง PR ซื้อ WinRAR 3 สิทธิ์แล้ว')">ซื้อไลเซนส์</button></div></div>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <div class="x-modal" id="m" hidden role="dialog" aria-modal="true" aria-labelledby="mt">
+      <form class="x-card x-dlg" id="f">
+        <h3 id="mt" style="font:var(--type-heading)">เพิ่มไลเซนส์</h3>
+        <div class="x-form" id="ff">
+          <label class="full">ชื่อซอฟต์แวร์<input class="x-field" name="n" required placeholder="เช่น Microsoft Visio" /></label>
+          <label>ผู้ผลิต<input class="x-field" name="v" placeholder="เช่น Microsoft" /></label>
+          <label>ประเภท<select class="x-sel" name="t"><option>Subscription</option><option>Perpetual</option><option>Support</option><option>Per-device</option></select></label>
+          <label>จำนวนสิทธิ์<input class="x-field" name="s" type="number" min="1" value="1" required /></label>
+          <label>วันหมดอายุ<input class="x-field" name="d" type="date" required /></label>
+          <label>ค่าใช้จ่าย (บาท/ปี)<input class="x-field" name="c" type="number" min="0" value="0" /></label>
+          <label>License Key<input class="x-field" name="k" placeholder="XXXXX-XXXXX-XXXXX" /></label>
+        </div>
+        <div class="x-acts" style="justify-content:space-between;margin-top:16px;flex-wrap:wrap">
+          <button class="x-btn x-ghost" type="button" id="addF">+ เพิ่มฟิลด์</button>
+          <span class="x-acts"><button class="x-btn x-ghost" type="button" onclick="closeM()">ยกเลิก</button><button class="x-btn x-pri" type="submit">บันทึก</button></span>
+        </div>
+      </form>
+    </div>
+    <div class="x-toast" id="toast" hidden role="status"></div>
+
+    <script type="application/json" id="type-data">
+      [{"t":"คอมพิวเตอร์","n":3},{"t":"เครือข่าย","n":3},{"t":"เซิร์ฟเวอร์","n":2},{"t":"เครื่องพิมพ์","n":2},{"t":"NAS","n":1}]
+    </script>
+    <script type="application/json" id="lic-data">
+      [{"n":"Microsoft 365 E3","v":"Microsoft","t":"Subscription","u":48,"s":50,"d":2,"c":410000,"k":"M365-7F3K9-QX2LP-88TRA"},
+       {"n":"FortiCare","v":"Fortinet","t":"Support","u":1,"s":1,"d":11,"c":120000,"k":"FCS-100F-4421-ZK90"},
+       {"n":"Adobe Acrobat Pro","v":"Adobe","t":"Subscription","u":8,"s":10,"d":15,"c":85000,"k":"ADB-ACR-55KD-2P9W"},
+       {"n":"Veeam Backup","v":"Veeam","t":"Subscription","u":6,"s":10,"d":25,"c":95000,"k":"VBR-12-XH7Q-0LMN"},
+       {"n":"ESET Endpoint","v":"ESET","t":"Subscription","u":42,"s":60,"d":148,"c":48000,"k":"ESET-EP-3Y8B-KK21"},
+       {"n":"AutoCAD","v":"Autodesk","t":"Subscription","u":17,"s":15,"d":212,"c":172000,"k":"ACD-2025-9QWE-77JH"}]
+    </script>
+    <script src="../../assets/hark.js"></script>
+    <script>document.documentElement.setAttribute("data-theme", "dark");</script>
+    <script src="../../assets/chart.js"></script>
+    <script src="../../assets/datalabels.js"></script>
+    <script src="../../assets/hark-charts.js"></script>
+    <script>
+      const $ = (s) => document.querySelector(s);
+      const ic = {
+        dev: '<path d="M3 5h18v11H3zM8 20h8M12 16v4"/>', off: '<path d="M2 8.8a15 15 0 0120 0M5 12.5a10 10 0 0114 0M8.5 16a5 5 0 017 0M2 2l20 20"/>',
+        os: '<circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16v.5"/>', war: '<path d="M12 3l8 3v6c0 5-4 8-8 9-4-1-8-4-8-9V6z"/><path d="M9 9l6 6M15 9l-6 6"/>',
+        key: '<circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M17 6l3 3"/>', clk: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+        ovr: '<path d="M12 3l10 18H2zM12 10v5M12 18v.5"/>', bah: '<path d="M4 20h16M6 16V9M10 16V9M14 16V9M18 16V9M3 7l9-4 9 4z"/>',
+        srv: '<rect x="3" y="4" width="18" height="7" rx="1"/><rect x="3" y="13" width="18" height="7" rx="1"/><path d="M7 7.5h.5M7 16.5h.5"/>',
+        fw: '<path d="M12 3l8 3v6c0 5-4 8-8 9-4-1-8-4-8-9V6z"/>', nas: '<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 7h6M9 11h6M12 17h.5"/>',
+        nb: '<rect x="4" y="5" width="16" height="11" rx="1"/><path d="M2 19h20"/>', sw: '<rect x="2" y="8" width="20" height="8" rx="1"/><path d="M6 12h.5M10 12h.5M14 12h.5M18 12h.5"/>',
+        prn: '<path d="M6 9V3h12v6M6 18H4v-7h16v7h-2M7 14h10v7H7z"/>',
+        eye: '<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>', eyeOff: '<path d="M3 3l18 18M10.6 6.1A10 10 0 0112 6c6 0 10 6 10 6a17 17 0 01-3 3.6M6.6 6.6A17 17 0 002 12s4 7 10 7a9 9 0 004.4-1.2"/>'
+      };
+      const svg = (k, s = 20) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ic[k]}</svg>`;
+
+      const kpis = [["อุปกรณ์ IT", "11", "dev", "g1"], ["ไม่รายงานตัว 30 วัน", "1", "off", "g2"], ["OS หมดการสนับสนุน", "1", "os", "g3"], ["หมดประกัน", "2", "war", "g4"],
+        ["ไลเซนส์", "9", "key", "g6", "kLic"], ["ใกล้หมดอายุ", "3", "clk", "g3"], ["เกินสิทธิ์", "2", "ovr", "g2"], ["ค่า Subscription/ปี", "0.93M", "bah", "g5", "kCost"]];
+      $("#kpis").innerHTML = kpis.map(([l, v, i, g, id]) => `<div class="x-card x-kpi"><span class="x-tile ${g}">${svg(i)}</span><div><small>${l}</small><strong${id ? ` id="${id}"` : ""}>${v}</strong></div></div>`).join("");
+
+      const devs = [
+        ["SRV-001", "HPE ProLiant DL380 Gen11", "srv", "g1", "2 นาทีที่แล้ว", "VMware ESXi 8.0U2", "ถึง 12/2027", "t-grn"],
+        ["FW-001", "FortiGate 100F", "fw", "g2", "1 นาทีที่แล้ว", "FortiOS 7.2.8", "ถึง 06/2026", "t-grn"],
+        ["NAS-01", "Synology RS1221+", "nas", "g6", "5 นาทีที่แล้ว", "DSM 7.2.1", "ถึง 03/2026", "t-grn"],
+        ["NB-0231", "Dell Latitude 5420", "nb", "g4", "34 วันที่แล้ว", "Windows 10 Pro 22H2 · EOS", "ถึง 09/2026", "t-grn", 1],
+        ["SW-01", "Ruijie RG-S5750", "sw", "g5", "3 นาทีที่แล้ว", "RGOS 11.4", "หมดแล้ว 01/2025", "t-red"],
+        ["PRN-03", "HP LaserJet Pro M404dn", "prn", "g3", "1 ชม.ที่แล้ว", "Firmware 2.1", "หมดแล้ว 08/2024", "t-red"]];
+      $("#devs").innerHTML = devs.map(([id, m, i, g, ls, os, w, wt, stale]) => `<article class="x-card x-dev"><header><span class="x-tile ${g}">${svg(i)}</span><div><h3 style="margin:0">${id}</h3><small>${m}</small></div></header>
+        <dl><dt>Last-seen</dt><dd><span class="x-tag ${stale ? "t-red" : "t-blu"}">${ls}</span></dd><dt>OS</dt><dd${os.includes("EOS") ? ' style="color:#FF8A95"' : ""}>${os}</dd><dt>ประกัน</dt><dd><span class="x-tag ${wt}">${w}</span></dd></dl></article>`).join("");
+
+      const lics = Hark.data("lic-data");
+      const baht = (n) => "฿" + n.toLocaleString("th-TH");
+      function row(l) {
+        const p = Math.round((l.u / l.s) * 100), over = l.u > l.s;
+        const dt = l.d <= 7 ? "t-red" : l.d <= 30 ? "t-amb" : "t-grn";
+        const mask = l.k ? l.k.replace(/[A-Z0-9](?=.{4})/g, "•") : "—";
+        return `<tr><td><b>${l.n}</b><br><small style="color:var(--x-dim)">${l.v || "—"}</small></td><td>${l.t}</td>
+          <td>${l.u}/${l.s}${over ? ` <span class="x-tag t-red">เกิน +${l.u - l.s}</span>` : ""}<div class="x-bar${over ? " over" : ""}"><i style="width:${Math.min(p, 100)}%"></i></div></td>
+          <td><span class="x-tag ${dt}">อีก ${l.d} วัน</span></td><td>${baht(l.c)}</td>
+          <td><span class="x-key"><span data-k="${l.k}" data-m="${mask}">${mask}</span>${l.k ? `<button class="x-eye" type="button" aria-label="แสดง License Key">${svg("eye", 18)}</button>` : ""}</span></td></tr>`;
+      }
+      const renderL = () => { $("#lrows").innerHTML = lics.map(row).join(""); };
+      renderL();
+      $("#lrows").addEventListener("click", (e) => {
+        const b = e.target.closest(".x-eye"); if (!b) return;
+        const s = b.previousElementSibling, show = s.textContent === s.dataset.m;
+        s.textContent = show ? s.dataset.k : s.dataset.m;
+        b.innerHTML = svg(show ? "eyeOff" : "eye", 18); b.setAttribute("aria-label", show ? "ซ่อน License Key" : "แสดง License Key");
+      });
+
+      document.querySelectorAll(".x-tab").forEach((t) => t.addEventListener("click", () => {
+        document.querySelectorAll(".x-tab").forEach((x) => x.setAttribute("aria-selected", x === t));
+        document.querySelectorAll("[role=tabpanel]").forEach((p) => (p.hidden = p.id !== t.dataset.t));
+      }));
+
+      let tt; function toast(msg) { const t = $("#toast"); t.textContent = "✓ " + msg; t.hidden = false; clearTimeout(tt); tt = setTimeout(() => (t.hidden = true), 2800); }
+      function openM() { $("#m").hidden = false; $("#f [name=n]").focus(); }
+      function closeM() { $("#m").hidden = true; $("#f").reset(); document.querySelectorAll(".x-extra").forEach((e) => e.remove()); }
+      $("#m").addEventListener("click", (e) => { if (e.target.id === "m") closeM(); });
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && !$("#m").hidden) closeM();
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") { e.preventDefault(); $("#q").focus(); }
+      });
+      let nf = 0;
+      $("#addF").addEventListener("click", () => {
+        nf++; const l = document.createElement("label"); l.className = "full x-extra";
+        l.innerHTML = `ฟิลด์เพิ่มเติม ${nf}<span style="display:flex;gap:8px"><input class="x-field" placeholder="ชื่อฟิลด์" aria-label="ชื่อฟิลด์" style="flex:1"><input class="x-field" placeholder="ค่า" aria-label="ค่า" style="flex:1"></span>`;
+        $("#ff").appendChild(l); l.querySelector("input").focus();
+      });
+      $("#f").addEventListener("submit", (e) => {
+        e.preventDefault(); const f = new FormData(e.target);
+        const d = Math.max(0, Math.ceil((new Date(f.get("d")) - new Date()) / 864e5));
+        const l = { n: f.get("n"), v: f.get("v"), t: f.get("t"), u: 0, s: +f.get("s"), d, c: +f.get("c") || 0, k: f.get("k").trim().toUpperCase() };
+        lics.push(l); renderL();
+        $("#kLic").textContent = 9 + lics.length - 6;
+        $("#kCost").textContent = (lics.reduce((a, x) => a + x.c, 0) / 1e6).toFixed(2) + "M";
+        closeM(); toast(`เพิ่มไลเซนส์ “${l.n}” แล้ว`);
+        document.querySelector('[data-t="lic"]').click();
+      });
+
+      const types = Hark.data("type-data");
+      new Chart($("#cType"), { type: "doughnut", data: { labels: types.map((d) => d.t), datasets: [{ data: types.map((d) => d.n) }] },
+        options: { cutout: "62%", plugins: { legend: { position: "right" } } } });
+      const base = lics.slice(0, 6);
+      new Chart($("#cUse"), { type: "bar", data: { labels: base.map((l) => l.n.replace("Microsoft ", "M365 ").replace("M365 365 ", "M365 ")), datasets: [{ data: base.map((l) => Math.round((l.u / l.s) * 100)), backgroundColor: base.map((l) => (l.u > l.s ? "var(--chart-bad)" : "var(--chart-1)")) }] },
+        options: { indexAxis: "y", scales: { x: { ticks: { callback: (v) => v + "%" } } }, plugins: { legend: { display: false }, datalabels: { ...Hark.labels.values, formatter: (v) => v + "%" }, tooltip: { callbacks: { label: (c) => `${c.raw}% ของสิทธิ์` } } } } });
+    </script>
+  </body>
+</html>
