@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="th" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ITMAINT RCA FMEA</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400&family=Noto+Sans+Thai:wght@400;500;600&display=swap" />
+    <link rel="stylesheet" href="../../assets/hark.css" />
+    <link rel="stylesheet" href="../../assets/hark-hero.css" />
+    <link rel="stylesheet" href="../../assets/hark-charts.css" />
+    <style>
+      :root{--x-bg:#0A1024;--x-card:#0F1A3A;--x-card2:#13214A;--x-line:rgba(77,141,255,.28);--x-glow:0 0 0 1px rgba(77,141,255,.22),0 0 18px rgba(56,120,255,.12);--x-tx:#E8EEFF;--x-tx2:#9DACD3;--x-red:#F0506E;--x-amb:#F5A524;--x-grn:#2FCB8B;--x-blu:#4D8DFF;--x-cta:linear-gradient(135deg,#C2410C,#BE185D)}
+      body{background:var(--x-bg);color:var(--x-tx);font-family:"Geist","Noto Sans Thai",sans-serif;color-scheme:dark}
+      .x-app{display:grid;grid-template-columns:248px minmax(0,1fr);min-height:100vh;font-family:"Geist","Noto Sans Thai",sans-serif}
+      .x-side{background:#0B1430;border-right:1px solid var(--x-line);padding:18px 12px;display:flex;flex-direction:column;gap:4px;position:sticky;top:0;height:100vh;overflow-y:auto}
+      .x-logo{display:flex;gap:10px;align-items:center;padding:4px 8px 14px}.x-logo b{font-size:18px;display:block}.x-logo small{color:var(--x-tx2)}
+      .x-grp{font:var(--type-caption);color:var(--x-tx2);padding:12px 10px 4px;text-transform:uppercase;letter-spacing:.04em}
+      .x-nav{display:flex;align-items:center;gap:10px;min-height:var(--tap);padding:0 10px;border-radius:12px;color:var(--x-tx);text-decoration:none;font:var(--type-label)}
+      .x-nav:hover{background:rgba(77,141,255,.1)}.x-nav.on{background:linear-gradient(90deg,#1E4FD8,#2F6BFF);box-shadow:0 0 16px rgba(47,107,255,.4)}
+      .x-ic{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+      .x-top{display:flex;align-items:center;gap:10px;padding:12px 20px;border-bottom:1px solid var(--x-line);background:rgba(10,16,36,.9);position:sticky;top:0;z-index:5;backdrop-filter:blur(10px)}
+      .x-in,.x-sel{min-height:var(--tap);background:var(--x-card);color:var(--x-tx);border:1px solid var(--x-line);border-radius:12px;padding:0 12px;font:var(--type-label);font-family:inherit;width:100%;box-sizing:border-box}
+      textarea.x-in{padding:10px 12px;min-height:84px;resize:vertical}
+      .x-search{flex:1;display:flex;align-items:center;gap:8px;max-width:520px;position:relative}.x-search .x-in{padding-left:38px}.x-search>svg{position:absolute;left:12px;color:var(--x-tx2)}
+      .x-kbd{position:absolute;right:10px;font:var(--type-caption);border:1px solid var(--x-line);border-radius:6px;padding:2px 6px;color:var(--x-tx2)}
+      .x-btn{min-height:var(--tap);display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:0 16px;border-radius:12px;border:1px solid var(--x-line);background:var(--x-card2);color:var(--x-tx);font:var(--type-label);font-family:inherit;cursor:pointer;white-space:nowrap}
+      .x-btn:hover{border-color:var(--x-blu)}.x-cta{background:var(--x-cta);border:0;color:#fff;font-weight:600;box-shadow:0 4px 18px rgba(190,24,93,.35)}
+      .x-icb{width:var(--tap);padding:0;position:relative}.x-badge{position:absolute;top:6px;right:6px;background:#C81E4A;color:#fff;font-size:12px;line-height:16px;min-width:16px;border-radius:8px}
+      .x-av{display:flex;align-items:center;gap:8px}.x-av i{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#2F6BFF,#8B5CF6);display:grid;place-items:center;font-style:normal;font-weight:600}
+      .x-main{padding:20px;display:grid;gap:16px;min-width:0}
+      .x-hd{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap}.x-hd h1{font:var(--type-title)}.x-hd p{color:var(--x-tx2);margin-top:4px}
+      .x-card{background:linear-gradient(180deg,var(--x-card),#0C1634);border-radius:16px;box-shadow:var(--x-glow);padding:16px;min-width:0}
+      .x-kpis{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px}
+      .x-kpi{display:flex;gap:12px;align-items:center}.x-kpi b{font:var(--type-figure);display:block}.x-kpi span{color:var(--x-tx2);font:var(--type-small)}
+      .x-tile{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;flex:none;color:#fff}
+      .g1{background:linear-gradient(135deg,#3B82F6,#1D4ED8)}.g2{background:linear-gradient(135deg,#22C55E,#0E9F6E)}.g3{background:linear-gradient(135deg,#8B5CF6,#6D28D9)}.g4{background:linear-gradient(135deg,#F43F5E,#BE123C)}.g5{background:linear-gradient(135deg,#F59E0B,#C2410C)}.g6{background:linear-gradient(135deg,#EC4899,#9D174D)}
+      .x-tabs{display:flex;gap:6px;border-bottom:1px solid var(--x-line);overflow-x:auto}
+      .x-tab{min-height:var(--tap);padding:0 18px;background:none;border:0;border-bottom:2px solid transparent;color:var(--x-tx2);font:var(--type-label);font-family:inherit;cursor:pointer}
+      .x-tab[aria-selected=true]{color:var(--x-tx);border-color:#F97316}
+      .x-tbl{width:100%;border-collapse:collapse;font:var(--type-small)}
+      .x-tbl th{text-align:left;color:var(--x-tx2);font-weight:500;padding:10px;border-bottom:1px solid var(--x-line)}
+      .x-tbl td{padding:12px 10px;border-bottom:1px solid rgba(77,141,255,.12);vertical-align:top}.x-tbl small{display:block;color:var(--x-tx2)}
+      .x-tbl tbody tr.x-click{cursor:pointer}.x-tbl tbody tr.x-click:hover{background:rgba(77,141,255,.08)}
+      .x-st{display:inline-block;padding:3px 10px;border-radius:999px;font:var(--type-caption);white-space:nowrap}
+      .s-blu{background:#1A2F66;color:#BFD5FF}.s-red{background:#4A1527;color:#FFC2CF}.s-amb{background:#4A330D;color:#FFDCA6}.s-grn{background:#0E3D2D;color:#A8F0D0}
+      .x-rpn{font-weight:600;padding:3px 10px;border-radius:8px}
+      .x-chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+      .x-chip{min-height:var(--tap);padding:0 16px;border-radius:999px;border:1px solid var(--x-line);background:transparent;color:var(--x-tx2);font:var(--type-label);font-family:inherit;cursor:pointer}
+      .x-chip[aria-pressed=true]{background:rgba(77,141,255,.2);color:var(--x-tx);border-color:var(--x-blu)}
+      .x-acts{display:flex;gap:6px;flex-wrap:wrap}
+      .x-grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
+      .x-card h3{font:var(--type-heading);font-size:16px;margin-bottom:10px}.x-cap{color:var(--x-tx2);font:var(--type-caption);margin-top:8px}
+      .x-mx{display:grid;grid-template-columns:20px repeat(10,minmax(0,1fr));gap:3px;font:var(--type-caption)}
+      .x-mx div{aspect-ratio:1;display:grid;place-items:center;border-radius:5px;font-weight:600}.x-mx .l{color:var(--x-tx2);font-weight:400}
+      .x-ov{position:fixed;inset:0;background:rgba(3,6,18,.7);z-index:20;display:none}.x-ov.open{display:block}
+      .x-modal{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(560px,calc(100vw - 24px));max-height:calc(100vh - 32px);overflow-y:auto;z-index:21;display:none;box-sizing:border-box}
+      .x-modal.open,.x-drawer.open{display:block}
+      .x-drawer{position:fixed;top:0;right:0;height:100vh;width:min(760px,100vw);overflow-y:auto;z-index:21;border-radius:16px 0 0 16px;display:none;box-sizing:border-box}
+      .x-form{display:grid;gap:12px}.x-form label{display:grid;gap:6px;font:var(--type-small);color:var(--x-tx2)}
+      .x-why{display:grid;gap:8px;counter-reset:w}.x-why label{display:grid;grid-template-columns:88px minmax(0,1fr);align-items:center;gap:8px;font:var(--type-small);color:#FFD08A}
+      .x-toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:30;background:#13214A;border:1px solid var(--x-grn);color:var(--x-tx);padding:12px 18px;border-radius:12px;display:none;box-shadow:0 8px 30px rgba(0,0,0,.5)}
+      .x-menu{display:none}
+      .x-fish text{fill:var(--x-tx);font:12px "Geist","Noto Sans Thai",sans-serif}
+      @media (max-width:1100px){.x-kpis{grid-template-columns:repeat(3,minmax(0,1fr))}.x-grid2{grid-template-columns:minmax(0,1fr)}}
+      @media (max-width:860px){.x-app{grid-template-columns:minmax(0,1fr)}.x-side{position:fixed;left:0;z-index:22;width:260px;transform:translateX(-100%);transition:transform .2s}.x-side.open{transform:none}.x-menu{display:inline-flex}.x-hide{display:none}}
+      @media (max-width:640px){.x-main{padding:12px}.x-top{padding:8px 12px;gap:6px}.x-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.x-kbd,.x-av span{display:none}
+        .x-tbl thead{display:none}.x-tbl tr{display:grid;padding:10px 0;border-bottom:1px solid var(--x-line)}.x-tbl td{border:0;padding:4px 0;display:grid;grid-template-columns:96px minmax(0,1fr);gap:8px}.x-tbl td::before{content:attr(data-l);color:var(--x-tx2)}
+        .x-why label{grid-template-columns:minmax(0,1fr)}}
+    </style>
+  </head>
+  <body>
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+      <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></symbol>
+      <symbol id="i-box" viewBox="0 0 24 24"><path d="M21 8l-9-5-9 5 9 5 9-5zM3 8v8l9 5 9-5V8M12 13v8"/></symbol>
+      <symbol id="i-wrench" viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0 5 5L21 13l-8 8-3-3 8-8M14.7 6.3L10 2 2 10l4 4"/></symbol>
+      <symbol id="i-cart" viewBox="0 0 24 24"><path d="M3 4h2l2 11h11l2-8H6M9 20h.01M17 20h.01"/></symbol>
+      <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></symbol>
+      <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M5 19l2-2M17 7l2-2"/></symbol>
+      <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-5-5"/></symbol>
+      <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4zM10 21h4"/></symbol>
+      <symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 21V4h11l-2 4 2 4H5"/></symbol>
+      <symbol id="i-check" viewBox="0 0 24 24"><path d="M4 12l5 5L20 6"/></symbol>
+      <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 3l10 18H2zM12 10v5M12 18h.01"/></symbol>
+      <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+      <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+    </svg>
+    <div class="x-app" id="top">
+      <aside class="x-side" id="side" aria-label="เมนูหลัก">
+        <div class="x-logo"><span class="x-tile g1"><svg class="x-ic"><use href="#i-wrench"/></svg></span><span><b>IT&amp;MAINT</b><small>Smart Asset · Smart Work</small></span></div>
+        <p class="x-grp">ภาพรวม</p><a class="x-nav" href="#"><svg class="x-ic"><use href="#i-home"/></svg>แดชบอร์ด</a>
+        <p class="x-grp">ทรัพย์สิน</p><a class="x-nav" href="#"><svg class="x-ic"><use href="#i-box"/></svg>ทะเบียนทรัพย์สิน</a>
+        <p class="x-grp">ซ่อมบำรุง</p><a class="x-nav" href="#"><svg class="x-ic"><use href="#i-wrench"/></svg>ใบสั่งงาน &amp; PM</a>
+        <p class="x-grp">คลัง &amp; จัดซื้อ</p><a class="x-nav" href="#"><svg class="x-ic"><use href="#i-cart"/></svg>อะไหล่ / PR / PO</a>
+        <p class="x-grp">วิเคราะห์</p><a class="x-nav on" href="#" aria-current="page"><svg class="x-ic"><use href="#i-flag"/></svg>RCA / FMEA</a><a class="x-nav" href="#"><svg class="x-ic"><use href="#i-chart"/></svg>รายงาน &amp; KPI</a>
+        <p class="x-grp">ระบบ</p><a class="x-nav" href="#"><svg class="x-ic"><use href="#i-gear"/></svg>ตั้งค่า</a>
+      </aside>
+      <div style="min-width:0">
+        <header class="x-top">
+          <button class="x-btn x-icb x-menu" id="menuBtn" aria-label="เปิดเมนู"><svg class="x-ic"><use href="#i-menu"/></svg></button>
+          <select class="x-sel x-hide" style="width:auto" aria-label="เลือกไซต์"><option>โรงงานหลัก</option><option>คลังสินค้า</option></select>
+          <div class="x-search"><svg class="x-ic"><use href="#i-search"/></svg><input class="x-in" id="q" placeholder="ค้นหา RCA / CAPA / ทรัพย์สิน…" aria-label="ค้นหา" /><span class="x-kbd">Ctrl + K</span></div>
+          <button class="x-btn x-cta x-hide" id="repBtn">+ แจ้งซ่อม</button>
+          <button class="x-btn x-icb" id="bellBtn" aria-label="การแจ้งเตือน 2 รายการ"><svg class="x-ic"><use href="#i-bell"/></svg><span class="x-badge">2</span></button>
+          <div class="x-av"><i>A</i><span>Admin</span></div>
+        </header>
+        <main class="x-main">
+          <div class="x-hd">
+            <div><h1>RCA / FMEA / CAPA</h1><p>วิเคราะห์สาเหตุราก (5 Why + ก้างปลา 6M) → CAPA → ตรวจประสิทธิผล · FMEA จัดลำดับความเสี่ยงด้วย RPN</p></div>
+            <button class="x-btn x-cta" id="newRca">+ เปิดเรื่อง RCA</button>
+          </div>
+          <section class="x-kpis" aria-label="ตัวชี้วัด">
+            <div class="x-card x-kpi"><span class="x-tile g1"><svg class="x-ic"><use href="#i-flag"/></svg></span><div><b id="k-open">1</b><span>RCA ที่เปิดอยู่</span></div></div>
+            <div class="x-card x-kpi"><span class="x-tile g2"><svg class="x-ic"><use href="#i-check"/></svg></span><div><b>0</b><span>ปิดใน 90 วัน</span></div></div>
+            <div class="x-card x-kpi"><span class="x-tile g3"><svg class="x-ic"><use href="#i-home"/></svg></span><div><b>0</b><span>CAPA ของฉัน</span></div></div>
+            <div class="x-card x-kpi"><span class="x-tile g4"><svg class="x-ic"><use href="#i-alert"/></svg></span><div><b id="k-over">2</b><span>CAPA เกินกำหนด</span></div></div>
+            <div class="x-card x-kpi"><span class="x-tile g5"><svg class="x-ic"><use href="#i-search"/></svg></span><div><b id="k-ver">1</b><span>รอตรวจประสิทธิผล</span></div></div>
+            <div class="x-card x-kpi"><span class="x-tile g6"><svg class="x-ic"><use href="#i-chart"/></svg></span><div><b>1</b><span>FMEA RPN ≥ 200</span></div></div>
+          </section>
+          <div class="x-tabs" role="tablist">
+            <button class="x-tab" role="tab" aria-selected="true" data-t="rca">RCA</button>
+            <button class="x-tab" role="tab" aria-selected="false" data-t="capa">CAPA</button>
+            <button class="x-tab" role="tab" aria-selected="false" data-t="fmea">FMEA</button>
+          </div>
+          <section class="x-card" id="p-rca" role="tabpanel">
+            <table class="x-tbl"><thead><tr><th>เลขที่ / หัวข้อ</th><th>ทรัพย์สิน</th><th>วิธี</th><th>ผู้รับผิดชอบ</th><th>CAPA</th><th>สถานะ</th></tr></thead><tbody id="rcaBody"></tbody></table>
+          </section>
+          <section class="x-card" id="p-capa" role="tabpanel" hidden>
+            <div class="x-chips" id="capaF"><button class="x-chip" aria-pressed="true" data-f="all">ทั้งหมด</button><button class="x-chip" aria-pressed="false" data-f="mine">ของฉัน</button><button class="x-chip" aria-pressed="false" data-f="over">เกินกำหนด</button><button class="x-chip" aria-pressed="false" data-f="ver">รอตรวจ</button></div>
+            <table class="x-tbl"><thead><tr><th>CAPA</th><th>ประเภท</th><th>ที่มา</th><th>สถานะ</th><th>ดำเนินการ</th></tr></thead><tbody id="capaBody"></tbody></table>
+          </section>
+          <section id="p-fmea" role="tabpanel" hidden style="display:grid;gap:16px">
+            <div class="x-grid2">
+              <div class="x-card"><h3>Risk matrix S × O</h3><div class="x-mx" id="mx"></div><p class="x-cap">แกนตั้ง = Severity (S) · แกนนอน = Occurrence (O) · แดงเมื่อ S×O ≥ 50</p></div>
+              <figure class="x-card chart" style="margin:0"><figcaption class="chart__cap">Pareto RPN: CONV-03 สูงสุดที่ 288<small>RPN ต่อ failure mode และ % สะสม</small></figcaption><div class="chart__canvas"><canvas id="pareto" role="img" aria-label="RPN CONV-03 288, CMP-02 175, MTR-007 96"></canvas></div></figure>
+            </div>
+            <div class="x-card">
+              <div class="x-hd" style="margin-bottom:8px"><h3>Failure modes</h3><button class="x-btn x-cta" id="addFm">+ Failure mode</button></div>
+              <table class="x-tbl"><thead><tr><th>ทรัพย์สิน</th><th>Failure mode → Effect</th><th>สาเหตุ / การควบคุม</th><th>S</th><th>O</th><th>D</th><th>RPN</th><th>ข้อเสนอแนะ</th></tr></thead><tbody id="fmBody"></tbody></table>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <div class="x-ov" id="ov"></div>
+    <form class="x-card x-modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mT">
+      <div class="x-hd"><h3 id="mT">เปิดเรื่อง RCA</h3><button type="button" class="x-btn x-icb x-close" aria-label="ปิด"><svg class="x-ic"><use href="#i-x"/></svg></button></div>
+      <div class="x-form" id="mForm">
+        <label>หัวข้อปัญหา<input class="x-in" name="title" required placeholder="เช่น MTR-007 ฉนวนเสื่อมก่อนกำหนด" /></label>
+        <label>เลขใบสั่งงานต้นเหตุ / Asset<input class="x-in" name="wo" placeholder="WO-2569-xxxx · รหัสทรัพย์สิน" /></label>
+        <label>วิธีวิเคราะห์<select class="x-sel" name="m"><option>5 Why</option><option>ก้างปลา</option><option selected>5 Why + ก้างปลา</option></select></label>
+        <label>ผู้รับผิดชอบ<input class="x-in" name="own" value="ประเสริฐ ช่างใหญ่" /></label>
+        <label>คำอธิบายปัญหา (What / Where / When / How much)<textarea class="x-in" name="desc"></textarea></label>
+      </div>
+      <div class="x-acts" style="justify-content:space-between;margin-top:14px"><button type="button" class="x-btn" id="addField">+ เพิ่มฟิลด์</button><span class="x-acts"><button type="button" class="x-btn x-close">ยกเลิก</button><button class="x-btn x-cta">บันทึก</button></span></div>
+    </form>
+    <aside class="x-card x-drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="dT">
+      <div class="x-hd"><div><h3 id="dT">RCA-2569-0001 · CONV-03 ลูกปืนแตกซ้ำ</h3><p>WO-2569-0003 · CONV-03 สายพานลำเลียง Line 2</p></div><button type="button" class="x-btn x-icb x-close" aria-label="ปิด"><svg class="x-ic"><use href="#i-x"/></svg></button></div>
+      <h3 style="margin-top:16px">5 Why</h3>
+      <div class="x-why" id="why"></div>
+      <h3 style="margin-top:20px">ก้างปลา 6M</h3>
+      <svg class="x-fish" id="fish" viewBox="0 0 760 330" width="100%" role="img" aria-label="แผนภาพก้างปลา 6M ของปัญหาลูกปืนแตก"></svg>
+      <div class="x-acts" style="justify-content:flex-end;margin-top:12px"><button class="x-btn x-cta" id="saveWs">บันทึกการวิเคราะห์</button></div>
+    </aside>
+    <div class="x-toast" id="toast" role="status"></div>
+
+    <script src="../../assets/hark.js"></script>
+    <script src="../../assets/chart.js"></script>
+    <script src="../../assets/datalabels.js"></script>
+    <script src="../../assets/hark-charts.js"></script>
+    <script>
+      document.documentElement.setAttribute("data-theme", "dark");
+      const $ = (s) => document.querySelector(s), $$ = (s) => [...document.querySelectorAll(s)];
+      const rcas = [{ id: "RCA-2569-0001", t: "CONV-03 ลูกปืนแตกซ้ำ 2 ครั้งใน 180 วัน", d: "1 ต.ค. 2569 · WO-2569-0003", a: "CONV-03", an: "สายพานลำเลียง Line 2", m: "5 Why + ก้างปลา", o: "ประเสริฐ ช่างใหญ่", c: "0/2", s: "กำลังวิเคราะห์" }];
+      const capas = [
+        { t: "ติดตั้งมิเตอร์ชั่วโมง CONV-03", k: "Preventive", src: "RCA-2569-0001", s: "over" },
+        { t: "เปลี่ยน PM เป็นตามมิเตอร์ 500 ชม.", k: "Corrective", src: "RCA-2569-0001", s: "over" },
+        { t: "ปรับปรุงซีล Air end CMP-02", k: "Preventive", src: "FMEA #2", s: "ver" },
+      ];
+      const fms = [
+        { a: "CONV-03", p: "ลูกปืนลูกกลิ้ง", f: "ลูกปืนแตก → สายหยุด", c: "หล่อลื่นไม่พอ / PM ตามปฏิทิน", S: 8, O: 6, D: 6, r: "ติดมิเตอร์ชั่วโมง + PM 500 ชม." },
+        { a: "CMP-02", p: "Air end", f: "ซีลรั่ว → แรงดันตก", c: "ซีลเสื่อม / ตรวจด้วยสายตา", S: 7, O: 5, D: 5, r: "ปรับปรุงซีล Air end" },
+        { a: "MTR-007", p: "มอเตอร์", f: "ฉนวนเสื่อม → มอเตอร์ไหม้", c: "ความร้อนสะสม / Megger รายปี", S: 8, O: 3, D: 4, r: "เพิ่มความถี่ Megger test" },
+      ];
+      const why = ["ลูกปืนแตก", "หล่อลื่นไม่พอ", "รอบ PM ยาวเกิน", "แผนไม่อิงชั่วโมงเดินเครื่อง", "ไม่มีมิเตอร์"];
+      const bones = [["Man", ["ช่างไม่รู้รอบหล่อลื่นจริง"]], ["Machine", ["ไม่มีมิเตอร์ชั่วโมง", "ซีลลูกปืนสึก"]], ["Method", ["PM ตามปฏิทิน ไม่ตามชั่วโมง"]], ["Material", ["จาระบีเกรดไม่เหมาะ"]], ["Measurement", ["ไม่วัดการสั่นสะเทือน"]], ["Environment", ["ฝุ่นในไลน์สูง"]]];
+      const stMap = { over: ["เกินกำหนด", "s-red"], ver: ["รอตรวจ", "s-amb"], doing: ["กำลังดำเนินการ", "s-blu"], done: ["ปิดแล้ว", "s-grn"] };
+      const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+      let capaFilter = "all", chart;
+
+      function toast(msg) { const t = $("#toast"); t.textContent = msg; t.style.display = "block"; clearTimeout(t._h); t._h = setTimeout(() => (t.style.display = "none"), 2600); }
+      function renderRca() {
+        const q = $("#q").value.trim().toLowerCase();
+        $("#rcaBody").innerHTML = rcas.filter((r) => !q || JSON.stringify(r).toLowerCase().includes(q)).map((r, i) => `<tr class="x-click" tabindex="0" data-i="${i}">
+          <td data-l="เลขที่ / หัวข้อ"><span><b>${esc(r.id)}</b> ${esc(r.t)}<small>${esc(r.d)}</small></span></td>
+          <td data-l="ทรัพย์สิน"><span>${esc(r.a)}<small>${esc(r.an)}</small></span></td><td data-l="วิธี">${esc(r.m)}</td>
+          <td data-l="ผู้รับผิดชอบ">${esc(r.o)}</td><td data-l="CAPA">${esc(r.c)}</td><td data-l="สถานะ"><span><span class="x-st s-blu">${esc(r.s)}</span></span></td></tr>`).join("");
+        $("#k-open").textContent = rcas.length;
+      }
+      function renderCapa() {
+        const rows = capas.map((c, i) => [c, i]).filter(([c]) => capaFilter === "all" || (capaFilter !== "mine" && c.s === capaFilter));
+        $("#capaBody").innerHTML = rows.length ? rows.map(([c, i]) => {
+          const [lab, cls] = stMap[c.s];
+          const act = c.s === "over" || c.s === "doing" ? `<button class="x-btn" data-a="done" data-i="${i}">สำเร็จแล้ว</button>`
+            : c.s === "ver" ? `<button class="x-btn" data-a="pass" data-i="${i}">ผ่าน</button><button class="x-btn" data-a="fail" data-i="${i}">ไม่ผ่าน ส่งกลับ</button>` : "—";
+          return `<tr><td data-l="CAPA"><b>${esc(c.t)}</b></td><td data-l="ประเภท">${c.k}</td><td data-l="ที่มา">จาก ${esc(c.src)}</td><td data-l="สถานะ"><span><span class="x-st ${cls}">${lab}</span></span></td><td data-l="ดำเนินการ"><div class="x-acts">${act}</div></td></tr>`;
+        }).join("") : `<tr><td colspan="5" style="color:var(--x-tx2)">ไม่มีรายการ CAPA ในมุมมองนี้</td></tr>`;
+        $("#k-over").textContent = capas.filter((c) => c.s === "over").length;
+        $("#k-ver").textContent = capas.filter((c) => c.s === "ver").length;
+      }
+      const rpnCls = (v) => (v >= 200 ? "s-red" : v >= 120 ? "s-amb" : "s-grn");
+      function renderFmea() {
+        $("#fmBody").innerHTML = fms.map((f) => { const r = f.S * f.O * f.D; return `<tr><td data-l="ทรัพย์สิน"><span><b>${esc(f.a)}</b><small>${esc(f.p)}</small></span></td><td data-l="Failure → Effect">${esc(f.f)}</td><td data-l="สาเหตุ / ควบคุม">${esc(f.c)}</td><td data-l="S">${f.S}</td><td data-l="O">${f.O}</td><td data-l="D">${f.D}</td><td data-l="RPN"><span><span class="x-rpn ${rpnCls(r)}">${r}</span></span></td><td data-l="ข้อเสนอแนะ">${esc(f.r)}</td></tr>`; }).join("");
+        const cnt = { "8-6": 2 };
+        fms.slice(1).forEach((f) => (cnt[f.S + "-" + f.O] = (cnt[f.S + "-" + f.O] || 0) + 1));
+        let h = "";
+        for (let s = 10; s >= 1; s--) { h += `<div class="l">${s}</div>`; for (let o = 1; o <= 10; o++) { const v = s * o, n = cnt[s + "-" + o] || ""; h += `<div title="S${s} × O${o} = ${v}" style="background:${v >= 50 ? "#8E1F3A" : v >= 25 ? "#6B420A" : "#0F4A35"};color:#fff;${n ? "outline:2px solid #fff" : ""}">${n}</div>`; } }
+        h += `<div class="l"></div>` + Array.from({ length: 10 }, (_, i) => `<div class="l">${i + 1}</div>`).join("");
+        $("#mx").innerHTML = h;
+        const sorted = fms.map((f) => ({ n: f.a, v: f.S * f.O * f.D })).sort((a, b) => b.v - a.v), tot = sorted.reduce((s, x) => s + x.v, 0);
+        let acc = 0; const cum = sorted.map((x) => Math.round(((acc += x.v) / tot) * 100));
+        if (chart) chart.destroy();
+        chart = new Chart($("#pareto"), {
+          type: "bar",
+          data: { labels: sorted.map((x) => x.n), datasets: [
+            { type: "bar", label: "RPN", data: sorted.map((x) => x.v), backgroundColor: sorted.map((x) => (x.v >= 200 ? "var(--chart-bad)" : "var(--chart-muted)")), datalabels: Hark.labels.values, order: 2 },
+            { type: "line", label: "% สะสม", data: cum, yAxisID: "y1", pointRadius: 3, order: 1, datalabels: { display: false } }] },
+          options: { scales: { y1: { position: "right", min: 0, max: 100, grid: { display: false }, ticks: { callback: (v) => v + "%" } } }, plugins: { datalabels: { display: false } } },
+        });
+      }
+      function drawFish() {
+        const W = 760, sy = 165, head = 640; let g = `<line x1="30" y1="${sy}" x2="${head}" y2="${sy}" stroke="#4D8DFF" stroke-width="3"/>
+          <rect x="${head}" y="${sy - 24}" width="112" height="48" rx="12" fill="url(#gh)"/><text x="${head + 56}" y="${sy + 5}" text-anchor="middle" style="font-weight:600">ลูกปืนแตก</text>
+          <defs><linearGradient id="gh"><stop offset="0" stop-color="#C2410C"/><stop offset="1" stop-color="#BE185D"/></linearGradient></defs>`;
+        bones.forEach(([name, causes], i) => {
+          const top = i < 3, x = 230 + (i % 3) * 165, y = top ? 30 : 300;
+          g += `<line x1="${x}" y1="${y}" x2="${x + 70}" y2="${sy}" stroke="#4D8DFF" stroke-opacity=".7" stroke-width="2"/>
+            <rect x="${x - 50}" y="${top ? y - 22 : y - 4}" width="100" height="26" rx="8" fill="#1E3A8A"/><text x="${x}" y="${top ? y - 4 : y + 14}" text-anchor="middle" style="font-weight:600">${name}</text>`;
+          causes.forEach((c, j) => { const cy = top ? 62 + j * 34 : 228 + j * 34 - (causes.length - 1) * 34, w = c.length * 7.4 + 20, cx = x + (top ? (cy - 30) : (300 - cy)) * 70 / 135 - w + 10;
+            g += `<rect x="${cx}" y="${cy - 14}" width="${w}" height="24" rx="12" fill="rgba(245,165,36,.16)" stroke="rgba(245,165,36,.6)"/><text x="${cx + w / 2}" y="${cy + 2}" text-anchor="middle">${esc(c)}</text>`; });
+        });
+        $("#fish").innerHTML = g;
+      }
+      function openEl(el) { $("#ov").classList.add("open"); el.classList.add("open"); (el.querySelector("input,button") || el).focus(); }
+      function closeAll() { $$(".x-modal,.x-drawer,.x-ov").forEach((e) => e.classList.remove("open")); $("#side").classList.remove("open"); }
+
+      $$(".x-tab").forEach((b) => (b.onclick = () => {
+        $$(".x-tab").forEach((x) => x.setAttribute("aria-selected", x === b));
+        ["rca", "capa", "fmea"].forEach((t) => ($("#p-" + t).hidden = t !== b.dataset.t));
+        $("#p-fmea").style.display = b.dataset.t === "fmea" ? "grid" : "none";
+        if (b.dataset.t === "fmea" && !chart) renderFmea();
+      }));
+      $("#p-fmea").style.display = "none";
+      $("#capaF").onclick = (e) => { const b = e.target.closest(".x-chip"); if (!b) return; capaFilter = b.dataset.f; $$("#capaF .x-chip").forEach((x) => x.setAttribute("aria-pressed", x === b)); renderCapa(); };
+      $("#capaBody").onclick = (e) => { const b = e.target.closest("[data-a]"); if (!b) return; const c = capas[b.dataset.i];
+        c.s = { done: "ver", pass: "done", fail: "doing" }[b.dataset.a];
+        toast({ done: "ส่งตรวจประสิทธิผลแล้ว", pass: "CAPA ผ่านการตรวจ ปิดเรื่องแล้ว", fail: "ส่งกลับให้ผู้รับผิดชอบแก้ไข" }[b.dataset.a]); renderCapa(); };
+      const openWs = (tr) => { if (!tr) return; const r = rcas[tr.dataset.i]; $("#dT").textContent = `${r.id} · ${r.t}`; $("#drawer .x-hd p").textContent = `${r.d} · ${r.a} ${r.an}`; openEl($("#drawer")); };
+      $("#rcaBody").onclick = (e) => openWs(e.target.closest("tr"));
+      $("#rcaBody").onkeydown = (e) => { if (e.key === "Enter") openWs(e.target.closest("tr")); };
+      $("#why").innerHTML = why.map((w, i) => `<label>ทำไม ${i + 1}<input class="x-in" value="${esc(w)}" /></label>`).join("");
+      $("#saveWs").onclick = () => { $$("#why input").forEach((x, i) => (why[i] = x.value)); closeAll(); toast("บันทึกการวิเคราะห์ 5 Why แล้ว"); };
+      $("#newRca").onclick = () => openEl($("#modal"));
+      $("#addField").onclick = () => { const l = document.createElement("label"); l.innerHTML = `ฟิลด์เพิ่มเติม<input class="x-in" placeholder="ชื่อฟิลด์ : ค่า" />`; $("#mForm").append(l); l.querySelector("input").focus(); };
+      $("#modal").onsubmit = (e) => { e.preventDefault(); const f = new FormData(e.target), wo = f.get("wo") || "—";
+        rcas.push({ id: "RCA-2569-" + String(rcas.length + 1).padStart(4, "0"), t: f.get("title"), d: "วันนี้ · " + wo, a: wo.split("·").pop().trim(), an: "", m: f.get("m"), o: f.get("own") || "—", c: "0/0", s: "เปิดเรื่อง" });
+        e.target.reset(); closeAll(); renderRca(); toast("เปิดเรื่อง " + rcas[rcas.length - 1].id + " แล้ว"); };
+      $("#addFm").onclick = () => toast("เพิ่ม Failure mode ใหม่ (ฟอร์มตัวอย่าง)");
+      $$(".x-close").forEach((b) => (b.onclick = closeAll)); $("#ov").onclick = closeAll;
+      $("#menuBtn").onclick = () => { $("#side").classList.add("open"); $("#ov").classList.add("open"); };
+      $("#q").oninput = renderRca;
+      $("#repBtn").onclick = () => toast("เปิดฟอร์มแจ้งซ่อม (ตัวอย่าง)");
+      $("#bellBtn").onclick = () => toast("แจ้งเตือน: CAPA เกินกำหนด " + $("#k-over").textContent + " รายการ");
+      document.addEventListener("keydown", (e) => { if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") { e.preventDefault(); $("#q").focus(); } if (e.key === "Escape") closeAll(); });
+      renderRca(); renderCapa(); drawFish();
+    </script>
+  </body>
+</html>
