@@ -307,5 +307,6 @@
       new Chart($("#cUse"), { type: "bar", data: { labels: base.map((l) => l.n.replace("Microsoft ", "M365 ").replace("M365 365 ", "M365 ")), datasets: [{ data: base.map((l) => Math.round((l.u / l.s) * 100)), backgroundColor: base.map((l) => (l.u > l.s ? "var(--chart-bad)" : "var(--chart-1)")) }] },
         options: { indexAxis: "y", scales: { x: { ticks: { callback: (v) => v + "%" } } }, plugins: { legend: { display: false }, datalabels: { ...Hark.labels.values, formatter: (v) => v + "%" }, tooltip: { callbacks: { label: (c) => `${c.raw}% ของสิทธิ์` } } } } });
     </script>
-  </body>
+      <script src="../../assets/site-nav.js"></script>
+</body>
 </html>
