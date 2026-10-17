@@ -143,6 +143,7 @@
                 <button type="button" data-v="month" aria-pressed="true">เดือน</button><button type="button" data-v="week" aria-pressed="false">สัปดาห์</button><button type="button" data-v="list" aria-pressed="false">รายการ</button>
               </div>
               <button class="x-btn" type="button" id="ics">ส่งออก .ics</button>
+              <button class="x-btn" type="button" id="addEv">+ กำหนดการ</button>
               <button class="x-btn x-pri" type="button" id="addHol">+ วันหยุด</button>
             </div>
             <div class="x-chips" id="chips" aria-label="ตัวกรองประเภท"></div>
@@ -159,12 +160,15 @@
     </div>
 
     <dialog class="x-card" id="dlg">
-      <form method="dialog" id="holForm">
-        <h3 style="font-size:18px">เพิ่มวันหยุด</h3>
-        <label for="hn">ชื่อวันหยุด</label><input class="x-in" id="hn" required placeholder="เช่น วันหยุดชดเชย" />
-        <label for="hd">วันที่</label><input class="x-in" id="hd" type="date" required value="2026-10-19" />
-        <label for="hs">ไซต์</label><select class="x-sel" id="hs"><option>ทุกไซต์</option><option>โรงงานสมุทรสาคร</option><option>โรงงานระยอง</option></select>
-        <div class="x-row"><button class="x-btn" type="button" id="hc">ยกเลิก</button><button class="x-btn x-pri" type="submit">บันทึก</button></div>
+      <form method="dialog" id="holForm" novalidate>
+        <h3 style="font-size:18px" id="dlgT">เพิ่มกำหนดการ</h3>
+        <label for="ht">ประเภท <span style="color:#FB7185">*</span></label><select class="x-sel" id="ht"></select>
+        <label for="hn">ชื่อกำหนดการ <span style="color:#FB7185">*</span></label><input class="x-in" id="hn" placeholder="เช่น วันหยุดชดเชย" />
+        <label for="hd">วันที่เริ่ม <span style="color:#FB7185">*</span></label><input class="x-in" id="hd" type="date" />
+        <label for="he">วันที่สิ้นสุด</label><input class="x-in" id="he" type="date" />
+        <label for="ha">ทรัพย์สิน / รายละเอียด</label><input class="x-in" id="ha" placeholder="เช่น AHU-01 หรือ ทุกไซต์" />
+        <label for="hs">ไซต์ <span style="color:#FB7185">*</span></label><select class="x-sel" id="hs"><option value="">— เลือกไซต์ —</option><option>ทุกไซต์</option><option>โรงงานสมุทรสาคร</option><option>โรงงานระยอง</option></select>
+        <div class="x-row"><button class="x-btn" type="button" id="hc">ยกเลิก</button><button class="x-btn x-pri" type="button" id="hsave">บันทึก</button></div>
       </form>
     </dialog>
     <div class="x-toast" id="toast" hidden role="status"></div>
@@ -270,7 +274,7 @@
       function toast(msg) { const t = $("toast"); t.textContent = msg; t.hidden = false; clearTimeout(toast.h); toast.h = setTimeout(() => (t.hidden = true), 2600); }
       function openEv(id) {
         const e = E.find((x) => x.id === +id), [n, c] = T[e.t];
-        $("popB").innerHTML = `<span class="x-tag" style="--c:${c}"><i></i>${n}</span><h3>${e.title}</h3><dl><dt>ประเภท</dt><dd>${n}</dd><dt>ทรัพย์สิน</dt><dd>${e.asset}</dd><dt>วันที่</dt><dd>${th(parse(e.s))}${e.s !== e.e ? " – " + th(parse(e.e)) : ""}</dd></dl><button class="x-btn x-pri" type="button" data-toast="กำลังเปิด ${e.title}">เปิดรายการ →</button>`;
+        $("popB").innerHTML = `<span class="x-tag" style="--c:${c}"><i></i>${n}</span><h3>${e.title}</h3><dl><dt>ประเภท</dt><dd>${n}</dd><dt>ทรัพย์สิน</dt><dd>${e.asset}</dd><dt>วันที่</dt><dd>${th(parse(e.s))}${e.s !== e.e ? " – " + th(parse(e.e)) : ""}</dd></dl>${e.mine ? `<div class="x-row" style="justify-content:flex-start"><button class="x-btn" type="button" data-edit="${e.id}">แก้ไข</button><button class="x-btn" type="button" data-del="${e.id}">ลบ</button></div>` : ""}${LINK[e.t] ? `<a class="x-btn x-pri" style="margin-top:10px" href="${LINK[e.t](e)}">เปิดรายการ →</a>` : ""}`;
         $("pop").hidden = false; $("popX").focus();
       }
       function openDay(K) {
@@ -298,15 +302,57 @@
       $("prev").onclick = () => step(-1); $("next").onclick = () => step(1);
       $("today").onclick = () => { cur = new Date(TODAY); render(); };
       $("q").oninput = (e) => { q = e.target.value.trim().toLowerCase(); render(); };
-      $("ics").onclick = () => toast(`ส่งออก ${vis().length} รายการเป็นไฟล์ .ics แล้ว`);
-      $("addHol").onclick = () => $("dlg").showModal();
-      $("hc").onclick = () => $("dlg").close();
-      $("holForm").onsubmit = () => {
-        const name = $("hn").value.trim(), K = $("hd").value; if (!name || !K) return false;
-        E.push({ id: E.length, t: "hol", s: K, e: K, title: name, asset: $("hs").value });
-        off.delete("hol"); cur = parse(K); chips(); render(); $("hn").value = "";
-        toast(`เพิ่มวันหยุด “${name}” วันที่ ${th(parse(K))} แล้ว`);
+      const LINK = { sla: () => "../wo/", pm: () => "../pm-plans/", cal: () => "../calibration/", war: (e) => "../asset-register/?q=" + encodeURIComponent(e.asset.split(" ")[0]), lic: () => "../it-asset-license/", con: () => "../purchasing-pr-po/", st: () => "../stocktake/", ret: () => "../asset-movements/", doc: () => "../dam/" };
+      /* real .ics export of the visible (filtered) events */
+      const icsEsc = (v) => String(v).replace(/\\/g, "\\\\").replace(/([,;])/g, "\\$1").replace(/\n/g, "\\n");
+      const icsD = (k) => k.replace(/-/g, "");
+      $("ics").onclick = () => {
+        const ev = vis(); if (!ev.length) { toast("ไม่มีกำหนดการให้ส่งออก (ตรวจสอบตัวกรอง)"); return; }
+        const st = new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d+Z$/, "Z");
+        const L = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//IT&MAINT//Master Calendar//TH", "CALSCALE:GREGORIAN", "METHOD:PUBLISH", "X-WR-CALNAME:IT&MAINT ปฏิทินรวม", "X-WR-TIMEZONE:Asia/Bangkok"];
+        ev.forEach((e) => L.push("BEGIN:VEVENT", `UID:itmaint-${e.t}-${e.id}-${icsD(e.s)}@itmaint.local`, `DTSTAMP:${st}`, `DTSTART;VALUE=DATE:${icsD(e.s)}`, `DTEND;VALUE=DATE:${icsD(ymd(add(parse(e.e), 1)))}`, `SUMMARY:${icsEsc(e.title)}`, `DESCRIPTION:${icsEsc(T[e.t][0] + " · " + e.asset)}`, `CATEGORIES:${icsEsc(T[e.t][0])}`, "TRANSP:TRANSPARENT", "END:VEVENT"));
+        L.push("END:VCALENDAR");
+        const name = `itmaint-calendar-${cur.getFullYear()}-${pad(cur.getMonth() + 1)}.ics`;
+        const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([L.join("\r\n") + "\r\n"], { type: "text/calendar;charset=utf-8" })); a.download = name; document.body.appendChild(a); a.click(); a.remove();
+        toast(`ส่งออก ${ev.length} รายการเป็นไฟล์ ${name} แล้ว`);
       };
+      /* add / edit event with validation */
+      const dlg = $("dlg"); let editId = null;
+      $("ht").innerHTML = '<option value="">— เลือกประเภท —</option>' + Object.entries(T).map(([k, [n]]) => `<option value="${k}">${n}</option>`).join("");
+      const ferr = (list) => {
+        dlg.querySelectorAll(".x-ferr").forEach((n) => n.remove()); dlg.querySelectorAll("[aria-invalid]").forEach((n) => { n.removeAttribute("aria-invalid"); n.style.borderColor = ""; });
+        list.forEach(([id, m]) => { const el = $(id); el.setAttribute("aria-invalid", "true"); el.style.borderColor = "#FB7185"; el.insertAdjacentHTML("afterend", `<span class="x-ferr" style="display:block;color:#FB7185;font-size:12px;margin-top:4px">${m}</span>`); });
+        if (list.length) { $(list[0][0]).focus(); $(list[0][0]).scrollIntoView({ block: "center" }); } return !list.length;
+      };
+      const openDlg = (type, e) => {
+        editId = e ? e.id : null; ferr([]);
+        $("dlgT").textContent = e ? "แก้ไขกำหนดการ" : type === "hol" ? "เพิ่มวันหยุด" : "เพิ่มกำหนดการ";
+        $("ht").value = e ? e.t : type || ""; $("hn").value = e ? e.title : ""; $("hd").value = e ? e.s : ""; $("he").value = e && e.e !== e.s ? e.e : ""; $("ha").value = e ? e.asset : ""; $("hs").value = e ? e.site || "" : "";
+        $("pop").hidden = true; dlg.showModal(); (type || e ? $("hn") : $("ht")).focus();
+      };
+      $("addHol").onclick = () => openDlg("hol");
+      $("addEv").onclick = () => openDlg("");
+      $("hc").onclick = () => dlg.close();
+      $("hsave").onclick = () => {
+        const t = $("ht").value, name = $("hn").value.trim(), K = $("hd").value, K2 = $("he").value, site = $("hs").value, L = [];
+        if (!t) L.push(["ht", "กรุณาเลือกประเภท"]); if (!name) L.push(["hn", "กรุณากรอกชื่อกำหนดการ"]); if (!K) L.push(["hd", "กรุณาเลือกวันที่เริ่ม"]);
+        if (K && K2 && K2 < K) L.push(["he", "วันที่สิ้นสุดต้องไม่ก่อนวันที่เริ่ม"]); if (!site) L.push(["hs", "กรุณาเลือกไซต์"]);
+        if (!ferr(L)) return;
+        const asset = $("ha").value.trim() || site;
+        if (editId != null) { const e = E.find((x) => x.id === editId); Object.assign(e, { t, s: K, e: K2 || K, title: name, asset, site }); }
+        else E.push({ id: Math.max(...E.map((x) => x.id)) + 1, t, s: K, e: K2 || K, title: name, asset, site, mine: true });
+        off.delete(t); cur = parse(K); dlg.close(); chips(); render(); save();
+        toast(`${editId != null ? "บันทึกการแก้ไข" : "เพิ่ม"} “${name}” วันที่ ${th(parse(K))} แล้ว`); editId = null;
+      };
+      $("holForm").onsubmit = (ev) => { ev.preventDefault(); $("hsave").click(); };
+      $("popB").addEventListener("click", (ev) => {
+        const ed = ev.target.closest("[data-edit]"), dl = ev.target.closest("[data-del]");
+        if (ed) openDlg("", E.find((x) => x.id === +ed.dataset.edit));
+        if (dl) { const k = E.findIndex((x) => x.id === +dl.dataset.del); const [e] = E.splice(k, 1); $("pop").hidden = true; chips(); render(); save(); toast(`ลบ “${e.title}” แล้ว`); }
+      });
+      const LSK = "itm-master-calendar-v1";
+      function save() { try { localStorage.setItem(LSK, JSON.stringify(E.filter((e) => e.mine))); } catch (e) {} }
+      try { (JSON.parse(localStorage.getItem(LSK) || "[]") || []).forEach((e) => { if (!E.some((x) => x.id === e.id)) E.push(e); }); } catch (e) {}
       chips(); render();
     </script>
       <script src="../../assets/site-nav.js"></script>
