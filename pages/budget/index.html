@@ -199,10 +199,10 @@
     </div>
 
     <dialog class="x-modal" id="dlg">
-      <form method="dialog" id="frm">
+      <form method="dialog" id="frm" novalidate>
         <h2>เพิ่มบรรทัดงบ</h2>
-        <label class="x-f">ประเภท<select name="type"><option>OPEX</option><option>CAPEX</option></select></label>
-        <label class="x-f">ไซต์<select name="site"><option>โรงงานสมุทรสาคร</option><option>โรงงานระยอง</option></select></label>
+        <label class="x-f">ประเภท<select name="type" required><option value="">— เลือกประเภท —</option><option>OPEX</option><option>CAPEX</option></select></label>
+        <label class="x-f">ไซต์<select name="site" required><option value="">— เลือกไซต์ —</option><option>โรงงานสมุทรสาคร</option><option>โรงงานระยอง</option></select></label>
         <label class="x-f">ศูนย์ต้นทุน<input name="cc" required placeholder="เช่น MT-03" /></label>
         <label class="x-f">หมวด<input name="cat" required placeholder="เช่น อะไหล่" /></label>
         <label class="x-f">จำนวนเงิน (บาท)<input name="amt" type="number" min="1" required inputmode="numeric" /></label>
@@ -268,11 +268,30 @@
       $("#menuBtn").addEventListener("click", () => $("#side").classList.toggle("is-open"));
       $("#repBtn").addEventListener("click", () => toast("เปิดฟอร์มแจ้งซ่อม"));
       $("#bellBtn").addEventListener("click", (e) => { const b = e.currentTarget.querySelector(".x-badge"); if (b) { b.remove(); e.currentTarget.setAttribute("aria-label", "การแจ้งเตือน"); toast("แจ้งเตือนใหม่ 3 รายการ: รออนุมัติแผน CNC · งบ OPEX อัปเดต · ใบสั่งงานใหม่"); } else toast("ไม่มีการแจ้งเตือนใหม่"); });
-      $("#addBtn").addEventListener("click", () => { if ($("#fy").value === "2568") return toast("ปีงบ 2568 ปิดแล้ว เพิ่มงบไม่ได้"); $("#frm").reset(); $("#extra").innerHTML = ""; $("#dlg").showModal(); });
+      $("#addBtn").addEventListener("click", () => { if ($("#fy").value === "2568") return toast("ปีงบ 2568 ปิดแล้ว เพิ่มงบไม่ได้"); $("#frm").reset(); $("#frm").querySelectorAll(".v-err").forEach((n) => n.remove()); $("#frm").querySelectorAll("[aria-invalid]").forEach((n) => { n.removeAttribute("aria-invalid"); n.style.borderColor = ""; }); $("#extra").innerHTML = ""; $("#dlg").showModal(); });
       $("#cancel").addEventListener("click", () => $("#dlg").close());
       let nx = 0;
       $("#addField").addEventListener("click", () => { nx++; const l = document.createElement("label"); l.className = "x-f"; l.innerHTML = `ฟิลด์เพิ่มเติม ${nx}<input name="x${nx}" placeholder="ชื่อ : ค่า" />`; $("#extra").appendChild(l); });
+      function validate(form) {
+        form.querySelectorAll(".v-err").forEach((n) => n.remove());
+        let first = null;
+        form.querySelectorAll("[required]").forEach((el) => {
+          const v = (el.value || "").trim();
+          let msg = "";
+          if (!v) msg = el.tagName === "SELECT" ? "กรุณาเลือกรายการ" : "กรุณากรอกข้อมูลช่องนี้";
+          else if (el.type === "number" && el.min !== "" && +v < +el.min) msg = "ต้องมากกว่าหรือเท่ากับ " + el.min;
+          el.toggleAttribute("aria-invalid", !!msg); el.style.borderColor = msg ? "#ff5c7a" : "";
+          if (msg) { const s = document.createElement("small"); s.className = "v-err"; s.style.cssText = "display:block;color:#ff6b81;margin-top:4px;font-size:12px"; s.textContent = msg; (el.closest("label") || el.parentNode).appendChild(s); first = first || el; }
+        });
+        if (first) first.focus();
+        return !first;
+      }
+      const clearErr = (e) => { const t = e.target; if (t.hasAttribute && t.hasAttribute("aria-invalid") && String(t.value).trim()) { t.removeAttribute("aria-invalid"); t.style.borderColor = ""; const s = t.closest("label") && t.closest("label").querySelector(".v-err"); if (s) s.remove(); } };
+      $("#frm").addEventListener("input", clearErr); $("#frm").addEventListener("change", clearErr);
       $("#frm").addEventListener("submit", (e) => {
+        e.preventDefault();
+        if (!validate(e.target)) return;
+        $("#dlg").close();
         const f = new FormData(e.target);
         rows.push({ type: f.get("type"), site: f.get("site"), cc: f.get("cc"), cat: f.get("cat"), budget: +f.get("amt"), actual: 0 });
         renderRows(); toast("เพิ่มงบ " + f.get("cat") + " ฿" + fmt(+f.get("amt")) + " แล้ว");
