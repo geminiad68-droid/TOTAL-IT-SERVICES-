@@ -209,7 +209,7 @@
           </div>
           <div class="x-card x-kpi">
             <span class="x-tile x-t4"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#fff" stroke-width="1.7"><path d="M4 10.5l4 4 8-9"/></svg></span>
-            <p><span class="x-lab">ถึงรอบสร้างใบงาน</span><br /><span class="x-fig">0</span><span class="x-note">ตาม Lead days วันนี้</span></p>
+            <p><span class="x-lab">ถึงรอบสร้างใบงาน</span><br /><span class="x-fig" id="kDue">0</span><span class="x-note">ตาม Lead days วันนี้</span></p>
           </div>
         </section>
 
@@ -257,29 +257,43 @@
     </div>
 
     <div class="x-modal" id="modal" role="dialog" aria-modal="true" aria-label="สร้างแผน PM ใหม่">
-      <form id="form">
+      <form id="form" novalidate>
         <div class="x-between" style="margin-bottom:16px">
           <p class="x-tt" style="font-size:18px">+ แผน PM ใหม่</p>
           <button type="button" class="x-btn x-btn--sm" id="close">ปิด</button>
         </div>
-        <div class="x-f"><label for="f-name">ชื่อแผน</label><input id="f-name" required placeholder="เช่น ตรวจสายพานลำเลียง" /></div>
+        <div class="x-f"><label for="f-name">ชื่อแผน *</label><input id="f-name" required placeholder="เช่น ตรวจสายพานลำเลียง" /></div>
         <div class="x-g2">
-          <div class="x-f"><label for="f-asset">ทรัพย์สิน</label><select id="f-asset"><option>CONV-03 สายพานลำเลียง</option><option>MTR-007 มอเตอร์ไลน์ 2</option><option>CMP-02 เครื่องอัดอากาศ</option><option>AHU-05 เครื่องส่งลมเย็น</option><option>CNC-001 เครื่องกัด CNC</option><option>SRV-001 เซิร์ฟเวอร์หลัก</option></select></div>
-          <div class="x-f"><label for="f-type">ประเภทรอบ</label><select id="f-type"><option>ตามเวลา (Fixed)</option><option>ตามเวลา (Floating)</option><option>ตามมิเตอร์</option></select></div>
+          <div class="x-f"><label for="f-asset">ทรัพย์สิน *</label><select id="f-asset" required><option value="">— เลือกทรัพย์สิน —</option><option>CONV-03 สายพานลำเลียง</option><option>MTR-007 มอเตอร์ไลน์ 2</option><option>CMP-02 เครื่องอัดอากาศ</option><option>AHU-05 เครื่องส่งลมเย็น</option><option>CNC-001 เครื่องกัด CNC</option><option>SRV-001 เซิร์ฟเวอร์หลัก</option></select></div>
+          <div class="x-f"><label for="f-type">ประเภทรอบ *</label><select id="f-type" required><option value="">— เลือกประเภทรอบ —</option><option>ตามเวลา (Fixed)</option><option>ตามเวลา (Floating)</option><option>ตามมิเตอร์</option></select></div>
         </div>
         <div class="x-g2">
-          <div class="x-f"><label for="f-every">ทุก N วัน / ชม.</label><input id="f-every" type="number" value="30" min="1" /></div>
-          <div class="x-f"><label for="f-lead">Lead days</label><input id="f-lead" type="number" value="7" min="0" /></div>
+          <div class="x-f"><label for="f-every">ทุก N วัน / ชม. *</label><input id="f-every" type="number" min="1" required placeholder="เช่น 30" /></div>
+          <div class="x-f"><label for="f-lead">Lead days *</label><input id="f-lead" type="number" min="0" required placeholder="เช่น 7" /></div>
         </div>
         <div class="x-g2">
-          <div class="x-f"><label for="f-tech">ช่างผู้รับผิดชอบ</label><select id="f-tech"><option>สมชาย ว.</option><option>ปิยะ ก.</option><option>อรทัย ส.</option><option>ธนกร พ.</option></select></div>
-          <div class="x-f"><label for="f-cl">เช็คลิสต์</label><select id="f-cl"><option>CL-001 ตรวจสายพาน</option><option>CL-002 ตรวจมอเตอร์</option><option>CL-003 ระบบลม</option><option>CL-004 งาน IT</option></select></div>
+          <div class="x-f"><label for="f-tech">ช่างผู้รับผิดชอบ *</label><select id="f-tech" required><option value="">— เลือกช่าง —</option><option>สมชาย ว.</option><option>ปิยะ ก.</option><option>อรทัย ส.</option><option>ธนกร พ.</option></select></div>
+          <div class="x-f"><label for="f-cl">เช็คลิสต์ *</label><select id="f-cl" required><option value="">— เลือกเช็คลิสต์ —</option><option>CL-001 ตรวจสายพาน</option><option>CL-002 ตรวจมอเตอร์</option><option>CL-003 ระบบลม</option><option>CL-004 งาน IT</option></select></div>
         </div>
         <div class="x-f"><label for="f-part">อะไหล่ที่ใช้</label><input id="f-part" placeholder="เช่น ไส้กรองอากาศ x1, จาระบี x2" /></div>
         <div id="extra"></div>
         <div class="x-row" style="margin-top:16px">
           <button type="button" class="x-btn" id="addf">+ เพิ่มฟิลด์</button>
           <button type="submit" class="x-btn x-btn--primary" style="margin-left:auto">บันทึกแผน</button>
+        </div>
+      </form>
+    </div>
+    <div class="x-modal" id="dueModal" role="dialog" aria-modal="true" aria-labelledby="dueT">
+      <form id="dueBox" onsubmit="return false">
+        <div class="x-between" style="margin-bottom:12px">
+          <p class="x-tt" style="font-size:18px" id="dueT">สร้างใบงานที่ถึงรอบ</p>
+          <button type="button" class="x-btn x-btn--sm" data-close>ปิด</button>
+        </div>
+        <p class="x-mut" id="dueSub" style="margin:0 0 12px"></p>
+        <div style="overflow-x:auto"><table class="x-tbl"><thead><tr><th>ใบสั่งงาน</th><th>แผน</th><th>ทรัพย์สิน</th><th>ครบกำหนด</th><th>มอบหมาย</th></tr></thead><tbody id="dueRows"></tbody></table></div>
+        <div class="x-row" style="margin-top:16px;justify-content:flex-end">
+          <button type="button" class="x-btn" data-close>ปิด</button>
+          <a class="x-btn x-btn--primary" href="../wo/" style="text-decoration:none">ไปที่ใบสั่งงาน</a>
         </div>
       </form>
     </div>
@@ -298,6 +312,9 @@
       ];
 
       const el = (id) => document.getElementById(id);
+      const isDue = (p) => !p.wo && !p.off && p.late >= -(p.lead ?? 7);
+      const TODAY = new Date(2026, 9, 14), TM = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."];
+      const thd = (d) => `${String(d.getDate()).padStart(2, "0")} ${TM[d.getMonth()]} ${d.getFullYear() + 543}`;
       let woSeq = 160;
 
       function toast(msg) {
@@ -328,10 +345,11 @@
           <td>${p.cyc}<br /><span class="x-mut">${p.kind}</span></td>
           <td>${dueCell(p)}</td>
           <td>${p.tech}</td>
-          <td>${p.wo ? `<a class="x-link" href="#">${p.wo}</a><br /><span class="x-mut">กำลังดำเนินการ</span>` : `<button class="x-btn x-btn--sm" data-make="${plans.indexOf(p)}">สร้างใบงาน</button>`}</td>
+          <td>${p.wo ? `<a class="x-link" href="../wo/?q=${p.wo}">${p.wo}</a><br /><span class="x-mut">กำลังดำเนินการ</span>` : `<button class="x-btn x-btn--sm" data-make="${plans.indexOf(p)}">สร้างใบงาน</button>`}</td>
         </tr>`
           )
           .join("") || `<tr><td colspan="6" class="x-mut">ไม่มีแผนในสถานะนี้</td></tr>`;
+        el("kDue").textContent = plans.filter(isDue).length;
         el("count").textContent = `แสดง ${list.length} จาก ${plans.length} แผน · มีงานค้าง ${plans.filter((p) => p.wo).length} ใบ`;
         el("rows").querySelectorAll("[data-make]").forEach((b) =>
           b.addEventListener("click", () => {
@@ -411,7 +429,9 @@
 
       /* modal */
       const modal = el("modal");
-      el("btnNew").addEventListener("click", () => modal.setAttribute("open", ""));
+      const liveFix = (e) => { const c = e.target; if (c.getAttribute && c.getAttribute("aria-invalid") && String(c.value).trim()) { c.removeAttribute("aria-invalid"); c.style.borderColor = ""; const m = c.closest(".x-f") && c.closest(".x-f").querySelector(".x-err"); if (m) m.remove(); } };
+      el("form").addEventListener("input", liveFix); el("form").addEventListener("change", liveFix);
+      el("btnNew").addEventListener("click", () => { el("form").reset(); el("form").querySelectorAll(".x-err").forEach((m) => m.remove()); el("form").querySelectorAll("[aria-invalid]").forEach((x) => { x.removeAttribute("aria-invalid"); x.style.borderColor = ""; }); el("extra").innerHTML = ""; modal.setAttribute("open", ""); el("f-name").focus(); });
       el("close").addEventListener("click", () => modal.removeAttribute("open"));
       modal.addEventListener("click", (e) => { if (e.target === modal) modal.removeAttribute("open"); });
       let extraN = 0;
@@ -424,16 +444,31 @@
       });
       el("form").addEventListener("submit", (e) => {
         e.preventDefault();
+        const form = el("form");
+        form.querySelectorAll(".x-err").forEach((m) => m.remove());
+        form.querySelectorAll("[aria-invalid]").forEach((x) => { x.removeAttribute("aria-invalid"); x.style.borderColor = ""; });
+        let first = null;
+        form.querySelectorAll("[required]").forEach((c) => {
+          const v = c.value.trim(); let msg = "";
+          if (!v) msg = c.tagName === "SELECT" ? "กรุณาเลือกรายการ" : "กรุณากรอกข้อมูลช่องนี้";
+          else if (c.type === "number" && c.min !== "" && +v < +c.min) msg = "ต้องไม่น้อยกว่า " + c.min;
+          if (!msg) return;
+          c.setAttribute("aria-invalid", "true"); c.style.borderColor = "var(--x-red)";
+          const m = document.createElement("small"); m.className = "x-err"; m.style.cssText = "display:block;color:#ff8a95;font-size:12px;margin-top:2px"; m.textContent = msg;
+          c.closest(".x-f").appendChild(m); first = first || c;
+        });
+        if (first) { first.focus(); return; }
         const name = el("f-name").value.trim();
         const type = el("f-type").value;
         const every = el("f-every").value;
-        const lead = el("f-lead").value || 7;
+        const lead = +el("f-lead").value;
+        const dueD = new Date(TODAY); dueD.setDate(dueD.getDate() + (type === "ตามมิเตอร์" ? 30 : +every));
         const id = "PMP-2569-" + String(plans.length + 1).padStart(4, "0");
         plans.push({
           id, t: name, cl: el("f-cl").value.split(" ")[0],
           asset: el("f-asset").value, loc: "รอระบุตำแหน่ง",
           cyc: type === "ตามมิเตอร์" ? `ทุก ${every} ชม.` : `ทุก ${every} วัน`,
-          kind: type, due: "15 พ.ย. 2569", late: -32, tech: el("f-tech").value, wo: null, state: "ok",
+          kind: type, due: thd(dueD), late: -Math.round((dueD - TODAY) / 864e5), lead, tech: el("f-tech").value, wo: null, state: "ok",
         });
         modal.removeAttribute("open");
         el("form").reset();
@@ -443,12 +478,26 @@
       });
 
       /* top bar */
-      el("btnDue").addEventListener("click", () => toast("ตรวจรอบแล้ว: วันนี้ยังไม่มีแผนที่ถึงรอบสร้างใบงาน (0 รายการ)"));
+      const dueModal = el("dueModal");
+      dueModal.addEventListener("click", (e) => { if (e.target === dueModal || e.target.closest("[data-close]")) dueModal.removeAttribute("open"); });
+      el("btnDue").addEventListener("click", () => {
+        const list = plans.filter(isDue);
+        list.forEach((p) => { p.wo = "WO-2569-0" + ++woSeq; });
+        render();
+        el("dueT").textContent = list.length ? `สร้างใบงานแล้ว ${list.length} ใบ` : "ไม่มีแผนที่ถึงรอบ";
+        el("dueSub").textContent = list.length
+          ? `ตรวจรอบ ณ ${thd(TODAY)} · แผนที่เกินกำหนดหรือครบภายใน Lead days และยังไม่มีงานค้าง · สถานะใบงาน: รอดำเนินการ`
+          : `ตรวจรอบ ณ ${thd(TODAY)} · ทุกแผนที่ถึงรอบมีใบงานค้างอยู่แล้ว (1 แผนมีงานค้างได้ 1 ใบ)`;
+        el("dueRows").innerHTML = list.map((p) => `<tr><td><a class="x-link" href="../wo/?q=${p.wo}">${p.wo}</a></td><td><span class="x-id">${p.id}</span><br />${p.t}</td><td>${p.asset}</td><td>${dueCell(p)}</td><td>${p.tech}</td></tr>`).join("") ||
+          `<tr><td colspan="5" class="x-mut">ไม่มีใบงานใหม่ · แผนถัดไปที่จะถึงรอบ: ${plans.filter((p) => !p.wo && !p.off).sort((a, b) => b.late - a.late).slice(0, 1).map((p) => p.id + " (" + p.due + ")").join("") || "—"}</td></tr>`;
+        dueModal.setAttribute("open", "");
+        if (list.length) toast(`สร้างใบงาน ${list.length} ใบจากแผนที่ถึงรอบแล้ว`);
+      });
       el("btnReport").addEventListener("click", () => toast("เปิดฟอร์มแจ้งซ่อมใหม่"));
       el("btnBell").addEventListener("click", () => toast("แจ้งเตือน 3 รายการ: แผนเกินกำหนด 6 แผน · WO-2569-0142 ใกล้ครบ SLA · อะไหล่ไส้กรองใกล้หมด"));
       document.addEventListener("keydown", (e) => {
         if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") { e.preventDefault(); el("gsearch").focus(); }
-        if (e.key === "Escape") modal.removeAttribute("open");
+        if (e.key === "Escape") { modal.removeAttribute("open"); dueModal.removeAttribute("open"); }
       });
     </script>
     <script src="../../assets/hark.js"></script>
