@@ -1,0 +1,416 @@
+<!doctype html>
+<html lang="th" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>IT&amp;MAINT ใบสั่งงาน WO</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400&family=Noto+Sans+Thai:wght@400;500;600&display=swap"
+    />
+    <link rel="stylesheet" href="../../assets/hark.css" />
+    <link rel="stylesheet" href="../../assets/hark-hero.css" />
+    <link rel="stylesheet" href="../../assets/hark-charts.css" />
+    <style>
+      :root{--x-bg:#0A1024;--x-glass:#121830;--x-line:rgba(99,179,255,.18);--x-ink:#E8EEFF;--x-dim:#A9B5D1;--x-red:#F87171;--x-amber:#FBBF24;--x-green:#34D399;--x-blue:#60A5FA;--x-violet:#A78BFA;--x-grad:linear-gradient(135deg,#C2410C,#BE185D)}
+      body{background:#0A1024}
+      .x-app{position:fixed;inset:0;display:grid;grid-template-columns:260px 1fr;background:var(--x-bg);color:var(--x-ink);font:var(--weight-regular) 14px/1.5 var(--sans),"Noto Sans Thai",sans-serif;overflow:hidden}
+      .x-app::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(800px 400px at 70% -10%,rgba(99,179,255,.16),transparent 60%),radial-gradient(600px 400px at 0% 100%,rgba(167,139,250,.12),transparent 60%),linear-gradient(rgba(99,179,255,.05) 1px,transparent 1px) 0 0/40px 40px,linear-gradient(90deg,rgba(99,179,255,.05) 1px,transparent 1px) 0 0/40px 40px}
+      .x-app *{font-family:inherit}
+      .x-glass{background:var(--x-glass);backdrop-filter:blur(var(--hark-blur,20px));-webkit-backdrop-filter:blur(20px);border:1px solid var(--x-line);border-radius:16px}
+      .x-side{position:relative;overflow-y:auto;border-right:1px solid var(--x-line);padding:20px 14px;background:rgba(10,16,36,.6)}
+      .x-logo{display:flex;gap:10px;align-items:center;padding:0 8px 18px}
+      .x-logo b{display:block;font-size:16px}.x-logo small{color:var(--x-dim);font-size:12px}
+      .x-tile{flex:none;display:grid;place-items:center;width:40px;height:40px;border-radius:12px;color:#fff;background:var(--x-grad)}
+      .x-tile svg{width:20px;height:20px}
+      .x-t-blue{background:linear-gradient(135deg,#3B82F6,#06B6D4)}.x-t-red{background:linear-gradient(135deg,#F43F5E,#F97316)}.x-t-amber{background:linear-gradient(135deg,#F59E0B,#EF4444)}.x-t-green{background:linear-gradient(135deg,#10B981,#22D3EE)}.x-t-violet{background:linear-gradient(135deg,#8B5CF6,#EC4899)}.x-t-cyan{background:linear-gradient(135deg,#06B6D4,#6366F1)}
+      .x-grp{margin:14px 8px 6px;font-size:12px;color:var(--x-dim);letter-spacing:.04em}
+      .x-nav a{display:flex;align-items:center;gap:10px;min-height:36px;padding:6px 10px;border-radius:10px;color:var(--x-ink);text-decoration:none;font-size:13px;opacity:.85}
+      .x-nav a:hover{background:rgba(99,179,255,.08);opacity:1}
+      .x-nav a.on{background:linear-gradient(90deg,rgba(255,138,61,.2),rgba(255,77,141,.12));border:1px solid rgba(255,138,61,.35);opacity:1;font-weight:600}
+      .x-nav a i{width:6px;height:6px;border-radius:50%;background:var(--x-line);flex:none}.x-nav a.on i{background:#FF8A3D}
+      .x-badge{margin-left:auto;font-size:12px;font-style:normal;padding:0 8px;border-radius:99px;background:#4A1F2E;color:#FECACA}
+      .x-main{position:relative;overflow-y:auto;display:flex;flex-direction:column}
+      .x-top{position:sticky;top:0;z-index:5;display:flex;gap:12px;align-items:center;padding:12px 24px;border-bottom:1px solid var(--x-line);background:rgba(10,16,36,.75);backdrop-filter:blur(20px)}
+      .x-in,.x-sel{height:44px;padding:0 12px;border-radius:12px;border:1px solid var(--x-line);background:#121830;color:var(--x-ink);font-size:14px}
+      .x-sel option{background:#121a36}
+      .x-search{flex:1;max-width:420px;position:relative}.x-search .x-in{width:100%;padding-left:36px}
+      .x-search svg{position:absolute;left:12px;top:12px;width:16px;height:16px;color:var(--x-dim)}
+      .x-search kbd{position:absolute;right:10px;top:10px;font:12px var(--sans);color:var(--x-dim);border:1px solid var(--x-line);border-radius:6px;padding:0 6px}
+      .x-btn{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:0 16px;border-radius:12px;border:1px solid var(--x-line);background:#141B33;color:var(--x-ink);font-size:14px;font-weight:500;cursor:pointer;white-space:nowrap}
+      .x-btn:hover{background:rgba(99,179,255,.1)}
+      .x-btn--p{border:0;background:var(--x-grad);color:#fff;box-shadow:0 6px 20px rgba(255,77,141,.3)}
+      .x-btn--sm{min-height:44px;padding:0 10px;font-size:13px;border-radius:10px}
+      .x-btn--danger{color:#FCA5A5;border-color:rgba(248,113,113,.35)}
+      .x-icon{flex:none;width:44px;height:44px;display:grid;place-items:center;border-radius:12px;border:1px solid var(--x-line);background:#141B33;color:var(--x-ink);position:relative;cursor:pointer}
+      .x-icon svg{width:18px;height:18px}.x-dotr{position:absolute;top:8px;right:9px;width:8px;height:8px;border-radius:50%;background:#FF4D8D}
+      .x-av{display:flex;align-items:center;gap:8px;font-size:13px}.x-av span{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#8B5CF6,#3B82F6);font-weight:600}
+      .x-body{padding:20px 24px 40px;display:flex;flex-direction:column;gap:18px}
+      .x-crumb{font-size:13px;color:var(--x-dim)}.x-crumb b{color:var(--x-ink);font-weight:500}
+      .x-head{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
+      .x-head h1{font-size:24px;font-weight:600}.x-head p{margin:2px 0 0;color:var(--x-dim);font-size:13px}
+      .x-kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}
+      .x-kpi{display:flex;gap:12px;align-items:flex-start;padding:14px;text-align:left;color:var(--x-ink);cursor:pointer}
+      .x-kpi:hover,.x-kpi.on{border-color:rgba(255,138,61,.6);box-shadow:0 0 0 1px rgba(255,138,61,.3) inset}
+      .x-kpi .x-tile{width:36px;height:36px}
+      .x-kpi small{display:block;font-size:12px;color:var(--x-dim)}.x-kpi b{display:block;font-size:24px;font-weight:600;line-height:1.2}.x-kpi em{font-style:normal;font-size:12px;color:var(--x-dim)}
+      .x-charts{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+      .x-card{padding:16px}.x-card h3{font-size:14px;font-weight:600;margin-bottom:8px}
+      .x-card .chart{margin:0}.x-card .chart__canvas{height:200px}
+      .x-bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+      .x-seg{display:inline-flex;padding:3px;border-radius:12px;border:1px solid var(--x-line);background:#0F1630}
+      .x-seg button{min-height:44px;padding:0 14px;border:0;border-radius:9px;background:none;color:var(--x-dim);cursor:pointer;font-size:13px}
+      .x-seg button.on{background:#1C3358;color:var(--x-ink)}
+      .x-chk{display:flex;gap:6px;align-items:center;font-size:13px;min-height:40px;cursor:pointer}.x-chk input{accent-color:#FF8A3D;width:16px;height:16px}
+      .x-tbl{overflow-x:auto;padding:4px 16px}
+      .x-tbl table{min-width:960px}
+      .x-tbl th,.x-tbl td{border-bottom:1px solid rgba(99,179,255,.1);padding:12px 8px;vertical-align:middle;color:var(--x-ink)}
+      .x-tbl thead th{color:var(--x-dim);font-size:12px;font-weight:500}
+      .x-tbl tbody tr{cursor:pointer}.x-tbl tbody tr:hover{background:rgba(99,179,255,.06)}
+      .x-tbl small{color:var(--x-dim)}
+      .x-no{font-family:"Geist Mono",monospace;font-size:13px;color:#93C5FD}
+      .x-chip{display:inline-flex;align-items:center;gap:6px;padding:2px 10px;border-radius:99px;font-size:12px;white-space:nowrap;border:1px solid}
+      .x-chip::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+      .x-c-red{color:#FCA5A5;background:#3A1C2A;border-color:rgba(248,113,113,.35)}
+      .x-c-amber{color:#FCD34D;background:#3A2E1A;border-color:rgba(251,191,36,.35)}
+      .x-c-green{color:#6EE7B7;background:#12302A;border-color:rgba(52,211,153,.35)}
+      .x-c-blue{color:#93C5FD;background:#172A4A;border-color:rgba(96,165,250,.35)}
+      .x-c-violet{color:#C4B5FD;background:#2A2350;border-color:rgba(167,139,250,.35)}
+      .x-c-grey{color:#CBD5E1;background:#222A3A;border-color:rgba(148,163,184,.3)}
+      .x-sla-over{color:#FCA5A5;font-weight:600}.x-sla-warn{color:#FCD34D}
+      .x-empty{padding:30px;text-align:center;color:var(--x-dim)}
+      .x-kan{display:grid;grid-template-columns:repeat(5,minmax(220px,1fr));gap:12px;overflow-x:auto}
+      .x-col{padding:12px;min-height:300px}.x-col.over{border-color:#FF8A3D;background:rgba(255,138,61,.06)}
+      .x-col h4{margin:0 0 10px;font-size:13px;display:flex;justify-content:space-between}
+      .x-kc{padding:10px 12px;margin-bottom:8px;border-radius:12px;background:#18203A;border:1px solid var(--x-line);cursor:grab;font-size:13px}
+      .x-kc p{margin:4px 0}.x-kc .x-row{display:flex;justify-content:space-between;gap:6px;align-items:center;font-size:12px;color:var(--x-dim)}
+      .x-scrim{position:fixed;inset:0;z-index:20;background:rgba(3,6,18,.6);opacity:0;pointer-events:none;transition:opacity var(--dur-quick) var(--ease-out)}
+      .x-scrim.open{opacity:1;pointer-events:auto}
+      .x-drawer{position:fixed;z-index:21;top:0;right:0;bottom:0;width:min(560px,100%);background:#0E1630;border-left:1px solid var(--x-line);color:var(--x-ink);transform:translateX(100%);transition:transform var(--dur-quick) var(--ease-out);display:flex;flex-direction:column;font-family:var(--sans),"Noto Sans Thai",sans-serif}
+      .x-drawer.open{transform:none}
+      .x-dh{padding:18px 20px;border-bottom:1px solid var(--x-line)}.x-dh h2{font-size:20px;font-weight:600;margin:4px 0 8px}
+      .x-tabs{display:flex;gap:4px;padding:0 20px;border-bottom:1px solid var(--x-line);overflow-x:auto}
+      .x-tabs button{min-height:44px;padding:0 10px;background:none;border:0;border-bottom:2px solid transparent;color:var(--x-dim);cursor:pointer;white-space:nowrap;font-size:13px}
+      .x-tabs button.on{color:var(--x-ink);border-color:#FF8A3D}
+      .x-dbody{flex:1;overflow-y:auto;padding:18px 20px;font-size:14px}
+      .x-dl{display:grid;grid-template-columns:140px 1fr;gap:10px 12px;margin:0}.x-dl dt{color:var(--x-dim)}.x-dl dd{margin:0}
+      .x-tl{list-style:none;margin:0;padding:0}.x-tl li{position:relative;padding:0 0 16px 24px;border-left:2px solid var(--x-line);margin-left:6px}
+      .x-tl li::before{content:"";position:absolute;left:-7px;top:3px;width:12px;height:12px;border-radius:50%;background:#1E2A4A;border:2px solid var(--x-line)}
+      .x-tl li.done::before{background:var(--x-green);border-color:var(--x-green)}.x-tl li.now::before{background:#FF8A3D;border-color:#FF8A3D}
+      .x-tl small{display:block;color:var(--x-dim)}
+      .x-mini{width:100%;border-collapse:collapse;font-size:13px}.x-mini th,.x-mini td{padding:8px 4px;border-bottom:1px solid rgba(99,179,255,.1);color:var(--x-ink)}.x-mini td:last-child,.x-mini th:last-child{text-align:right}
+      .x-mini tfoot td{font-weight:600;border:0}
+      .x-files{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.x-files div{aspect-ratio:4/3;border-radius:12px;border:1px dashed var(--x-line);display:grid;place-items:center;color:var(--x-dim);font-size:12px;text-align:center}
+      .x-dfoot{display:flex;flex-wrap:wrap;gap:8px;padding:14px 20px;border-top:1px solid var(--x-line)}
+      .x-modal{position:fixed;z-index:22;left:50%;top:50%;width:min(720px,94vw);max-height:90vh;overflow-y:auto;transform:translate(-50%,-48%);opacity:0;pointer-events:none;background:#0E1630;border:1px solid var(--x-line);border-radius:16px;color:var(--x-ink);transition:all var(--dur-quick) var(--ease-out);font-family:var(--sans),"Noto Sans Thai",sans-serif}
+      .x-modal.open{opacity:1;pointer-events:auto;transform:translate(-50%,-50%)}
+      .x-form{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:20px}
+      .x-form label{display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--x-dim);position:relative}
+      .x-form .x-full{grid-column:1/-1}.x-form textarea{height:80px;padding:10px 12px;resize:vertical}
+      .x-ta{position:absolute;top:100%;left:0;right:0;z-index:3;margin-top:4px;background:#121a36;border:1px solid var(--x-line);border-radius:12px;overflow:hidden;display:none}
+      .x-ta button{display:block;width:100%;text-align:left;padding:10px 12px;background:none;border:0;color:var(--x-ink);cursor:pointer;font-size:13px}.x-ta button:hover{background:rgba(99,179,255,.1)}
+      .x-addf{color:#FF8A3D;background:none;border:0;cursor:pointer;font-size:13px;min-height:44px;padding:0;align-self:flex-start}
+      .x-extra{display:flex;flex-direction:column;gap:8px}.x-extra div{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+      .x-mfoot{display:flex;justify-content:flex-end;gap:8px;padding:14px 20px;border-top:1px solid var(--x-line)}
+      .x-toast{position:fixed;z-index:30;bottom:24px;left:50%;transform:translate(-50%,20px);opacity:0;padding:12px 18px;border-radius:12px;background:#12302A;border:1px solid rgba(52,211,153,.4);color:#A7F3D0;font-size:14px;transition:all var(--dur-quick) var(--ease-out);font-family:var(--sans),"Noto Sans Thai",sans-serif}
+      .x-toast.show{opacity:1;transform:translate(-50%,0)}
+      @media (max-width:1200px){.x-kpis{grid-template-columns:repeat(3,1fr)}}
+      @media (max-width:860px){.x-app{grid-template-columns:1fr}.x-side{display:none}.x-charts{grid-template-columns:1fr}.x-kpis{grid-template-columns:repeat(2,1fr)}.x-form{grid-template-columns:1fr}.x-top .x-av b,.x-search kbd{display:none}}
+    </style>
+  </head>
+  <body>
+    <div class="page" id="top">
+    <div class="x-app">
+      <aside class="x-side" aria-label="เมนูหลัก">
+        <div class="x-logo"><span class="x-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.4-.6-.6-2.4z"/></svg></span><div><b>IT&amp;MAINT</b><small>Smart Asset · Smart Work</small></div></div>
+        <nav class="x-nav" id="x-nav"></nav>
+      </aside>
+      <div class="x-main">
+        <header class="x-top">
+          <select class="x-sel" aria-label="เลือกไซต์"><option>ทุกไซต์</option><option>โรงงานสมุทรสาคร</option><option>โรงงานระยอง</option></select>
+          <div class="x-search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input class="x-in" id="x-gsearch" placeholder="ค้นหาทรัพย์สิน ใบสั่งงาน..." aria-label="ค้นหา" /><kbd>Ctrl+K</kbd></div>
+          <span style="flex:1"></span>
+          <button class="x-btn x-btn--p" type="button" onclick="toast('เปิดฟอร์มแจ้งซ่อม')">+ แจ้งซ่อม</button>
+          <button class="x-icon" type="button" aria-label="การแจ้งเตือน" onclick="toast('การแจ้งเตือนใหม่ 3 รายการ: เกิน SLA 2 · รออนุมัติ 1')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10 21h4"/></svg><i class="x-dotr"></i></button>
+          <div class="x-av"><span>A</span><b>Admin</b></div>
+        </header>
+        <div class="x-body">
+          <div class="x-crumb">หน้าแรก / ซ่อมบำรุง / <b>ใบสั่งงาน</b></div>
+          <div class="x-head">
+            <div><h1>ใบสั่งงาน (Work Orders)</h1><p>ข้อมูล ณ 12 มี.ค. 2569 · 09:30 น.</p></div>
+            <div class="x-bar"><button class="x-btn" type="button" onclick="toast('ไปที่ใบแจ้งซ่อม')">ใบแจ้งซ่อม</button><button class="x-btn x-btn--p" type="button" onclick="openModal()">+ สร้างใบสั่งงาน</button></div>
+          </div>
+          <div class="x-kpis" id="x-kpis"></div>
+          <div class="x-charts">
+            <div class="x-glass x-card"><h3>สถานะ</h3><figure class="chart"><div class="chart__canvas"><canvas id="c-status" role="img" aria-label="กำลังซ่อม 5 มอบหมายแล้ว 8 อนุมัติแล้ว 4 รออะไหล่ 1 ซ่อมเสร็จ 2"></canvas></div></figure></div>
+            <div class="x-glass x-card"><h3>อายุงาน (วัน)</h3><figure class="chart"><div class="chart__canvas"><canvas id="c-aging" role="img" aria-label="อายุงานเปิด แยกตามช่วงวัน"></canvas></div></figure></div>
+          </div>
+          <div class="x-bar">
+            <div class="x-seg" role="tablist"><button class="on" type="button" data-v="table">ตาราง</button><button type="button" data-v="kanban">Kanban</button></div>
+            <input class="x-in" id="f-q" placeholder="เลขที่ / หัวข้อ / Asset Tag" aria-label="ค้นหาใบสั่งงาน" style="min-width:220px" />
+            <select class="x-sel" id="f-st" aria-label="สถานะ"></select>
+            <select class="x-sel" id="f-ty" aria-label="ประเภท"></select>
+            <select class="x-sel" id="f-pr" aria-label="ระดับ"></select>
+            <label class="x-chk"><input type="checkbox" id="f-me" /> งานของฉัน</label>
+            <label class="x-chk"><input type="checkbox" id="f-ov" /> เกิน SLA</label>
+          </div>
+          <div class="x-glass x-tbl" id="v-table"><table><thead><tr><th>เลขที่</th><th>ประเภท</th><th>หัวข้อ / ทรัพย์สิน</th><th>ระดับ</th><th>สถานะ</th><th>ช่าง</th><th>SLA</th><th></th></tr></thead><tbody id="x-rows"></tbody></table></div>
+          <div class="x-kan" id="v-kanban" hidden></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="x-scrim" id="x-scrim" onclick="closeAll()"></div>
+    <aside class="x-drawer" id="x-drawer" aria-label="รายละเอียดใบสั่งงาน">
+      <div class="x-dh"><div class="x-bar" style="justify-content:space-between"><span class="x-no" id="d-no"></span><button class="x-icon" type="button" aria-label="ปิด" onclick="closeAll()">✕</button></div><h2 id="d-title"></h2><div class="x-bar" id="d-chips"></div></div>
+      <div class="x-tabs" id="d-tabs"><button class="on" type="button" data-t="0">รายละเอียด</button><button type="button" data-t="1">ไทม์ไลน์</button><button type="button" data-t="2">อะไหล่ &amp; ค่าใช้จ่าย</button><button type="button" data-t="3">เช็คลิสต์</button><button type="button" data-t="4">ไฟล์ &amp; รูป</button></div>
+      <div class="x-dbody" id="d-body"></div>
+      <div class="x-dfoot"><button class="x-btn" type="button" data-a="มอบหมายแล้ว">มอบหมาย</button><button class="x-btn" type="button" data-a="กำลังซ่อม">เริ่มงาน</button><button class="x-btn x-btn--p" type="button" data-a="ปิดงาน">ปิดงาน</button><button class="x-btn x-btn--danger" type="button" data-a="ยกเลิก">ยกเลิก</button></div>
+    </aside>
+
+    <div class="x-modal" id="x-modal" role="dialog" aria-modal="true" aria-labelledby="m-h">
+      <div class="x-dh"><h2 id="m-h">สร้างใบสั่งงาน</h2></div>
+      <form class="x-form" id="m-form" onsubmit="return saveWO(event)">
+        <label>ประเภท<select class="x-sel" name="ty" id="m-ty"></select></label>
+        <label>ระดับ<select class="x-sel" name="pr" id="m-pr"></select></label>
+        <label class="x-full">ทรัพย์สิน<input class="x-in" name="as" id="m-as" placeholder="พิมพ์ Asset Tag หรือชื่อ เช่น CNC" autocomplete="off" required /><div class="x-ta" id="m-ta"></div></label>
+        <label class="x-full">หัวข้อ<input class="x-in" name="ti" required placeholder="เช่น มอเตอร์มีเสียงดังผิดปกติ" /></label>
+        <label class="x-full">รายละเอียดอาการ<textarea class="x-in" name="de"></textarea></label>
+        <label>ไซต์/ที่ตั้ง<select class="x-sel" name="si"><option>โรงงานสมุทรสาคร</option><option>โรงงานระยอง</option></select></label>
+        <label>ผู้รับผิดชอบ/ช่าง<select class="x-sel" name="te" id="m-te"></select></label>
+        <label>วันที่กำหนดเสร็จ (SLA)<input class="x-in" type="datetime-local" name="du" /></label>
+        <label>แนบไฟล์<input class="x-in" type="file" multiple style="padding-top:8px" /></label>
+        <div class="x-full x-extra" id="m-extra"><b style="font-size:14px;font-weight:600">ฟิลด์เพิ่มเติม</b><button class="x-addf" type="button" onclick="addField()">+ เพิ่มฟิลด์</button></div>
+      </form>
+      <div class="x-mfoot"><button class="x-btn" type="button" onclick="closeAll()">ยกเลิก</button><button class="x-btn x-btn--p" type="submit" form="m-form">บันทึก</button></div>
+    </div>
+    <div class="x-toast" id="x-toast" role="status"></div>
+    </div>
+
+    <script type="application/json" id="wo-data">
+      [
+        {"no":"WO-2569-0001","ty":"Breakdown","ti":"สายพานขาด หยุดไลน์ผลิต","as":"CONV-03","an":"สายพานลำเลียง","pr":"P1","st":"กำลังซ่อม","te":"สมชัย","sla":-48,"age":4,"si":"โรงงานสมุทรสาคร"},
+        {"no":"WO-2569-0002","ty":"Corrective","ti":"มอเตอร์ร้อนผิดปกติ ลูกปืนสึก","as":"MTR-007","an":"มอเตอร์ไฟฟ้า","pr":"P2","st":"รออะไหล่/ผู้ขาย","te":"วิชัย","sla":-26,"age":6,"si":"โรงงานสมุทรสาคร"},
+        {"no":"WO-2569-0003","ty":"PM","ti":"PM รายเดือน หล่อลื่นแกนสปินเดิล","as":"CNC-001","an":"เครื่อง CNC","pr":"P3","st":"มอบหมายแล้ว","te":"ธนพล","sla":30,"age":1,"si":"โรงงานระยอง"},
+        {"no":"WO-2569-0004","ty":"Breakdown","ti":"ปั๊มไม่ส่งน้ำ แรงดันตก","as":"PMP-11","an":"ปั๊มน้ำ","pr":"P1","st":"มอบหมายแล้ว","te":"อนุชา","sla":-5,"age":2,"si":"โรงงานระยอง"},
+        {"no":"WO-2569-0005","ty":"ตรวจสอบ","ti":"ตรวจสภาพโซ่ยกและเบรก","as":"FL-02","an":"รถโฟล์คลิฟท์","pr":"P3","st":"อนุมัติแล้ว","te":"","sla":52,"age":0.5,"si":"โรงงานสมุทรสาคร"},
+        {"no":"WO-2569-0006","ty":"Predictive","ti":"ค่าสั่นสะเทือนเกินเกณฑ์ (IoT)","as":"AHU-05","an":"เครื่องส่งลมเย็น","pr":"P2","st":"กำลังซ่อม","te":"ปรีชา","sla":6,"age":3,"si":"โรงงานระยอง"},
+        {"no":"WO-2569-0007","ty":"PM","ti":"เปลี่ยนไส้กรองอากาศ","as":"AHU-05","an":"เครื่องส่งลมเย็น","pr":"P4","st":"ซ่อมเสร็จ","te":"ปรีชา","sla":72,"age":8,"si":"โรงงานระยอง"},
+        {"no":"WO-2569-0008","ty":"สอบเทียบ","ti":"สอบเทียบเซนเซอร์อุณหภูมิ","as":"CNC-001","an":"เครื่อง CNC","pr":"P3","st":"อนุมัติแล้ว","te":"","sla":-30,"age":9,"si":"โรงงานระยอง"},
+        {"no":"WO-2569-0009","ty":"Corrective","ti":"ปรับตั้งความตึงสายพาน","as":"CONV-03","an":"สายพานลำเลียง","pr":"P3","st":"มอบหมายแล้ว","te":"Admin","sla":20,"age":1.5,"si":"โรงงานสมุทรสาคร"},
+        {"no":"WO-2569-0010","ty":"IT Request","ti":"เพิ่ม RAM 64GB และอัปเดต Firmware","as":"SRV-001","an":"เซิร์ฟเวอร์ HPE","pr":"P4","st":"รออนุมัติ","te":"","sla":120,"age":2,"si":"โรงงานสมุทรสาคร"},
+        {"no":"IT-2569-0007","ty":"IT Incident","ti":"VPN หลุดบ่อย ตรวจสอบ Policy","as":"FW-001","an":"FortiGate","pr":"P2","st":"กำลังซ่อม","te":"ธนพล","sla":-50,"age":5,"si":"โรงงานสมุทรสาคร"}
+      ]
+    </script>
+    <script src="../../assets/hark.js"></script>
+    <script src="../../assets/chart.js"></script>
+    <script src="../../assets/datalabels.js"></script>
+    <script src="../../assets/hark-charts.js"></script>
+    <script>
+      document.documentElement.setAttribute("data-theme", "dark");
+      const $ = (s) => document.querySelector(s);
+      const ICON = {
+        grid: '<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',
+        alert: '<path d="M12 3 2 20h20L12 3zM12 10v4M12 17h.01"/>',
+        clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+        user: '<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/>',
+        check: '<circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/>',
+        cal: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>'
+      };
+      const svg = (k) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ICON[k]}</svg>`;
+      const NAV = [
+        ["ภาพรวม", ["Command Center", "จอแสดงผล TV", "ปฏิทินรวม"]],
+        ["ทรัพย์สิน", ["ทะเบียนทรัพย์สินกลาง", "พิมพ์ป้าย QR/Barcode", "สินทรัพย์ถาวร & ค่าเสื่อม", "โอนย้าย/ยืม-คืน/จำหน่าย", "IT Asset & License", "EAM ลำดับชั้น/Lifecycle", "ติดตามตำแหน่ง", "ตรวจนับทรัพย์สิน", "คลังดิจิทัล (DAM)"]],
+        ["ซ่อมบำรุง", ["ใบสั่งงาน (WO)|18", "ใบแจ้งซ่อม", "แผน PM & เช็คลิสต์|6", "Predictive/IoT", "สอบเทียบเครื่องมือ"]],
+        ["คลัง & จัดซื้อ", ["คลังอะไหล่|3", "จัดซื้อ PR/PO & สัญญา", "ต้นทุน & งบประมาณ"]],
+        ["วิเคราะห์", ["RCA/FMEA", "รายงาน & KPI"]],
+        ["ระบบ", ["ผู้ใช้งาน", "บทบาท & สิทธิ์ (RBAC)", "ข้อมูลหลัก", "ตั้งค่าระบบ", "การแจ้งเตือน & Cron", "REST API & Token", "Audit Log"]]
+      ];
+      $("#x-nav").innerHTML = NAV.map(([g, items]) => `<p class="x-grp">${g}</p>` + items.map((it) => {
+        const [n, b] = it.split("|"), on = n === "ใบสั่งงาน (WO)";
+        return `<a href="#top" class="${on ? "on" : ""}" ${on ? 'aria-current="page"' : ""}><i></i>${n.replace(/&/g, "&amp;")}${b ? `<em class="x-badge">${b}</em>` : ""}</a>`;
+      }).join("")).join("");
+
+      const STATUSES = ["ร่าง", "รออนุมัติ", "อนุมัติแล้ว", "มอบหมายแล้ว", "กำลังซ่อม", "รออะไหล่/ผู้ขาย", "ซ่อมเสร็จ", "รอตรวจรับ", "ตรวจรับแล้ว", "ปิดงาน", "ยกเลิก"];
+      const TYPES = ["Breakdown", "Corrective", "PM", "Predictive", "สอบเทียบ", "ตรวจสอบ", "IT Incident", "IT Request", "โครงการ"];
+      const PRIOS = { P1: "P1 วิกฤต", P2: "P2 สูง", P3: "P3 ปกติ", P4: "P4 ต่ำ" };
+      const TECHS = ["สมชัย", "วิชัย", "ธนพล", "อนุชา", "ปรีชา", "Admin"];
+      const KANBAN = ["อนุมัติแล้ว", "มอบหมายแล้ว", "กำลังซ่อม", "รออะไหล่/ผู้ขาย", "ซ่อมเสร็จ"];
+      const CLOSED = ["ตรวจรับแล้ว", "ปิดงาน", "ยกเลิก"];
+      const ME = "Admin";
+      const stColor = (s) => ({ "อนุมัติแล้ว": "blue", "มอบหมายแล้ว": "violet", "กำลังซ่อม": "blue", "รออะไหล่/ผู้ขาย": "amber", "ซ่อมเสร็จ": "green", "รอตรวจรับ": "amber", "ตรวจรับแล้ว": "green", "ปิดงาน": "green", "ยกเลิก": "grey", "รออนุมัติ": "amber" }[s] || "grey");
+      const prColor = { P1: "red", P2: "amber", P3: "blue", P4: "grey" };
+      const chip = (t, c) => `<span class="x-chip x-c-${c}">${t}</span>`;
+      const ASSETS = [["CONV-03", "สายพานลำเลียง"], ["MTR-007", "มอเตอร์ไฟฟ้า"], ["CNC-001", "เครื่อง CNC"], ["PMP-11", "ปั๊มน้ำ"], ["FL-02", "รถโฟล์คลิฟท์"], ["AHU-05", "เครื่องส่งลมเย็น"], ["SRV-001", "เซิร์ฟเวอร์ HPE"], ["FW-001", "FortiGate"]];
+
+      const now = Date.now();
+      let rows = Hark.data("wo-data").map((r) => ({ ...r, due: now + r.sla * 3600e3 }));
+      const fill = (el, opts, first) => (el.innerHTML = (first ? `<option value="">${first}</option>` : "") + opts.map((o) => (Array.isArray(o) ? `<option value="${o[0]}">${o[1]}</option>` : `<option>${o}</option>`)).join(""));
+      fill($("#f-st"), [["open", "งานที่ยังเปิด"], ["all", "ทุกสถานะ"], ["wait", "รออนุมัติ/มอบหมาย"], ...STATUSES.map((s) => [s, s])]);
+      fill($("#f-ty"), TYPES, "ทุกประเภท");
+      fill($("#f-pr"), Object.entries(PRIOS), "ทุกระดับ");
+      fill($("#m-ty"), TYPES); fill($("#m-pr"), Object.entries(PRIOS)); $("#m-pr").value = "P3";
+      fill($("#m-te"), TECHS, "ยังไม่มอบหมาย");
+
+      function slaText(r) {
+        if (CLOSED.includes(r.st) || r.st === "ซ่อมเสร็จ") return '<span style="color:#6EE7B7">ทัน SLA</span>';
+        const h = (r.due - Date.now()) / 3600e3, a = Math.abs(h), d = Math.floor(a / 24), hh = Math.floor(a % 24), m = Math.floor((a * 60) % 60);
+        if (h < 0) return `<span class="x-sla-over">เกิน ${d ? d + " วัน" : hh + " ชม."}</span>`;
+        const t = d ? `${d} วัน ${hh} ชม.` : `${hh} ชม. ${m} น.`;
+        return `<span class="${h < 8 ? "x-sla-warn" : ""}">เหลือ ${t}</span>`;
+      }
+      const overdue = (r) => !CLOSED.includes(r.st) && r.st !== "ซ่อมเสร็จ" && r.due < Date.now();
+
+      function filtered() {
+        const q = $("#f-q").value.trim().toLowerCase(), st = $("#f-st").value, ty = $("#f-ty").value, pr = $("#f-pr").value;
+        return rows.filter((r) => {
+          if (q && !(r.no + r.ti + r.as + r.an).toLowerCase().includes(q)) return false;
+          if (st === "open" && CLOSED.includes(r.st)) return false;
+          if (st === "wait" && !["รออนุมัติ", "อนุมัติแล้ว"].includes(r.st)) return false;
+          if (!["open", "all", "wait"].includes(st) && r.st !== st) return false;
+          if (ty && r.ty !== ty) return false;
+          if (pr && r.pr !== pr) return false;
+          if ($("#f-me").checked && r.te !== ME) return false;
+          if ($("#f-ov").checked && !overdue(r)) return false;
+          return true;
+        });
+      }
+
+      function render() {
+        const list = filtered();
+        $("#x-rows").innerHTML = list.length ? list.map((r) => `<tr data-no="${r.no}">
+          <td><span class="x-no">${r.no}</span></td><td>${r.ty}</td>
+          <td>${r.ti}<small>${r.as} · ${r.an}</small></td>
+          <td>${chip(r.pr, prColor[r.pr])}</td><td>${chip(r.st, stColor(r.st))}</td>
+          <td>${r.te || '<small>— ยังไม่มอบหมาย</small>'}</td><td>${slaText(r)}</td>
+          <td><button class="x-btn x-btn--sm" type="button" aria-label="เปิด ${r.no}">เปิด</button></td></tr>`).join("")
+          : `<tr><td colspan="8" class="x-empty">ไม่พบใบสั่งงานตามตัวกรอง</td></tr>`;
+        $("#v-kanban").innerHTML = KANBAN.map((s) => {
+          const items = list.filter((r) => r.st === s);
+          return `<div class="x-glass x-col" data-st="${s}"><h4>${chip(s, stColor(s))}<span>${items.length}</span></h4>${items.map((r) => `<div class="x-kc" draggable="true" data-no="${r.no}">
+            <div class="x-row"><span class="x-no">${r.no}</span>${chip(r.pr, prColor[r.pr])}</div><p>${r.ti}</p>
+            <div class="x-row"><span>${r.as} · ${r.te || "—"}</span>${slaText(r)}</div></div>`).join("")}</div>`;
+        }).join("");
+      }
+
+      const KPIS = [
+        ["งานเปิด", "18", "ของฉัน 1", "grid", "", { st: "open" }],
+        ["เกิน SLA", "8", "P1 2", "alert", "x-t-red", { ov: true }],
+        ["รออนุมัติ/มอบหมาย", "4", "รอของ 1", "user", "x-t-violet", { st: "wait" }],
+        ["MTTR 90 วัน", "3 ชม.", "เวลาซ่อมเฉลี่ย", "clock", "x-t-blue", { st: "ซ่อมเสร็จ" }],
+        ["ทัน SLA 90 วัน", "90%", "เป้าหมาย 95%", "check", "x-t-green", { st: "all" }],
+        ["PM Compliance", "30%", "แผน PM เดือนนี้", "cal", "x-t-amber", { st: "open", ty: "PM" }]
+      ];
+      $("#x-kpis").innerHTML = KPIS.map((k, i) => `<button type="button" class="x-glass x-kpi" data-k="${i}"><span class="x-tile ${k[4]}">${svg(k[3])}</span><span><small>${k[0]}</small><b>${k[1]}</b><em>${k[2]}</em></span></button>`).join("");
+      $("#x-kpis").addEventListener("click", (e) => {
+        const b = e.target.closest(".x-kpi"); if (!b) return;
+        const f = KPIS[b.dataset.k][5], was = b.classList.contains("on");
+        document.querySelectorAll(".x-kpi").forEach((x) => x.classList.remove("on"));
+        $("#f-st").value = was ? "open" : f.st || "open"; $("#f-ty").value = was ? "" : f.ty || ""; $("#f-pr").value = "";
+        $("#f-ov").checked = !was && !!f.ov; $("#f-me").checked = false;
+        if (!was) b.classList.add("on");
+        render();
+      });
+      ["#f-q", "#f-st", "#f-ty", "#f-pr", "#f-me", "#f-ov"].forEach((s) => $(s).addEventListener("input", render));
+
+      document.querySelectorAll(".x-seg button").forEach((b) => b.addEventListener("click", () => {
+        document.querySelectorAll(".x-seg button").forEach((x) => x.classList.toggle("on", x === b));
+        $("#v-table").hidden = b.dataset.v !== "table"; $("#v-kanban").hidden = b.dataset.v !== "kanban";
+      }));
+
+      // Kanban drag and drop
+      let dragNo = null;
+      const kan = $("#v-kanban");
+      kan.addEventListener("dragstart", (e) => { const c = e.target.closest(".x-kc"); if (c) { dragNo = c.dataset.no; e.dataTransfer.setData("text/plain", dragNo); } });
+      kan.addEventListener("dragover", (e) => { const col = e.target.closest(".x-col"); if (col) { e.preventDefault(); kan.querySelectorAll(".x-col").forEach((c) => c.classList.toggle("over", c === col)); } });
+      kan.addEventListener("dragleave", (e) => { if (!kan.contains(e.relatedTarget)) kan.querySelectorAll(".x-col").forEach((c) => c.classList.remove("over")); });
+      kan.addEventListener("drop", (e) => {
+        const col = e.target.closest(".x-col"); if (!col || !dragNo) return; e.preventDefault();
+        const r = rows.find((x) => x.no === dragNo); if (r && r.st !== col.dataset.st) { r.st = col.dataset.st; toast(`${r.no} → ${r.st}`); }
+        dragNo = null; render();
+      });
+      kan.addEventListener("click", (e) => { const c = e.target.closest(".x-kc"); if (c) openDrawer(c.dataset.no); });
+      $("#x-rows").addEventListener("click", (e) => { const tr = e.target.closest("tr[data-no]"); if (tr) openDrawer(tr.dataset.no); });
+
+      // Drawer
+      let cur = rows[0], tab = 0;
+      const STEPS = ["แจ้ง", "อนุมัติ", "มอบหมาย", "เริ่มซ่อม", "รออะไหล่", "ซ่อมเสร็จ", "ตรวจรับ", "ปิดงาน"];
+      const stepIdx = (s) => ({ "ร่าง": 0, "รออนุมัติ": 0, "อนุมัติแล้ว": 1, "มอบหมายแล้ว": 2, "กำลังซ่อม": 3, "รออะไหล่/ผู้ขาย": 4, "ซ่อมเสร็จ": 5, "รอตรวจรับ": 5, "ตรวจรับแล้ว": 6, "ปิดงาน": 7 }[s] ?? 0);
+      const DATES = ["8 มี.ค. 2569 08:15", "8 มี.ค. 2569 08:40", "8 มี.ค. 2569 09:05", "8 มี.ค. 2569 10:20", "9 มี.ค. 2569 14:00", "11 มี.ค. 2569 16:30", "12 มี.ค. 2569 09:00", "12 มี.ค. 2569 10:00"];
+      function drawerBody() {
+        const r = cur;
+        if (tab === 0) return `<dl class="x-dl"><dt>ทรัพย์สิน</dt><dd>${r.as} · ${r.an}</dd><dt>ประเภท</dt><dd>${r.ty}</dd><dt>ระดับ</dt><dd>${PRIOS[r.pr]}</dd><dt>ไซต์</dt><dd>${r.si}</dd><dt>ช่าง</dt><dd>${r.te || "ยังไม่มอบหมาย"}</dd><dt>SLA</dt><dd>${slaText(r)}</dd><dt>ผู้แจ้ง</dt><dd>ฝ่ายผลิต · 8 มี.ค. 2569</dd><dt>อาการ</dt><dd>${r.de || r.ti}</dd></dl>`;
+        if (tab === 1) { const i = stepIdx(r.st); return `<ol class="x-tl">${STEPS.map((s, j) => `<li class="${j < i ? "done" : j === i ? "now" : ""}"><b>${s}</b><small>${j <= i ? DATES[j] : "รอดำเนินการ"}</small></li>`).join("")}</ol>`; }
+        if (tab === 2) return `<table class="x-mini"><thead><tr><th>รายการ</th><th>จำนวน</th><th>รวม</th></tr></thead><tbody><tr><td>SP-BRG-6205 ลูกปืน 6205-2RS</td><td>×2</td><td>฿370</td></tr><tr><td>ค่าแรง ${r.te || "ช่าง"} (3 ชม. × ฿250)</td><td>3 ชม.</td><td>฿750</td></tr></tbody><tfoot><tr><td>รวมค่าใช้จ่าย</td><td></td><td>฿1,120</td></tr></tfoot></table>`;
+        if (tab === 3) return ["ตัดไฟและล็อกเอาท์ (LOTO)", "ตรวจสอบเสียง/การสั่นสะเทือน", "เปลี่ยนชิ้นส่วนที่ชำรุด", "ทดสอบเดินเครื่อง 30 นาที", "ทำความสะอาดพื้นที่"].map((c, j) => `<label class="x-chk"><input type="checkbox" ${j < 2 ? "checked" : ""} /> ${c}</label>`).join("");
+        return `<div class="x-files"><div>รูปก่อนซ่อม.jpg</div><div>รูปหลังซ่อม.jpg</div><div>+ อัปโหลดไฟล์</div></div>`;
+      }
+      function paintDrawer() {
+        $("#d-no").textContent = cur.no; $("#d-title").textContent = cur.ti;
+        $("#d-chips").innerHTML = chip(cur.st, stColor(cur.st)) + chip(PRIOS[cur.pr], prColor[cur.pr]) + chip(cur.ty, "grey") + (overdue(cur) ? chip("เกิน SLA", "red") : "");
+        document.querySelectorAll("#d-tabs button").forEach((b) => b.classList.toggle("on", +b.dataset.t === tab));
+        $("#d-body").innerHTML = drawerBody();
+      }
+      function openDrawer(no) { cur = rows.find((r) => r.no === no); tab = 0; paintDrawer(); $("#x-drawer").classList.add("open"); $("#x-scrim").classList.add("open"); }
+      $("#d-tabs").addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) { tab = +b.dataset.t; paintDrawer(); } });
+      document.querySelectorAll(".x-dfoot button").forEach((b) => b.addEventListener("click", () => {
+        cur.st = b.dataset.a; if (cur.st === "มอบหมายแล้ว" && !cur.te) cur.te = "สมชัย";
+        toast(`${cur.no}: ${b.textContent}แล้ว`); paintDrawer(); render();
+      }));
+
+      // Modal
+      function openModal() { $("#x-modal").classList.add("open"); $("#x-scrim").classList.add("open"); setTimeout(() => $("#m-as").focus(), 50); }
+      function closeAll() { ["#x-modal", "#x-drawer", "#x-scrim"].forEach((s) => $(s).classList.remove("open")); }
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") closeAll();
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") { e.preventDefault(); $("#x-gsearch").focus(); }
+      });
+      $("#x-gsearch").addEventListener("input", (e) => { $("#f-q").value = e.target.value; render(); });
+      const ta = $("#m-ta");
+      $("#m-as").addEventListener("input", (e) => {
+        const q = e.target.value.toLowerCase(), m = ASSETS.filter((a) => (a[0] + a[1]).toLowerCase().includes(q));
+        ta.innerHTML = m.map((a) => `<button type="button" data-v="${a[0]} ${a[1]}">${a[0]} · ${a[1]}</button>`).join("");
+        ta.style.display = q && m.length ? "block" : "none";
+      });
+      ta.addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) { $("#m-as").value = b.dataset.v; ta.style.display = "none"; } });
+      function addField() {
+        const d = document.createElement("div");
+        d.innerHTML = '<input class="x-in" placeholder="ชื่อฟิลด์" aria-label="ชื่อฟิลด์" /><input class="x-in" placeholder="ค่า" aria-label="ค่า" />';
+        $("#m-extra").insertBefore(d, $(".x-addf"));
+      }
+      let seq = 11;
+      function saveWO(e) {
+        e.preventDefault();
+        const f = new FormData(e.target), [tag, ...nm] = f.get("as").split(" ");
+        const due = f.get("du") ? new Date(f.get("du")).getTime() : Date.now() + 48 * 3600e3;
+        const no = `WO-2569-${String(seq++).padStart(4, "0")}`;
+        rows.unshift({ no, ty: f.get("ty"), ti: f.get("ti"), de: f.get("de"), as: tag, an: nm.join(" ") || "-", pr: f.get("pr"), st: f.get("te") ? "มอบหมายแล้ว" : "อนุมัติแล้ว", te: f.get("te"), due, age: 0, si: f.get("si") });
+        e.target.reset(); $("#m-pr").value = "P3"; $("#m-extra").querySelectorAll("div").forEach((d) => d.remove());
+        closeAll(); render(); toast(`บันทึกใบสั่งงาน ${no} เรียบร้อย`);
+        return false;
+      }
+      let tt;
+      function toast(m) { const t = $("#x-toast"); t.textContent = m; t.classList.add("show"); clearTimeout(tt); tt = setTimeout(() => t.classList.remove("show"), 2600); }
+
+      // Charts
+      new Chart($("#c-status"), {
+        type: "doughnut",
+        data: { labels: KANBAN, datasets: [{ data: [4, 8, 5, 1, 2] }] },
+        options: { cutout: "62%", plugins: { legend: { position: "right" }, datalabels: Hark.labels.percent } }
+      });
+      const buckets = ["0-1", "1-3", "3-7", ">7"], open = rows.filter((r) => !CLOSED.includes(r.st));
+      const aging = [open.filter((r) => r.age <= 1).length, open.filter((r) => r.age > 1 && r.age <= 3).length, open.filter((r) => r.age > 3 && r.age <= 7).length, open.filter((r) => r.age > 7).length];
+      new Chart($("#c-aging"), {
+        type: "bar",
+        data: { labels: buckets.map((b) => b + " วัน"), datasets: [{ label: "งาน", data: aging, backgroundColor: ["var(--chart-muted)", "var(--chart-muted)", "var(--chart-ink)", "var(--chart-bad)"] }] },
+        options: { scales: { y: { ticks: { stepSize: 1 } } }, plugins: { legend: { display: false }, datalabels: Hark.labels.values } }
+      });
+
+      render();
+      paintDrawer();
+      setInterval(render, 60000);
+    </script>
+  </body>
+</html>
