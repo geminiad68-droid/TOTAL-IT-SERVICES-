@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="th" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ITMAINT Predictive IoT</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400&display=swap"
+    />
+    <link rel="stylesheet" href="../../assets/hark.css" />
+    <link rel="stylesheet" href="../../assets/hark-hero.css" />
+    <link rel="stylesheet" href="../../assets/hark-charts.css" />
+    <style>
+      :root, :root[data-theme="dark"] {
+        color-scheme: dark;
+        --fill-primary-on: #0a1024; --fill-tertiary: #141d3d; --text-primary: #eef2ff; --text-secondary: #a3afd1;
+        --stroke-primary: #5b8cff40; --stroke-secondary: #5b8cff24; --fill-primary: #eef2ff; --text-primary-on: #0a1024;
+        --x-card: #10183a; --x-glow: 0 0 0 1px #4f7dff38, 0 0 18px #3b6cff1f; --x-red: #ff6b7a; --x-amber: #ffb547; --x-green: #3ddc97;
+        --x-grad: linear-gradient(135deg, #c2410c, #be185d);
+      }
+      body { font-family: var(--sans); }
+      .x-app { display: grid; grid-template-columns: 248px minmax(0, 1fr); min-height: 100vh; }
+      .x-side { background: #0c1430; border-right: 1px solid var(--stroke-secondary); padding: 20px 14px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+      .x-logo { display: flex; gap: 10px; align-items: center; padding: 0 8px 20px; }
+      .x-logo b { font: var(--type-label); font-weight: var(--weight-bold); display: block; }
+      .x-logo small { color: var(--text-secondary); font: var(--type-caption); }
+      .x-grp { font: var(--type-tag); color: var(--text-secondary); padding: 14px 10px 6px; text-transform: uppercase; letter-spacing: .04em; }
+      .x-nav a { display: flex; align-items: center; gap: 10px; min-height: var(--tap); padding: 0 10px; border-radius: var(--r-s); color: var(--text-secondary); text-decoration: none; font: var(--type-small); }
+      .x-nav a:hover { background: var(--fill-tertiary); color: var(--text-primary); }
+      .x-nav a[aria-current] { background: linear-gradient(90deg, #3b6cff33, #3b6cff0d); color: var(--text-primary); box-shadow: inset 2px 0 0 #6d95ff; }
+      .x-nav a::before { content: ""; width: 8px; height: 8px; border-radius: 3px; background: currentColor; opacity: .5; }
+      .x-top { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; padding: 14px var(--gutter); border-bottom: 1px solid var(--stroke-secondary); position: sticky; top: 0; z-index: 5; background: #0a1024e6; backdrop-filter: var(--hark-blur); }
+      .x-input, .x-select { min-height: var(--tap); background: var(--x-card); color: var(--text-primary); border: 1px solid var(--stroke-primary); border-radius: var(--r-s); padding: 0 12px; font: var(--type-small); }
+      .x-search { flex: 1; min-width: 180px; position: relative; }
+      .x-search .x-input { width: 100%; box-sizing: border-box; padding-right: 64px; }
+      .x-kbd { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font: var(--type-caption); color: var(--text-secondary); border: 1px solid var(--stroke-primary); border-radius: 6px; padding: 1px 6px; }
+      .x-btn { min-height: var(--tap); padding: 0 16px; border-radius: var(--r-s); border: 1px solid var(--stroke-primary); background: var(--x-card); color: var(--text-primary); font: var(--type-label); cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
+      .x-btn:hover { border-color: #6d95ff; }
+      .x-btn--pri { background: var(--x-grad); border-color: transparent; color: #fff; box-shadow: 0 4px 16px #be185d40; }
+      .x-btn--ghost { background: transparent; }
+      .x-icon { width: var(--tap); padding: 0; justify-content: center; position: relative; }
+      .x-badge { position: absolute; top: 4px; right: 4px; min-width: 18px; height: 18px; border-radius: 9px; background: #e11d48; color: #fff; font: var(--type-tag); font-size: 12px; line-height: 18px; text-align: center; }
+      .x-avatar { display: flex; align-items: center; gap: 8px; font: var(--type-label); }
+      .x-avatar span { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, #3b6cff, #8b5cf6); display: grid; place-items: center; font: var(--type-tag); }
+      .x-body { padding: 20px var(--gutter) 40px; display: grid; gap: 20px; min-width: 0; }
+      .x-title { display: flex; justify-content: space-between; align-items: end; gap: 12px; flex-wrap: wrap; }
+      .x-title h1 { font: var(--type-title); }
+      .x-title p { color: var(--text-secondary); font: var(--type-small); }
+      .x-card { background: var(--x-card); border-radius: var(--r-m); box-shadow: var(--x-glow); padding: 18px; min-width: 0; }
+      .x-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 14px; }
+      .x-kpi { display: flex; gap: 14px; align-items: center; }
+      .x-tile { width: 44px; height: 44px; border-radius: var(--r-s); display: grid; place-items: center; flex: none; }
+      .x-kpi b { font: var(--type-figure); display: block; }
+      .x-kpi small { color: var(--text-secondary); font: var(--type-caption); }
+      .x-g1 { background: linear-gradient(135deg, #3b6cff, #22d3ee); } .x-g2 { background: linear-gradient(135deg, #10b981, #22d3ee); }
+      .x-g3 { background: linear-gradient(135deg, #ef4444, #f97316); } .x-g4 { background: linear-gradient(135deg, #f59e0b, #ec4899); }
+      .x-g5 { background: linear-gradient(135deg, #8b5cf6, #ec4899); }
+      .x-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
+      .x-mc { cursor: pointer; display: grid; gap: 12px; transition: box-shadow var(--dur-quick) var(--ease-out); }
+      .x-mc.is-sel { box-shadow: 0 0 0 2px #6d95ff, 0 0 24px #3b6cff55; }
+      .x-mc header { display: flex; gap: 12px; align-items: center; }
+      .x-mc h3 { font: var(--type-label); font-weight: var(--weight-bold); }
+      .x-mc header small { color: var(--text-secondary); font: var(--type-caption); display: block; }
+      .x-ring { position: relative; width: 56px; height: 56px; flex: none; }
+      .x-ring b { position: absolute; inset: 0; display: grid; place-items: center; font: var(--type-label); }
+      .x-tag { margin-left: auto; font: var(--type-tag); padding: 3px 10px; border-radius: var(--r-pill); border: 1px solid currentColor; white-space: nowrap; }
+      .x-red { color: var(--x-red); } .x-amber { color: var(--x-amber); } .x-green { color: var(--x-green); }
+      .x-sens { display: grid; grid-template-columns: 1fr auto 96px; gap: 4px 10px; align-items: center; font: var(--type-small); }
+      .x-sens span:first-child { color: var(--text-secondary); font: var(--type-caption); }
+      .x-sens .x-val { font-family: "Geist Mono", monospace; font-size: 14px; text-align: right; }
+      .x-mc footer { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; font: var(--type-caption); color: var(--text-secondary); }
+      .x-mc footer strong { color: var(--text-primary); }
+      .x-two { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 14px; }
+      .x-h { display: flex; justify-content: space-between; gap: 10px; align-items: center; margin-bottom: 12px; flex-wrap: wrap; }
+      .x-h h2 { font: var(--type-heading); }
+      .x-h p { color: var(--text-secondary); font: var(--type-caption); }
+      .x-rules { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+      .x-rules li { background: var(--fill-tertiary); border-radius: var(--r-s); padding: 10px 12px; font: var(--type-small); }
+      .x-rules small { display: block; color: var(--text-secondary); font: var(--type-caption); }
+      .x-modal { position: fixed; inset: 0; background: #050a18cc; display: none; place-items: center; z-index: 20; padding: 16px; }
+      .x-modal.is-open { display: grid; }
+      .x-dialog { width: min(560px, 100%); display: grid; gap: 14px; background: #10183a; }
+      .x-form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+      .x-form label { display: grid; gap: 6px; font: var(--type-caption); color: var(--text-secondary); }
+      .x-form .x-wide { grid-column: 1 / -1; }
+      .x-toasts { position: fixed; right: 16px; bottom: 16px; display: grid; gap: 8px; z-index: 30; }
+      .x-toast { background: #16214a; color: var(--text-primary); border-radius: var(--r-s); box-shadow: var(--x-glow), var(--hark-shadow); padding: 12px 16px; font: var(--type-small); border-left: 3px solid var(--x-green); max-width: 340px; }
+      @media (max-width: 1000px) { .x-two { grid-template-columns: 1fr; } }
+      @media (max-width: 860px) { .x-app { grid-template-columns: 1fr; } .x-side { display: none; } .x-avatar em { display: none; } }
+    </style>
+  </head>
+  <body>
+    <div class="page x-app" id="top" style="max-width:none;padding:0;gap:0">
+      <aside class="x-side" aria-label="เมนูหลัก">
+        <div class="x-logo">
+          <svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3b6cff"/><stop offset="1" stop-color="#ec4899"/></linearGradient></defs><rect width="40" height="40" rx="12" fill="url(#lg)"/><path d="M12 26l6-12 4 8 3-5 3 9" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div><b>IT&amp;MAINT</b><small>Smart Asset · Smart Work</small></div>
+        </div>
+        <nav class="x-nav">
+          <p class="x-grp">ภาพรวม</p><a href="#top">แดชบอร์ด</a><a href="#top">ศูนย์สั่งการ</a>
+          <p class="x-grp">ทรัพย์สิน</p><a href="#top">ทะเบียนทรัพย์สิน</a><a href="#top">QR / ป้ายทรัพย์สิน</a>
+          <p class="x-grp">ซ่อมบำรุง</p><a href="#top">ใบแจ้งซ่อม</a><a href="#top">ใบงาน (WO)</a><a href="#top">PM ตามแผน</a><a href="#top" aria-current="page">Predictive / IoT</a>
+          <p class="x-grp">คลัง &amp; จัดซื้อ</p><a href="#top">อะไหล่ &amp; สต็อก</a><a href="#top">ใบขอซื้อ</a>
+          <p class="x-grp">วิเคราะห์</p><a href="#top">รายงาน</a><a href="#top">MTBF / MTTR</a>
+          <p class="x-grp">ระบบ</p><a href="#top">ผู้ใช้ &amp; สิทธิ์</a><a href="#top">ตั้งค่า</a>
+        </nav>
+      </aside>
+      <div style="min-width:0">
+        <header class="x-top">
+          <select class="x-select" aria-label="เลือกไซต์"><option>ทุกไซต์</option><option>โรงงานสมุทรสาคร</option><option>โรงงานระยอง</option></select>
+          <div class="x-search"><input class="x-input" id="q" type="search" placeholder="ค้นหาทรัพย์สิน, ใบงาน, เซนเซอร์…" aria-label="ค้นหา" /><span class="x-kbd">Ctrl K</span></div>
+          <button class="x-btn x-btn--pri" type="button" data-toast="เปิดฟอร์มแจ้งซ่อมใหม่">+ แจ้งซ่อม</button>
+          <button class="x-btn x-icon" type="button" id="bell" aria-label="การแจ้งเตือน 3 รายการ"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 8a6 6 0 0112 0c0 7 3 9 3 9H3s3-2 3-9M10 21h4"/></svg><span class="x-badge">3</span></button>
+          <div class="x-avatar"><span>AD</span><em style="font-style:normal">Admin</em></div>
+        </header>
+        <main class="x-body">
+          <div class="x-title">
+            <div><p>ซ่อมบำรุง › Predictive / IoT</p><h1>Predictive Maintenance / IoT</h1></div>
+            <div class="links" style="margin:0">
+              <button class="x-btn x-btn--pri" type="button" data-toast="เพิ่มอุปกรณ์/เซนเซอร์ใหม่: เปิดตัวช่วยเชื่อมต่อ MQTT">+ อุปกรณ์/เซนเซอร์</button>
+              <button class="x-btn x-btn--ghost" type="button" id="openRules">กฎแจ้งเตือน</button>
+            </div>
+          </div>
+
+          <section class="x-kpis" aria-label="ตัวชี้วัด">
+            <div class="x-card x-kpi"><span class="x-tile x-g1"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M5 12a7 7 0 0114 0M2 12a10 10 0 0120 0"/></svg></span><div><b>12</b><small>เซนเซอร์ทั้งหมด</small></div></div>
+            <div class="x-card x-kpi"><span class="x-tile x-g2"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg></span><div><b>11</b><small>ออนไลน์</small></div></div>
+            <div class="x-card x-kpi"><span class="x-tile x-g3"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" aria-hidden="true"><path d="M12 3l10 18H2zM12 10v4M12 17v.5"/></svg></span><div><b>1</b><small>เกินเกณฑ์</small></div></div>
+            <div class="x-card x-kpi"><span class="x-tile x-g4"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></span><div><b>2</b><small>คาดการณ์เสีย 7 วัน</small></div></div>
+            <div class="x-card x-kpi"><span class="x-tile x-g5"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" aria-hidden="true"><path d="M14 3l-2 7h6l-8 11 2-8H6z"/></svg></span><div><b id="woKpi">3</b><small>ใบงานอัตโนมัติ 30 วัน</small></div></div>
+          </section>
+
+          <section aria-label="เครื่องจักร"><div class="x-h"><h2>เครื่องจักรที่ติดตาม</h2><p>ค่าสดอัปเดตทุก 2 วินาที · คลิกการ์ดเพื่อดูแนวโน้ม</p></div><div class="x-grid" id="machines"></div></section>
+
+          <section class="x-card">
+            <div class="x-h"><div><h2 id="chartTitle">แนวโน้มเซนเซอร์ 24 ชม.</h2><p id="chartSub"></p></div></div>
+            <figure class="chart" style="margin:0">
+              <div class="chart__canvas chart__canvas--tall"><canvas id="trend" role="img" aria-label="แนวโน้มค่าเซนเซอร์ 24 ชั่วโมง พร้อมเส้นเกณฑ์และจุดผิดปกติ"></canvas></div>
+            </figure>
+          </section>
+
+          <div class="x-two">
+            <section class="x-card">
+              <div class="x-h"><h2>การแจ้งเตือนล่าสุด</h2><p>3 รายการวันนี้</p></div>
+              <div class="table-wrap"><table>
+                <thead><tr><th scope="col">เวลา</th><th scope="col">เซนเซอร์</th><th scope="col">ค่า</th><th scope="col">กฎ</th><th scope="col">การดำเนินการ</th></tr></thead>
+                <tbody>
+                  <tr class="is-highlight"><th scope="row">10:42</th><td>TMP-MTR007</td><td class="num x-red">86.5°C</td><td>≥ 80°C นาน 5 นาที</td><td>สร้าง WO-2406-118 (P1) · LINE</td></tr>
+                  <tr><th scope="row">09:15</th><td>VIB-CONV03</td><td class="num x-amber">5.1 mm/s</td><td>เปลี่ยนแปลง ≥ 20% / 1 ชม.</td><td>สร้าง WO-2406-117 (P2) · Email</td></tr>
+                  <tr><th scope="row">07:58</th><td>FLW-PMP11</td><td class="num muted">ไม่มีสัญญาณ</td><td>ออฟไลน์ ≥ 10 นาที</td><td>แจ้ง LINE ช่างไฟฟ้า</td></tr>
+                </tbody>
+              </table></div>
+            </section>
+            <section class="x-card">
+              <div class="x-h"><h2>กฎที่ใช้งาน</h2><button class="x-btn" type="button" id="openRules2">+ เพิ่มกฎ</button></div>
+              <ul class="x-rules" id="rules"></ul>
+            </section>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <div class="x-modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+      <form class="x-card x-dialog" id="ruleForm">
+        <div class="x-h" style="margin:0"><h2 id="mTitle">สร้างกฎแจ้งเตือน</h2><button class="x-btn x-icon" type="button" id="closeRules" aria-label="ปิด">✕</button></div>
+        <div class="x-form">
+          <label class="x-wide">ถ้า เซนเซอร์<select class="x-select" name="sensor" id="fSensor"></select></label>
+          <label>เงื่อนไข<select class="x-select" name="op"><option value=">">&gt; มากกว่า</option><option value="<">&lt; น้อยกว่า</option><option value="Δ%">เปลี่ยนแปลง %</option></select></label>
+          <label>ค่า<input class="x-input" name="val" type="number" step="0.1" value="80" required /></label>
+          <label>นาน (นาที)<input class="x-input" name="dur" type="number" min="1" value="5" required /></label>
+          <label>แจ้งเตือนทาง<select class="x-select" name="ch"><option>LINE</option><option>Email</option><option>LINE + Email</option></select></label>
+          <label>สร้าง WO อัตโนมัติ<select class="x-select" name="wo"><option value="">ไม่สร้าง</option><option>P1</option><option selected>P2</option><option>P3</option><option>P4</option></select></label>
+        </div>
+        <div class="links" style="margin:0;justify-content:flex-end"><button class="x-btn x-btn--ghost" type="button" id="cancelRules">ยกเลิก</button><button class="x-btn x-btn--pri" type="submit">บันทึกกฎ</button></div>
+      </form>
+    </div>
+    <div class="x-toasts" id="toasts" aria-live="polite"></div>
+
+    <script src="../../assets/hark.js"></script>
+    <script>document.documentElement.setAttribute("data-theme", "dark");</script>
+    <script src="../../assets/chart.js"></script>
+    <script src="../../assets/datalabels.js"></script>
+    <script src="../../assets/hark-charts.js"></script>
+    <script type="application/json" id="machine-data">
+      [
+        {"id":"MTR-007","name":"มอเตอร์ ABB 45kW","health":38,"rul":5,"status":"เกินเกณฑ์","tone":"red","info":"ชม.ทำงาน 12,360",
+         "sensors":[{"tag":"TMP-MTR007","label":"อุณหภูมิ","unit":"°C","v":86.5,"n":0.6,"thr":80,"d":1},{"tag":"VIB-MTR007","label":"Vibration","unit":"mm/s","v":4.2,"n":0.15,"thr":4.5,"d":1}]},
+        {"id":"CONV-03","name":"สายพานลำเลียง","health":55,"rul":6,"status":"เฝ้าระวัง","tone":"amber","info":"Vibration เพิ่มขึ้น",
+         "sensors":[{"tag":"VIB-CONV03","label":"Vibration ↑","unit":"mm/s","v":4.1,"n":0.12,"thr":4.5,"d":1,"rise":0.01},{"tag":"TMP-CONV03","label":"อุณหภูมิมอเตอร์","unit":"°C","v":58.2,"n":0.4,"thr":75,"d":1}]},
+        {"id":"CMP-02","name":"ปั๊มลม Atlas Copco","health":78,"rul":42,"status":"ปกติ","tone":"green","info":"ชม.ทำงาน 4,820",
+         "sensors":[{"tag":"PRS-CMP02","label":"แรงดัน","unit":"bar","v":7.2,"n":0.08,"thr":8.5,"d":2},{"tag":"TMP-CMP02","label":"อุณหภูมิ","unit":"°C","v":71.4,"n":0.5,"thr":90,"d":1}]},
+        {"id":"PMP-11","name":"ปั๊มน้ำหล่อเย็น","health":71,"rul":30,"status":"เซนเซอร์ออฟไลน์","tone":"amber","info":"ชม.ทำงาน 8,105",
+         "sensors":[{"tag":"PRS-PMP11","label":"แรงดัน","unit":"bar","v":3.4,"n":0.05,"thr":4.5,"d":2},{"tag":"FLW-PMP11","label":"อัตราไหล","unit":"m³/h","v":0,"n":0,"thr":0,"d":1,"off":true}]},
+        {"id":"AHU-05","name":"AHU ห้องคลีนรูม","health":88,"rul":75,"status":"ปกติ","tone":"green","info":"ชม.ทำงาน 6,940",
+         "sensors":[{"tag":"TMP-AHU05","label":"อุณหภูมิจ่ายลม","unit":"°C","v":16.8,"n":0.2,"thr":20,"d":1},{"tag":"HUM-AHU05","label":"ความชื้น","unit":"%RH","v":52,"n":0.8,"thr":65,"d":0}]},
+        {"id":"CNC-001","name":"เครื่อง CNC Mazak","health":82,"rul":58,"status":"ปกติ","tone":"green","info":"ชม.ทำงาน 3,275",
+         "sensors":[{"tag":"LOD-CNC001","label":"Spindle load","unit":"%","v":64,"n":2.5,"thr":90,"d":0},{"tag":"VIB-CNC001","label":"Vibration","unit":"mm/s","v":1.8,"n":0.1,"thr":3.5,"d":1}]}
+      ]
+    </script>
+    <script>
+      var M = Hark.data("machine-data"), sel = 0, woSeq = 119, woCount = 3;
+      var ring = { red: "#ff6b7a", amber: "#ffb547", green: "#3ddc97" };
+      var $ = function (id) { return document.getElementById(id); };
+      function toast(msg) {
+        var t = document.createElement("div"); t.className = "x-toast"; t.textContent = msg;
+        $("toasts").appendChild(t); setTimeout(function () { t.remove(); }, 3800);
+      }
+      // seeded history so every machine has a stable 24h trend
+      M.forEach(function (m, mi) {
+        m.sensors.forEach(function (s, si) {
+          var seed = mi * 7 + si + 1, rnd = function () { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; };
+          s.spark = []; for (var i = 0; i < 20; i++) s.spark.push(s.off ? 0 : s.v + (rnd() - 0.5) * s.n * 4);
+          s.day = []; for (var h = 0; h < 24; h++) {
+            var drift = mi === 0 && si === 0 ? (h / 23) * 12 - 6 : mi === 1 && si === 0 ? (h / 23) * 1.2 - 0.9 : 0;
+            s.day.push(s.off ? null : +(s.v + drift + (rnd() - 0.5) * s.n * 6).toFixed(s.d));
+          }
+          if (!s.off) s.day[23] = s.v;
+        });
+      });
+      function spark(s) {
+        if (s.off) return '<svg width="96" height="28" aria-hidden="true"><line x1="0" y1="14" x2="96" y2="14" stroke="#a3afd1" stroke-dasharray="3 4"/></svg>';
+        var mn = Math.min.apply(0, s.spark), mx = Math.max.apply(0, s.spark), r = mx - mn || 1;
+        var pts = s.spark.map(function (v, i) { return (i * 5).toFixed(1) + "," + (25 - ((v - mn) / r) * 22).toFixed(1); }).join(" ");
+        var c = s.v >= s.thr ? "#ff6b7a" : "#6d95ff";
+        return '<svg width="96" height="28" viewBox="0 0 96 28" aria-hidden="true"><polyline points="' + pts + '" fill="none" stroke="' + c + '" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/></svg>';
+      }
+      function render() {
+        $("machines").innerHTML = M.map(function (m, i) {
+          var C = 2 * Math.PI * 24, off = C * (1 - m.health / 100);
+          return '<article class="x-card x-mc' + (i === sel ? " is-sel" : "") + '" data-i="' + i + '" tabindex="0" aria-label="' + m.id + ' ดูแนวโน้ม">' +
+            '<header><div class="x-ring"><svg width="56" height="56" viewBox="0 0 56 56" aria-hidden="true"><circle cx="28" cy="28" r="24" fill="none" stroke="#5b8cff26" stroke-width="5"/><circle cx="28" cy="28" r="24" fill="none" stroke="' + ring[m.tone] + '" stroke-width="5" stroke-linecap="round" stroke-dasharray="' + C.toFixed(1) + '" stroke-dashoffset="' + off.toFixed(1) + '" transform="rotate(-90 28 28)"/></svg><b>' + m.health + '</b></div>' +
+            '<div><h3>' + m.id + '</h3><small>' + m.name + ' · ' + m.info + '</small></div><span class="x-tag x-' + m.tone + '">' + m.status + '</span></header>' +
+            '<div class="x-sens">' + m.sensors.map(function (s, si) {
+              var over = !s.off && s.v >= s.thr;
+              return '<span>' + s.label + ' <small>' + s.tag + '</small></span><span class="x-val' + (over ? " x-red" : "") + '" id="v' + i + '-' + si + '">' + (s.off ? "ออฟไลน์" : s.v.toFixed(s.d) + " " + s.unit) + (over ? " ▲" : "") + '</span><span id="s' + i + '-' + si + '">' + spark(s) + '</span>';
+            }).join("") + '</div>' +
+            '<footer><span>คาดอายุคงเหลือ <strong>~' + m.rul + ' วัน</strong></span><button class="x-btn" type="button" data-wo="' + i + '">สร้างใบงานอัตโนมัติ</button></footer></article>';
+        }).join("");
+      }
+      function tick() {
+        M.forEach(function (m, i) {
+          m.sensors.forEach(function (s, si) {
+            if (s.off) return;
+            var base = s.day[23] + (s.rise ? (s.v - s.day[23]) + s.rise : 0);
+            s.v = base + (Math.random() - 0.5) * s.n * 2;
+            if (i === 0 && si === 0) s.v = Math.max(s.v, 84.8);
+            if (s.rise) s.v = Math.min(Math.max(s.v, 3.9), 5.2);
+            s.spark.push(s.v); s.spark.shift();
+            var over = s.v >= s.thr, el = $("v" + i + "-" + si);
+            el.textContent = s.v.toFixed(s.d) + " " + s.unit + (over ? " ▲" : "");
+            el.classList.toggle("x-red", over);
+            $("s" + i + "-" + si).innerHTML = spark(s);
+          });
+        });
+      }
+      var hours = []; for (var h = 0; h < 24; h++) hours.push((h < 10 ? "0" : "") + h + ":00");
+      var chart = new Chart($("trend"), {
+        type: "line",
+        data: { labels: hours, datasets: [{ label: "", data: [], fill: true, pointRadius: [], pointBackgroundColor: "var(--chart-bad)", pointBorderColor: "var(--chart-bad)" },
+          { label: "", data: [], borderColor: "var(--chart-accent)", borderDash: [3, 4], borderWidth: 1, pointRadius: 0 }] },
+        options: { plugins: { legend: { display: false } } }
+      });
+      function showChart() {
+        var m = M[sel], s = m.sensors[0], an = s.day.filter(function (v) { return v >= s.thr; }).length;
+        chart.data.datasets[0].label = s.tag;
+        chart.data.datasets[0].data = s.day;
+        chart.data.datasets[0].pointRadius = s.day.map(function (v) { return v >= s.thr ? 4 : 0; });
+        chart.data.datasets[1].label = "เกณฑ์ " + s.thr + " " + s.unit;
+        chart.data.datasets[1].data = hours.map(function () { return s.thr; });
+        chart.options.plugins.tooltip = { callbacks: { label: function (c) { return c.raw + " " + s.unit; } } };
+        chart.update();
+        $("chartTitle").textContent = m.id + " · " + s.label + " 24 ชม.";
+        $("chartSub").textContent = s.tag + " · หน่วย " + s.unit + " · จุดผิดปกติ (เกินเกณฑ์) " + an + " จุด";
+        $("trend").setAttribute("aria-label", m.id + " " + s.label + " 24 ชั่วโมง เกินเกณฑ์ " + an + " ครั้ง");
+      }
+      $("machines").addEventListener("click", function (e) {
+        var b = e.target.closest("[data-wo]");
+        if (b) {
+          var m = M[+b.dataset.wo], no = "WO-2406-" + woSeq++;
+          $("woKpi").textContent = ++woCount;
+          toast("สร้างใบงานอัตโนมัติ " + no + " สำหรับ " + m.id + " (" + (m.tone === "red" ? "P1" : m.tone === "amber" ? "P2" : "P3") + ") แล้ว");
+          return;
+        }
+        var c = e.target.closest(".x-mc"); if (!c) return;
+        sel = +c.dataset.i;
+        document.querySelectorAll(".x-mc").forEach(function (x, i) { x.classList.toggle("is-sel", i === sel); });
+        showChart();
+      });
+      $("machines").addEventListener("keydown", function (e) { if ((e.key === "Enter" || e.key === " ") && e.target.classList.contains("x-mc")) { e.preventDefault(); e.target.click(); } });
+
+      var rules = [
+        { s: "TMP-MTR007", op: "≥", val: "80", dur: 5, ch: "LINE", wo: "P1" },
+        { s: "VIB-CONV03", op: "เปลี่ยนแปลง %", val: "20", dur: 60, ch: "Email", wo: "P2" },
+        { s: "FLW-PMP11", op: "ออฟไลน์", val: "", dur: 10, ch: "LINE", wo: "" }
+      ];
+      function drawRules() {
+        $("rules").innerHTML = rules.map(function (r) {
+          return "<li>ถ้า <b>" + r.s + "</b> " + r.op + " " + r.val + " นาน " + r.dur + " นาที<small>→ แจ้ง " + r.ch + (r.wo ? " · สร้าง WO ระดับ " + r.wo : "") + "</small></li>";
+        }).join("");
+      }
+      $("fSensor").innerHTML = M.map(function (m) { return m.sensors.map(function (s) { return "<option>" + s.tag + "</option>"; }).join(""); }).join("");
+      function openM() { $("modal").classList.add("is-open"); $("fSensor").focus(); }
+      function closeM() { $("modal").classList.remove("is-open"); }
+      $("openRules").onclick = openM; $("openRules2").onclick = openM; $("closeRules").onclick = closeM; $("cancelRules").onclick = closeM;
+      $("modal").addEventListener("click", function (e) { if (e.target === this) closeM(); });
+      $("ruleForm").addEventListener("submit", function (e) {
+        e.preventDefault();
+        var f = new FormData(this), op = f.get("op");
+        rules.unshift({ s: f.get("sensor"), op: op, val: f.get("val") + (op === "Δ%" ? "%" : ""), dur: f.get("dur"), ch: f.get("ch"), wo: f.get("wo") });
+        drawRules(); closeM(); toast("บันทึกกฎแจ้งเตือนสำหรับ " + f.get("sensor") + " แล้ว");
+      });
+      document.addEventListener("keydown", function (e) {
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") { e.preventDefault(); $("q").focus(); }
+        if (e.key === "Escape") closeM();
+      });
+      document.querySelectorAll("[data-toast]").forEach(function (b) { b.onclick = function () { toast(b.dataset.toast); }; });
+      $("bell").onclick = function () { toast("มี 3 การแจ้งเตือนใหม่ · ล่าสุด TMP-MTR007 86.5°C"); };
+      render(); drawRules(); showChart(); setInterval(tick, 2000);
+    </script>
+  </body>
+</html>
