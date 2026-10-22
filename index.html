@@ -1,6 +1,6 @@
 <!doctype html>
-<html lang="th" data-theme="dark">
-  <head>
+<html lang="th" data-theme="dark" style="color-scheme:dark">
+  <head><script>/*theme-lock*/(function(){var r=document.documentElement;r.setAttribute("data-theme","dark");r.classList.remove("is-light");r.style.colorScheme="dark";try{localStorage.setItem("hark-theme","dark");localStorage.setItem("itm-theme","dark")}catch(e){}})();</script>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>IT&amp;MAINT Command Center</title>
@@ -203,7 +203,7 @@
             <label class="x-search"><svg class="i"><use href="#i-search"/></svg><input id="q" placeholder="ค้นหา WO / ทรัพย์สิน / อุปกรณ์ / ผู้ใช้งาน…" aria-label="ค้นหา" /><span class="x-kbd">Ctrl + K</span></label>
             <button class="x-cta" id="ctaBtn"><svg class="i"><use href="#i-plus"/></svg>แจ้งซ่อม</button>
             <button class="x-icon" id="bellBtn" aria-label="การแจ้งเตือน 8 รายการ"><svg class="i"><use href="#i-bell"/></svg><span class="x-badge">8</span></button>
-            <button class="x-icon" id="themeBtn" aria-label="สลับธีม"><svg class="i"><use href="#i-moon"/></svg></button>
+            <button class="x-icon" id="themeBtn" aria-label="สลับธีม" hidden style="display:none"><svg class="i"><use href="#i-moon"/></svg></button>
             <div class="x-user"><span class="x-av">A</span><div>Admin<small>ผู้ดูแลระบบ</small></div></div>
           </header>
 
@@ -345,7 +345,7 @@
       $("#ctaBtn").addEventListener("click", () => { $("#app").classList.remove("is-open"); toast("เปิดแบบฟอร์มแจ้งซ่อมใหม่…"); flash("#tiles .x-tile"); });
       $("#bellBtn").addEventListener("click", () => { $("#app").classList.remove("is-open"); toast("มี 8 เรื่องที่ต้องดำเนินการ"); flash("#alerts"); });
       $("#themeBtn").addEventListener("click", () => { const r = document.documentElement; r.dataset.theme = r.dataset.theme === "light" ? "dark" : "light"; r.classList.toggle("is-light", r.dataset.theme === "light"); $("#themeBtn").setAttribute("aria-pressed", r.dataset.theme === "light"); try { localStorage.setItem("itm-theme", r.dataset.theme); } catch (e) {} });
-      try { if (localStorage.getItem("itm-theme") === "light") { document.documentElement.dataset.theme = "light"; document.documentElement.classList.add("is-light"); } } catch (e) {}
+      
       document.addEventListener("keydown", (e) => { if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") { e.preventDefault(); $("#q").focus(); } });
 
       /* alerts */
