@@ -59,14 +59,16 @@
   function mapColor(c, kind) {
     var h = rgb2hsl(c[0], c[1], c[2]), H = h[0], S = h[1], L = h[2], A = c[3], n;
     if (kind === "text") {
-      if (L <= .5) return null;
-      n = S < .25 ? clamp(1.02 - L, .12, .45) : clamp(1.08 - L, .2, .42);
-      return hsl2rgb(H, Math.min(S, S < .25 ? .3 : .5), n).concat(A);
+      var warm = S > .4 && H > .07 && H < .5;
+      if (L <= .5) { if (warm && L > .34) return hsl2rgb(H, S, .32).concat(A); return null; }
+      n = S < .25 ? clamp(.95 - L, .1, .36) : clamp(1 - L, .18, warm ? .3 : .38);
+      return hsl2rgb(H, Math.min(S, S < .25 ? .3 : .6), n).concat(A);
     }
     if (kind === "accent") {
       if (L < .3 && A > .5) return mapColor(c, "bg");
-      if (L <= .55) return null;
-      return hsl2rgb(H, S, clamp(1.05 - L, .32, .45)).concat(A);
+      var warm2 = S > .4 && H > .07 && H < .5;
+      if (L <= .55) { if (warm2 && L > .36 && A > .5) return hsl2rgb(H, S, .34).concat(A); return null; }
+      return hsl2rgb(H, S, clamp(1.05 - L, .3, warm2 ? .34 : .45)).concat(A);
     }
     if (kind === "shadow") {
       if (S < .15 && L < .15) return [c[0], c[1], c[2], A * .35];
@@ -80,7 +82,7 @@
     }
     /* bg */
     if (S < .08 && L < .1 && A < .9) return null;              /* modal scrims stay dark */
-    if (L < .42) return hsl2rgb(H, Math.min(S, .55), clamp(.985 - L * .55, .8, .985)).concat(A);
+    if (L < .42 && !(S > .45 && L > .24 && A > .5)) return hsl2rgb(H, Math.min(S, .55), clamp(.985 - L * .55, .8, .985)).concat(A);
     if (L > .85 && A < .2) return [30, 45, 90, Math.min(.12, A * 1.2)]; /* faint white washes become faint ink */
     return null;
   }
@@ -125,9 +127,17 @@
     return toks.some(function (tk) { var c = parse(tk); if (!c || c[3] < .5) return false; var h = rgb2hsl(c[0], c[1], c[2]); return h[1] > .35 && h[2] > .3 && h[2] < .75; });
   }
   function convertDecls(style) {
-    var res = [], accentBg = null;
-    for (var i = 0; i < style.length; i++) {
-      var p = style[i], v = style.getPropertyValue(p), k = propKind(p);
+    var res = [], accentBg = null, props = [], seen = {};
+    for (var j = 0; j < style.length; j++) {
+      var q = style[j];
+      if (!style.getPropertyValue(q) && q.indexOf("--") !== 0) {
+        var sh = /^background/.test(q) ? "background" : /^border-(top|right|bottom|left)/.test(q) ? (style.getPropertyValue("border-" + RegExp.$1) ? "border-" + RegExp.$1 : "border") : /^border/.test(q) ? (style.getPropertyValue("border-color") ? "border-color" : "border") : /^outline/.test(q) ? "outline" : null;
+        if (sh) q = sh;
+      }
+      if (!seen[q]) { seen[q] = 1; props.push(q); }
+    }
+    for (var i = 0; i < props.length; i++) {
+      var p = props[i], v = style.getPropertyValue(p), k = propKind(p);
       if (!k || !v || /light-dark|color-mix/.test(v)) continue;
       if (k === "var") { k = varKind(p, v); if (!k) continue; }
       if (k === "text" && (p === "color" || p === "-webkit-text-fill-color")) {
@@ -206,6 +216,50 @@
     if (window.Chart && Chart.defaults) { try { Chart.defaults.color = "#475569"; Chart.defaults.borderColor = "rgba(15,23,42,.1)"; } catch (e) {} }
   }
 
+  /* ---------- Chart.js colours in light mode ---------- */
+  function chartPlugin(C) {
+    try {
+      C.defaults.color = "#475569"; C.defaults.borderColor = "rgba(15,23,42,.1)";
+      C.register({ id: "itmLight", beforeUpdate: function (ch) {
+        function fix(v) {
+          if (typeof v !== "string") return v;
+          var c = parse(v.trim()); if (!c) return v;
+          var hh = rgb2hsl(c[0], c[1], c[2]);
+          if (hh[2] < .25) return "rgba(100,116,139," + Math.max(.55, c[3]) + ")";
+          if (hh[2] > .9 && hh[1] < .2) return "rgba(15,23,42,.12)";
+          return v;
+        }
+        (ch.data.datasets || []).forEach(function (d) {
+          ["backgroundColor", "borderColor"].forEach(function (k) { if (Array.isArray(d[k])) d[k] = d[k].map(fix); else d[k] = fix(d[k]); });
+        });
+        var dl = ch.options && ch.options.plugins && ch.options.plugins.datalabels;
+        if (dl && typeof dl.color === "string") { var c2 = parse(dl.color); if (c2 && rgb2hsl(c2[0], c2[1], c2[2])[2] > .8) dl.color = "#0F172A"; }
+        var sc = ch.options && ch.options.scales;
+        if (sc) Object.keys(sc).forEach(function (a) {
+          var t = sc[a].ticks, g = sc[a].grid;
+          if (t && typeof t.color === "string") { var c3 = parse(t.color); if (c3 && rgb2hsl(c3[0], c3[1], c3[2])[2] > .5) t.color = "#475569"; }
+          if (g && typeof g.color === "string") g.color = "rgba(15,23,42,.08)";
+        });
+      } });
+    } catch (e) {}
+  }
+  if (theme === "light") {
+    if (window.Chart) chartPlugin(window.Chart);
+    else { var _C; try { Object.defineProperty(window, "Chart", { configurable: true, get: function () { return _C; }, set: function (v) { _C = v; if (v && v.register) chartPlugin(v); } }); } catch (e) {} }
+  }
+
+  /* in-page theme switches (e.g. Settings → ธีม มืด/สว่าง) follow the site theme */
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest && e.target.closest("#theme button");
+    if (!b) return;
+    var want = /สว่าง|light/i.test(b.textContent) ? "light" : "dark";
+    if (want !== theme) { e.preventDefault(); window.itmToggleTheme(); }
+  }, true);
+  function syncSeg() {
+    var bs = document.querySelectorAll("#theme button");
+    [].forEach.call(bs, function (b) { var on = (/สว่าง|light/i.test(b.textContent) ? "light" : "dark") === theme; b.setAttribute("aria-pressed", on ? "true" : "false"); b.classList.toggle("is-on", on); b.classList.toggle("on", on); });
+  }
+
   /* ---------- toggle button on every page ---------- */
   function addButton() {
     var home = document.getElementById("themeBtn");
@@ -222,7 +276,7 @@
     btn.innerHTML = theme === "light" ? moon : sun;
     btn.style.cssText = "display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;flex:none;border-radius:999px;cursor:pointer;border:1px solid " + (theme === "light" ? "rgba(40,70,160,.22)" : "rgba(110,150,255,.28)") + ";background:" + (theme === "light" ? "#ffffff" : "rgba(20,32,72,.62)") + ";color:" + (theme === "light" ? "#0F1A3A" : "#E8EEFF");
     btn.addEventListener("click", window.itmToggleTheme);
-    var head = document.querySelector("header.x-top, header.top, header.x-head, header");
+    var head = document.querySelector("header.x-top, header.top, header.x-head, header, .x-top, .topbar, .top");
     if (head) { head.appendChild(btn); }
     else { btn.style.position = "fixed"; btn.style.right = "16px"; btn.style.bottom = "16px"; btn.style.zIndex = "60"; document.body.appendChild(btn); }
   }
@@ -230,6 +284,7 @@
   function ready() {
     if (theme === "light") { try { buildLight(); } catch (e) { if (window.console) console.warn("light theme", e); } }
     addButton();
+    syncSeg(); setTimeout(syncSeg, 300); setTimeout(syncSeg, 1200);
     root.classList.remove("itm-hide");
   }
   if (theme === "light") {
