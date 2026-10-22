@@ -213,39 +213,36 @@
         else m.addedNodes.forEach(fixTree);
       });
     }).observe(document.body, { subtree: true, childList: true, attributes: true, attributeFilter: ["style"] });
-    if (window.Chart && Chart.defaults) { try { Chart.defaults.color = "#475569"; Chart.defaults.borderColor = "rgba(15,23,42,.1)"; } catch (e) {} }
   }
 
   /* ---------- Chart.js colours in light mode ---------- */
-  function chartPlugin(C) {
+  function fixChart(ch) {
+    function fix(v) {
+      if (typeof v !== "string") return v;
+      var c = parse(v.trim()); if (!c) return v;
+      var hh = rgb2hsl(c[0], c[1], c[2]);
+      if (hh[2] < .25) return "rgba(100,116,139," + Math.max(.55, c[3]) + ")";
+      if (hh[2] > .9 && hh[1] < .2) return "rgba(15,23,42,.12)";
+      return v;
+    }
     try {
-      C.defaults.color = "#475569"; C.defaults.borderColor = "rgba(15,23,42,.1)";
-      C.register({ id: "itmLight", beforeUpdate: function (ch) {
-        function fix(v) {
-          if (typeof v !== "string") return v;
-          var c = parse(v.trim()); if (!c) return v;
-          var hh = rgb2hsl(c[0], c[1], c[2]);
-          if (hh[2] < .25) return "rgba(100,116,139," + Math.max(.55, c[3]) + ")";
-          if (hh[2] > .9 && hh[1] < .2) return "rgba(15,23,42,.12)";
-          return v;
-        }
-        (ch.data.datasets || []).forEach(function (d) {
-          ["backgroundColor", "borderColor"].forEach(function (k) { if (Array.isArray(d[k])) d[k] = d[k].map(fix); else d[k] = fix(d[k]); });
-        });
-        var dl = ch.options && ch.options.plugins && ch.options.plugins.datalabels;
-        if (dl && typeof dl.color === "string") { var c2 = parse(dl.color); if (c2 && rgb2hsl(c2[0], c2[1], c2[2])[2] > .8) dl.color = "#0F172A"; }
-        var sc = ch.options && ch.options.scales;
-        if (sc) Object.keys(sc).forEach(function (a) {
-          var t = sc[a].ticks, g = sc[a].grid;
-          if (t && typeof t.color === "string") { var c3 = parse(t.color); if (c3 && rgb2hsl(c3[0], c3[1], c3[2])[2] > .5) t.color = "#475569"; }
-          if (g && typeof g.color === "string") g.color = "rgba(15,23,42,.08)";
-        });
-      } });
+      (ch.data.datasets || []).forEach(function (d) {
+        ["backgroundColor", "borderColor"].forEach(function (k) { if (Array.isArray(d[k])) d[k] = d[k].map(fix); else if (d[k] != null) d[k] = fix(d[k]); });
+      });
+      var dl = ch.options && ch.options.plugins && ch.options.plugins.datalabels;
+      if (dl && typeof dl.color === "string") { var c2 = parse(dl.color); if (c2 && rgb2hsl(c2[0], c2[1], c2[2])[2] > .8) dl.color = "#0F172A"; }
+      var sc = ch.options && ch.options.scales;
+      if (sc) Object.keys(sc).forEach(function (a) {
+        var t = sc[a].ticks, g = sc[a].grid;
+        if (t && typeof t.color === "string") { var c3 = parse(t.color); if (c3 && rgb2hsl(c3[0], c3[1], c3[2])[2] > .5) t.color = "#475569"; }
+        if (g && typeof g.color === "string") g.color = "rgba(15,23,42,.08)";
+      });
+      ch.update("none");
     } catch (e) {}
   }
-  if (theme === "light") {
-    if (window.Chart) chartPlugin(window.Chart);
-    else { var _C; try { Object.defineProperty(window, "Chart", { configurable: true, get: function () { return _C; }, set: function (v) { _C = v; if (v && v.register) chartPlugin(v); } }); } catch (e) {} }
+  function fixCharts() {
+    var C = window.Chart; if (!C || !C.instances) return;
+    Object.keys(C.instances).forEach(function (k) { var ch = C.instances[k]; if (ch && !ch.$itm) { ch.$itm = 1; fixChart(ch); } });
   }
 
   /* in-page theme switches (e.g. Settings → ธีม มืด/สว่าง) follow the site theme */
@@ -285,6 +282,7 @@
     if (theme === "light") { try { buildLight(); } catch (e) { if (window.console) console.warn("light theme", e); } }
     addButton();
     syncSeg(); setTimeout(syncSeg, 300); setTimeout(syncSeg, 1200);
+    if (theme === "light") { [200, 900, 2000, 4000].forEach(function (t) { setTimeout(fixCharts, t); }); }
     root.classList.remove("itm-hide");
   }
   if (theme === "light") {
