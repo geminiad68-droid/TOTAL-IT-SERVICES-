@@ -357,7 +357,7 @@
   function applyLabelDefaults(sans, mono) {
     if (!DataLabels) return;
     Object.assign(Chart.defaults.plugins.datalabels, {
-      display: false, clip: false, font: { family: mono, size: 12 }, color: live("var(--chart-ink)"), formatter: formatNumber
+      display: false, clip: false, font: { family: mono, size: 12 }, color: live("var(--chart-label)"), formatter: formatNumber
     });
   }
   function formatNumber(v) {
