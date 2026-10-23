@@ -61,7 +61,7 @@
     if (kind === "text") {
       var warm = S > .4 && H > .07 && H < .5;
       if (L <= .5) { if (warm && L > .34) return hsl2rgb(H, S, .32).concat(A); return null; }
-      n = S < .25 ? clamp(.95 - L, .1, .36) : clamp(1 - L, .18, warm ? .3 : .38);
+      n = S < .25 ? clamp(.92 - L, .1, .32) : clamp(.98 - L, .18, warm ? .3 : .36);
       return hsl2rgb(H, Math.min(S, S < .25 ? .3 : .6), n).concat(A);
     }
     if (kind === "accent") {
@@ -82,7 +82,7 @@
     }
     /* bg */
     if (S < .08 && L < .1 && A < .9) return null;              /* modal scrims stay dark */
-    if (L < .42 && !(S > .45 && L > .24 && A > .5)) return hsl2rgb(H, Math.min(S, .55), clamp(.985 - L * .55, .8, .985)).concat(A);
+    if (L < .42 && !(S > .45 && L > .38 && A > .5)) return hsl2rgb(H, Math.min(S, .55), clamp(.985 - L * .55, .8, .985)).concat(A);
     if (L > .85 && A < .2) return [30, 45, 90, Math.min(.12, A * 1.2)]; /* faint white washes become faint ink */
     return null;
   }
