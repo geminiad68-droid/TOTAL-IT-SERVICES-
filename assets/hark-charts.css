@@ -1,23 +1,24 @@
 /* The Hark chart palette for Chart.js. Load it after hark.css. style-gates: data */
 :root {
-  --chart-ink: light-dark(#1d1d1f, #f5f5f7);            /* the story: one series, or the one that matters */
-  --chart-ink-2: light-dark(#1d1d1f80, #f5f5f780);      /* the comparison beside the story; axis and legend text */
-  --chart-ink-3: light-dark(#1d1d1f4d, #f5f5f74d);
+  --chart-ink: light-dark(#2563eb, #60a5fa);            /* the story: one series, or the one that matters */
+  --chart-ink-2: light-dark(#334155, #cbd5e1);      /* the comparison beside the story; axis and legend text */
+  --chart-ink-3: light-dark(#94a3b8, #475569);
   --chart-reference: light-dark(#1d1d1f24, #f5f5f724);  /* baselines, targets, averages: dashed 3 / 4 */
-  --chart-grid: light-dark(#1d1d1f12, #f5f5f712);
+  --chart-grid: light-dark(#0f172a17, #ffffff14);
   --chart-accent: #ff4d00;                              /* the one thing to look at now; never a series or a fill */
   --chart-good: light-dark(#607868, #8fa898);           /* positive, up, on track */
   --chart-bad: light-dark(#9c635e, #b97f7a);            /* negative, down, off track */
   --chart-muted: var(--chart-ink-3);                    /* context: the rest around a highlight, washes */
   /* Three or more series take these in order; one or two series take the inks. */
-  --chart-1: light-dark(#b1bcd2, #c3ccdd);
-  --chart-2: light-dark(#607868, #8fa898);
-  --chart-3: light-dark(#dbb691, #e2c39f);
-  --chart-4: light-dark(#a79fb8, #b9b2c9);
-  --chart-5: light-dark(#d9c489, #e2d09e);
-  --chart-6: light-dark(#7e9c9b, #96b3b2);
-  --chart-7: light-dark(#c9a3a8, #d6b5b9);
-  --chart-on-colour: #1d1d1f;                           /* text drawn on the seven colours, pale in both themes */
+  --chart-1: light-dark(#2563eb, #60a5fa);
+  --chart-2: light-dark(#059669, #34d399);
+  --chart-3: light-dark(#d97706, #fbbf24);
+  --chart-4: light-dark(#7c3aed, #a78bfa);
+  --chart-5: light-dark(#db2777, #f472b6);
+  --chart-6: light-dark(#0891b2, #22d3ee);
+  --chart-7: light-dark(#dc2626, #f87171);
+  --chart-on-colour: #0f172a;                           /* text drawn on the seven colours, pale in both themes */
+  --chart-label: light-dark(#0f172a, #f1f5f9);
   --chart-mono: "GT Standard Mono", "Geist Mono", ui-monospace, monospace; /* every number on a chart */
 }
 
