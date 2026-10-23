@@ -203,7 +203,7 @@
       var rules; try { rules = sh.cssRules; } catch (e) { return; }
       if (rules) convertRules(rules, css);
     });
-    css.push(PFX + "{--itm-light:1}" + PFX + " body{background-color:#eef2fb}" + PFX + " ::-webkit-scrollbar-thumb{background:#c5cde0}");
+    css.push(PFX + "{--itm-light:1}" + PFX + " body{background-color:#eef2fb}" + PFX + " ::-webkit-scrollbar-thumb{background:#c5cde0}" + PFX + " button:disabled," + PFX + " .is-disabled," + PFX + " [aria-disabled=true]{opacity:.6!important;filter:none!important}" + PFX + " input::placeholder," + PFX + " textarea::placeholder{color:#64748b!important;opacity:1}" + PFX + " input[type=time]::-webkit-calendar-picker-indicator," + PFX + " input[type=date]::-webkit-calendar-picker-indicator{filter:none!important;opacity:.7}");
     var st = document.getElementById("itm-light") || document.createElement("style");
     st.id = "itm-light"; st.textContent = css.join("\n"); document.head.appendChild(st);
     fixTree(document.body);
@@ -221,7 +221,7 @@
       if (typeof v !== "string") return v;
       var c = parse(v.trim()); if (!c) return v;
       var hh = rgb2hsl(c[0], c[1], c[2]);
-      if (hh[2] < .25) return "rgba(100,116,139," + Math.max(.55, c[3]) + ")";
+      if (hh[2] < .25) { var m = hsl2rgb(hh[0], Math.min(Math.max(hh[1], .25), .55), .6); return out(m[0], m[1], m[2], Math.max(.7, c[3])); }
       if (hh[2] > .9 && hh[1] < .2) return "rgba(15,23,42,.12)";
       return v;
     }
@@ -231,17 +231,23 @@
       });
       var dl = ch.options && ch.options.plugins && ch.options.plugins.datalabels;
       if (dl && typeof dl.color === "string") { var c2 = parse(dl.color); if (c2 && rgb2hsl(c2[0], c2[1], c2[2])[2] > .8) dl.color = "#0F172A"; }
-      var sc = ch.options && ch.options.scales;
+      var o = ch.options || {}, sc = o.scales;
+      function ink(v) { if (v == null) return "#334155"; if (typeof v !== "string") return v; var c3 = parse(v); return c3 && rgb2hsl(c3[0], c3[1], c3[2])[2] > .45 ? "#334155" : v; }
       if (sc) Object.keys(sc).forEach(function (a) {
-        var t = sc[a].ticks, g = sc[a].grid;
-        if (t && typeof t.color === "string") { var c3 = parse(t.color); if (c3 && rgb2hsl(c3[0], c3[1], c3[2])[2] > .5) t.color = "#475569"; }
-        if (g && typeof g.color === "string") g.color = "rgba(15,23,42,.08)";
+        var x = sc[a]; x.ticks = x.ticks || {}; x.ticks.color = ink(x.ticks.color);
+        x.grid = x.grid || {}; if (typeof x.grid.color !== "function") x.grid.color = "rgba(15,23,42,.09)";
+        if (x.title) x.title.color = ink(x.title.color);
+        if (x.pointLabels) x.pointLabels.color = ink(x.pointLabels.color);
       });
+      o.plugins = o.plugins || {};
+      var lg = o.plugins.legend = o.plugins.legend || {}; lg.labels = lg.labels || {}; lg.labels.color = ink(lg.labels.color);
+      if (o.plugins.title) o.plugins.title.color = ink(o.plugins.title.color);
       ch.update("none");
     } catch (e) {}
   }
   function fixCharts() {
     var C = window.Chart; if (!C || !C.instances) return;
+    try { C.defaults.color = "#334155"; C.defaults.borderColor = "rgba(15,23,42,.09)"; } catch (e) {}
     Object.keys(C.instances).forEach(function (k) { var ch = C.instances[k]; if (ch && !ch.$itm) { ch.$itm = 1; fixChart(ch); } });
   }
 
