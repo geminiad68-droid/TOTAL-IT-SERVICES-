@@ -143,7 +143,13 @@
 
 
   /* Standard sidebar (same groups as the home page) for pages that were built with their own menu */
-  var STD_PAGES = { "repair-requests": "ใบแจ้งซ่อม", "settings-notify": "ตั้งค่าระบบ", "reports-lite": "รายงาน & KPI" };
+  var STD_PAGES = { "repair-requests": "ใบแจ้งซ่อม", "settings-notify": "ตั้งค่าระบบ", "reports-lite": "รายงาน & KPI", "reports-kpi": "รายงาน & KPI",
+    "api-tokens": "REST API & Token", "asset-movements": "โอนย้าย/ยืม-คืน/จำหน่าย", "asset-register": "ทะเบียนทรัพย์สินกลาง", "audit-log": "Audit Log",
+    "budget": "ต้นทุน & งบประมาณ", "cost-budget": "ต้นทุน & งบประมาณ", "calibration": "สอบเทียบเครื่องมือ", "dam": "คลังดิจิทัล (DAM)",
+    "eam-hierarchy": "EAM ลำดับชั้น/Lifecycle", "fixed-assets-depreciation": "สินทรัพย์ถาวร & ค่าเสื่อม", "it-asset-license": "IT Asset & License",
+    "itam-licenses": "IT Asset & License", "master-calendar": "ปฏิทินรวม", "master-data-custom-fields": "ข้อมูลหลัก", "pm-plans": "แผน PM & เช็คลิสต์",
+    "predictive-iot": "Predictive/IoT", "purchasing-pr-po": "จัดซื้อ PR/PO & สัญญา", "qr-labels": "พิมพ์ป้าย QR/Barcode", "rca-fmea": "RCA/FMEA",
+    "spare-parts": "คลังอะไหล่", "stocktake": "ตรวจนับทรัพย์สิน", "tracking": "ติดตามตำแหน่ง", "users-rbac": "ผู้ใช้งาน", "wo": "ใบสั่งงาน (WO)" };
   var STD_NAV = [
     ["ภาพรวม", ["Command Center", "จอแสดงผล TV", "ปฏิทินรวม"]],
     ["ทรัพย์สิน", ["ทะเบียนทรัพย์สินกลาง", "พิมพ์ป้าย QR/Barcode", "สินทรัพย์ถาวร & ค่าเสื่อม", "โอนย้าย/ยืม-คืน/จำหน่าย", "IT Asset & License", "EAM ลำดับชั้น/Lifecycle", "ติดตามตำแหน่ง", "ตรวจนับทรัพย์สิน", "คลังดิจิทัล (DAM)"]],
