@@ -203,6 +203,7 @@
       var rules; try { rules = sh.cssRules; } catch (e) { return; }
       if (rules) convertRules(rules, css);
     });
+    [].forEach.call(document.querySelectorAll('meta[name="color-scheme"]'), function (m) { m.setAttribute("content", "light"); });
     css.push(PFX + "{--itm-light:1}" + PFX + " body{background-color:#eef2fb}" + PFX + " ::-webkit-scrollbar-thumb{background:#c5cde0}" + PFX + " button:disabled," + PFX + " .is-disabled," + PFX + " [aria-disabled=true]{opacity:.6!important;filter:none!important}" + PFX + " input::placeholder," + PFX + " textarea::placeholder{color:#64748b!important;opacity:1}" + PFX + " input[type=time]::-webkit-calendar-picker-indicator," + PFX + " input[type=date]::-webkit-calendar-picker-indicator{filter:none!important;opacity:.7}");
     var st = document.getElementById("itm-light") || document.createElement("style");
     st.id = "itm-light"; st.textContent = css.join("\n"); document.head.appendChild(st);
