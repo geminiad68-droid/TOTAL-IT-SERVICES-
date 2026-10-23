@@ -141,7 +141,73 @@
     document.body.appendChild(a);
   }
 
+
+  /* Standard sidebar (same groups as the home page) for pages that were built with their own menu */
+  var STD_PAGES = { "repair-requests": "ใบแจ้งซ่อม", "settings-notify": "ตั้งค่าระบบ", "reports-lite": "รายงาน & KPI" };
+  var STD_NAV = [
+    ["ภาพรวม", ["Command Center", "จอแสดงผล TV", "ปฏิทินรวม"]],
+    ["ทรัพย์สิน", ["ทะเบียนทรัพย์สินกลาง", "พิมพ์ป้าย QR/Barcode", "สินทรัพย์ถาวร & ค่าเสื่อม", "โอนย้าย/ยืม-คืน/จำหน่าย", "IT Asset & License", "EAM ลำดับชั้น/Lifecycle", "ติดตามตำแหน่ง", "ตรวจนับทรัพย์สิน", "คลังดิจิทัล (DAM)"]],
+    ["ซ่อมบำรุง", ["ใบสั่งงาน (WO)|18", "ใบแจ้งซ่อม", "แผน PM & เช็คลิสต์|6", "Predictive/IoT", "สอบเทียบเครื่องมือ"]],
+    ["คลัง & จัดซื้อ", ["คลังอะไหล่|3", "จัดซื้อ PR/PO & สัญญา", "ต้นทุน & งบประมาณ"]],
+    ["วิเคราะห์", ["RCA/FMEA", "รายงาน & KPI"]],
+    ["ระบบ", ["ผู้ใช้งาน", "บทบาท & สิทธิ์ (RBAC)", "ข้อมูลหลัก", "ตั้งค่าระบบ", "การแจ้งเตือน & Cron", "REST API & Token", "Audit Log"]]
+  ];
+  var STD_CSS = [
+    "aside.sn-side{background:#080d1e!important;border-right:1px solid #1b2850!important;padding:16px 12px 24px!important;display:block!important;gap:0!important;overflow-y:auto;scrollbar-width:thin}",
+    "@media (min-width:901px){aside.sn-side{position:sticky!important;top:0;height:100vh;transform:none!important}}",
+    "@media (max-width:900px){aside.sn-side{display:none!important}aside.sn-side.open,aside.sn-side.is-open,aside.sn-side.show{display:block!important;transform:none!important}}",
+    ".sn-logo{display:flex;gap:10px;align-items:center;padding:8px 8px 16px;color:#E8EEFF;text-decoration:none}",
+    ".sn-logo b{display:block;font-size:17px;font-weight:700;line-height:1.2;letter-spacing:.02em}",
+    ".sn-logo span{display:block;color:#8E9BC4;font-size:12px}",
+    ".sn-grp>button{all:unset;cursor:pointer;display:flex;justify-content:space-between;align-items:center;width:100%;box-sizing:border-box;padding:14px 10px 6px;color:#8494bd;font-size:12px;font-weight:600;letter-spacing:.06em;min-height:32px}",
+    ".sn-grp>button i{font-style:normal;transition:transform .2s}",
+    ".sn-grp.is-closed>button i{transform:rotate(-90deg)}",
+    ".sn-grp.is-closed ul{display:none}",
+    ".sn-grp ul{list-style:none;margin:0;padding:0;display:grid;gap:2px}",
+    ".sn-grp a{display:flex;align-items:center;gap:10px;min-height:40px;padding:0 10px;border-radius:10px;color:#c3cde6;text-decoration:none;font-size:13.5px;box-sizing:border-box}",
+    ".sn-grp a:hover{background:#142145;color:#fff}",
+    ".sn-grp a.is-on{background:linear-gradient(90deg,#2563EB,#3B82F6);color:#fff;box-shadow:0 6px 20px rgba(37,99,235,.35)}",
+    ".sn-grp a span{flex:1}",
+    ".sn-grp a em{font-style:normal;margin-left:auto;background:#22305c;color:#cfe0ff;border-radius:999px;font-size:11px;padding:2px 8px}",
+    ".sn-grp a.is-on em{background:rgba(255,255,255,.22);color:#fff}",
+    'html[data-theme="light"] aside.sn-side{background:#f4f6fc!important;border-right-color:#d5dcef!important}',
+    'html[data-theme="light"] .sn-logo{color:#0f1a3a}html[data-theme="light"] .sn-logo span{color:#4a5675}',
+    'html[data-theme="light"] .sn-grp>button{color:#4a5675}',
+    'html[data-theme="light"] .sn-grp a{color:#1f2a48}html[data-theme="light"] .sn-grp a:hover{background:#e3e9f8;color:#0f1a3a}',
+    'html[data-theme="light"] .sn-grp a.is-on{color:#fff}',
+    'html[data-theme="light"] .sn-grp a em{background:#dfe6fa;color:#1e3a8a}'
+  ].join("\n");
+  function esc(t) { return t.replace(/&/g, "&amp;").replace(/</g, "&lt;"); }
+  function stdSidebar() {
+    var key = null;
+    Object.keys(STD_PAGES).forEach(function (k) { if (onPage(k)) key = k; });
+    if (!key) return;
+    var side = document.querySelector("aside.x-side, aside.side, aside#side");
+    if (!side || side.classList.contains("sn-side")) return;
+    var active = STD_PAGES[key];
+    var st = document.createElement("style"); st.id = "sn-style"; st.textContent = STD_CSS; document.head.appendChild(st);
+    var logo = '<a class="sn-logo" href="' + BASE + '"><svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><defs><linearGradient id="snlg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3b82f6"/><stop offset="1" stop-color="#22d3ee"/></linearGradient></defs><rect width="34" height="34" rx="10" fill="url(#snlg)"/><path d="M11 22l6-12 6 12-6-4z" fill="#07122b"/></svg><div><b>IT&amp;MAINT</b><span>Smart Asset · Smart Work</span></div></a>';
+    var html = STD_NAV.map(function (g) {
+      var has = g[1].some(function (it) { return it.split("|")[0] === active; });
+      var open = has || STD_NAV.indexOf(g) <= 3;
+      return '<div class="sn-grp' + (open ? "" : " is-closed") + '"><button type="button" aria-expanded="' + open + '">' + esc(g[0]) + '<i>▾</i></button><ul>' +
+        g[1].map(function (it) {
+          var p = it.split("|"), on = p[0] === active, href = target(p[0]) || "#";
+          return '<li><a href="' + href + '"' + (on ? ' class="is-on" aria-current="page"' : "") + '><span>' + esc(p[0]) + '</span>' + (p[1] ? "<em>" + p[1] + "</em>" : "") + '</a></li>';
+        }).join("") + "</ul></div>";
+    }).join("");
+    /* keep hidden copies of ids the page's own scripts may look for */
+    var keep = [].slice.call(side.querySelectorAll("[id]")).map(function (el) { return '<div id="' + el.id + '" hidden></div>'; }).join("");
+    side.classList.add("sn-side");
+    side.setAttribute("aria-label", "เมนูหลัก");
+    side.innerHTML = logo + '<nav class="sn-nav">' + html + "</nav>" + keep;
+    side.addEventListener("click", function (e) {
+      var b = e.target.closest && e.target.closest(".sn-grp>button"); if (!b) return;
+      var g = b.parentElement; g.classList.toggle("is-closed"); b.setAttribute("aria-expanded", !g.classList.contains("is-closed"));
+    });
+  }
   function start() {
+    try { stdSidebar(); } catch (e) {}
     wire(); tvHome();
     var mo = new MutationObserver(function () { wire(); });
     mo.observe(document.body, { childList: true, subtree: true });
