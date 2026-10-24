@@ -44,6 +44,11 @@
       .x-btn--pri { background: linear-gradient(90deg,#C2410C,#BE185D); border: 0; color: #fff; box-shadow: 0 4px 18px rgba(190,24,93,.35); }
       .x-btn--sm { min-height: 36px; padding: 0 12px; font-size: 13px; }
       .x-btn[disabled] { opacity: .4; cursor: not-allowed; }
+      .x-btn--rej { color: #FECACA; border-color: rgba(248,113,113,.65); background: #3A1420; font-weight: 600; }
+      .x-btn--rej:hover { border-color: #F87171; background: #4C1828; }
+      html[data-theme="light"] .x-btn--rej { color: #B91C1C !important; border-color: #F87171 !important; background: #FEF2F2 !important; }
+      .x-done { font-size: 13px; color: #A9B6D6; white-space: nowrap; }
+      html[data-theme="light"] .x-done { color: #475569 !important; }
       .x-icon { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; border: 1px solid var(--bd); background: #0E1733; cursor: pointer; position: relative; }
       .x-dotn { position: absolute; top: 6px; right: 6px; width: 16px; height: 16px; border-radius: 50%; background: #DC2626; font-size: 12px; line-height: 16px; color: #fff; }
       .x-user { display: flex; align-items: center; gap: 8px; }
@@ -282,8 +287,8 @@
             <td>${r.by === ME ? "Admin (ฉัน)" : r.by}</td>
             <td><span class="x-tag ${ST[r.st]}">${r.st}</span>${r.wo ? `<div class="x-meta">${r.wo}</div>` : ""}</td>
             <td><div class="x-acts">
-              <button class="x-btn x-btn--sm x-btn--pri" data-wo="${r.no}" ${open(r.st) ? "" : "disabled"}>เปิดใบสั่งงาน</button>
-              <button class="x-btn x-btn--sm" data-rej="${r.no}" ${open(r.st) ? "" : "disabled"}>ไม่รับ</button>
+              ${open(r.st) ? `<button class="x-btn x-btn--sm x-btn--pri" data-wo="${r.no}">เปิดใบสั่งงาน</button>
+              <button class="x-btn x-btn--sm x-btn--rej" data-rej="${r.no}">ไม่รับ</button>` : `<span class="x-done">ดำเนินการแล้ว</span>`}
             </div></td>
           </tr>`).join("") : `<tr><td colspan="6" class="x-empty">ไม่พบใบแจ้งซ่อมตามเงื่อนไข</td></tr>`;
         rows.forEach((r) => (r.fresh = false));
