@@ -462,7 +462,7 @@
       try { new Chart($("#c-status"), {
         type: "doughnut",
         data: { labels: KANBAN, datasets: [{ data: [4, 8, 5, 1, 2] }] },
-        options: { cutout: "62%", plugins: { legend: { position: "right" }, datalabels: Hark.labels.percent } }
+        options: { cutout: "55%", maintainAspectRatio: false, layout: { padding: 14 }, plugins: { legend: { position: "bottom", labels: { boxWidth: 10, padding: 10 } }, datalabels: Object.assign({}, Hark.labels.percent, { display: true, clip: false, font: { size: 11, weight: "600" }, padding: 2, formatter: (v, c) => Math.round(v / c.dataset.data.reduce((a, b) => a + b, 0) * 100) + "%" }) } }
       });
       const buckets = ["0-1", "1-3", "3-7", ">7"], open = rows.filter((r) => !CLOSED.includes(r.st));
       const aging = [open.filter((r) => r.age <= 1).length, open.filter((r) => r.age > 1 && r.age <= 3).length, open.filter((r) => r.age > 3 && r.age <= 7).length, open.filter((r) => r.age > 7).length];
